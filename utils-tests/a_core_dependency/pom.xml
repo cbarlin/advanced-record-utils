@@ -5,9 +5,9 @@
     <parent>
         <groupId>io.github.cbarlin.aru.tests</groupId>
         <artifactId>utils-tests</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-
     <groupId>io.github.cbarlin.aru.tests</groupId>
     <artifactId>a_core_dependency</artifactId>
     <name>Advanced Record Utils - Tests - Core Test "Dependency"</name>

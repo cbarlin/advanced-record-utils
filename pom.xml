@@ -4,7 +4,7 @@
 
     <groupId>io.github.cbarlin</groupId>
     <artifactId>aru-parent</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <name>Advanced Record Utils - Parent</name>
     <description>A collection of record utilities, covering quite a wide variety of use-cases.</description>
@@ -347,6 +347,7 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
@@ -360,6 +361,7 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -382,6 +384,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>central</publishingServerId>
+                    <skipPublishing>false</skipPublishing>
                 </configuration>
             </plugin>
             <plugin>
