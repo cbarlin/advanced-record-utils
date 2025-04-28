@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.cbarlin</groupId>
     <artifactId>aru-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <name>Advanced Record Utils - Parent</name>
     <description>A collection of record utilities, covering quite a wide variety of use-cases.</description>
@@ -45,7 +43,8 @@
         <connection>scm:git:git://github.com/cbarlin/advanced-record-utils.git</connection>
         <developerConnection>scm:git:ssh://github.com/cbarlin/advanced-record-utils.git</developerConnection>
         <url>https://github.com/cbarlin/advanced-record-utils</url>
-    </scm>
+      <tag>0.1.0</tag>
+  </scm>
 
     <issueManagement>
         <url>https://github.com/cbarlin/advanced-record-utils/issues</url>
@@ -57,7 +56,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.proc>full</maven.compiler.proc>
-        <project.build.outputTimestamp>2025-01-01T00:00:01Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-04-28T05:53:42Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
         <junit-bom.version>5.12.0</junit-bom.version>
