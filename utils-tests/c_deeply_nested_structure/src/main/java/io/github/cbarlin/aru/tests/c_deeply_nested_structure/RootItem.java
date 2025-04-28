@@ -1,5 +1,6 @@
 package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
@@ -30,5 +31,9 @@ public record RootItem(
     @XmlAttribute
     int anotherField,
     @XmlAttribute(name = "butIHaveAnotherName", required = true)
-    String yetAnotherField
+    String yetAnotherField,
+    @XmlAttribute
+    OffsetDateTime testOdtAttr,
+    @XmlElement
+    OffsetDateTime testOdtEl
 ) implements RootItemUtils.All {}

@@ -1,28 +1,26 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
-import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
-import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
+import static io.github.cbarlin.aru.impl.Constants.Names.DATE_TIME_FORMATTER;
+import static io.github.cbarlin.aru.impl.Constants.Names.OFFSET_DATE_TIME;
+import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_OFFSET;
 
 import java.util.Optional;
 
-import io.github.cbarlin.aru.core.APContext;
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteCharSequence extends XmlVisitor {
+public class WriteOffsetDatetime extends XmlVisitor {
 
-    private static final String CHK_NULL_OR_TO_STRING_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
+    private static final String CHK_NULL = "if ($T.nonNull(val))";
 
-    public WriteCharSequence() {
+    public WriteOffsetDatetime() {
         super(Claims.XML_WRITE_FIELD);
     }
 
@@ -39,14 +37,14 @@ public class WriteCharSequence extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final Optional<XmlElementPrism> optPrism = XmlElementPrism.getOptionalOn(analysedComponent.element().getAccessor());
-        if (optPrism.isPresent() && (!analysedComponent.requiresUnwrapping()) && APContext.types().isSubtype(analysedComponent.componentType(), APContext.elements().getTypeElement(CharSequence.class.getCanonicalName()).asType())) {
+        if (optPrism.isPresent() && OFFSET_DATE_TIME.equals(analysedComponent.typeName())) {
             // Nice!
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
             final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
-            final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, CHAR_SEQUENCE);
+            final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.typeName());
             
             if (defaultValue.isPresent()) {
                 writeWithDefaultDefined(analysedComponent, elementName, defaultValue.get(), namespaceName, methodBuilder);
@@ -68,16 +66,15 @@ public class WriteCharSequence extends XmlVisitor {
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
-            methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NULL, OBJECTS);
         }
       
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.addStatement("output.writeCharacters(val.toString())")
+        methodBuilder.addStatement("output.writeCharacters(val.atZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_OFFSET, DATE_TIME_FORMATTER)
             .addStatement("output.writeEndElement()");
       
         if (!required) {
@@ -96,11 +93,11 @@ public class WriteCharSequence extends XmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
+        methodBuilder.beginControlFlow(CHK_NULL, OBJECTS);
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
         methodBuilder.addStatement("output.writeCharacters($S)", writeAsDefaultValue)
             .nextControlFlow("else")
-            .addStatement("output.writeCharacters(val.toString())")
+            .addStatement("output.writeCharacters(val.atZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_OFFSET, DATE_TIME_FORMATTER)
             .endControlFlow()
             .addStatement("output.writeEndElement()");
     }

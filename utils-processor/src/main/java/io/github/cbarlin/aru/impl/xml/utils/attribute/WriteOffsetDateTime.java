@@ -2,7 +2,7 @@ package io.github.cbarlin.aru.impl.xml.utils.attribute;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.DATE_TIME_FORMATTER;
-import static io.github.cbarlin.aru.impl.Constants.Names.UUID;
+import static io.github.cbarlin.aru.impl.Constants.Names.OFFSET_DATE_TIME;
 import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_OFFSET;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class WriteOffsetDateTime extends WriteXmlAttribute {
 
     @Override
     TypeName supportedTypeName() {
-        return UUID;
+        return OFFSET_DATE_TIME;
     }
 
     @Override

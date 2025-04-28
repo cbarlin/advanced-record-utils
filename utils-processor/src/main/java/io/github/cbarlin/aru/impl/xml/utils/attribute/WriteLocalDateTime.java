@@ -2,16 +2,15 @@ package io.github.cbarlin.aru.impl.xml.utils.attribute;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.DATE_TIME_FORMATTER;
-import static io.github.cbarlin.aru.impl.Constants.Names.UUID;
+import static io.github.cbarlin.aru.impl.Constants.Names.LOCAL_DATE_TIME;
 import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_ID;
 import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_OFFSET;
 
 import java.util.Optional;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
@@ -24,7 +23,7 @@ public class WriteLocalDateTime extends WriteXmlAttribute {
 
     @Override
     TypeName supportedTypeName() {
-        return UUID;
+        return LOCAL_DATE_TIME;
     }
 
     @Override
