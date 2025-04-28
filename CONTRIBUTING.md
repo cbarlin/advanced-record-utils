@@ -39,17 +39,17 @@ We should be able to take code built/written against `1.0.0` of the processor an
 # Dependencies & Layout
 
 The layout of the project is as so:
- * `utils-annotations` - this is the library that ends up on the user's module- or class-path
+ * `advanced-record-utils-annotations` - this is the library that ends up on the user's module- or class-path
  * `prisms-prison` - a library which is used to generate prisms in a way that means the processor doesn't depend on those libraries, and thus can safely detect if they exist in the final output without getting itself confused.
- * `utils-processor-core` - this implements the annotation processor itself, its analysis and interlinking of annotated types, the service loading of the various features, and the "core" operations of the processor (a basic builder).
- * `utils-processor` - this implements all of the features of the processor (such as Withers, Mergers, etc). It's deliberately isolated from the core processor itself - keep the complexity of feature implementation "walled off" from the complexity of analysis etc
+ * `aru-processor-core` - this implements the annotation processor itself, its analysis and interlinking of annotated types, the service loading of the various features, and the "core" operations of the processor (a basic builder).
+ * `advanced-record-utils-processor` - this implements all of the features of the processor (such as Withers, Mergers, etc). It's deliberately isolated from the core processor itself - keep the complexity of feature implementation "walled off" from the complexity of analysis etc
  * `utils-tests` - all the tests!
 
-The intent of the layout is that it should be easy to "plug-in" capabilties into the `utils-processor` - most contributions would be to this area. It's also the most "neat" - every class can mostly be self-isolated and easy to reason with. The `utils-processor`'s complexity should only end up being the number of classes it has, whereas the `utils-processor-core` is complex as it attempts to create a complete graph of operations and then enact it.
+The intent of the layout is that it should be easy to "plug-in" capabilties into the `advanced-record-utils-processor` - most contributions would be to this area. It's also the most "neat" - every class can mostly be self-isolated and easy to reason with. The `advanced-record-utils-processor`'s complexity should only end up being the number of classes it has, whereas the `aru-processor-core` is complex as it attempts to create a complete graph of operations and then enact it.
 
-The `utils-annotations` should not gain any new required dependencies. `commons-lang3` and `jspecify` are pushing it already.
+The `advanced-record-utils-annotations` should not gain any new required dependencies. `commons-lang3` and `jspecify` are pushing it already.
 
-The `optional` dependencies that are applied to it are to indicate to consumers that, based on their settings for the generator, we can use/integrate with those dependencies. An example would be if they enabled validation for the `build` method of their builder - we would use the requested api to do that. The "sane" defaults for the annotation should require none of these (though detecting them and working with those is fine).
+The `optional` dependencies that are applied to it are to indicate to consumers that, based on their settings for the generator, we can (potentially, maybe not yet) use/integrate with those dependencies. An example would be if they enabled validation for the `build` method of their builder - we would use the requested api to do that. The "sane" defaults for the annotation should require none of these (though detecting them and working with those is fine).
 
 Dependencies for the processor itself are a little different. Since those don't end up being included in final builds, we can afford to be a little more lenient there. However, keeping them low is ideal for a few reasons (mostly making it easier to detect when the end-user has them!), and really the processor doesn't need the dependencies in order to generate code that does.
 

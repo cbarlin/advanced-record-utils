@@ -34,13 +34,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <proc>full</proc>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-                            <artifactId>utils-processor</artifactId>
-                            <version>${project.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
                     <fork>true</fork>
                     <compilerArgs>
                         <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->

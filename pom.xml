@@ -4,8 +4,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-    <artifactId>utils-parent</artifactId>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>aru-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
     <name>Advanced Record Utils - Parent</name>
@@ -14,10 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>utils-annotations</module>
+        <module>advanced-record-utils-annotations</module>
         <module>prism-prison</module>
-        <module>utils-processor-core</module>
-        <module>utils-processor</module>
+        <module>aru-processor-core</module>
+        <module>advanced-record-utils-processor</module>
         <module>utils-tests</module>
     </modules>
 
@@ -35,7 +35,7 @@
 
     <developers>
         <developer>
-            <name>Conrad</name>
+            <name>cbarlin</name>
             <organization>Advanced Record Utils</organization>
             <organizationUrl>https://github.com/cbarlin/advanced-record-utils</organizationUrl>
         </developer>
@@ -43,13 +43,13 @@
 
     <scm>
         <connection>scm:git:git://github.com/cbarlin/advanced-record-utils.git</connection>
-        <developerConnection>scm:git:ssh://github.com:cbarlin/advanced-record-utils.git</developerConnection>
+        <developerConnection>scm:git:ssh://github.com/cbarlin/advanced-record-utils.git</developerConnection>
         <url>https://github.com/cbarlin/advanced-record-utils</url>
     </scm>
 
     <issueManagement>
         <url>https://github.com/cbarlin/advanced-record-utils/issues</url>
-      </issueManagement>
+    </issueManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -94,6 +94,8 @@
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <central-publishing.version>0.7.0</central-publishing.version>
+        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -220,12 +222,12 @@
             </dependency>
             <!-- Child repositories -->
             <dependency>
-                <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-                <artifactId>utils-annotations</artifactId>
+                <groupId>io.github.cbarlin</groupId>
+                <artifactId>advanced-record-utils-annotations</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.github.cbarlin.advanced-record-utils</groupId>
+                <groupId>io.github.cbarlin</groupId>
                 <artifactId>prism-prison</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -373,6 +375,23 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>${central-publishing.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <username>git</username>
+                </configuration>
             </plugin>
         </plugins>
     </build>

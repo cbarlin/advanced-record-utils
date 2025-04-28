@@ -4,8 +4,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-        <artifactId>utils-parent</artifactId>
+        <groupId>io.github.cbarlin</groupId>
+        <artifactId>aru-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
@@ -76,9 +76,8 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-            <artifactId>processor-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>io.github.cbarlin</groupId>
+            <artifactId>advanced-record-utils-annotations</artifactId>
         </dependency>
     </dependencies>
 
@@ -90,8 +89,8 @@
                     <proc>full</proc>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-                            <artifactId>utils-processor</artifactId>
+                            <groupId>io.github.cbarlin</groupId>
+                            <artifactId>advanced-record-utils-processor</artifactId>
                             <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
@@ -99,6 +98,16 @@
                     <compilerArgs>
                         <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
                     </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>${central-publishing.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <skipPublishing>true</skipPublishing>
                 </configuration>
             </plugin>
         </plugins>
