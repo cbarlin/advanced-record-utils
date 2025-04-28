@@ -1,0 +1,106 @@
+package io.github.cbarlin.aru.impl.types.dependencies;
+
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.*;
+
+import java.util.List;
+import java.util.Optional;
+import javax.lang.model.element.RecordComponentElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
+import io.github.cbarlin.aru.core.UtilsProcessingContext;
+
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+import io.micronaut.sourcegen.javapoet.TypeName;
+import io.github.cbarlin.aru.core.types.*;
+
+public class EclipseCollectionComponent extends AnalysedComponent {
+
+    private final TypeMirror innerType;
+    private final TypeName innerTypeName;
+    private final ClassName erasedWrapperClassName;
+
+    public EclipseCollectionComponent(final RecordComponentElement element, 
+                                      final AnalysedRecord parentRecord,
+                                      final boolean isIntendedConstructorParam, 
+                                      final UtilsProcessingContext utilsProcessingContext
+    ) {
+        super(element, parentRecord, isIntendedConstructorParam, utilsProcessingContext);
+        final DeclaredType decl = (DeclaredType) componentType;
+        final List<? extends TypeMirror> typeArguments = decl.getTypeArguments();
+        innerType = typeArguments.get(0);
+        if(innerType instanceof final DeclaredType dInner) {
+            final TypeElement te = (TypeElement) dInner.asElement();
+            this.innerTypeName = ClassName.get(te);
+        } else {
+            this.innerTypeName = TypeName.get(componentType);
+        }
+        final TypeElement ret = (TypeElement) decl.asElement();
+        final TypeMirror wrapper = utilsProcessingContext.processingEnv().getTypeUtils().erasure(ret.asType());
+        final TypeElement te = (TypeElement) ((DeclaredType) wrapper).asElement();
+        erasedWrapperClassName = ClassName.get(te);
+    }
+
+    public static boolean isEclipseCollection(final RecordComponentElement recordComponentElement) {
+        return OptionalClassDetector.checkSameOrSubType(recordComponentElement, ECLIPSE_COLLECTIONS__RICH_ITERABLE);
+    }
+
+    public boolean isImmutableCollection() {
+        return OptionalClassDetector.checkSameOrSubType(element, ECLIPSE_COLLECTIONS__IMMUTABLE_COLLECTION);
+    }
+
+    public boolean isMutableCollection() {
+        return OptionalClassDetector.checkSameOrSubType(element, ECLIPSE_COLLECTIONS__MUTABLE_COLLECTION);
+    }
+
+    public boolean isImmutableList() {
+        return OptionalClassDetector.checkSameOrSubType(element, ECLIPSE_COLLECTIONS__IMMUTABLE_LIST);
+    }
+
+    public boolean isMutableList() {
+        return OptionalClassDetector.checkSameOrSubType(element, ECLIPSE_COLLECTIONS__MUTABLE_LIST);
+    }
+
+    public boolean isList() {
+        return isImmutableList() || isMutableList();
+    }
+
+    public boolean isImmutableSet() {
+        return OptionalClassDetector.checkSameOrSubType(element, ECLIPSE_COLLECTIONS__IMMUTABLE_SET);
+    }
+
+    public boolean isMutableSet() {
+        return OptionalClassDetector.checkSameOrSubType(element, ECLIPSE_COLLECTIONS__MUTABLE_SET);
+    }
+
+    public boolean isSet() {
+        return isImmutableSet() || isMutableSet();
+    }
+
+    @Override
+    public TypeName typeName() {
+        return ParameterizedTypeName.get(erasedWrapperClassName, innerTypeName);
+    }
+
+    @Override
+    public Optional<ClassName> erasedWrapperTypeName() {
+        return Optional.of(erasedWrapperClassName);
+    }
+
+    @Override
+    public TypeMirror unNestedPrimaryComponentType() {
+        return innerType;
+    }
+
+    @Override
+    public TypeName unNestedPrimaryTypeName() {
+        return innerTypeName;
+    }
+
+    @Override
+    public boolean requiresUnwrapping() {
+        return true;
+    }
+}
