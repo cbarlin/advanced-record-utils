@@ -1,56 +1,73 @@
-name: release version
+name: Release Version
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'The version to release (e.g., 1.2.3)'
+        required: true
+      next_development_version:
+        description: 'The next development version (e.g., 1.3.0-SNAPSHOT)'
+        required: true
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  release:
+    name: Release to Maven Central and GitHub
+    if: github.actor == 'cbarlin' && github.triggering_actor == 'cbarlin'
+    runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
-    strategy:
-      fail-fast: false
-      matrix:
-        java_version: [21]
-        os: [ubuntu-latest]
-    if: | 
-      (github.triggering_actor == 'cbarlin') && (github.actor == 'cbarlin')
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Java
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Java and Maven Central credentials
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java_version }}
+          java-version: '21'
           distribution: 'zulu'
-      - name: Maven cache
-        uses: actions/cache@v4
-        env:
-          cache-name: maven-cache
+          server-id: 'central'
+          gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
+          server-username: ${{ secrets.MVN_USERNAME }}
+          server-password: ${{ secrets.MVN_PASSWORD }}
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          path:
-            ~/.m2
-          key: build-${{ env.cache-name }}
-      - name: Release
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
-          MVN_SETTINGS_XML: ${{ secrets.MVN_SETTINGS_XML }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Configure Git User
         run: |
-            set -e
-            echo "Configuring git"
-            git config --global --add safe.directory /github/workspace
-            git config --global user.name "autobot"
-            git config --global user.email "autobot.cbarlin@nowhere"
-            git config --global commit.gpgsign true
-            git config --global user.signingkey ${{ secrets.GPG_KEY_ID }}
-            echo "Importing GPG key"
-            echo -n "${GPG_SIGNING_KEY}" | base64 --decode | gpg --import
-            echo "${MVN_SETTINGS_XML}" > ~/.m2/settings.xml
-            echo "Configuring ssh"
-            mkdir -p ~/.ssh/
-            echo "${SSH_PRIVATE_KEY}" | base64 --decode > ~/.ssh/id_ed25519
-            chmod 600 ~/.ssh/id_ed25519
-            ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-            echo "Doing release!"
-            mvn -Prelease release:prepare release:perform
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Run Maven Release
+        run: |
+          mvn -B -Prelease \
+            -DreleaseVersion=${{ github.event.inputs.release_version }} \
+            -DdevelopmentVersion=${{ github.event.inputs.next_development_version }} \
+            -DscmCommentPrefix="[maven-release-plugin][skip ci] " \
+            release:prepare release:perform
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock # Ensure Maven uses the agent socket setup above
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }} # Passphrase for the SSH key if it's encrypted
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.release_version }}
+          release_name: Release ${{ github.event.inputs.release_version }}
+          body: |
+            Released version ${{ github.event.inputs.release_version }}.
+            See commit history for details.
+            Released by GitHub Actions.
+            Triggered by @${{ github.actor }}.
+          draft: false
+          prerelease: false
