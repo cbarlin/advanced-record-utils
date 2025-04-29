@@ -4,15 +4,14 @@ on: [pull_request, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     strategy:
       fail-fast: false
       matrix:
-        java_version: [21]
-        os: [ubuntu-latest]
+        java_version: [21, 24]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Java

@@ -87,7 +87,6 @@
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <central-publishing.version>0.7.0</central-publishing.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-        <maven-versions-plugin.version>2.18.0</maven-versions-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -248,11 +247,6 @@
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-resources-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>versions-maven-plugin</artifactId>
-                    <version>${maven-versions-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
