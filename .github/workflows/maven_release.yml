@@ -1,0 +1,55 @@
+name: release version
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        java_version: [21]
+        os: [ubuntu-latest]
+    if: '(github.event.triggering_actor == "cbarlin") && (github.event.actor == "cbarlin")'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java_version }}
+          distribution: 'zulu'
+      - name: Maven cache
+        uses: actions/cache@v4
+        env:
+          cache-name: maven-cache
+        with:
+          path:
+            ~/.m2
+          key: build-${{ env.cache-name }}
+      - name: Release
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+          MVN_SETTINGS_XML: ${{ secrets.MVN_SETTINGS_XML }}
+        run: |
+            set -e
+            echo "Configuring git"
+            git config --global --add safe.directory /github/workspace
+            git config --global user.name "autobot"
+            git config --global user.email "autobot.cbarlin@nowhere"
+            git config --global commit.gpgsign true
+            git config --global user.signingkey ${{ secrets.GPG_KEY_ID }}
+            echo "Importing GPG key"
+            echo -n "${GPG_SIGNING_KEY}" | base64 --decode | gpg --import
+            echo "${MVN_SETTINGS_XML}" > ~/.m2/settings.xml
+            echo "Configuring ssh"
+            mkdir -p ~/.ssh/
+            echo "${SSH_PRIVATE_KEY}" | base64 --decode > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+            ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+            echo "Doing release!"
+            mvn -Prelease release:prepare release:perform

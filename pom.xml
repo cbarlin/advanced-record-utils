@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.cbarlin</groupId>
@@ -10,14 +12,6 @@
     <description>A collection of record utilities, covering quite a wide variety of use-cases.</description>
     <url>https://github.com/cbarlin/advanced-record-utils</url>
     <packaging>pom</packaging>
-
-    <modules>
-        <module>advanced-record-utils-annotations</module>
-        <module>prism-prison</module>
-        <module>aru-processor-core</module>
-        <module>advanced-record-utils-processor</module>
-        <module>utils-tests</module>
-    </modules>
 
     <organization>
         <name>Advanced Record Utils</name>
@@ -43,8 +37,8 @@
         <connection>scm:git:git://github.com/cbarlin/advanced-record-utils.git</connection>
         <developerConnection>scm:git:ssh://github.com/cbarlin/advanced-record-utils.git</developerConnection>
         <url>https://github.com/cbarlin/advanced-record-utils</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <url>https://github.com/cbarlin/advanced-record-utils/issues</url>
@@ -56,7 +50,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.proc>full</maven.compiler.proc>
-        <project.build.outputTimestamp>2025-04-28T05:54:02Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-04-29T07:41:06Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
         <junit-bom.version>5.12.0</junit-bom.version>
@@ -95,8 +89,8 @@
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <central-publishing.version>0.7.0</central-publishing.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-versions-plugin.version>2.18.0</maven-versions-plugin.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -227,7 +221,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.cbarlin</groupId>
-                <artifactId>prism-prison</artifactId>
+                <artifactId>aru-prism-prison</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -256,6 +250,11 @@
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${maven-versions-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -326,20 +325,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${maven-gpg-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -377,24 +363,67 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>${central-publishing.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                    <skipPublishing>false</skipPublishing>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
-                <configuration>
-                    <username>git</username>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>standard</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>advanced-record-utils-annotations</module>
+                <module>aru-prism-prison</module>
+                <module>aru-processor-core</module>
+                <module>advanced-record-utils-processor</module>
+                <module>utils-tests</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>advanced-record-utils-annotations</module>
+                <module>aru-prism-prison</module>
+                <module>aru-processor-core</module>
+                <module>advanced-record-utils-processor</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>${central-publishing.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>${maven-release-plugin.version}</version>
+                        <configuration>
+                            <username>git</username>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

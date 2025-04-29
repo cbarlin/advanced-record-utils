@@ -38,8 +38,8 @@ Add the following maven or gradle dependency for the annotations:
 
 ```xml
 <dependency>
-    <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-    <artifactId>utils-annotations</artifactId>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>advanced-record-utils-annotations</artifactId>
     <version>${aru.version}</version>
 </dependency>
 ```
@@ -48,8 +48,8 @@ And the following to your annotation processor paths (note: if using integration
 
 ```xml
 <path>
-    <groupId>io.github.cbarlin.advanced-record-utils</groupId>
-    <artifactId>utils-processor</artifactId>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>utiladvanced-record-utils-processor</artifactId>
     <version>${aru.version}</version>
 </path>
 ```

@@ -9,7 +9,7 @@
     </parent>
 
     <groupId>io.github.cbarlin</groupId>
-    <artifactId>prism-prison</artifactId>
+    <artifactId>aru-prism-prison</artifactId>
     <packaging>jar</packaging>
 
     <name>Advanced Record Utils - Processor - Prisms</name>

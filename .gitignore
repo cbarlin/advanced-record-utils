@@ -81,4 +81,3 @@ nb-configuration.xml
 ##############################
 *.log
 digest.txt
-deploy.sh

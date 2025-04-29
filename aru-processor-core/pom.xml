@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.cbarlin</groupId>
-            <artifactId>prism-prison</artifactId>
+            <artifactId>aru-prism-prison</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micronaut.sourcegen</groupId>
