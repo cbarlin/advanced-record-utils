@@ -63,7 +63,6 @@
         <guava.version>33.4.0-jre</guava.version>
         <eclipse-collections.version>11.1.0</eclipse-collections.version>
         <avaje.validator.version>2.9</avaje.validator.version>
-        <sl4j-api.version>2.0.16</sl4j-api.version>
         <avaje.prism.version>1.41</avaje.prism.version>
         <avaje-spi.version>2.11</avaje-spi.version>
         <avaje-jsonb.version>3.2</avaje-jsonb.version>
@@ -190,11 +189,6 @@
                 <groupId>org.jspecify</groupId>
                 <artifactId>jspecify</artifactId>
                 <version>${jspecify.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${sl4j-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.avaje</groupId>
