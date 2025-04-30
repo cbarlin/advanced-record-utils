@@ -118,7 +118,15 @@ if [ $BUILD_VALIDATE_SUCCESS -eq 0 ]; then
             --draft \
             --title "$GH_RELEASE_TITLE" \
             --notes "$GH_RELEASE_NOTES" \
-            $GH_RELEASE_ARTIFACT_GLOB
+            target/central-staging/io/github/cbarlin/aru-parent/${RELEASE_VERSION}/*.pom \
+            target/central-staging/io/github/cbarlin/aru-prism-prison/${RELEASE_VERSION}/*.pom \
+            target/central-staging/io/github/cbarlin/aru-prism-prison/${RELEASE_VERSION}/*.jar \
+            target/central-staging/io/github/cbarlin/aru-processor-core/${RELEASE_VERSION}/*.pom \
+            target/central-staging/io/github/cbarlin/aru-processor-core/${RELEASE_VERSION}/*.jar \
+            target/central-staging/io/github/cbarlin/advanced-record-utils-annotations/${RELEASE_VERSION}/*.pom \
+            target/central-staging/io/github/cbarlin/advanced-record-utils-annotations/${RELEASE_VERSION}/*.jar \
+            target/central-staging/io/github/cbarlin/advanced-record-utils-processor/${RELEASE_VERSION}/*.pom \
+            target/central-staging/io/github/cbarlin/advanced-record-utils-processor/${RELEASE_VERSION}/*.jar
         echo "Draft GitHub release created successfully."
     else
         echo "WARN: Artifact directory '$ARTIFACT_DIR' not found or empty. Creating draft release without artifacts."
