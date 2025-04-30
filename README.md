@@ -138,6 +138,7 @@ Major:
  * Changes to default settings
  * Additional required dependencies
  * Changes to generated serialisations (not just semantic changes)
+     * A change to support a dependency that would change serialisations would be minor, not major 
 
 With the same settings, changing the minor or patch version of the processor should be completely transparent to a consumer, even if the code the processor generates completely changes. A major version would only be needed if the end-user would be required to change their code. Alterations that do change "internal" implementation details are marked as "minor" as a way of flagging that, while it *should* externally be the same there is a non-zero risk it isn't.
 
