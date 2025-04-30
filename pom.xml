@@ -4,7 +4,7 @@
 
     <groupId>io.github.cbarlin</groupId>
     <artifactId>aru-parent</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.2</version>
 
     <name>Advanced Record Utils - Parent</name>
     <description>A collection of record utilities, covering quite a wide variety of use-cases.</description>
@@ -48,7 +48,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.proc>full</maven.compiler.proc>
-        <project.build.outputTimestamp>2025-04-30T07:49:37Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-04-30T09:09:11Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
         <junit-bom.version>5.12.2</junit-bom.version>
