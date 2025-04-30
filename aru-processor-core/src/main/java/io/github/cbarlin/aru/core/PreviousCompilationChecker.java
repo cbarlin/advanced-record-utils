@@ -1,13 +1,13 @@
 package io.github.cbarlin.aru.core;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_UTIL;
+
 import java.util.Optional;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-
-import io.github.cbarlin.aru.annotations.GeneratedUtil;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
 
@@ -23,14 +23,12 @@ public class PreviousCompilationChecker {
     public PreviousCompilationChecker(final ProcessingEnvironment env) {
         elementUtils = env.getElementUtils();
         typeUtils = env.getTypeUtils();
-        generatedUtilElement = elementUtils.getTypeElement(GeneratedUtil.class.getCanonicalName());
+        generatedUtilElement = elementUtils.getTypeElement(GENERATED_UTIL.canonicalName());
     }
 
     public Optional<TypeElement> findTypeElement(final ClassName className) {
         return Optional.ofNullable(elementUtils.getTypeElement(className.canonicalName()))
-            .filter(te -> {
-                return typeUtils.isSubtype(te.asType(), generatedUtilElement.asType());
-            });
+            .filter(te -> typeUtils.isSubtype(te.asType(), generatedUtilElement.asType()));
     }
 
     public Optional<TypeElement> loadGeneratedArtifact(final ClassName className) {

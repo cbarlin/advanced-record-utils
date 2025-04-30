@@ -13,6 +13,10 @@
     <artifactId>aru-processor-core</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <micronaut-javapoet.version>1.7.0</micronaut-javapoet.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.github.cbarlin</groupId>
@@ -24,11 +28,18 @@
         </dependency>
         <dependency>
             <groupId>io.micronaut.sourcegen</groupId>
-            <artifactId>micronaut-sourcegen-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut.sourcegen</groupId>
             <artifactId>micronaut-sourcegen-generator-java</artifactId>
+            <version>${micronaut-javapoet.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>micronaut-sourcegen-generator</artifactId>
+                    <groupId>io.micronaut.sourcegen</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>micronaut-inject</artifactId>
+                    <groupId>io.micronaut</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
