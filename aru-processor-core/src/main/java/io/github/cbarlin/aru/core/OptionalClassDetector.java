@@ -58,7 +58,7 @@ public class OptionalClassDetector {
         } else {
             final var dependencyTypeMirror = optionalTypeMirror.get();
             final var types = APContext.types();
-            return (TypeMirror returnType) -> types.isSubtype(types.erasure(returnType), types.erasure(dependencyTypeMirror));
+            return (TypeMirror returnType) -> types.isAssignable(types.erasure(returnType), types.erasure(dependencyTypeMirror));
         }
     }
 
