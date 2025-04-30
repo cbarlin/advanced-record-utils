@@ -64,7 +64,7 @@ if [ $BUILD_VALIDATE_SUCCESS -eq 0 ]; then
     git commit -am "[ci skip] Prepare release $RELEASE_VERSION"
 
     echo "Tagging release as $RELEASE_TAG..."
-    git tag "$RELEASE_TAG"
+    git tag "$RELEASE_TAG" -m "Release $RELEASE_TAG"
 
     # --- Prepare Next Development Version ---
     echo "Setting version to next development version $NEXT_DEV_VERSION..."
