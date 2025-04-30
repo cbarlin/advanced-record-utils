@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.impl.xml.utils.elements.collections;
 
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
+import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class WriteCharSequence extends XmlVisitor {
 
     @Override
     protected int innerSpecificity() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class WriteCharSequence extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
         final Optional<XmlElementPrism> optPrism = XmlElementPrism.getOptionalOn(analysedComponent.element().getAccessor());
-        if (optPrism.isPresent() && analysedComponent.requiresUnwrapping() && APContext.types().isSubtype(analysedComponent.unNestedPrimaryComponentType(), APContext.elements().getTypeElement(CharSequence.class.getCanonicalName()).asType())) {
+        if (isSupported(analysedComponent, optPrism)) {
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
@@ -77,6 +78,20 @@ public class WriteCharSequence extends XmlVisitor {
         }
 
         return false;
+    }
+
+    private boolean isSupported(AnalysedComponent analysedComponent, final Optional<XmlElementPrism> optPrism) {
+        final var types = APContext.types();
+        return optPrism.isPresent() && 
+            analysedComponent.requiresUnwrapping() && 
+            types.isAssignable(
+                analysedComponent.unNestedPrimaryComponentType(), 
+                APContext.elements().getTypeElement(CHAR_SEQUENCE.canonicalName()).asType()
+            ) &&
+            types.isAssignable(
+                types.erasure(analysedComponent.componentType()), 
+                APContext.elements().getTypeElement(ITERABLE.canonicalName()).asType()
+            );
     }
 
     private void handleWrapperEnd(final boolean required, final MethodSpec.Builder methodBuilder) {

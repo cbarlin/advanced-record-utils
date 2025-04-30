@@ -49,7 +49,7 @@ And the following to your annotation processor paths (note: if using integration
 ```xml
 <path>
     <groupId>io.github.cbarlin</groupId>
-    <artifactId>utiladvanced-record-utils-processor</artifactId>
+    <artifactId>advanced-record-utils-processor</artifactId>
     <version>${aru.version}</version>
 </path>
 ```
