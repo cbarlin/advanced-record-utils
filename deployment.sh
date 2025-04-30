@@ -47,23 +47,14 @@ if [ "$CURRENT_BRANCH" != "$MAIN_BRANCH" ]; then
     exit 1
 fi
 
-echo "Checking for divergence from remote..."
-git fetch $REMOTE_NAME
-LOCAL_HEAD=$(git rev-parse HEAD)
-REMOTE_HEAD=$(git rev-parse $REMOTE_NAME/$MAIN_BRANCH)
-if [ "$LOCAL_HEAD" != "$REMOTE_HEAD" ]; then
-    echo "ERROR: Local '$MAIN_BRANCH' has diverged from '$REMOTE_NAME/$MAIN_BRANCH'. Please pull or rebase."
-    exit 1
-fi
-
 # --- Prepare Release Version & Validate ---
 echo "Setting version to $RELEASE_VERSION..."
 mvn clean
-mvn versions:set -DnewVersion="$RELEASE_VERSION" -DprocessAllModules=true -DgenerateBackupPoms=false
+mvn versions:set -DnewVersion="$RELEASE_VERSION" -DprocessAllModules=true -DgenerateBackupPoms=true
 
 echo "Building and validating reproducibility for $RELEASE_VERSION..."
 BUILD_VALIDATE_SUCCESS=0
-(mvn clean install && mvn clean verify artifact:compare) || BUILD_VALIDATE_SUCCESS=$?
+(mvn clean && mvn install && mvn clean verify artifact:compare) || BUILD_VALIDATE_SUCCESS=$?
 
 if [ $BUILD_VALIDATE_SUCCESS -eq 0 ]; then
     echo "Build and reproducibility check successful."

@@ -21,10 +21,12 @@
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-annotations</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>aru-prism-prison</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.micronaut.sourcegen</groupId>

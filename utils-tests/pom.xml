@@ -76,6 +76,7 @@
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-annotations</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
