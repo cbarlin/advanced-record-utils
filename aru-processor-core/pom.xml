@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <micronaut-javapoet.version>1.7.0</micronaut-javapoet.version>
+        <micronaut-javapoet.version>1.7.7</micronaut-javapoet.version>
     </properties>
 
     <dependencies>
