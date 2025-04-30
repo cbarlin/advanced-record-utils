@@ -11,4 +11,4 @@ updates:
         - "*"
     labels:
       - "dependencies"
-    target-branch: "master"
+    target-branch: "main"
