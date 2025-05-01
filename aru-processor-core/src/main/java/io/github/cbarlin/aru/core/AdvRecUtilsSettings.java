@@ -14,12 +14,13 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 import io.github.cbarlin.aru.core.mirrorhandlers.MergedMirror;
+import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
  * Holder for the settings being used in the current processing context of an element.
@@ -28,11 +29,14 @@ import io.github.cbarlin.aru.core.mirrorhandlers.MergedMirror;
 public class AdvRecUtilsSettings {
     private static final String ANNOTATION_TYPE = AdvancedRecordUtilsPrism.PRISM_TYPE;
     private final AdvancedRecordUtilsPrism prism;
-    private final Optional<Element> originalElement;
+    private final Element originalElement;
 
-    public AdvRecUtilsSettings(AnnotationMirror originalMirror, @Nullable Element element) {
+    public AdvRecUtilsSettings(AnnotationMirror originalMirror, Element element) {
+        if ((!(element instanceof TypeElement)) && (!(element instanceof PackageElement))) {
+            throw new IllegalArgumentException("Element must be either Type or Package");
+        }
         this.prism = Objects.requireNonNull(AdvancedRecordUtilsPrism.getInstance(originalMirror));
-        this.originalElement = Optional.ofNullable(element);
+        this.originalElement = element;
     }
 
     public AdvRecUtilsSettings(AnnotationMirror originalMirror) {
@@ -51,8 +55,17 @@ public class AdvRecUtilsSettings {
         return this.prism.mirror;
     }
 
-    public Optional<Element> originalElement() {
+    public Element originalElement() {
         return this.originalElement;
+    }
+
+    public String packageName() {
+        if (originalElement instanceof TypeElement te) {
+            return ClassName.get(te).packageName();
+        } else if (originalElement instanceof PackageElement pe) {
+            return pe.getQualifiedName().toString();
+        }
+        throw new IllegalStateException("Internal element is not a TypeElement or PackageElement");
     }
 
     private static final Map<PackageElement, Optional<AnnotationMirror>> PACKAGE_MIRRORS = new HashMap<>();
@@ -126,6 +139,6 @@ public class AdvRecUtilsSettings {
 
     public static AdvRecUtilsSettings merge(AdvRecUtilsSettings preferred, AdvRecUtilsSettings secondary) {
         final AnnotationMirror merged = new MergedMirror(preferred.mirror(), secondary.mirror());
-        return new AdvRecUtilsSettings(merged, preferred.originalElement.orElse(secondary.originalElement.orElse(null)));
+        return new AdvRecUtilsSettings(merged, preferred.originalElement());
     }
 }

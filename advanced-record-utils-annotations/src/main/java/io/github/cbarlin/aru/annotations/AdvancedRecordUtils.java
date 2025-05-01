@@ -131,6 +131,13 @@ public @interface AdvancedRecordUtils {
      * Only relevant if recursion is enabled
      */
     ImportRecursiveOptions importRecursiveOptions() default @ImportRecursiveOptions();
+
+    /**
+     * Should an Avaje Jsonb import annotation be created for you
+     * <p>
+     * Useful if you don't want to have annotate everything in a tree/package
+     */
+    boolean addJsonbImportAnnotation() default false;
     //#endregion
 
     //#region Enums
@@ -379,6 +386,11 @@ public @interface AdvancedRecordUtils {
          *  will generate fluent setters named {@code addYourRecordAToMyCol} and {@code addYourRecordBToMyCol}
          */
         String multiTypeAdderBridge() default "To";
+
+        /**
+         * Should we generate an overload for optional types that accepts the concrete one?
+         */
+        boolean concreteSettersForOptional() default true;
     }
 
     /**

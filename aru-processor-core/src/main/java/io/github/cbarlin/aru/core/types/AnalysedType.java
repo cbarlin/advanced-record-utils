@@ -1,5 +1,7 @@
 package io.github.cbarlin.aru.core.types;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +18,6 @@ import javax.tools.Diagnostic;
 
 import org.jspecify.annotations.NonNull;
 
-import io.github.cbarlin.aru.annotations.Generated;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
@@ -53,12 +54,12 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         this.typeMirror = element.asType();
         this.utilsProcessingContext = context;
         this.settings = finaliseSettings(parentSettings, element, context);
-        this.utilsClass = new ToBeBuiltClass(createUtilsClassName(settings, element, context), context);
+        this.utilsClass = new ToBeBuiltClass(createUtilsClassName(settings, element), context);
         utilsClass.builder()
             .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
             .addSuperinterface(Names.GENERATED_UTIL)
             .addAnnotation(
-                AnnotationSpec.builder(Generated.class)
+                AnnotationSpec.builder(GENERATED_ANNOTATION)
                     .addMember("value", "$S", AdvRecUtilsProcessor.class.getCanonicalName())
                     .build()
             );
@@ -74,9 +75,11 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         }
     }
 
-    private static ClassName createUtilsClassName(final AdvRecUtilsSettings settings, final TypeElement element, final UtilsProcessingContext utilsProcessingContext) {
+    private static ClassName createUtilsClassName(final AdvRecUtilsSettings settings, final TypeElement element) {
         final String originalClassName = element.getSimpleName().toString();
-        final String targetPackage = utilsProcessingContext.processingEnv().getElementUtils().getPackageOf(settings.originalElement().orElse(element)).getQualifiedName().toString();
+        final String targetPackage = AdvancedRecordUtilsPrism.getOptionalOn(element)
+            .map(ignored -> ClassName.get(element).packageName())
+            .orElseGet(() -> settings.packageName());
         final String utilsCn = settings.prism().typeNameOptions().utilsImplementationPrefix() + originalClassName + settings.prism().typeNameOptions().utilsImplementationSuffix();
         return ClassName.get(targetPackage, utilsCn);
     }
