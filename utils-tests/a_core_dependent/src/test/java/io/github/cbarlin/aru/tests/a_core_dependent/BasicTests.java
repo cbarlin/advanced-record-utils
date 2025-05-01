@@ -2,9 +2,6 @@ package io.github.cbarlin.aru.tests.a_core_dependent;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.cbarlin.aru.tests.a_core_dependent.MyRecordFOptionA;
-import io.github.cbarlin.aru.tests.a_core_dependent.MyRecordG;
-
 import static org.assertj.core.api.Assertions.*;
 
 import org.assertj.core.api.Condition;
@@ -18,7 +15,7 @@ class BasicTests {
             .addMoreAItems(aB -> aB.someIntField(69))
             .addListOfSealed(
                 MyRecordFOptionAUtils.builder()
-                    .myRecordE(e -> e.myRecordD(d -> d.theInterface(b -> b.otherItem(a -> a.someIntField(420)))))
+                    .myRecordE(e -> e.someOtherValue("Hi!").myRecordD(d -> d.theInterface(b -> b.otherItem(a -> a.someIntField(420)))))
                     .build()
             )
             .build();

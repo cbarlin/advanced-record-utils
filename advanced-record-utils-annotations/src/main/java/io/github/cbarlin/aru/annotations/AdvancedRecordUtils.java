@@ -386,6 +386,11 @@ public @interface AdvancedRecordUtils {
          *  will generate fluent setters named {@code addYourRecordAToMyCol} and {@code addYourRecordBToMyCol}
          */
         String multiTypeAdderBridge() default "To";
+
+        /**
+         * Should we generate an overload for optional types that accepts the concrete one?
+         */
+        boolean concreteSettersForOptional() default true;
     }
 
     /**

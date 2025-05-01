@@ -26,6 +26,7 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_ADD_ALL_ITERABLE = new ClaimableOperation("builderAddAllIterable", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_ADD_ALL_VARARGS = new ClaimableOperation("builderAddAllVarargs", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_ADD_VALIDATED_BUILD_METHOD = new ClaimableOperation("builderAddValidatedBuildMethod", CLASS);
+        public static final ClaimableOperation BUILDER_CONCRETE_OPTIONAL = new ClaimableOperation("builderConcreteSetterForOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_SET_TIME_TO_NOW = new ClaimableOperation("builderSetTimeToNow", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_USE_TYPE_CONVERTER = new ClaimableOperation("builderUseTypeConverter", FIELD_AND_ACCESSORS);
