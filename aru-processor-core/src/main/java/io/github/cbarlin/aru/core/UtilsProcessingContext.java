@@ -132,7 +132,7 @@ public class UtilsProcessingContext {
     }
 
     private ClassName cnToCheckExisting(final AdvRecUtilsSettings settings, final TypeElement typeElement) {
-        final Element originaElement = settings.originalElement().orElse(typeElement);
+        final Element originaElement = settings.originalElement();
         final String utilsClassName = settings.prism().typeNameOptions().utilsImplementationPrefix() + originaElement.getSimpleName().toString() + settings.prism().typeNameOptions().utilsImplementationSuffix();
         Element packageEl = originaElement;
         while(!(packageEl instanceof PackageElement)) {

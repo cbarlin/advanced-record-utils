@@ -131,6 +131,13 @@ public @interface AdvancedRecordUtils {
      * Only relevant if recursion is enabled
      */
     ImportRecursiveOptions importRecursiveOptions() default @ImportRecursiveOptions();
+
+    /**
+     * Should an Avaje Jsonb import annotation be created for you
+     * <p>
+     * Useful if you don't want to have annotate everything in a tree/package
+     */
+    boolean addJsonbImportAnnotation() default false;
     //#endregion
 
     //#region Enums

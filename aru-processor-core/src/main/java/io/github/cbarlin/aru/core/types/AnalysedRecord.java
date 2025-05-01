@@ -227,8 +227,6 @@ public final class AnalysedRecord extends AnalysedType {
         return null;
     }
 
-    
-
     private static ExecutableElement findCanonicalConstructor(final TypeElement element, final UtilsProcessingContext context) {
         final List<? extends Element> enclosedElements = element.getEnclosedElements();
         final List<ExecutableElement> constructors = ElementFilter.constructorsIn(enclosedElements);
@@ -318,7 +316,7 @@ public final class AnalysedRecord extends AnalysedType {
         this.canonicalConstructor = findCanonicalConstructor(element, context);
         this.intendedConstructor = findIntendedConstructor(element, context, this.canonicalConstructor);
         if (
-            element.equals(parentSettings.originalElement().orElse(null)) && 
+            element.equals(parentSettings.originalElement()) && 
             Objects.nonNull(settings().prism().useInterface()) &&
             (!processingEnv().getTypeUtils().isSameType(defaultClassUseInterface(processingEnv()), settings.prism().useInterface()))
         ) {

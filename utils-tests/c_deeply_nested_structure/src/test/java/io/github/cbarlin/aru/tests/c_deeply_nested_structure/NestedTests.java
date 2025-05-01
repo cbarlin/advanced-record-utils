@@ -17,6 +17,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import io.avaje.jsonb.Jsonb;
+
 class NestedTests {
 
     @Test
@@ -111,6 +113,12 @@ class NestedTests {
         });
         final String xmlString = xmlStringBuilder.toString();
         assertEquals("<?xml version=\"1.0\" ?><RootItem xmlns:wooo=\"ns://namedA\" xmlns:yayyyyy=\"ns://namedB\" xmlns=\"ns://nxA\" butIHaveAnotherName=\"I should be in the output!\" anotherField=\"42\" testOdtAttr=\"2025-01-01T08:15:42Z\"><FirstLevels><recurringReference itemA=\"A\" itemB=\"B\" itemC=\"C\"><recurisveItems notRecursiveB=\"E\" notRecursiveC=\"F\"><notRecursiveA>D</notRecursiveA><recursionFtw><notRecursiveA>G</notRecursiveA></recursionFtw></recurisveItems></recurringReference><secondLevelA><ThirdLevelAFromA><thirdString>This is a string!</thirdString></ThirdLevelAFromA></secondLevelA></FirstLevels><FirstLevels><secondLevelB><thirdLevelAFromB><fourthLevelA><letsGoFive><nowToSix><woo><andImDone itemA=\"Hi!\"></andImDone></woo></nowToSix></letsGoFive><oohNotLinear><andImDone itemB=\"Probs not\"></andImDone></oohNotLinear></fourthLevelA></thirdLevelAFromB></secondLevelB><secondLevelC><endOfTheLineHere>Nice</endOfTheLineHere></secondLevelC></FirstLevels><testOdtEl>2025-07-01T08:15:42Z</testOdtEl></RootItem>", xmlString);
+
+        Jsonb jsonb = Jsonb.builder().build();
+        final String result = assertDoesNotThrow(() -> jsonb.toJson(merged));
+        assertThat(result)
+            .isNotNull()
+            .isNotBlank();
     }
 
 }

@@ -36,13 +36,14 @@ public enum Constants {
         public static final ClaimableOperation MERGER_ADD_FIELD_MERGER_METHOD = new ClaimableOperation("mergerAddFieldMergerMethod", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation MERGER_IFACE = new ClaimableOperation("mergerInterface", CLASS);
         public static final ClaimableOperation MERGER_STATIC_CLASS = new ClaimableOperation("mergerStaticClass", CLASS);
+        public static final ClaimableOperation MISC_AVAJE_JSONB_IMPORT = new ClaimableOperation("miscAvajeJsonbImport", CLASS);
         public static final ClaimableOperation WITHER_FLUENT_BUILDER = new ClaimableOperation("witherFluentBuilder", CLASS);
         public static final ClaimableOperation WITHER_IFACE = new ClaimableOperation("wither", CLASS);
         public static final ClaimableOperation WITHER_TO_BUILDER = new ClaimableOperation("witherToBuilder", CLASS);
+        public static final ClaimableOperation WITHER_USE_TYPE_CONVERTER = new ClaimableOperation("witherUseTypeConverter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH = new ClaimableOperation("witherWith", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_ADD = new ClaimableOperation("witherWithAdd", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_FLUENT = new ClaimableOperation("witherWithFluent", FIELD_AND_ACCESSORS);
-        public static final ClaimableOperation WITHER_USE_TYPE_CONVERTER = new ClaimableOperation("witherUseTypeConverter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation XML_IFACE = new ClaimableOperation("xmlInterface", CLASS);
         public static final ClaimableOperation XML_IFACE_TO_XML = new ClaimableOperation("xmlInterfaceToXml", CLASS);
         public static final ClaimableOperation XML_IFACE_TO_XML_NO_DEF_NAMESPACE = new ClaimableOperation("xmlInterfaceToXmlNoDefNs", CLASS);
@@ -59,6 +60,7 @@ public enum Constants {
     public enum Names {
         ;
         public static final ClassName AVAJE_CONSTRAINT_VIOLATION = ClassName.get("io.avaje.validation", "ConstraintViolationException");
+        public static final ClassName AVAJE_JSONB_IMPORT = ClassName.get("io.avaje.jsonb", "Json", "Import");
         public static final ClassName AVAJE_VALIDATOR = ClassName.get("io.avaje.validation", "Validator");
         public static final ClassName BI_CONSUMER = ClassName.get(BiConsumer.class);
         public static final ClassName CHAR_SEQUENCE = ClassName.get(CharSequence.class);
@@ -78,10 +80,10 @@ public enum Constants {
         public static final ClassName UNARY_OPERATOR = ClassName.get(UnaryOperator.class);
         public static final ClassName UUID = ClassName.get(java.util.UUID.class);
         public static final ClassName VALIDATE = ClassName.get("org.apache.commons.lang3", "Validate");
+        public static final ClassName XML_ELEMENT_DEFAULT = ClassName.get("jakarta.xml.bind.annotation", "XmlElement", "DEFAULT");
         public static final ClassName XML_NAMESPACE_CONTEXT = ClassName.get("javax.xml.namespace", "NamespaceContext");
         public static final ClassName XML_STREAM_EXCEPTION = ClassName.get("javax.xml.stream", "XMLStreamException");
         public static final ClassName XML_STREAM_WRITER = ClassName.get("javax.xml.stream", "XMLStreamWriter");
-        public static final ClassName XML_ELEMENT_DEFAULT = ClassName.get("jakarta.xml.bind.annotation", "XmlElement", "DEFAULT");
         public static final ClassName ZONE_ID = ClassName.get(ZoneId.class);
         public static final ClassName ZONE_OFFSET = ClassName.get(ZoneOffset.class);
         public static final ClassName ZONED_DATE_TIME = ClassName.get(ZonedDateTime.class);

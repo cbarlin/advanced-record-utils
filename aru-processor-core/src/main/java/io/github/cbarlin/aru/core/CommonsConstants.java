@@ -13,14 +13,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.NullUnmarked;
-import org.jspecify.annotations.Nullable;
-
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
-import io.github.cbarlin.aru.annotations.GeneratedUtil;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
 
@@ -47,10 +41,13 @@ public enum CommonsConstants {
 
     public enum Names {
         ;
-        public static final ClassName NON_NULL = ClassName.get(NonNull.class);
-        public static final ClassName NULL_MARKED = ClassName.get(NullMarked.class);
-        public static final ClassName NULL_UNMARKED = ClassName.get(NullUnmarked.class);
-        public static final ClassName NULLABLE = ClassName.get(Nullable.class);
+        private static final String ADVANCED_RECORD_UTILS_GENERATED = "AdvancedRecordUtilsGenerated";
+        private static final String IO_GITHUB_CBARLIN_ARU_ANNOTATIONS = "io.github.cbarlin.aru.annotations";
+        private static final String ORG_JSPECIFY_ANNOTATIONS = "org.jspecify.annotations";
+        public static final ClassName NON_NULL = ClassName.get(ORG_JSPECIFY_ANNOTATIONS, "NonNull");
+        public static final ClassName NULL_MARKED = ClassName.get(ORG_JSPECIFY_ANNOTATIONS, "NullMarked");
+        public static final ClassName NULL_UNMARKED = ClassName.get(ORG_JSPECIFY_ANNOTATIONS, "NullUnmarked");
+        public static final ClassName NULLABLE = ClassName.get(ORG_JSPECIFY_ANNOTATIONS, "Nullable");
         public static final ClassName OBJECTS = ClassName.get(Objects.class);
         public static final ClassName OPTIONAL = ClassName.get(Optional.class);
         public static final ClassName ARRAY_LIST = ClassName.get(ArrayList.class);
@@ -60,11 +57,12 @@ public enum CommonsConstants {
         public static final ClassName QUEUE = ClassName.get(Queue.class);
         public static final ClassName LOGGER = ClassName.get("org.slf4j", "Logger");
         public static final ClassName LOGGER_FACTORY = ClassName.get("org.slf4j", "LoggerFactory");
-        public static final ClassName GENERATED_UTIL = ClassName.get(GeneratedUtil.class);
-        public static final ClassName ARU_MAIN_ANNOTATION = ClassName.get(AdvancedRecordUtils.class);
-        public static final ClassName ARU_GENERATED = ClassName.get(AdvancedRecordUtilsGenerated.class);
-        public static final ClassName ARU_VERSION = ClassName.get(AdvancedRecordUtilsGenerated.Version.class);
-        public static final ClassName ARU_INTERNAL_UTILS = ClassName.get(AdvancedRecordUtilsGenerated.InternalUtil.class);
+        public static final ClassName GENERATED_UTIL = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "GeneratedUtil");
+        public static final ClassName GENERATED_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "Generated");
+        public static final ClassName ARU_MAIN_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "AdvancedRecordUtils");
+        public static final ClassName ARU_GENERATED = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED);
+        public static final ClassName ARU_VERSION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "Version");
+        public static final ClassName ARU_INTERNAL_UTILS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "InternalUtil");
         public static final ClassName COLLECTORS = ClassName.get(Collectors.class);
         public static final ClassName COLLECTION = ClassName.get(Collection.class);
         public static final ClassName UNSUPPORTED_OPERATION_EXCEPTION = ClassName.get(UnsupportedOperationException.class);
