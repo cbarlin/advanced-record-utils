@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -26,6 +27,7 @@ import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltClass;
+import io.github.cbarlin.aru.core.inference.Holder;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
@@ -244,4 +246,38 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         return className().canonicalName();
     }
     //#endregion
+
+    protected final Map<ClassName, Optional> annotations = new HashMap<>();
+
+    public <T> Optional<T> findPrism(ClassName annotationClassName, Class<T> prismClass) {
+        return (Optional<T>) annotations.computeIfAbsent(annotationClassName, c -> findPrismImpl(c, prismClass));
+    }
+
+    private <T> Optional<T> findPrismImpl(ClassName annotationClassName, Class<T> prismClass) {
+        return Holder.adaptors().stream()
+            .filter(cn -> annotationClassName.equals(cn.supportedAnnotationClassName()))
+            .map(cn -> cn.optionalInstanceOn(typeElement))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(prismClass::isInstance)
+            .map(prismClass::cast)
+            .findFirst()
+            .or(
+                () -> Holder.inferencers().stream()
+                        .filter(inf -> annotationClassName.equals(inf.supportedAnnotationClassName()))
+                        .map(inf -> inf.inferAnnotationMirror(typeElement, utilsProcessingContext, prism()))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .flatMap(
+                            (AnnotationMirror tm) -> Holder.adaptors().stream()
+                                    .filter(cn -> annotationClassName.equals(cn.supportedAnnotationClassName()))
+                                    .map(cn -> cn.optionalInstanceOf(tm))
+                                    .filter(Optional::isPresent)
+                                    .map(Optional::get)
+                                    .filter(prismClass::isInstance)
+                                    .map(prismClass::cast)
+                        )
+                        .findFirst()
+            );
+    }
 }

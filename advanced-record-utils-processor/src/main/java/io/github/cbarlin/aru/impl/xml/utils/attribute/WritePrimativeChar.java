@@ -27,7 +27,7 @@ public class WritePrimativeChar extends WriteXmlAttribute {
     void visitAttributeComponent(final AnalysedComponent analysedComponent, final XmlAttributePrism prism) {
         final MethodSpec.Builder methodBuilder = createMethod(analysedComponent);
         final String attributeName = attributeName(analysedComponent, prism);
-        final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+        final Optional<String> namespaceName = namespaceName(prism);
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, $T.valueOf(val))", namespace, attributeName, STRING),
             () -> methodBuilder.addStatement("output.writeAttribute($S, $T.valueOf(val))", attributeName, STRING)

@@ -20,6 +20,8 @@ module io.github.cbarlin.aru.core {
 
     uses io.github.cbarlin.aru.core.visitors.RecordVisitor;
     uses io.github.cbarlin.aru.core.types.ComponentAnalyser;
+    uses io.github.cbarlin.aru.core.inference.AnnotationInferencer;
+    uses io.github.cbarlin.aru.core.inference.ClassNameToPrismAdaptor;
 
     provides io.github.cbarlin.aru.core.visitors.RecordVisitor
             with io.github.cbarlin.aru.core.impl.visitors.BuilderClassCreatorVisitor,

@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.artifacts.PreBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -25,9 +26,6 @@ import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
@@ -117,7 +115,7 @@ public class Branching extends XmlVisitor {
 
     private Map<ClassName, NameAndNamespace> extractNamedVersions(final AnalysedComponent analysedComponent, final AnalysedInterface other) {
         final Map<ClassName, NameAndNamespace> extracted = HashMap.newHashMap(other.implementingTypes().size());
-        XmlElementsPrism.getOptionalOn(analysedComponent.element().getAccessor())
+        xmlElementsPrism(analysedComponent)
             .ifPresent(outerPrism -> {
                 for (final XmlElementPrism prism : outerPrism.value()) {
                     final ClassName className = ClassName.get(APContext.asTypeElement(prism.type()));
@@ -145,7 +143,7 @@ public class Branching extends XmlVisitor {
     private Optional<AnalysedInterface> extractSupported(final AnalysedComponent analysedComponent) {
         return analysedComponent.targetAnalysedType()
             .filter(x -> (!analysedComponent.requiresUnwrapping()))
-            .filter(x -> XmlElementPrism.isPresent(analysedComponent.element().getAccessor()))
+            .filter(x -> xmlElementsPrism(analysedComponent).isPresent())
             .filter(AnalysedInterface.class::isInstance)
             .map(AnalysedInterface.class::cast);
     }
