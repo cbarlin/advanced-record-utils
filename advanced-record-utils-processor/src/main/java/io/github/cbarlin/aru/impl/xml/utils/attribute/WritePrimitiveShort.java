@@ -12,9 +12,9 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WritePrimativeShort extends WriteXmlAttribute {
+public class WritePrimitiveShort extends WriteXmlAttribute {
 
-    public WritePrimativeShort() {
+    public WritePrimitiveShort() {
         super();
     }
 
@@ -27,7 +27,7 @@ public class WritePrimativeShort extends WriteXmlAttribute {
     void visitAttributeComponent(final AnalysedComponent analysedComponent, final XmlAttributePrism prism) {
         final MethodSpec.Builder methodBuilder = createMethod(analysedComponent);
         final String attributeName = attributeName(analysedComponent, prism);
-        final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+        final Optional<String> namespaceName = namespaceName(prism);
 
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, $T.valueOf(val))", namespace, attributeName, STRING),

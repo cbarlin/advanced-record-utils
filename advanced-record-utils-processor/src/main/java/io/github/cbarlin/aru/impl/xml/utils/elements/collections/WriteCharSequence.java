@@ -40,20 +40,20 @@ public class WriteCharSequence extends XmlVisitor {
 
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = XmlElementPrism.getOptionalOn(analysedComponent.element().getAccessor());
+        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
         if (isSupported(analysedComponent, optPrism)) {
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
-            final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+            final Optional<String> namespaceName = namespaceName(prism);
             final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.typeName());
 
             if (defaultValue.isPresent()) {
                 APContext.messager().printWarning("Cannot process default value on an XmlElement that's pointing at a collection", analysedComponent.element());
             }
 
-            final Optional<XmlElementWrapperPrism> wrapper = XmlElementWrapperPrism.getOptionalOn(analysedComponent.element().getAccessor());
+            final Optional<XmlElementWrapperPrism> wrapper = xmlElementWrapperPrism(analysedComponent);
             if (wrapper.isPresent()) {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }

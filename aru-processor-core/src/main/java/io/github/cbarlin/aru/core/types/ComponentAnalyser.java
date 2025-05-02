@@ -43,6 +43,9 @@ public interface ComponentAnalyser extends Comparable<ComponentAnalyser> {
 
     @Override
     public default int compareTo(ComponentAnalyser o) {
+        if (specificity() == o.specificity()) {
+            return getClass().getCanonicalName().compareTo(o.getClass().getCanonicalName());
+        }
         return Integer.compare(specificity(), o.specificity());
     }
 }

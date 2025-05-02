@@ -32,13 +32,13 @@ public class WriteUUID extends XmlVisitor {
 
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = XmlElementPrism.getOptionalOn(analysedComponent.element().getAccessor());
+        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
         if (UUID.equals(analysedComponent.typeName()) && optPrism.isPresent()) {
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
-            final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+            final Optional<String> namespaceName = namespaceName(prism);
             final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, UUID);
 
             if (defaultValue.isPresent()) {

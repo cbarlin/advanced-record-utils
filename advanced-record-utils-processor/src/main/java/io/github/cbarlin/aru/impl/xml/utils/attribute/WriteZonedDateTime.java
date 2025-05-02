@@ -30,7 +30,7 @@ public class WriteZonedDateTime extends WriteXmlAttribute {
         final MethodSpec.Builder methodBuilder = createMethod(analysedComponent);
         final boolean required = Boolean.TRUE.equals(prism.required());
         final String attributeName = attributeName(analysedComponent, prism);
-        final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+        final Optional<String> namespaceName = namespaceName(prism);
 
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);

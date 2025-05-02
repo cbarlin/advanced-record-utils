@@ -15,7 +15,6 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants;
-
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 public enum Constants {
@@ -60,6 +59,7 @@ public enum Constants {
     
     public enum Names {
         ;
+        private static final String XML_ANNOTATIONS = "jakarta.xml.bind.annotation";
         public static final ClassName AVAJE_CONSTRAINT_VIOLATION = ClassName.get("io.avaje.validation", "ConstraintViolationException");
         public static final ClassName AVAJE_JSONB_IMPORT = ClassName.get("io.avaje.jsonb", "Json", "Import");
         public static final ClassName AVAJE_VALIDATOR = ClassName.get("io.avaje.validation", "Validator");
@@ -81,10 +81,15 @@ public enum Constants {
         public static final ClassName UNARY_OPERATOR = ClassName.get(UnaryOperator.class);
         public static final ClassName UUID = ClassName.get(java.util.UUID.class);
         public static final ClassName VALIDATE = ClassName.get("org.apache.commons.lang3", "Validate");
-        public static final ClassName XML_ELEMENT_DEFAULT = ClassName.get("jakarta.xml.bind.annotation", "XmlElement", "DEFAULT");
+        public static final ClassName XML_ATTRIBUTE = ClassName.get(XML_ANNOTATIONS, "XmlAttribute");
+        public static final ClassName XML_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlElement");
+        public static final ClassName XML_ELEMENT_DEFAULT = XML_ELEMENT.nestedClass("DEFAULT");
+        public static final ClassName XML_ELEMENT_WRAPPER = ClassName.get(XML_ANNOTATIONS, "XmlElementWrapper");
+        public static final ClassName XML_ELEMENTS = ClassName.get(XML_ANNOTATIONS, "XmlElements");
         public static final ClassName XML_NAMESPACE_CONTEXT = ClassName.get("javax.xml.namespace", "NamespaceContext");
         public static final ClassName XML_STREAM_EXCEPTION = ClassName.get("javax.xml.stream", "XMLStreamException");
         public static final ClassName XML_STREAM_WRITER = ClassName.get("javax.xml.stream", "XMLStreamWriter");
+        public static final ClassName XML_TRANSIENT = ClassName.get(XML_ANNOTATIONS, "XmlTransient");
         public static final ClassName ZONE_ID = ClassName.get(ZoneId.class);
         public static final ClassName ZONE_OFFSET = ClassName.get(ZoneOffset.class);
         public static final ClassName ZONED_DATE_TIME = ClassName.get(ZonedDateTime.class);

@@ -12,22 +12,23 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WritePrimativeDouble extends WriteXmlAttribute {
+public class WritePrimitiveLong extends WriteXmlAttribute {
 
-    public WritePrimativeDouble() {
+    public WritePrimitiveLong() {
         super();
     }
 
     @Override
     TypeName supportedTypeName() {
-        return TypeName.DOUBLE;
+        return TypeName.LONG;
     }
 
     @Override
     void visitAttributeComponent(final AnalysedComponent analysedComponent, final XmlAttributePrism prism) {
         final MethodSpec.Builder methodBuilder = createMethod(analysedComponent);
         final String attributeName = attributeName(analysedComponent, prism);
-        final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+        final Optional<String> namespaceName = namespaceName(prism);
+
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, $T.valueOf(val))", namespace, attributeName, STRING),
             () -> methodBuilder.addStatement("output.writeAttribute($S, $T.valueOf(val))", attributeName, STRING)

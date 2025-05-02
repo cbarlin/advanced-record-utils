@@ -20,8 +20,8 @@ import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
+import io.github.cbarlin.aru.core.inference.Holder;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
@@ -36,7 +36,6 @@ public class AnalysedComponent {
      * Annotations that are not on the RecordComponentElement (and/or accessor or field) but are "projected"
      *   into it that may be relevent (e.g. `NotNull` which is implied from a package annotation)
      */
-    protected final Map<ClassName, List<AnnotationMirror>> projectedRelevantAnnotations = new HashMap<>();
     protected Optional<ProcessingTarget> targetAnalysedType = Optional.empty();
     protected final TypeName typeName;
     protected final List<AnalysedTypeConverter> analysedTypeConverters;
@@ -228,10 +227,6 @@ public class AnalysedComponent {
             .map(ClassName::get);
     }
 
-    public Map<ClassName, List<AnnotationMirror>> projectedRelevantAnnotations() {
-        return Map.copyOf(projectedRelevantAnnotations);
-    }
-
     public Optional<ProcessingTarget> targetAnalysedType() {
         return targetAnalysedType;
     }
@@ -252,5 +247,38 @@ public class AnalysedComponent {
     public String toString() {
         return className().map(ClassName::canonicalName)
             .orElse(typeName().toString());
+    }
+
+    private final Map<ClassName, Optional<?>> annotations = new HashMap<>();
+
+    // Fine, because the only population is the known-correct impl method
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> findPrism(ClassName annotationClassName, Class<T> prismClass) {
+        return (Optional<T>) annotations.computeIfAbsent(annotationClassName, c -> findPrismImpl(c, prismClass));
+    }
+
+    private <T> Optional<T> findPrismImpl(ClassName annotationClassName, Class<T> prismClass) {
+        return Holder.adaptors(annotationClassName).stream()
+            .map(cn -> cn.optionalInstanceOn(element))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(prismClass::isInstance)
+            .map(prismClass::cast)
+            .findFirst()
+            .or(
+                () -> Holder.inferencers(annotationClassName).stream()
+                        .map(inf -> inf.inferAnnotationMirror(element, context, parentRecord().prism()))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .flatMap(
+                            (AnnotationMirror tm) -> Holder.adaptors(annotationClassName).stream()
+                                    .map(cn -> cn.optionalInstanceOf(tm))
+                                    .filter(Optional::isPresent)
+                                    .map(Optional::get)
+                                    .filter(prismClass::isInstance)
+                                    .map(prismClass::cast)
+                        )
+                        .findFirst()
+            );
     }
 }

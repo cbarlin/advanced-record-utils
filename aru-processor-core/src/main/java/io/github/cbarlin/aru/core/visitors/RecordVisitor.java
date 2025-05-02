@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
@@ -209,7 +211,9 @@ public abstract class RecordVisitor implements Comparable<RecordVisitor> {
 
     @Override
     public final int hashCode() {
-        return this.claimableOperation.hashCode();
+        return new HashCodeBuilder(17, 37)
+            .append(getClass().getCanonicalName())
+            .build();
     }
 
     /**

@@ -33,7 +33,7 @@ public class WriteLocalDateTime extends WriteXmlAttribute {
             .addJavadoc("Will convert to UTC by assuming that the system default time zone is the zone of the LocalDateTime");
         final boolean required = Boolean.TRUE.equals(prism.required());
         final String attributeName = attributeName(analysedComponent, prism);
-        final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+        final Optional<String> namespaceName = namespaceName(prism);
 
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);

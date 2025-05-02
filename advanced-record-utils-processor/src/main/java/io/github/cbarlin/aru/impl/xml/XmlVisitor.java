@@ -5,6 +5,10 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ATTRIBUTE;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT_WRAPPER;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 
@@ -30,6 +34,8 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.prism.prison.XmlAccessorOrderPrism;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
+import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
+import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
@@ -75,6 +81,22 @@ public abstract class XmlVisitor extends RecordVisitor {
         return false;
     }
 
+    protected static Optional<XmlAttributePrism> xmlAttributePrism(final AnalysedComponent analysedComponent) {
+        return analysedComponent.findPrism(XML_ATTRIBUTE, XmlAttributePrism.class);
+    }
+
+    protected static Optional<XmlElementPrism> xmlElementPrism(final AnalysedComponent analysedComponent) {
+        return analysedComponent.findPrism(XML_ELEMENT, XmlElementPrism.class);
+    }
+
+    protected static Optional<XmlElementsPrism> xmlElementsPrism(final AnalysedComponent analysedComponent) {
+        return analysedComponent.findPrism(XML_ELEMENTS, XmlElementsPrism.class);
+    }
+
+    protected static Optional<XmlElementWrapperPrism> xmlElementWrapperPrism(final AnalysedComponent analysedComponent) {
+        return analysedComponent.findPrism(XML_ELEMENT_WRAPPER, XmlElementWrapperPrism.class);
+    }
+
     protected abstract boolean innerIsApplicable(final AnalysedRecord analysedRecord);
 
     protected String attributeName(final AnalysedComponent analysedComponent, final XmlAttributePrism prism) {
@@ -84,7 +106,7 @@ public abstract class XmlVisitor extends RecordVisitor {
             .orElseGet(analysedComponent::name);
     }
 
-    protected Optional<String> namespaceName(final AnalysedComponent analysedComponent, final XmlAttributePrism prism) {
+    protected Optional<String> namespaceName(final XmlAttributePrism prism) {
         return Optional.ofNullable(prism.namespace())
             .filter(StringUtils::isNotBlank)
             .filter(Predicate.not(XML_DEFAULT_STRING::equals));
@@ -97,7 +119,7 @@ public abstract class XmlVisitor extends RecordVisitor {
             .orElseGet(analysedComponent::name);
     }
 
-    protected Optional<String> namespaceName(final AnalysedComponent analysedComponent, final XmlElementPrism prism) {
+    protected Optional<String> namespaceName(final XmlElementPrism prism) {
         return Optional.ofNullable(prism.namespace())
             .filter(StringUtils::isNotBlank)
             .filter(Predicate.not(XML_DEFAULT_STRING::equals));

@@ -31,7 +31,7 @@ public class WriteCharSequence extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
         return Boolean.TRUE.equals(
-            XmlAttributePrism.getOptionalOn(analysedComponent.element().getAccessor())
+            xmlAttributePrism(analysedComponent)
                 .map(prism -> {
                     if (APContext.types().isSubtype(analysedComponent.componentType(), APContext.elements().getTypeElement(CharSequence.class.getCanonicalName()).asType())) {
                         visitAttributeComponent(analysedComponent, prism);
@@ -47,7 +47,7 @@ public class WriteCharSequence extends XmlVisitor {
         final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, CHAR_SEQUENCE);
         final boolean required = Boolean.TRUE.equals(prism.required());
         final String attributeName = attributeName(analysedComponent, prism);
-        final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+        final Optional<String> namespaceName = namespaceName(prism);
 
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);

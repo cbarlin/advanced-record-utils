@@ -32,7 +32,7 @@ public abstract class WriteXmlAttribute extends XmlVisitor {
     @Override
     protected final boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         return Boolean.TRUE.equals(
-            XmlAttributePrism.getOptionalOn(analysedComponent.element().getAccessor())
+            xmlAttributePrism(analysedComponent)
                 .map(prism -> {
                     if (supportedTypeName().equals(analysedComponent.typeName())) {
                         visitAttributeComponent(analysedComponent, prism);
