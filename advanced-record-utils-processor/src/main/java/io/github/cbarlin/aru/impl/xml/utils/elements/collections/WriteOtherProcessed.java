@@ -56,7 +56,7 @@ public class WriteOtherProcessed extends XmlVisitor {
 
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = XmlElementPrism.getOptionalOn(analysedComponent.element().getAccessor());
+        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
         final var otherOpt = extractSupported(analysedComponent, optPrism);
         if (optPrism.isPresent() && otherOpt.isPresent()) {
             final XmlElementPrism prism = optPrism.get();
@@ -64,7 +64,7 @@ public class WriteOtherProcessed extends XmlVisitor {
             final String elementName = elementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
-            final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+            final Optional<String> namespaceName = namespaceName(prism);
             final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.typeName());
             final ClassName otherXmlUtils = other.utilsClassChildClass(XML_UTILS_CLASS, Claims.XML_STATIC_CLASS).className();
             analysedComponent.addCrossReference(other);

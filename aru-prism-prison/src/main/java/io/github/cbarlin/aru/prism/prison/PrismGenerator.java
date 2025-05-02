@@ -51,6 +51,7 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 @GeneratePrism(publicAccess = true, value = Json.Value.class, name = "JsonBValuePrism")
 @GeneratePrism(publicAccess = true, value = Json.SubType.class, name = "JsonBSubTypePrism")
 @GeneratePrism(publicAccess = true, value = Json.SubTypes.class, name = "JsonBSubTypesPrism")
+@GeneratePrism(publicAccess = true, value = Json.Property.class, name = "JsonBPropertyPrism")
 @GeneratePrism(publicAccess = true, value = CustomAdapter.class, name = "JsonBCustomAdaptorPrism")
 // Jakarta XML
 @GeneratePrism(publicAccess = true, value = XmlAttribute.class)

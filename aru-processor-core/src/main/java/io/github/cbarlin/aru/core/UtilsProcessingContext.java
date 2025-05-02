@@ -16,6 +16,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
+import org.jspecify.annotations.Nullable;
+
 import io.github.cbarlin.aru.core.artifacts.PreBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -41,6 +43,10 @@ public class UtilsProcessingContext {
 
     public ProcessingEnvironment processingEnv() {
         return processingEnvironment;
+    }
+
+    public @Nullable ProcessingTarget analysedType(final TypeElement typeElement) {
+        return analysedTypes.get(typeElement);
     }
 
     public void processElements(final Supplier<List<RecordVisitor>> visitorSupplier) {

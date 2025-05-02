@@ -36,14 +36,14 @@ public class WriteOffsetDatetime extends XmlVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = XmlElementPrism.getOptionalOn(analysedComponent.element().getAccessor());
+        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
         if (optPrism.isPresent() && OFFSET_DATE_TIME.equals(analysedComponent.typeName())) {
             // Nice!
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
-            final Optional<String> namespaceName = namespaceName(analysedComponent, prism);
+            final Optional<String> namespaceName = namespaceName(prism);
             final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.typeName());
             
             if (defaultValue.isPresent()) {

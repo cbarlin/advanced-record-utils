@@ -13,9 +13,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
-
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
@@ -44,6 +41,7 @@ public enum CommonsConstants {
         private static final String ADVANCED_RECORD_UTILS_GENERATED = "AdvancedRecordUtilsGenerated";
         private static final String IO_GITHUB_CBARLIN_ARU_ANNOTATIONS = "io.github.cbarlin.aru.annotations";
         private static final String ORG_JSPECIFY_ANNOTATIONS = "org.jspecify.annotations";
+        private static final String JAKARTA_XML_BIND = "jakarta.xml.bind.annotation";
         public static final ClassName NON_NULL = ClassName.get(ORG_JSPECIFY_ANNOTATIONS, "NonNull");
         public static final ClassName NULL_MARKED = ClassName.get(ORG_JSPECIFY_ANNOTATIONS, "NullMarked");
         public static final ClassName NULL_UNMARKED = ClassName.get(ORG_JSPECIFY_ANNOTATIONS, "NullUnmarked");
@@ -66,6 +64,7 @@ public enum CommonsConstants {
         public static final ClassName COLLECTORS = ClassName.get(Collectors.class);
         public static final ClassName COLLECTION = ClassName.get(Collection.class);
         public static final ClassName UNSUPPORTED_OPERATION_EXCEPTION = ClassName.get(UnsupportedOperationException.class);
+        public static final ClassName XML_SEE_ALSO = ClassName.get(JAKARTA_XML_BIND, "XmlSeeAlso");
 
 
         // Cross references the above. Used to resolve confusion
