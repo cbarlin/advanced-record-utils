@@ -1,12 +1,17 @@
 package io.github.cbarlin.aru.annotations.aliases;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import io.github.cbarlin.aru.annotations.TypeAlias;
 
 /**
- * A helper interface for making {@link TypeAlias} for {@link String}
+ * A helper interface for making {@link TypeAlias} for {@link String}.
+ * <p>
+ * An example use case is when dealing with Strings representing different concepts that you might get confused
+ *   (e.g. "BookName" vs "AuthorName" vs "PublisherName")
  */
+@NullMarked
 public interface StringAlias extends TypeAlias<String>, CharSequence, Comparable<StringAlias> {
 
     @Override

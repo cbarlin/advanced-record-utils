@@ -53,7 +53,7 @@ public class WriteCharSequence extends XmlVisitor {
                 APContext.messager().printWarning("Cannot process default value on an XmlElement that's pointing at a collection", analysedComponent.element());
             }
 
-            final Optional<XmlElementWrapperPrism> wrapper = XmlElementWrapperPrism.getOptionalOn(analysedComponent.element().getAccessor());
+            final Optional<XmlElementWrapperPrism> wrapper = xmlElementWrapperPrism(analysedComponent);
             if (wrapper.isPresent()) {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }

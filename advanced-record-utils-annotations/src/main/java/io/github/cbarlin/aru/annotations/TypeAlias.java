@@ -9,7 +9,8 @@ import org.jspecify.annotations.NonNull;
  */
 public interface TypeAlias<T> {
     /**
-     * The value of this alias. Cannot be null.
+     * Returns the non-null value held by this alias.
+     * 
      * @return The value held by the alias.
      */
     @NonNull

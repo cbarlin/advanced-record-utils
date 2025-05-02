@@ -143,7 +143,7 @@ public class Branching extends XmlVisitor {
     private Optional<AnalysedInterface> extractSupported(final AnalysedComponent analysedComponent) {
         return analysedComponent.targetAnalysedType()
             .filter(x -> (!analysedComponent.requiresUnwrapping()))
-            .filter(x -> xmlElementsPrism(analysedComponent).isPresent())
+            .filter(x -> xmlElementPrism(analysedComponent).isPresent())
             .filter(AnalysedInterface.class::isInstance)
             .map(AnalysedInterface.class::cast);
     }

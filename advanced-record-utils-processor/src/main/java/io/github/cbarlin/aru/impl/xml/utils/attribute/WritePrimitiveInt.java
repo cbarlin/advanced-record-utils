@@ -12,9 +12,9 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WritePrimativeInt extends WriteXmlAttribute {
+public class WritePrimitiveInt extends WriteXmlAttribute {
 
-    public WritePrimativeInt() {
+    public WritePrimitiveInt() {
         super();
     }
 

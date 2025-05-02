@@ -1,20 +1,18 @@
 package io.github.cbarlin.aru.annotations.aliases;
 
-import java.util.UUID;
-
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 
 import io.github.cbarlin.aru.annotations.TypeAlias;
 
 @NullMarked
-public interface UuidAlias extends TypeAlias<UUID>, Comparable<UuidAlias> {
+public interface LongAlias extends TypeAlias<Long>, Comparable<LongAlias> {
 
     @Override
-    @NonNull UUID value();
+    @NonNull Long value();
 
     @Override
-    default int compareTo(UuidAlias o) {
+    default int compareTo(LongAlias o) {
         return value().compareTo(o.value());
     }
 }

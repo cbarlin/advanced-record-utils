@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 
 import io.avaje.spi.Service;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
@@ -12,7 +11,7 @@ import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
- * A class that can "infer" a {@link TypeMirror} 
+ * A service that can attempt to synthesise an {@link AnnotationMirror}
  */
 @Service
 public interface AnnotationInferencer extends Comparable<AnnotationInferencer> {
@@ -20,17 +19,17 @@ public interface AnnotationInferencer extends Comparable<AnnotationInferencer> {
     /**
      * How specific is this inferrer?
      */
-    public int specificity();
+    int specificity();
 
     /**
      * The class name of the annotation
      */
-    public ClassName supportedAnnotationClassName();
+    ClassName supportedAnnotationClassName();
 
     /**
      * Attempt to create a type mirror with values inferred from other items
      */
-    public Optional<AnnotationMirror> inferAnnotationMirror(final Element element, final UtilsProcessingContext processingContext, final AdvancedRecordUtilsPrism prism);
+    Optional<AnnotationMirror> inferAnnotationMirror(final Element element, final UtilsProcessingContext processingContext, final AdvancedRecordUtilsPrism prism);
 
     // We don't need to also override equals, as we won't be `equals` them since that doesn't make sense
     @SuppressWarnings({"java:S1210"})

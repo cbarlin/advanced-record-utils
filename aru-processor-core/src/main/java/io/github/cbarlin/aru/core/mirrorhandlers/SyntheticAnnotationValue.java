@@ -16,15 +16,6 @@ public record SyntheticAnnotationValue(Object value) implements AnnotationValue 
         return value;
     }
 
-    /**
-     * This shouldn't be needed... Surely not...
-     */
-    @Override
-    public final String toString() {
-        return value.toString();
-    }
-
-    // Since we are constructing these... they should always be valid
     @SuppressWarnings("unchecked")
     @Override
     public <R, P> R accept(final AnnotationValueVisitor<R, P> v, final P p) {
@@ -41,7 +32,7 @@ public record SyntheticAnnotationValue(Object value) implements AnnotationValue 
             case final TypeMirror tm -> v.visitType(tm, p);
             case final VariableElement ve when ElementKind.ENUM_CONSTANT.equals(ve.getKind()) -> v.visitEnumConstant(ve, p);
             case final AnnotationMirror am -> v.visitAnnotation(am, p);
-            case final List<?> lst when (!lst.isEmpty()) && (lst.get(0) instanceof AnnotationValue) -> v.visitArray( (List<AnnotationValue>) lst, p);
+            case final List<?> lst when (!lst.isEmpty()) && lst.stream().allMatch(AnnotationValue.class::isInstance) -> v.visitArray((List<AnnotationValue>) lst, p);
             case final List<?> lst when lst.isEmpty() -> v.visitArray(List.of(), p);
             case null, default -> v.visitUnknown(this, p);
         };

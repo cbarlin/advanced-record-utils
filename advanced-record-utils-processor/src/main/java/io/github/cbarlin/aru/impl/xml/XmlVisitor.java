@@ -81,19 +81,19 @@ public abstract class XmlVisitor extends RecordVisitor {
         return false;
     }
 
-    protected Optional<XmlAttributePrism> xmlAttributePrism(final AnalysedComponent analysedComponent) {
+    protected static Optional<XmlAttributePrism> xmlAttributePrism(final AnalysedComponent analysedComponent) {
         return analysedComponent.findPrism(XML_ATTRIBUTE, XmlAttributePrism.class);
     }
 
-    protected Optional<XmlElementPrism> xmlElementPrism(final AnalysedComponent analysedComponent) {
+    protected static Optional<XmlElementPrism> xmlElementPrism(final AnalysedComponent analysedComponent) {
         return analysedComponent.findPrism(XML_ELEMENT, XmlElementPrism.class);
     }
 
-    protected Optional<XmlElementsPrism> xmlElementsPrism(final AnalysedComponent analysedComponent) {
+    protected static Optional<XmlElementsPrism> xmlElementsPrism(final AnalysedComponent analysedComponent) {
         return analysedComponent.findPrism(XML_ELEMENTS, XmlElementsPrism.class);
     }
 
-    protected Optional<XmlElementWrapperPrism> xmlElementWrapperPrism(final AnalysedComponent analysedComponent) {
+    protected static Optional<XmlElementWrapperPrism> xmlElementWrapperPrism(final AnalysedComponent analysedComponent) {
         return analysedComponent.findPrism(XML_ELEMENT_WRAPPER, XmlElementWrapperPrism.class);
     }
 

@@ -12,15 +12,15 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WritePrimativeDouble extends WriteXmlAttribute {
+public class WritePrimitiveBoolean extends WriteXmlAttribute {
 
-    public WritePrimativeDouble() {
+    public WritePrimitiveBoolean() {
         super();
     }
 
     @Override
     TypeName supportedTypeName() {
-        return TypeName.DOUBLE;
+        return TypeName.BOOLEAN;
     }
 
     @Override

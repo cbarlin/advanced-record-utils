@@ -14,15 +14,15 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 @Service
 public interface ClassNameToPrismAdaptor<T> {
 
-    public ClassName supportedAnnotationClassName();
+    ClassName supportedAnnotationClassName();
 
-    public Class<T> prismClass();
+    Class<T> prismClass();
 
     default ClassName supportedPrismClassName() {
         return ClassName.get(prismClass());
     }
 
-    public Optional<T> optionalInstanceOf(final AnnotationMirror typeMirror);
+    Optional<T> optionalInstanceOf(final AnnotationMirror typeMirror);
 
-    public Optional<T> optionalInstanceOn(final Element element);
+    Optional<T> optionalInstanceOn(final Element element);
 }

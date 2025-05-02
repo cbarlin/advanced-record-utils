@@ -142,6 +142,7 @@ The `ComponentAnalyser` is a service loading target, similar to the `RecordVisit
 Generated code must:
  * Be readable
  * Be commented (e.g. JavaDoc, code comments)
+ * Not generate `var` - use the proper type name
 
 For processor code, the following broad rules apply:
  * If you are editing a file, keep the style consistent within the file
@@ -157,7 +158,8 @@ For processor code, the following broad rules apply:
    * It may be useful to think: "It's 2am, I've had 2 hours sleep, and there is a bug in prod which is why I'm reading the generated code"...
    * Complex branching logic could also be refactored into a different `RecordVisitor`
  * A gentle preference for for-loops over streams, but emphasis is on *gentle* (i.e. don't make your life hard for it)
- * A gentle preference for `final` modifiers to be used when poissible
+ * A gentle preference for `final` modifiers to be used when possible
+ * A gentle preference to avoid `var`
 
 While this may cause issues because there isn't a concrete "style guide", it should avoid most issues. I'm aware some of the code in `aru-processor-core` isn't exactly styled nicely either, but auto formatters frustrate me to no end. Hopefully most contributions are `RecordBuilder`s where the logic is a lot simpler and are self-contained.
 

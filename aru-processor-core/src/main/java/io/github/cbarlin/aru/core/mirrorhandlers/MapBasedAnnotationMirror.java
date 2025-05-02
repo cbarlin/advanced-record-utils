@@ -63,7 +63,10 @@ public class MapBasedAnnotationMirror implements AnnotationMirror {
                     case final Collection<?> col when (col.isEmpty()) -> new SyntheticAnnotationValue(List.of());
                     case final Class<?> clz -> new SyntheticAnnotationValue(APContext.elements().getTypeElement(ClassName.get(clz).canonicalName()).asType());
                     case final ClassName clz -> new SyntheticAnnotationValue(APContext.elements().getTypeElement(clz.canonicalName()).asType());
-                    case final Enum<?> enm -> throw new UnsupportedOperationException("No support yet for enums");
+                    case final Enum<?> enm -> {
+                        APContext.messager().printError("Cannot process enum elements when creating synthetic annotations");
+                        yield new SyntheticAnnotationValue(value);
+                    }
                     case null, default -> new SyntheticAnnotationValue(value);
                 };
                 out.put(nKey, nValue);

@@ -3,6 +3,7 @@ package io.github.cbarlin.aru.impl.inferencer;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENTS;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.inference.AnnotationInferencer;
@@ -20,6 +22,7 @@ import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
+@ServiceProvider
 public class XmlElementsMapper implements ClassNameToPrismAdaptor<XmlElementsPrism>, AnnotationInferencer {
 
     @Override
@@ -34,7 +37,7 @@ public class XmlElementsMapper implements ClassNameToPrismAdaptor<XmlElementsPri
             final AdvancedRecordUtilsPrism prism
     ) {
         if (element instanceof TypeElement te && processingContext.analysedType(te) instanceof AnalysedInterface ai) {
-            final List<AnnotationMirror> mirrors = List.of();
+            final List<AnnotationMirror> mirrors = new ArrayList<>();
             ai.implementingTypes()
                 .forEach(pt -> mirrors.add(new MapBasedAnnotationMirror(
                     XML_ELEMENT,
