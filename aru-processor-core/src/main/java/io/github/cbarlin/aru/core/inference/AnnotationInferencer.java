@@ -27,7 +27,7 @@ public interface AnnotationInferencer extends Comparable<AnnotationInferencer> {
     ClassName supportedAnnotationClassName();
 
     /**
-     * Attempt to create a type mirror with values inferred from other items
+     * Attempt to create an annotation mirror with values inferred from other items
      */
     Optional<AnnotationMirror> inferAnnotationMirror(final Element element, final UtilsProcessingContext processingContext, final AdvancedRecordUtilsPrism prism);
 

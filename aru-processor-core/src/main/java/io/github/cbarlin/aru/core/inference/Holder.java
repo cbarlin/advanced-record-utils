@@ -2,11 +2,11 @@ package io.github.cbarlin.aru.core.inference;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
 
@@ -19,8 +19,8 @@ public class Holder {
     private static volatile List<ClassNameToPrismAdaptor> CLASS_NAME_PRISM_ADAPTORS;
     private static volatile List<AnnotationInferencer> INFERENCERS;
 
-    private static final Map<ClassName, List<ClassNameToPrismAdaptor>> CN_PRISM_BY_CN = new HashMap<>();
-    private static final Map<ClassName, List<AnnotationInferencer>> INF_BY_CN = new HashMap<>();
+    private static final Map<ClassName, List<ClassNameToPrismAdaptor>> CN_PRISM_BY_CN = new ConcurrentHashMap<>();
+    private static final Map<ClassName, List<AnnotationInferencer>> INF_BY_CN = new ConcurrentHashMap<>();
     
     /**
      * Return adaptors that are designed for the given annotation class name

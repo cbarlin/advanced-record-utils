@@ -17,13 +17,13 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
 public interface StringAlias extends TypeAlias<String>, CharSequence, Comparable<StringAlias> {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     @Override
     @NonNull String value();
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     @Override
     default int length() {
@@ -31,7 +31,7 @@ public interface StringAlias extends TypeAlias<String>, CharSequence, Comparable
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     @Override
     default char charAt(int index) {
@@ -39,7 +39,7 @@ public interface StringAlias extends TypeAlias<String>, CharSequence, Comparable
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     @Override
     default CharSequence subSequence(int start, int end) {

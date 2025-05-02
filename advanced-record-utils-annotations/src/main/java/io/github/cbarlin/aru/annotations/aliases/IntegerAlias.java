@@ -12,7 +12,7 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
 public interface IntegerAlias extends TypeAlias<Integer>, Comparable<IntegerAlias> {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     @Override
     @NonNull Integer value();

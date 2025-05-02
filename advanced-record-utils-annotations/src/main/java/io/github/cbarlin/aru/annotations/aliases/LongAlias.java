@@ -12,7 +12,7 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
 public interface LongAlias extends TypeAlias<Long>, Comparable<LongAlias> {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     @Override
     @NonNull Long value();

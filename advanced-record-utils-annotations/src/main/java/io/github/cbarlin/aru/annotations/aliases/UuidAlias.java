@@ -14,7 +14,7 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
 public interface UuidAlias extends TypeAlias<UUID>, Comparable<UuidAlias> {
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     @Override
     @NonNull UUID value();
