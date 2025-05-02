@@ -5,25 +5,24 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.visitors.collection.ListRecordVisitor;
-
-import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.visitors.collection.SetRecordVisitor;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class AddNonNullSetGetter extends ListRecordVisitor {
+public class AddNonNullSetGetter extends SetRecordVisitor {
 
     public AddNonNullSetGetter() {
         super(Claims.CORE_BUILDER_GETTER);
     }
 
     @Override
-    protected int listSpecificity() {
+    protected int setSpecificity() {
         return 2;
     }
 
@@ -34,7 +33,7 @@ public class AddNonNullSetGetter extends ListRecordVisitor {
     }
 
     @Override
-    protected boolean visitListComponent(AnalysedCollectionComponent analysedComponent) {
+    protected boolean visitSetComponent(AnalysedCollectionComponent analysedComponent) {
         if(analysedComponent.isIntendedConstructorParam()) {
             final String name = analysedComponent.name();
             final MethodSpec.Builder method = analysedComponent.builderArtifact()
