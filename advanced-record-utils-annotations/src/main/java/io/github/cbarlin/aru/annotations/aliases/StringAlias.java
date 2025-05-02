@@ -16,31 +16,19 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
 @NullMarked
 public interface StringAlias extends TypeAlias<String>, CharSequence, Comparable<StringAlias> {
 
-    /**
-     * @inheritDoc
-     */
     @Override
     @NonNull String value();
 
-    /**
-     * @inheritDoc
-     */
     @Override
     default int length() {
         return value().length();
     }
-
-    /**
-     * @inheritDoc
-     */
+    
     @Override
     default char charAt(int index) {
         return value().charAt(index);
     }
-
-    /**
-     * @inheritDoc
-     */
+    
     @Override
     default CharSequence subSequence(int start, int end) {
         return value().subSequence(start, end);

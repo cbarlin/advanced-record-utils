@@ -11,9 +11,6 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
 @NullMarked
 public interface LongAlias extends TypeAlias<Long>, Comparable<LongAlias> {
 
-    /**
-     * @inheritDoc
-     */
     @Override
     @NonNull Long value();
 

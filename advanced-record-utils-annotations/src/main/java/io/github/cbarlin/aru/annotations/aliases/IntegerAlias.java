@@ -11,9 +11,6 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
 @NullMarked
 public interface IntegerAlias extends TypeAlias<Integer>, Comparable<IntegerAlias> {
 
-    /**
-     * @inheritDoc
-     */
     @Override
     @NonNull Integer value();
 
