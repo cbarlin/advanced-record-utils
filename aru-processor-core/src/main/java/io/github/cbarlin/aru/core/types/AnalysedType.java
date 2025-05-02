@@ -247,7 +247,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     }
     //#endregion
 
-    private final Map<ClassName, Optional> annotations = new HashMap<>();
+    private final Map<ClassName, Optional<?>> annotations = new HashMap<>();
 
     // Fine, because the only population is the known-correct impl method
     @SuppressWarnings("unchecked")

@@ -249,7 +249,7 @@ public class AnalysedComponent {
             .orElse(typeName().toString());
     }
 
-    private final Map<ClassName, Optional> annotations = new HashMap<>();
+    private final Map<ClassName, Optional<?>> annotations = new HashMap<>();
 
     // Fine, because the only population is the known-correct impl method
     @SuppressWarnings("unchecked")

@@ -36,7 +36,7 @@ public interface AnnotationInferencer extends Comparable<AnnotationInferencer> {
     @Override
     default int compareTo(AnnotationInferencer o) {
         if (specificity() == o.specificity()) {
-            return getClass().getName().compareTo(o.getClass().getName());
+            return getClass().getCanonicalName().compareTo(o.getClass().getCanonicalName());
         }
         return Integer.compare(specificity(), o.specificity());
     }

@@ -9,7 +9,9 @@ import io.avaje.spi.Service;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
- * An adaptor that knows how to swap a type name for a prism
+ * An adaptor that knows how to swap a type name for a prism (annotation mirror wrapper)
+ * 
+ * @param <T> The prism type we are converting into
  */
 @Service
 public interface ClassNameToPrismAdaptor<T> {

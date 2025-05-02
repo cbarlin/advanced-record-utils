@@ -16,11 +16,11 @@ public class Holder {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    private static List<ClassNameToPrismAdaptor> CLASS_NAME_PRISM_ADAPTORS;
-    private static List<AnnotationInferencer> INFERENCERS;
+    private static volatile List<ClassNameToPrismAdaptor> CLASS_NAME_PRISM_ADAPTORS;
+    private static volatile List<AnnotationInferencer> INFERENCERS;
 
-    private static Map<ClassName, List<ClassNameToPrismAdaptor>> CN_PRISM_BY_CN = new HashMap<>();
-    private static Map<ClassName, List<AnnotationInferencer>> INF_BY_CN = new HashMap<>();
+    private static final Map<ClassName, List<ClassNameToPrismAdaptor>> CN_PRISM_BY_CN = new HashMap<>();
+    private static final Map<ClassName, List<AnnotationInferencer>> INF_BY_CN = new HashMap<>();
     
     /**
      * Return adaptors that are designed for the given annotation class name
