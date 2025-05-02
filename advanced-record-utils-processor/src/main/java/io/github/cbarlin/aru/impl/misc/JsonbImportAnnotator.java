@@ -26,13 +26,24 @@ public class JsonbImportAnnotator extends RecordVisitor {
 
     @Override
     protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
-        analysedRecord.utilsClass()
+        if (!analysedRecord.intendedType().equals(analysedRecord.className())) {
+            analysedRecord.utilsClass()
             .builder()
             .addAnnotation(
                 AnnotationSpec.builder(Names.AVAJE_JSONB_IMPORT)
                     .addMember("value", "{$T.class, $T.class}", analysedRecord.className(), analysedRecord.intendedType())
                     .build()
             );
+        } else {
+            analysedRecord.utilsClass()
+            .builder()
+            .addAnnotation(
+                AnnotationSpec.builder(Names.AVAJE_JSONB_IMPORT)
+                    .addMember("value", "{$T.class}", analysedRecord.className())
+                    .build()
+            );
+        }
+        
         return true;
     }
 }
