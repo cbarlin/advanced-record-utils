@@ -13,6 +13,10 @@
 
     <name>Advanced Record Utils - Annotations</name>
     <description>Annotations intended to be used by the Advanced Record Utils processor</description>
+    <url>https://github.com/cbarlin/advanced-record-utils</url>
+    <scm>
+        <url>https://github.com/cbarlin/advanced-record-utils</url>
+    </scm>
 
     <dependencies>
         <!-- Required dependencies -->

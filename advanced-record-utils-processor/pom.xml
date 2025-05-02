@@ -8,12 +8,15 @@
           <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>io.github.cbarlin</groupId>
     <artifactId>advanced-record-utils-processor</artifactId>
+    <url>https://github.com/cbarlin/advanced-record-utils</url>
     <packaging>jar</packaging>
 
     <name>Advanced Record Utils - Processor</name>
     <description>The processor to generate Advanced Record Utils</description>
+    <scm>
+        <url>https://github.com/cbarlin/advanced-record-utils</url>
+    </scm>
 
     <dependencies>
         <dependency>
