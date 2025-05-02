@@ -40,7 +40,7 @@ We should be able to take code built/written against `1.0.0` of the processor an
 
 The layout of the project is as so:
  * `advanced-record-utils-annotations` - this is the library that ends up on the user's module- or class-path
- * `prisms-prison` - a library which is used to generate prisms in a way that means the processor doesn't depend on those libraries, and thus can safely detect if they exist in the final output without getting itself confused.
+ * `aru-prisms-prison` - a library which is used to generate prisms in a way that means the processor doesn't depend on those libraries, and thus can safely detect if they exist in the final output without getting itself confused.
  * `aru-processor-core` - this implements the annotation processor itself, its analysis and interlinking of annotated types, the service loading of the various features, and the "core" operations of the processor (a basic builder).
  * `advanced-record-utils-processor` - this implements all of the features of the processor (such as Withers, Mergers, etc). It's deliberately isolated from the core processor itself - keep the complexity of feature implementation "walled off" from the complexity of analysis etc
  * `utils-tests` - all the tests!
@@ -145,9 +145,8 @@ Generated code must:
 
 For processor code, the following broad rules apply:
  * If you are editing a file, keep the style consistent within the file
- * `final` modifiers should be used where possible
  * `Nullable` annotations should be used where needed (the codebase is/should be `NullMarked`)
-   * `Optional` is also permissable
+   * `Optional` is preferred, and should never be nullable
  * No hard limits on line length - while code should fit on a screen, which screen? Easier to just gut feel it generally
    * Don't just wrap at an arbitrary point - if you need to wrap, make it consistent how the wrapping is applied
  * Fluent operators should go "down" the page - as if you are reading a series of steps in a recipe
@@ -157,8 +156,10 @@ For processor code, the following broad rules apply:
  * Generated code always takes priority for readability over the processor itself
    * It may be useful to think: "It's 2am, I've had 2 hours sleep, and there is a bug in prod which is why I'm reading the generated code"...
    * Complex branching logic could also be refactored into a different `RecordVisitor`
+ * A gentle preference for for-loops over streams, but emphasis is on *gentle* (i.e. don't make your life hard for it)
+ * A gentle preference for `final` modifiers to be used when poissible
 
-While this may cause issues because there isn't a concrete "style guide", it should avoid most issues. I'm aware some of the code in `utils-processor-core` isn't exactly styled nicely either, but auto formatters frustrate me to no end. Hopefully most contributions are `RecordBuilder`s where the logic is a lot simpler and are self-contained.
+While this may cause issues because there isn't a concrete "style guide", it should avoid most issues. I'm aware some of the code in `aru-processor-core` isn't exactly styled nicely either, but auto formatters frustrate me to no end. Hopefully most contributions are `RecordBuilder`s where the logic is a lot simpler and are self-contained.
 
 ## Wrapping examples
 

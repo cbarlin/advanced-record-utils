@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: en-AU
+enable_free_tier: true
+tone_instructions: 'We are working on a Java annotation processor, and you are a brilliant code reviewer. Please be approachable and kind, and please acknowledge when you are unsure or not confident'
+chat:
+  auto_reply: true
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: 'local'
+  issues:
+    scope: 'local'
+  pull_requests:
+    scope: 'local'
+reviews:
+  profile: 'assertive'
+  auto_review:
+    base_branches:
+      - 'main'
+  path_instructions:
+    - path: '**/*.java'
+      instructions: |
+        Please do these:
+        * Review code using Java 21 standards, taking into account the vague rules and samples defined in `CONTRIBUTING.md`
+        * Validate that code indentation uses spaces, not tabs, with an indent of multiple of 4
+        * Propose changes that only use the Java 21 API, not the API of Guava
+        
+        Please keep in mind:
+        * The pattern matching `instanceof` expression safely handles `null`, returning `false`
+        * Our rule is that builds must be reproduceable, and the annotation processor must not prevent a consuming build from being reproduceable
+        * We would like to avoid adding additional `required` dependencies, but we are happy to detect if a library is present to generate code and those can be added as optional
+    - path: 'utils-tests/**/*.java'
+      instructions: |
+        This folder, including "main" files, are all for the purpose of testing. This is because an annotation processor can only really be tested by applying it to a build
+
+        Coding standards can be relaxed a little here, as the code isn't published and isn't used by anyone except for tests
+    - path: 'advanced-record-utils-annotations/**/*.java'
+      instructions: |
+        This is the user-facing part of the library. It must be well-documented
+        
+        For the code:
+        * When providing defaults for the annotation values, we have some rules that should be enforced:
+           * Principle of Least Astonishment
+           * Dependencies are not required (minus commons-lang3)
+        * Non-default values may add dependency requirements - these should be documented (and added as optional to the pom)
+    - path: 'aru-prism-prison/**'
+      instructions: |
+        The README of `aru-prism-prison` covers this folder quite well
+    - path: 'aru-processor-core/**/*.java'
+      instructions: |
+        This folder contains the dense code that wires together the processor. As per `CONTRIBUTING.md`, this folder should really only have:
+          * The minimum to achieve that goal; and
+          * The "core" of the builder
+        
+        While it should be possible to make all the code readable, if any part of the codebase is going to be hard to read it is likely to be in here.
+        Changes here will have the largest impact, and should be well-understood
+    - path: 'advanced-record-utils-processor/**/*.java'
+      instructions: |
+        This is the "worker" part of the codebase. Ideally, everything in here follows a similar pattern (minus the Constants file):
+         * How "specific" the worker is at doing work
+         * Testing if it should attempt the work in a general sense (e.g. dependencies, settings)
+         * Then, when doing the work:
+            * Test any remaining specifics (e.g. component-level stuff)
+            * Do the work
+        
+        Because this is an annotation processor, tests should be included by adding modules/records to the `utils-tests` and should include positive and negative cases
+          * The design of the project may mean that the "negative" case isn't explicit, but is tested elsewhere. The positive case should definitely be tested though!
