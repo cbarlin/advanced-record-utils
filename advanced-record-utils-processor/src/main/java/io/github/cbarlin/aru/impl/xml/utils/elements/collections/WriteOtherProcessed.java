@@ -83,8 +83,8 @@ public class WriteOtherProcessed extends XmlVisitor {
                         .addStatement("continue")
                         .endControlFlow();
                     namespaceName.ifPresentOrElse(
-                        namespace -> methodBuilder.addStatement("$T.$L($L, output, $S, $S, currentDefaultNamespace)", variableName, otherXmlUtils, STATIC_WRITE_XML_NAME, elementName, namespace),
-                        () -> methodBuilder.addStatement("$T.$L($L, output, $S, null, currentDefaultNamespace)", variableName, otherXmlUtils, STATIC_WRITE_XML_NAME, elementName)
+                        namespace -> methodBuilder.addStatement("$T.$L($L, output, $S, $S, currentDefaultNamespace)", otherXmlUtils, STATIC_WRITE_XML_NAME, variableName, elementName, namespace),
+                        () -> methodBuilder.addStatement("$T.$L($L, output, $S, null, currentDefaultNamespace)", otherXmlUtils, STATIC_WRITE_XML_NAME, variableName, elementName)
                     );
                 },
                 methodBuilder,
