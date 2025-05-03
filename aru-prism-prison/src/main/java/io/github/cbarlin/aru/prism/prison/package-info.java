@@ -1,46 +1,3 @@
-package io.github.cbarlin.aru.prism.prison;
-
-// This file exists to cause prisms of common annotations to be generated
-//  We can then publish the prisms as a library and not depend on the actual libraries
-//  when running the actual processor
-
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeId;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
-import io.avaje.jsonb.CustomAdapter;
-import io.avaje.jsonb.Json;
-import io.avaje.prism.GeneratePrism;
-import jakarta.xml.bind.annotation.XmlAccessorOrder;
-import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlElementRefs;
-import jakarta.xml.bind.annotation.XmlElementWrapper;
-import jakarta.xml.bind.annotation.XmlElements;
-import jakarta.xml.bind.annotation.XmlEnum;
-import jakarta.xml.bind.annotation.XmlEnumValue;
-import jakarta.xml.bind.annotation.XmlNs;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlSchema;
-import jakarta.xml.bind.annotation.XmlSeeAlso;
-import jakarta.xml.bind.annotation.XmlTransient;
-import jakarta.xml.bind.annotation.XmlType;
-import jakarta.xml.bind.annotation.XmlValue;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
-
 // JsonB annotations
 @GeneratePrism(publicAccess = true, value = Json.class, name = "JsonBPrism")
 @GeneratePrism(publicAccess = true, value = Json.Raw.class, name = "JsonBRawPrism")
@@ -87,6 +44,41 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 @GeneratePrism(publicAccess = true, value = JsonTypeInfo.class)
 @GeneratePrism(publicAccess = true, value = JsonTypeName.class)
 @GeneratePrism(publicAccess = true, value = JsonUnwrapped.class)
-public class PrismGenerator {
+package io.github.cbarlin.aru.prism.prison;
 
-}
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeId;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
+import io.avaje.jsonb.CustomAdapter;
+import io.avaje.jsonb.Json;
+import io.avaje.prism.GeneratePrism;
+import jakarta.xml.bind.annotation.XmlAccessorOrder;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlElementRefs;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlElements;
+import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnumValue;
+import jakarta.xml.bind.annotation.XmlNs;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlSeeAlso;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlValue;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
