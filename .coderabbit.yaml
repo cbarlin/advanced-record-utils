@@ -1,4 +1,6 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# yamllint disable rule:line-length
+# yamllint disable rule:document-start
 
 language: en-AU
 enable_free_tier: true
