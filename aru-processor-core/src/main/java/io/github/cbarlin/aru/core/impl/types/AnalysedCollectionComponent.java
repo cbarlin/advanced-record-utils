@@ -144,8 +144,8 @@ public class AnalysedCollectionComponent extends AnalysedComponent {
     }
 
     @Override
-    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
-        methodBuilder.beginControlFlow("for (final $T $L : $L)", innerTypeName, UNWRAPPING_VARIABLE_NAME, incomingName);
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedType) {
+        methodBuilder.beginControlFlow("for (final $T $L : $L)", unwrappedType, UNWRAPPING_VARIABLE_NAME, incomingName);
         withUnwrappedName.accept(UNWRAPPING_VARIABLE_NAME);
         methodBuilder.endControlFlow();
     }

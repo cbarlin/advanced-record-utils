@@ -57,17 +57,22 @@ public class WriteCharSequence extends XmlVisitor {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }
 
-            methodBuilder.beginControlFlow("for (final $T v : val)", CHAR_SEQUENCE)
-                .beginControlFlow("if ($T.isNull(v))", OBJECTS)
-                .addStatement("continue")
-                .endControlFlow();
-                namespaceName.ifPresentOrElse(
-                    namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                    () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
-                );
-                methodBuilder.addStatement("output.writeCharacters(v.toString())")
-                    .addStatement("output.writeEndElement()");
-            methodBuilder.endControlFlow();
+            analysedComponent.withinUnwrapped(
+                variableName -> {
+                    methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                        .addStatement("continue")
+                        .endControlFlow();
+                    namespaceName.ifPresentOrElse(
+                        namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
+                        () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                    );
+                    methodBuilder.addStatement("output.writeCharacters($L.toString())", variableName)
+                        .addStatement("output.writeEndElement()");
+                },
+                methodBuilder,
+                "val",
+                CHAR_SEQUENCE
+            );
 
             if (wrapper.isPresent()) {
                 handleWrapperEnd(required, methodBuilder);

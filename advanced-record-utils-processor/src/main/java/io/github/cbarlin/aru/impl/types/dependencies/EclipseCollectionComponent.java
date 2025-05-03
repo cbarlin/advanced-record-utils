@@ -114,8 +114,8 @@ public class EclipseCollectionComponent extends AnalysedComponent {
     }
 
     @Override
-    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
-        methodBuilder.beginControlFlow("for (final $T $L : $L)", innerTypeName, UNWRAPPING_VARIABLE_NAME, incomingName);
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTn) {
+        methodBuilder.beginControlFlow("for (final $T $L : $L)", unwrappedTn, UNWRAPPING_VARIABLE_NAME, incomingName);
         withUnwrappedName.accept(UNWRAPPING_VARIABLE_NAME);
         methodBuilder.endControlFlow();
     }

@@ -147,7 +147,7 @@ The `ComponentAnalyser` is a service loading target, similar to the `RecordVisit
 
 Annotation inferencing refers to the concept that we can *infer* or safely assume that an annotation should be present, even if it isn't. An example of this would be that the end-user has asked for their data structure to have XML serialisations added, but has only marked the structure up with Json annotations. We can take those annotations and infer the XML annotations from those.
 
-The `ClassName`/Prism mapping is a byproduct of this - since we are working off of annotations that may not actually be present, we have to have a mapping from annotation class names to their prisms.
+The `ClassName`/Prism mapping is a byproduct of this - since we are working from annotations that may not actually be present, we have to have a mapping from annotation class names to their prisms.
 
 ## `CommonsConstants` and `Constants`
 

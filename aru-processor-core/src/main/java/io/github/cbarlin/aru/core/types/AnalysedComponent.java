@@ -177,7 +177,21 @@ public class AnalysedComponent {
      * @param methodBuilder The builder that can be used to do the unwrapping
      * @param incomingName The current name of the variable.
      */
-    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
+    public final void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
+        withinUnwrapped(withUnwrappedName, methodBuilder, incomingName, unNestedPrimaryTypeName());
+    }
+
+    /**
+     * Perform some operation within an "Unwrapped" version of the value
+     * <p>
+     * This can be used on items like {@code List<?>} or {@code Optional<?>} or even {@code Optional<List<?>>}
+     * 
+     * @param withUnwrappedName The name of the variable that this component has been unwrapped into
+     * @param methodBuilder The builder that can be used to do the unwrapping
+     * @param incomingName The current name of the variable.
+     * @param unwrappedTypeName The type to use while unwrapping. Override with caution - unless you are using something as a parent type (e.g. String as CharSequence), prefer to omit this argument
+     */
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTypeName) {
         APContext.messager().printError("Attempt to invoke an unwrapping on a type that doesn't require it", element);
         throw new UnsupportedOperationException("Cannot unwrap a type that isn't wrapped");
     }

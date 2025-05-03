@@ -87,7 +87,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <sourcepath>${project.build.targetDirectory}/generated-sources/annotations</sourcepath>
+                            <sourcepath>${project.build.directory}/generated-sources/annotations</sourcepath>
                         </configuration>
                     </execution>
                 </executions>

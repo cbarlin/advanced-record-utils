@@ -68,16 +68,20 @@ public class Branching extends XmlVisitor {
                 writeWrapperElement(methodBuilder, wrapper.get());
             }
 
-            methodBuilder.beginControlFlow("for (final $T v : val)", other.className())
-                .beginControlFlow("if ($T.isNull(v))", OBJECTS)
-                .addStatement("continue");
-
-            for (final ProcessingTarget target : targets) {
-                writeTargetIfStatement(methodBuilder, extractedName, target);
-            }
-
-            methodBuilder.endControlFlow()
-                .endControlFlow();
+            analysedComponent.withinUnwrapped(
+                variableName -> {
+                    methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                        .addStatement("continue")
+                        .endControlFlow();
+                    for (final ProcessingTarget target : targets) {
+                        writeTargetIfStatement(methodBuilder, extractedName, target);
+                    }
+                    methodBuilder.endControlFlow();
+                },
+                methodBuilder,
+                "val",
+                other.className()
+            );
 
             if (wrapper.isPresent()) {
                 methodBuilder.addStatement("output.writeEndElement()");

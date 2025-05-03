@@ -71,9 +71,9 @@ public class AnalysedOptionalComponent extends AnalysedComponent {
     }
 
     @Override
-    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTn) {
         methodBuilder.beginControlFlow("if ($L.isPresent())", incomingName)
-            .addStatement("final $T $L = $L.get()", innerTypeName, UNWRAPPING_VARIABLE_NAME, incomingName);
+            .addStatement("final $T $L = $L.get()", unwrappedTn, UNWRAPPING_VARIABLE_NAME, incomingName);
         withUnwrappedName.accept(UNWRAPPING_VARIABLE_NAME);
         methodBuilder.endControlFlow();
     }
