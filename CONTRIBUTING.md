@@ -143,9 +143,15 @@ Similar to the `AnalysedRecord`, these are wrapper types around the `RecordCompo
 
 The `ComponentAnalyser` is a service loading target, similar to the `RecordVisitor` - it attempts to analyse from the most "specific" to the least specific. By doing this, we can make it easy to add new `AnalysedComponent` types (such as `Map`, or the Guava types).
 
+## Annotation Inferencing and `ClassName`/Prism mapping
+
+Annotation inferencing refers to the concept that we can *infer* or safely assume that an annotation should be present, even if it isn't. An example of this would be that the end-user has asked for their data structure to have XML serialisations added, but has only marked the structure up with Json annotations. We can take those annotations and infer the XML annotations from those.
+
+The `ClassName`/Prism mapping is a byproduct of this - since we are working off of annotations that may not actually be present, we have to have a mapping from annotation class names to their prisms.
+
 ## `CommonsConstants` and `Constants`
 
-There's two constants files that contain things that will come up repeatedly - things like `Claim` objects and `ClassName`s. I'm aware "Constant" files are a bit controversial, but I think in this context I think it's a better way of ensuring that `Claim` operations don't "drift" and that we only go through the process of setting up the `ClassName`s once.
+There are two constants files that contain things that will come up repeatedly - things like `Claim` objects and `ClassName`s. I'm aware "Constant" files are a bit controversial, but I think in this context I think it's a better way of ensuring that `Claim` operations don't "drift" and that we only go through the process of setting up the `ClassName`s once.
 
 # Style
 

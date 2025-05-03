@@ -20,6 +20,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>aru-processor-core</artifactId>
             <version>${project.version}</version>

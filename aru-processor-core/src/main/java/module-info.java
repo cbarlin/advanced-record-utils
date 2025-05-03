@@ -1,5 +1,5 @@
 /**
- * The core of the processor logic. If you are looking for information about the annotations or useage,
+ * The core of the processor logic. If you are looking for information about the annotations or usage,
  *   you should check out https://github.com/cbarlin/advanced-record-utils
  * <p>
  * As this is the core of the processor, it's quite dense but doesn't do a lot of

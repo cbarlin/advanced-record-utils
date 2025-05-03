@@ -41,6 +41,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <!-- Scope isn't needed here since this module and its children are not published -->
+        </dependency>
+        <dependency>
             <groupId>io.jstach.rainbowgum</groupId>
             <artifactId>rainbowgum-slf4j</artifactId>
             <version>${rainbowgum.version}</version>

@@ -19,11 +19,11 @@
     </scm>
 
     <dependencies>
-        <!-- Required dependencies -->
         <!-- jspecify for nullness checking -->
         <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- Commons lang 3 because it's too useful not to -->
         <dependency>

@@ -54,7 +54,7 @@ public class AnalysedComponent {
 
     /**
      * Construction of the Analysed component. This construction does handle detecting
-     *   {@link AnalysedTypeConverter} instances, but doesn't anything else.
+     *   {@link AnalysedTypeConverter} instances, but doesn’t perform anything else.
      * 
      * Params should be self-explanatory
      */
@@ -179,6 +179,7 @@ public class AnalysedComponent {
      */
     public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
         APContext.messager().printError("Attempt to invoke an unwrapping on a type that doesn't require it", element);
+        throw new UnsupportedOperationException("Cannot unwrap a type that isn't wrapped");
     }
 
     // Accessors below
