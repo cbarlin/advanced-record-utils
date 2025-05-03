@@ -79,7 +79,7 @@ public enum Constants {
         public static final ClassName STRING = ClassName.get(String.class);
         public static final ClassName STRINGUTILS = ClassName.get("org.apache.commons.lang3", "StringUtils");
         public static final ClassName UNARY_OPERATOR = ClassName.get(UnaryOperator.class);
-        public static final ClassName UUID = ClassName.get(java.util.UUID.class);
+        public static final ClassName UUID = ClassName.get("java.util", "UUID");
         public static final ClassName VALIDATE = ClassName.get("org.apache.commons.lang3", "Validate");
         public static final ClassName XML_ATTRIBUTE = ClassName.get(XML_ANNOTATIONS, "XmlAttribute");
         public static final ClassName XML_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlElement");

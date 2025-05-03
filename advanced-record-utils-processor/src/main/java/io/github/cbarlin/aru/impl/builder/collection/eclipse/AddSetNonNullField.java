@@ -1,4 +1,4 @@
-package io.github.cbarlin.aru.impl.builder.collection.eclipse.set;
+package io.github.cbarlin.aru.impl.builder.collection.eclipse;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_SET;
@@ -7,7 +7,6 @@ import javax.lang.model.element.Modifier;
 
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.builder.collection.eclipse.EclipseComponentVisitor;
 import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
 
 import io.avaje.spi.ServiceProvider;
@@ -16,11 +15,11 @@ import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class AddNonNullField extends EclipseComponentVisitor {
+public class AddSetNonNullField extends EclipseComponentVisitor {
 
     private static final ClassName SETS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Sets");
 
-    public AddNonNullField() {
+    public AddSetNonNullField() {
         super(Claims.CORE_BUILDER_FIELD);
     }
 

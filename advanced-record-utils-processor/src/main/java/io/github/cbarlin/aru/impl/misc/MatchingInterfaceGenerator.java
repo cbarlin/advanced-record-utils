@@ -1,4 +1,4 @@
-package io.github.cbarlin.aru.impl;
+package io.github.cbarlin.aru.impl.misc;
 
 import javax.lang.model.element.Modifier;
 
@@ -29,12 +29,12 @@ public class MatchingInterfaceGenerator extends RecordVisitor {
     }
 
     @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
+    public boolean isApplicable(final AnalysedRecord analysedRecord) {
         return true;
     }
 
     @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
         allerBuilder = analysedRecord.utilsClassChildInterface(INTERNAL_MATCHING_IFACE_NAME, claimableOperation);
         AnnotationSupplier.addGeneratedAnnotation(allerBuilder, this);
         allerBuilder.builder()
@@ -44,7 +44,7 @@ public class MatchingInterfaceGenerator extends RecordVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final var methodBuilder = allerBuilder.createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
             .returns(analysedComponent.typeName())
             .addModifiers(Modifier.ABSTRACT);

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
