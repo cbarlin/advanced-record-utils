@@ -4,6 +4,8 @@ import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -12,12 +14,14 @@ import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import io.github.cbarlin.aru.core.types.*;
 
 public class EclipseCollectionComponent extends AnalysedComponent {
 
+    private static final String UNWRAPPING_VARIABLE_NAME = "__innerValue";
     private final TypeMirror innerType;
     private final TypeName innerTypeName;
     private final ClassName erasedWrapperClassName;
@@ -102,5 +106,17 @@ public class EclipseCollectionComponent extends AnalysedComponent {
     @Override
     public boolean requiresUnwrapping() {
         return true;
+    }
+
+    @Override
+    public boolean isLoopable() {
+        return true;
+    }
+
+    @Override
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
+        methodBuilder.beginControlFlow("for (final $T $L : $L)", innerTypeName, UNWRAPPING_VARIABLE_NAME, incomingName);
+        withUnwrappedName.accept(UNWRAPPING_VARIABLE_NAME);
+        methodBuilder.endControlFlow();
     }
 }

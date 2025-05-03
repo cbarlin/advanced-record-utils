@@ -2,7 +2,6 @@ package io.github.cbarlin.aru.impl.xml.utils.elements.collections;
 
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
-import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 import java.util.Optional;
@@ -83,14 +82,10 @@ public class WriteCharSequence extends XmlVisitor {
     private boolean isSupported(AnalysedComponent analysedComponent, final Optional<XmlElementPrism> optPrism) {
         final var types = APContext.types();
         return optPrism.isPresent() && 
-            analysedComponent.requiresUnwrapping() && 
+            analysedComponent.isLoopable() && 
             types.isAssignable(
                 analysedComponent.unNestedPrimaryComponentType(), 
                 APContext.elements().getTypeElement(CHAR_SEQUENCE.canonicalName()).asType()
-            ) &&
-            types.isAssignable(
-                types.erasure(analysedComponent.componentType()), 
-                APContext.elements().getTypeElement(ITERABLE.canonicalName()).asType()
             );
     }
 

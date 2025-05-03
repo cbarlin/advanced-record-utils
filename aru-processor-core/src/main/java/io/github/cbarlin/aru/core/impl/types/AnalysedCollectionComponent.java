@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.function.Consumer;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.RecordComponentElement;
@@ -19,11 +20,13 @@ import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 public class AnalysedCollectionComponent extends AnalysedComponent {
 
+    private static final String UNWRAPPING_VARIABLE_NAME = "__innerValue";
     private final TypeMirror innerType;
     private final TypeName innerTypeName;
     private final ClassName erasedWrapperClassName;
@@ -133,5 +136,17 @@ public class AnalysedCollectionComponent extends AnalysedComponent {
     @Override
     public boolean requiresUnwrapping() {
         return true;
+    }
+
+    @Override
+    public boolean isLoopable() {
+        return true;
+    }
+
+    @Override
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
+        methodBuilder.beginControlFlow("for (final $T $L : $L)", innerTypeName, UNWRAPPING_VARIABLE_NAME, incomingName);
+        withUnwrappedName.accept(UNWRAPPING_VARIABLE_NAME);
+        methodBuilder.endControlFlow();
     }
 }

@@ -18,7 +18,6 @@ import org.jspecify.annotations.Nullable;
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.artifacts.PreBuilt;
-import io.github.cbarlin.aru.core.impl.types.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -179,8 +178,7 @@ public class Branching extends XmlVisitor {
 
     private Optional<AnalysedInterface> extractSupported(final AnalysedComponent analysedComponent) {
         return analysedComponent.targetAnalysedType()
-            .filter(x -> (analysedComponent.requiresUnwrapping()))
-            .filter(x -> !(analysedComponent instanceof AnalysedOptionalComponent))
+            .filter(x -> (analysedComponent.isLoopable() && analysedComponent.requiresUnwrapping()))
             .filter(x -> xmlElementsPrism(analysedComponent).isPresent())
             .filter(AnalysedInterface.class::isInstance)
             .map(AnalysedInterface.class::cast);
