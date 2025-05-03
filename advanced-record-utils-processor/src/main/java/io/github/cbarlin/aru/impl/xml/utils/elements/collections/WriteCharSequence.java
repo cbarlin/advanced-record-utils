@@ -2,7 +2,6 @@ package io.github.cbarlin.aru.impl.xml.utils.elements.collections;
 
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
-import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 import java.util.Optional;
@@ -58,17 +57,22 @@ public class WriteCharSequence extends XmlVisitor {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }
 
-            methodBuilder.beginControlFlow("for (final $T v : val)", CHAR_SEQUENCE)
-                .beginControlFlow("if ($T.isNull(v))", OBJECTS)
-                .addStatement("continue")
-                .endControlFlow();
-                namespaceName.ifPresentOrElse(
-                    namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                    () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
-                );
-                methodBuilder.addStatement("output.writeCharacters(v.toString())")
-                    .addStatement("output.writeEndElement()");
-            methodBuilder.endControlFlow();
+            analysedComponent.withinUnwrapped(
+                variableName -> {
+                    methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                        .addStatement("continue")
+                        .endControlFlow();
+                    namespaceName.ifPresentOrElse(
+                        namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
+                        () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                    );
+                    methodBuilder.addStatement("output.writeCharacters($L.toString())", variableName)
+                        .addStatement("output.writeEndElement()");
+                },
+                methodBuilder,
+                "val",
+                CHAR_SEQUENCE
+            );
 
             if (wrapper.isPresent()) {
                 handleWrapperEnd(required, methodBuilder);
@@ -83,14 +87,10 @@ public class WriteCharSequence extends XmlVisitor {
     private boolean isSupported(AnalysedComponent analysedComponent, final Optional<XmlElementPrism> optPrism) {
         final var types = APContext.types();
         return optPrism.isPresent() && 
-            analysedComponent.requiresUnwrapping() && 
+            analysedComponent.isLoopable() && 
             types.isAssignable(
                 analysedComponent.unNestedPrimaryComponentType(), 
                 APContext.elements().getTypeElement(CHAR_SEQUENCE.canonicalName()).asType()
-            ) &&
-            types.isAssignable(
-                types.erasure(analysedComponent.componentType()), 
-                APContext.elements().getTypeElement(ITERABLE.canonicalName()).asType()
             );
     }
 

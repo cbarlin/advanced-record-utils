@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.core.impl.types;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
@@ -14,10 +15,21 @@ import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
+/**
+ * A component that is of type {@code Optional<X>}.
+ * <p>
+ * Most documentation can be found on {@link AnalysedComponent}
+ * <p>
+ * Does not handle e.g. {@link java.util.OptionalInt}
+ * 
+ * @see AnalysedComponent
+ */
 public class AnalysedOptionalComponent extends AnalysedComponent {
 
+    private static final String UNWRAPPING_VARIABLE_NAME = "__innerValue";
     private final TypeMirror innerType;
     private final TypeName innerTypeName;
 
@@ -56,5 +68,13 @@ public class AnalysedOptionalComponent extends AnalysedComponent {
     @Override
     public boolean requiresUnwrapping() {
         return true;
+    }
+
+    @Override
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTn) {
+        methodBuilder.beginControlFlow("if ($L.isPresent())", incomingName)
+            .addStatement("final $T $L = $L.get()", unwrappedTn, UNWRAPPING_VARIABLE_NAME, incomingName);
+        withUnwrappedName.accept(UNWRAPPING_VARIABLE_NAME);
+        methodBuilder.endControlFlow();
     }
 }

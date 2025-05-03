@@ -20,12 +20,12 @@ public class JsonbImportAnnotator extends RecordVisitor {
     }
 
     @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
+    public boolean isApplicable(final AnalysedRecord analysedRecord) {
         return Boolean.TRUE.equals(analysedRecord.settings().prism().addJsonbImportAnnotation());
     }
 
     @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
         if (!analysedRecord.intendedType().equals(analysedRecord.className())) {
             analysedRecord.utilsClass()
             .builder()

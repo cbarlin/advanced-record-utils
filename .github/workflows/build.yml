@@ -26,8 +26,9 @@ jobs:
       with:
         path:
           ~/.m2
-        key: build-${{ env.cache-name }}
+        key: ${{ runner.os }}-${{ matrix.java_version }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-${{ matrix.java_version }}-maven-
     - name: Maven version
       run: mvn --version
     - name: Build with Maven
-      run: mvn clean install && mvn clean verify artifact:compare && rm -rf ~/.m2/io/github/cbarlin
+      run: rm -rf ~/.m2/io/github/cbarlin && mvn clean install && mvn clean verify artifact:compare && rm -rf ~/.m2/io/github/cbarlin

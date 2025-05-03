@@ -10,7 +10,6 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 
 import io.github.cbarlin.aru.core.APContext;
-import io.github.cbarlin.aru.core.impl.types.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
@@ -43,8 +42,8 @@ public class WriteOtherProcessed extends XmlVisitor {
     private final Optional<AnalysedRecord> extractSupported(final AnalysedComponent analysedComponent, final Optional<XmlElementPrism> optPrism) {
         final Optional<ProcessingTarget> targetAnalysedType = analysedComponent.targetAnalysedType();
         if(optPrism.isPresent() &&
-           analysedComponent.requiresUnwrapping() &&
-           (!(analysedComponent instanceof AnalysedOptionalComponent)) &&
+           analysedComponent.requiresUnwrapping() && 
+           analysedComponent.isLoopable() &&
            targetAnalysedType.isPresent() && 
            targetAnalysedType.get() instanceof final AnalysedRecord other
         ) {
@@ -78,15 +77,19 @@ public class WriteOtherProcessed extends XmlVisitor {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }
 
-            methodBuilder.beginControlFlow("for (final $T v : val)", other.intendedType())
-                .beginControlFlow("if ($T.isNull(v))", OBJECTS)
-                .addStatement("continue")
-                .endControlFlow();
-            namespaceName.ifPresentOrElse(
-                namespace -> methodBuilder.addStatement("$T.$L(v, output, $S, $S, currentDefaultNamespace)", otherXmlUtils, STATIC_WRITE_XML_NAME, elementName, namespace),
-                () -> methodBuilder.addStatement("$T.$L(v, output, $S, null, currentDefaultNamespace)", otherXmlUtils, STATIC_WRITE_XML_NAME, elementName)
+            analysedComponent.withinUnwrapped(
+                variableName -> {
+                    methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                        .addStatement("continue")
+                        .endControlFlow();
+                    namespaceName.ifPresentOrElse(
+                        namespace -> methodBuilder.addStatement("$T.$L($L, output, $S, $S, currentDefaultNamespace)", otherXmlUtils, STATIC_WRITE_XML_NAME, variableName, elementName, namespace),
+                        () -> methodBuilder.addStatement("$T.$L($L, output, $S, null, currentDefaultNamespace)", otherXmlUtils, STATIC_WRITE_XML_NAME, variableName, elementName)
+                    );
+                },
+                methodBuilder,
+                "val"
             );
-            methodBuilder.endControlFlow();
 
             if (wrapper.isPresent()) {
                 handleWrapperEnd(required, methodBuilder);

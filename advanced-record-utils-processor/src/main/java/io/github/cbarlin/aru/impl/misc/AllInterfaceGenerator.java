@@ -1,4 +1,4 @@
-package io.github.cbarlin.aru.impl;
+package io.github.cbarlin.aru.impl.misc;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
@@ -23,19 +23,19 @@ public class AllInterfaceGenerator extends RecordVisitor  {
     }
 
     @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
+    public boolean isApplicable(final AnalysedRecord analysedRecord) {
         return analysedRecord.settings().prism().createAllInterface();
     }
 
     @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
         final String generatedName = "All";
         final var builder = analysedRecord.utilsClassChildInterface(generatedName, claimableOperation);
         AnnotationSupplier.addGeneratedAnnotation(builder, this);
         builder.builder().addAnnotation(CommonsConstants.Names.NULL_MARKED);
 
         analysedRecord.utilsClass().visitChildArtifacts(artifact -> {
-            if (artifact != builder && artifact instanceof ToBeBuiltInterface tbbi) {
+            if (artifact != builder && artifact instanceof final ToBeBuiltInterface tbbi) {
                 builder.builder().addSuperinterface(tbbi.className());
             }
         });

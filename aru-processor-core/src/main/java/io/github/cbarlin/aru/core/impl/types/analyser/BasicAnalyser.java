@@ -16,7 +16,9 @@ public class BasicAnalyser implements ComponentAnalyser {
 
     @Override
     public int specificity() {
-        return 0;
+        // This should be the "last resort", although it'll probably
+        //   be chosen fairly often!
+        return Integer.MIN_VALUE;
     }
 
     @Override

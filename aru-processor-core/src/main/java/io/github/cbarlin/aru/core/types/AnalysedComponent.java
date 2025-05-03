@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -16,6 +17,7 @@ import javax.tools.Diagnostic;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
@@ -23,23 +25,39 @@ import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.inference.Holder;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
+/**
+ * An enriched wrapper around a {@link RecordComponentElement}.
+ * <p>
+ * This wrapper includes things like links to the utils class of the parent record, if it
+ *   is part of a constructor parameter or not, and tracks which claims have been made.
+ * <p>
+ * Child classes of this one exist as specialisations of this component. Generally speaking, they
+ *   shouldn't add too many extra functions (as they can probably be re-used across e.g. optional dependencies)
+ * <p>
+ * To create a specialisation of this component, you'll need to implement an {@link io.github.cbarlin.aru.core.types.ComponentAnalyser}
+ *   and it should determine if the specialisation should be built, and build it
+ */
 public class AnalysedComponent {
     protected final RecordComponentElement element;
     protected final AnalysedRecord parentRecord;
     protected final UtilsProcessingContext context;
     protected final boolean isIntendedConstructorParam;
     protected final TypeMirror componentType;
-    protected final Map<ClaimableOperation, RecordVisitor> claimedOperations = new HashMap<>();
-    /**
-     * Annotations that are not on the RecordComponentElement (and/or accessor or field) but are "projected"
-     *   into it that may be relevent (e.g. `NotNull` which is implied from a package annotation)
-     */
-    protected Optional<ProcessingTarget> targetAnalysedType = Optional.empty();
     protected final TypeName typeName;
     protected final List<AnalysedTypeConverter> analysedTypeConverters;
 
+    protected final Map<ClaimableOperation, RecordVisitor> claimedOperations = new HashMap<>();
+    protected Optional<ProcessingTarget> targetAnalysedType = Optional.empty();
+
+    /**
+     * Construction of the Analysed component. This construction does handle detecting
+     *   {@link AnalysedTypeConverter} instances, but doesn’t perform anything else.
+     * 
+     * Params should be self-explanatory
+     */
     public AnalysedComponent(
         RecordComponentElement element, 
         AnalysedRecord parentRecord, 
@@ -61,6 +79,11 @@ public class AnalysedComponent {
         }
     }
 
+    /**
+     * Inform this component that it's pointing at something else that's
+     *   in-scope for processing (or was processed), and thus we can "bounce"
+     *   into that record (e.g. fluent builder, pass on serialisations)
+     */
     public void setAnalysedType(ProcessingTarget type) {
         this.targetAnalysedType = Optional.of(type);
     }
@@ -133,8 +156,47 @@ public class AnalysedComponent {
         this.parentRecord().addCrossReference(other);
     }
 
-    // Accessors below
+    /**
+     * Perform some operation within an "Unwrapped" version of the value
+     * <p>
+     * This can be used on items like {@code List<?>} or {@code Optional<?>} or even {@code Optional<List<?>>}
+     * 
+     * @param withUnwrappedName The name of the variable that this component has been unwrapped into
+     * @param methodBuilder The builder that can be used to do the unwrapping
+     */
+    public final void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder) {
+        withinUnwrapped(withUnwrappedName, methodBuilder, name());
+    }
 
+    /**
+     * Perform some operation within an "Unwrapped" version of the value
+     * <p>
+     * This can be used on items like {@code List<?>} or {@code Optional<?>} or even {@code Optional<List<?>>}
+     * 
+     * @param withUnwrappedName The name of the variable that this component has been unwrapped into
+     * @param methodBuilder The builder that can be used to do the unwrapping
+     * @param incomingName The current name of the variable.
+     */
+    public final void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName) {
+        withinUnwrapped(withUnwrappedName, methodBuilder, incomingName, unNestedPrimaryTypeName());
+    }
+
+    /**
+     * Perform some operation within an "Unwrapped" version of the value
+     * <p>
+     * This can be used on items like {@code List<?>} or {@code Optional<?>} or even {@code Optional<List<?>>}
+     * 
+     * @param withUnwrappedName The name of the variable that this component has been unwrapped into
+     * @param methodBuilder The builder that can be used to do the unwrapping
+     * @param incomingName The current name of the variable.
+     * @param unwrappedTypeName The type to use while unwrapping. Override with caution - unless you are using something as a parent type (e.g. String as CharSequence), prefer to omit this argument
+     */
+    public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTypeName) {
+        APContext.messager().printError("Attempt to invoke an unwrapping on a type that doesn't require it", element);
+        throw new UnsupportedOperationException("Cannot unwrap a type that isn't wrapped");
+    }
+
+    // Accessors below
     public AnalysedRecord parentRecord() {
         return this.parentRecord;
     }
@@ -175,6 +237,10 @@ public class AnalysedComponent {
 
     public TypeMirror componentType() {
         return componentType;
+    }
+
+    public boolean isLoopable() {
+        return false;
     }
 
     public boolean requiresUnwrapping() {
@@ -251,7 +317,7 @@ public class AnalysedComponent {
 
     private final Map<ClassName, Optional<?>> annotations = new HashMap<>();
 
-    // Fine, because the only population is the known-correct impl method
+    // Fine because the only population is the known-correct impl method
     @SuppressWarnings("unchecked")
     public <T> Optional<T> findPrism(ClassName annotationClassName, Class<T> prismClass) {
         return (Optional<T>) annotations.computeIfAbsent(annotationClassName, c -> findPrismImpl(c, prismClass));

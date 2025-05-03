@@ -10,6 +10,8 @@ Thank you for taking the time to read the contribution guide! This guide will as
  * Style
  * Contribution Examples
 
+If you want a slightly more "compact" version of this document, the `.coderabbit.yaml` file can be used to see what the AI reviewer is looking for. It's not perfect or 100% comprehensive (nothing is perfect) but it's another perspective on the codebase.
+
 # Rules
 
 Really, there are only two contributor rules:
@@ -47,9 +49,13 @@ The layout of the project is as so:
 
 The intent of the layout is that it should be easy to "plug-in" capabilties into the `advanced-record-utils-processor` - most contributions would be to this area. It's also the most "neat" - every class can mostly be self-isolated and easy to reason with. The `advanced-record-utils-processor`'s complexity should only end up being the number of classes it has, whereas the `aru-processor-core` is complex as it attempts to create a complete graph of operations and then enact it.
 
+## The annotations library
+
 The `advanced-record-utils-annotations` should not gain any new required dependencies. `commons-lang3` and `jspecify` are pushing it already.
 
 The `optional` dependencies that are applied to it are to indicate to consumers that, based on their settings for the generator, we can (potentially, maybe not yet) use/integrate with those dependencies. An example would be if they enabled validation for the `build` method of their builder - we would use the requested api to do that. The "sane" defaults for the annotation should require none of these (though detecting them and working with those is fine).
+
+## The processor modules
 
 Dependencies for the processor itself are a little different. Since those don't end up being included in final builds, we can afford to be a little more lenient there. However, keeping them low is ideal for a few reasons (mostly making it easier to detect when the end-user has them!), and really the processor doesn't need the dependencies in order to generate code that does.
 
@@ -136,6 +142,16 @@ These are wrapper types around the `TypeElement` and the `AdvancedRecordUtils` a
 Similar to the `AnalysedRecord`, these are wrapper types around the `RecordComponentElement` and also have easy access back to the parent `AnalysedRecord`.
 
 The `ComponentAnalyser` is a service loading target, similar to the `RecordVisitor` - it attempts to analyse from the most "specific" to the least specific. By doing this, we can make it easy to add new `AnalysedComponent` types (such as `Map`, or the Guava types).
+
+## Annotation Inferencing and `ClassName`/Prism mapping
+
+Annotation inferencing refers to the concept that we can *infer* or safely assume that an annotation should be present, even if it isn't. An example of this would be that the end-user has asked for their data structure to have XML serialisations added, but has only marked the structure up with Json annotations. We can take those annotations and infer the XML annotations from those.
+
+The `ClassName`/Prism mapping is a byproduct of this - since we are working from annotations that may not actually be present, we have to have a mapping from annotation class names to their prisms.
+
+## `CommonsConstants` and `Constants`
+
+There are two constants files that contain things that will come up repeatedly - things like `Claim` objects and `ClassName`s. I'm aware "Constant" files are a bit controversial, but I think in this context I think it's a better way of ensuring that `Claim` operations don't "drift" and that we only go through the process of setting up the `ClassName`s once.
 
 # Style
 

@@ -1,4 +1,6 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# yamllint disable rule:line-length
+# yamllint disable rule:document-start
 
 language: en-AU
 enable_free_tier: true
@@ -21,11 +23,13 @@ reviews:
   path_instructions:
     - path: '**/*.java'
       instructions: |
+        All the code for the annotation processor should be checked, please.
+
         Please do these:
         * Review code using Java 21 standards, taking into account the vague rules and samples defined in `CONTRIBUTING.md`
         * Validate that code indentation uses spaces, not tabs, with an indent of multiple of 4
         * Propose changes that only use the Java 21 API, not the API of Guava
-        
+
         Please keep in mind:
         * The pattern matching `instanceof` expression safely handles `null`, returning `false`
         * Our rule is that builds must be reproduceable, and the annotation processor must not prevent a consuming build from being reproduceable
@@ -38,7 +42,7 @@ reviews:
     - path: 'advanced-record-utils-annotations/**/*.java'
       instructions: |
         This is the user-facing part of the library. It must be well-documented
-        
+
         For the code:
         * When providing defaults for the annotation values, we have some rules that should be enforced:
            * Principle of Least Astonishment
@@ -49,20 +53,31 @@ reviews:
         The README of `aru-prism-prison` covers this folder quite well
     - path: 'aru-processor-core/**/*.java'
       instructions: |
-        This folder contains the dense code that wires together the processor. As per `CONTRIBUTING.md`, this folder should really only have:
+        This folder contains the dense code that wires together the processor. The `module-info` specifies that the code is `@NullMarked`, therefore
+          if code is added that can put `null` somewhere that isn't explicitly annotated as `Nullable` it should be called out.
+
+        As per `CONTRIBUTING.md`, this folder should really only have:
           * The minimum to achieve that goal; and
           * The "core" of the builder
-        
+
         While it should be possible to make all the code readable, if any part of the codebase is going to be hard to read it is likely to be in here.
-        Changes here will have the largest impact, and should be well-understood
+        Changes here will have the largest impact, and should be well-understood. The code here should also be documented for contributors adding to the
+        processors capabilities (the documentation is *not* intended for end-users of the annotation processor, although hopefully it would make sense to them too!)
     - path: 'advanced-record-utils-processor/**/*.java'
       instructions: |
-        This is the "worker" part of the codebase. Ideally, everything in here follows a similar pattern (minus the Constants file):
+        This is the "worker" part of the codebase.
+
+        Ideally, everything in here follows a similar pattern (minus the Constants file):
          * How "specific" the worker is at doing work
          * Testing if it should attempt the work in a general sense (e.g. dependencies, settings)
          * Then, when doing the work:
             * Test any remaining specifics (e.g. component-level stuff)
             * Do the work
-        
+
         Because this is an annotation processor, tests should be included by adding modules/records to the `utils-tests` and should include positive and negative cases
           * The design of the project may mean that the "negative" case isn't explicit, but is tested elsewhere. The positive case should definitely be tested though!
+
+        The documentation here is a little more sparse, which isn't great but the aim is that each item should mostly be self-contained or should have a relationship with a
+          small parent that helps out with the context of the work. If parent classes do exist or the class is something used in multiple places, it should be documented.
+
+        Every package must be `NullMarked`, and if code is added that can put `null` somewhere that isn't explicitly annotated as `Nullable` it should be called out.
