@@ -132,18 +132,19 @@ public final class AnalysedRecord extends AnalysedType {
         final boolean isIntended = intendedParams.contains(componentElement.getSimpleName());
         final var env = analysisTarget.processingEnv();
         final AnalysedComponent analysedComponent = getComponent(componentElement, analysisTarget, isIntended, analysisTarget.utilsProcessingContext());
-        
         // Determine if we need to analyse this target too
-        final TypeMirror tmTypeOfComponent = analysedComponent.unNestedPrimaryComponentType();
-        final ProcessingTarget target = extractReference(analysed, analysisTarget, env, tmTypeOfComponent);
-        if (Objects.nonNull(target) && target instanceof ProcessingTarget analysedTypeTarget) {
-            analysedComponent.setAnalysedType(analysedTypeTarget);
-            // Extract any `XmlElements` from the component
-            if (target instanceof final AnalysedInterface analysedInterface) {
-                checkForImplAnnotations(analysed, analysisTarget, componentElement, env, analysedInterface);
+        if (analysedComponent.proceedDownTree()) {
+            final TypeMirror tmTypeOfComponent = analysedComponent.unNestedPrimaryComponentType();
+            final ProcessingTarget target = extractReference(analysed, analysisTarget, env, tmTypeOfComponent);
+            if (Objects.nonNull(target) && target instanceof ProcessingTarget analysedTypeTarget) {
+                analysedComponent.setAnalysedType(analysedTypeTarget);
+                // Extract any `XmlElements` from the component
+                if (target instanceof final AnalysedInterface analysedInterface) {
+                    checkForImplAnnotations(analysed, analysisTarget, componentElement, env, analysedInterface);
+                }
             }
         }
-
+        
         analysisTarget.components.add(analysedComponent);
         ignoredExecutableElements.add(componentElement.getAccessor());
     }

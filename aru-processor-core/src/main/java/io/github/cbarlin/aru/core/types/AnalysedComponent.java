@@ -248,6 +248,13 @@ public class AnalysedComponent {
     }
 
     /**
+     * When building up the processing tree, should we continue when we encounter this component?
+     */
+    public boolean proceedDownTree(){
+        return true;
+    }
+
+    /**
      * Un-nested type. For normal references, it will be the same as {@link #componentType()}
      * <p>
      * For lists, this will be the type within the list
@@ -273,6 +280,13 @@ public class AnalysedComponent {
         return typeName;
     }
 
+    /**
+     * When serialising, consider the component to be of this type
+     */
+    public TypeName serialisedTypeName() {
+        return typeName();
+    }
+    
     /**
      * @see #unNestedPrimaryComponentType()
      */

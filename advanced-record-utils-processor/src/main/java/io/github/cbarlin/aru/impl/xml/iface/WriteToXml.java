@@ -22,6 +22,7 @@ import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.xml.ToXmlMethod;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
@@ -109,7 +110,11 @@ public class WriteToXml extends ToXmlMethod {
 
         for(AnalysedComponent component : writeOrder) {
             final String name = component.name();
-            methodBuilder.addStatement("$T.$L(output, this.$L(), namespaceToPassDown)", xmlStaticClass.className(), name, name);
+            if (component instanceof TypeAliasComponent) {
+                methodBuilder.addStatement("$T.$L(output, this.$L().value(), namespaceToPassDown)", xmlStaticClass.className(), name, name);
+            } else {
+                methodBuilder.addStatement("$T.$L(output, this.$L(), namespaceToPassDown)", xmlStaticClass.className(), name, name);
+            }
         }
         methodBuilder.addStatement("output.writeEndElement()");
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);

@@ -34,7 +34,7 @@ public abstract class WriteXmlAttribute extends XmlVisitor {
         return Boolean.TRUE.equals(
             xmlAttributePrism(analysedComponent)
                 .map(prism -> {
-                    if (supportedTypeName().equals(analysedComponent.typeName())) {
+                    if (supportedTypeName().equals(analysedComponent.serialisedTypeName())) {
                         visitAttributeComponent(analysedComponent, prism);
                         return Boolean.TRUE;
                     }
@@ -45,6 +45,6 @@ public abstract class WriteXmlAttribute extends XmlVisitor {
     }
 
     protected final MethodSpec.Builder createMethod(final AnalysedComponent analysedComponent) {
-        return createMethod(analysedComponent, analysedComponent.typeName());
+        return createMethod(analysedComponent, analysedComponent.serialisedTypeName());
     }
 }

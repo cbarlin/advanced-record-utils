@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.cbarlin.aru.tests</groupId>
+        <artifactId>utils-tests</artifactId>
+        <version>0.1.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>b_type_alias</artifactId>
+    <name>Advanced Record Utils - Tests - Type Aliases</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>a_core_dependency</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <proc>full</proc>
+                    <fork>true</fork>
+                    <compilerArgs>
+                        <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -28,6 +28,7 @@ import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.xml.ToXmlMethod;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
@@ -145,7 +146,7 @@ public class WriteToXml extends ToXmlMethod {
                         .filter($T::isNotBlank)
                         .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                         .orElse($L)
-                """,
+                """.trim(),
                 OPTIONAL, 
                 STRINGUTILS, 
                 ARU_GENERATED,
@@ -187,7 +188,7 @@ public class WriteToXml extends ToXmlMethod {
                             .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                     )
                     .or(() -> $L)
-                """,
+                """.trim(),
                 OPTIONAL,
                 STRINGUTILS,
                 ARU_GENERATED,
@@ -223,7 +224,7 @@ public class WriteToXml extends ToXmlMethod {
                             .filter($T::isNotBlank)
                             .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                     )
-                """,
+                """.trim(),
                 OPTIONAL,
                 STRINGUTILS,
                 ARU_GENERATED,
@@ -289,7 +290,11 @@ public class WriteToXml extends ToXmlMethod {
 
         for(final AnalysedComponent component : writeOrder) {
             final String name = component.name();
-            methodBuilder.addStatement("$T.$L(output, el.$L(), namespaceToPassDown)", xmlStaticClass.className(), name, name);
+            if (component instanceof TypeAliasComponent) {
+                methodBuilder.addStatement("$T.$L(output, el.$L().value(), namespaceToPassDown)", xmlStaticClass.className(), name, name);
+            } else {
+                methodBuilder.addStatement("$T.$L(output, el.$L(), namespaceToPassDown)", xmlStaticClass.className(), name, name);
+            }
         }
         methodBuilder.addStatement("output.writeEndElement()");
 
