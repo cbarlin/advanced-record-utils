@@ -43,6 +43,7 @@ public enum Constants {
         public static final ClaimableOperation WITHER_TO_BUILDER = new ClaimableOperation("witherToBuilder", CLASS);
         public static final ClaimableOperation WITHER_USE_TYPE_CONVERTER = new ClaimableOperation("witherUseTypeConverter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH = new ClaimableOperation("witherWith", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation WITHER_WITH_ALIAS = new ClaimableOperation("witherWithAlias", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_ADD = new ClaimableOperation("witherWithAdd", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_FLUENT = new ClaimableOperation("witherWithFluent", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation XML_IFACE = new ClaimableOperation("xmlInterface", CLASS);

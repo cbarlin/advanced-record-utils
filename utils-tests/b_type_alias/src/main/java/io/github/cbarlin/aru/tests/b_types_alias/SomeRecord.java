@@ -18,6 +18,6 @@ public record SomeRecord(
     RandomIntB randomIntB,
     @XmlAttribute(name = "C")
     RandomIntC randomIntC
-) {
+) implements SomeRecordUtils.All {
 
 }

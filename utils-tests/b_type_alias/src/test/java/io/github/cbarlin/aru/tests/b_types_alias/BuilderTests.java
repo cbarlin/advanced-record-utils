@@ -17,8 +17,9 @@ class BuilderTests {
             .randomIntB(new RandomIntB(69))
             .randomIntC(13)
             .build();
-        // Test both that we have constructions of records and that we can destruct them
+        // Test both that we have constructions of aliases...
         assertEquals(new RandomIntA(42), someRecord.randomIntA());
+        // ... and that we can dealias them...
         assertEquals("This is an author", someRecord.authorName().value());        
         assertEquals("And this is a book", someRecord.bookName().value());
         assertEquals(69, someRecord.randomIntB().value());
