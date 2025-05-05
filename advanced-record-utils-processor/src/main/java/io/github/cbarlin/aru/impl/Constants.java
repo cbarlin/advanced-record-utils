@@ -25,6 +25,7 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_ADD_ALL_ITERABLE = new ClaimableOperation("builderAddAllIterable", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_ADD_ALL_VARARGS = new ClaimableOperation("builderAddAllVarargs", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_ADD_VALIDATED_BUILD_METHOD = new ClaimableOperation("builderAddValidatedBuildMethod", CLASS);
+        public static final ClaimableOperation BUILDER_ALIAS_SETTER = new ClaimableOperation("builderAliasSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_CONCRETE_OPTIONAL = new ClaimableOperation("builderConcreteSetterForOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_SET_TIME_TO_NOW = new ClaimableOperation("builderSetTimeToNow", FIELD_AND_ACCESSORS);
@@ -78,9 +79,8 @@ public enum Constants {
         public static final ClassName PREDICATE = ClassName.get(Predicate.class);
         public static final ClassName STRING = ClassName.get(String.class);
         public static final ClassName STRINGUTILS = ClassName.get("org.apache.commons.lang3", "StringUtils");
+        public static final ClassName TYPE_ALIAS = ClassName.get("io.github.cbarlin.aru.annotations", "TypeAlias");
         public static final ClassName UNARY_OPERATOR = ClassName.get(UnaryOperator.class);
-        // Use string based lookup since we can't import the "UUID" class when the constant name is "UUID"
-        public static final ClassName UUID = ClassName.get("java.util", "UUID");
         public static final ClassName VALIDATE = ClassName.get("org.apache.commons.lang3", "Validate");
         public static final ClassName XML_ATTRIBUTE = ClassName.get(XML_ANNOTATIONS, "XmlAttribute");
         public static final ClassName XML_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlElement");
@@ -94,6 +94,9 @@ public enum Constants {
         public static final ClassName ZONE_ID = ClassName.get(ZoneId.class);
         public static final ClassName ZONE_OFFSET = ClassName.get(ZoneOffset.class);
         public static final ClassName ZONED_DATE_TIME = ClassName.get(ZonedDateTime.class);
+
+        // Use string based lookup since we can't import the "UUID" class when the constant name is "UUID"
+        public static final ClassName UUID = ClassName.get("java.util", "UUID");
     }
 
     public enum InternalReferenceNames {

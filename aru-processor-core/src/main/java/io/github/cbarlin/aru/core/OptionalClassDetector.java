@@ -58,11 +58,15 @@ public class OptionalClassDetector {
         } else {
             final var dependencyTypeMirror = optionalTypeMirror.get();
             final var types = APContext.types();
-            return (TypeMirror returnType) -> types.isAssignable(types.erasure(returnType), types.erasure(dependencyTypeMirror));
+            return (TypeMirror returnType) -> {
+                TypeMirror erasedReturn = types.erasure(returnType);
+                TypeMirror erasedDep = types.erasure(dependencyTypeMirror);
+                return types.isAssignable(erasedReturn, erasedDep) || types.isSubtype(erasedReturn, erasedDep) ;
+            };
         }
     }
 
     public static boolean checkSameOrSubType(final RecordComponentElement recordComponentElement, final TypeName optionalDepTypeName ) {
-        return checkSameOrSubType(optionalDepTypeName).test(recordComponentElement.getAccessor().getReturnType());
+        return checkSameOrSubType(optionalDepTypeName).test(recordComponentElement.asType());
     } 
 }

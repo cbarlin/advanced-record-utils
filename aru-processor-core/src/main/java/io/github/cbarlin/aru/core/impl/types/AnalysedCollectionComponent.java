@@ -16,6 +16,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 
@@ -141,6 +142,12 @@ public class AnalysedCollectionComponent extends AnalysedComponent {
     @Override
     public boolean isLoopable() {
         return true;
+    }
+
+    @Override
+    public TypeName serialisedTypeName() {
+        // Always consider a collection of any type a simple list
+        return ParameterizedTypeName.get(Names.LIST, innerTypeName);
     }
 
     @Override

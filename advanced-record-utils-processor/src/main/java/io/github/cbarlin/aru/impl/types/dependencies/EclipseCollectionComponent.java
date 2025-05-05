@@ -10,6 +10,8 @@ import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+
+import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 
@@ -111,6 +113,12 @@ public class EclipseCollectionComponent extends AnalysedComponent {
     @Override
     public boolean isLoopable() {
         return true;
+    }
+
+    @Override
+    public TypeName serialisedTypeName() {
+        // Always consider a collection of any type a simple list
+        return ParameterizedTypeName.get(Names.LIST, innerTypeName);
     }
 
     @Override

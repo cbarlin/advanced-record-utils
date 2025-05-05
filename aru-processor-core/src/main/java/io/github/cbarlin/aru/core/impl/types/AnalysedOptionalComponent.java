@@ -11,11 +11,13 @@ import javax.lang.model.type.TypeMirror;
 
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 /**
@@ -68,6 +70,11 @@ public class AnalysedOptionalComponent extends AnalysedComponent {
     @Override
     public boolean requiresUnwrapping() {
         return true;
+    }
+
+    @Override
+    public TypeName typeName() {
+        return ParameterizedTypeName.get(Names.OPTIONAL, innerTypeName);
     }
 
     @Override
