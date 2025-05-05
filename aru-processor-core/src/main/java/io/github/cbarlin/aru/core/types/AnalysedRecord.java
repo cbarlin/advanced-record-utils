@@ -144,7 +144,6 @@ public final class AnalysedRecord extends AnalysedType {
                 }
             }
         }
-        
         analysisTarget.components.add(analysedComponent);
         ignoredExecutableElements.add(componentElement.getAccessor());
     }

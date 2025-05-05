@@ -15,7 +15,9 @@ public record SomeRecord(
     @XmlAttribute(name = "one")
     RandomIntA randomIntA,
     @XmlAttribute(name = "B")
-    RandomIntB randomIntB
+    RandomIntB randomIntB,
+    @XmlAttribute(name = "C")
+    RandomIntC randomIntC
 ) {
 
 }

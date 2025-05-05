@@ -9,6 +9,12 @@ import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
+/**
+ * Represents a record component that serves as a type alias.
+ * <p>
+ * This component stores information about what type it aliases to
+ * and overrides type-related behaviors to handle the alias relationship.
+ */
 public class TypeAliasComponent extends AnalysedComponent {
 
     private final ClassName aliasFor;
@@ -36,6 +42,8 @@ public class TypeAliasComponent extends AnalysedComponent {
 
     @Override
     public void setAnalysedType(final ProcessingTarget type) {
-        // Do nothing, this shouldn't be used
+        throw new UnsupportedOperationException(
+            "TypeAliasComponent represents an alias type and doesn't support setting an analysed type"
+        );
     }
 }

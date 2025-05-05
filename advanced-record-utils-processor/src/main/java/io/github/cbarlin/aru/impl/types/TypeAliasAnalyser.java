@@ -2,8 +2,10 @@ package io.github.cbarlin.aru.impl.types;
 
 import static io.github.cbarlin.aru.impl.Constants.Names.TYPE_ALIAS;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
@@ -42,10 +44,14 @@ public class TypeAliasAnalyser implements ComponentAnalyser {
             final Types typeUtils = APContext.types();
 
             final Queue<TypeMirror> interfaceQueue = new LinkedList<>();
+            final Set<TypeName> seen = new HashSet<>();
             interfaceQueue.addAll(APContext.asTypeElement(element.asType()).getInterfaces());
 
             while (!interfaceQueue.isEmpty()) {
                 final TypeMirror currentIfaceMirror = interfaceQueue.poll();
+                if (!seen.add(TypeName.get(currentIfaceMirror))) {
+                    continue; // already processed
+                }
                 final TypeMirror erasedIface = typeUtils.erasure(currentIfaceMirror);
 
                 if (currentIfaceMirror instanceof final DeclaredType declaredType && TYPE_ALIAS.equals(TypeName.get(erasedIface))) {

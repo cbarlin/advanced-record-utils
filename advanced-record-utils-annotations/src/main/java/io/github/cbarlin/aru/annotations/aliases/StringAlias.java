@@ -14,7 +14,7 @@ import io.github.cbarlin.aru.annotations.TypeAlias;
  * Defers operations from {@link CharSequence} and {@link Comparable} to the wrapped String.
  */
 @NullMarked
-public interface StringAlias extends TypeAlias<CharSequence>, CharSequence, Comparable<StringAlias> {
+public interface StringAlias extends TypeAlias<String>, CharSequence, Comparable<StringAlias> {
 
     @Override
     @NonNull String value();
