@@ -17,8 +17,9 @@ class BuilderTests {
             .randomIntB(new RandomIntB(69))
             .randomIntC(13)
             .build();
-        assertEquals("This is an author", someRecord.authorName().value());
+        // Test both that we have constructions of records and that we can destruct them
         assertEquals(new RandomIntA(42), someRecord.randomIntA());
+        assertEquals("This is an author", someRecord.authorName().value());        
         assertEquals("And this is a book", someRecord.bookName().value());
         assertEquals(69, someRecord.randomIntB().value());
         assertEquals(13, someRecord.randomIntC().value());
