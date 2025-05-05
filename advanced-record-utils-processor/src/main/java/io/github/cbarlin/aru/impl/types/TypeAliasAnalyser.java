@@ -57,8 +57,8 @@ public class TypeAliasAnalyser implements ComponentAnalyser {
                 if (currentIfaceMirror instanceof final DeclaredType declaredType && TYPE_ALIAS.equals(TypeName.get(erasedIface))) {
                     // Found TypeAlias!
                     if (!declaredType.getTypeArguments().isEmpty()) {
-                        final TypeElement aliasTo = APContext.asTypeElement(declaredType.getTypeArguments().get(0));
-                        return new TypeAliasComponent(element, parentRecord, isIntendedConstructorParam, utilsProcessingContext, ClassName.get(aliasTo));
+                        final TypeName aliasFor = TypeName.get(declaredType.getTypeArguments().get(0));
+                        return new TypeAliasComponent(element, parentRecord, isIntendedConstructorParam, utilsProcessingContext, aliasFor);
                     } else {
                         APContext.messager().printError("Found TypeAlias but it has no type arguments?", element);
                         return null;

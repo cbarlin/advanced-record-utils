@@ -62,7 +62,7 @@ public class AddAliasSetter extends RecordVisitor {
                     .endControlFlow();
             } else {
                 methodBuilder.beginControlFlow("if ($T.isNull($L))", OBJECTS, name)
-                    .addStatement("return this", name)
+                    .addStatement("return this")
                     .endControlFlow();
             }
             methodBuilder.addStatement("return this.$L(new $T($L))", name, tAliasComponent.typeName(), name);

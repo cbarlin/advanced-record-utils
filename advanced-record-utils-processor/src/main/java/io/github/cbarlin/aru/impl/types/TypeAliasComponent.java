@@ -6,7 +6,6 @@ import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
-import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 /**
@@ -17,14 +16,14 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  */
 public class TypeAliasComponent extends AnalysedComponent {
 
-    private final ClassName aliasFor;
+    private final TypeName aliasFor;
 
     public TypeAliasComponent(
         final RecordComponentElement element, 
         final AnalysedRecord parentRecord,
         final boolean isIntendedConstructorParam,
         final UtilsProcessingContext utilsProcessingContext,
-        final ClassName aliasFor
+        final TypeName aliasFor
     ) {
         super(element, parentRecord, isIntendedConstructorParam, utilsProcessingContext);
         this.aliasFor = aliasFor;
