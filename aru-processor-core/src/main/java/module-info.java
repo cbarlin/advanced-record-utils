@@ -27,6 +27,7 @@ module io.github.cbarlin.aru.core {
     provides javax.annotation.processing.Processor with io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 
     uses io.github.cbarlin.aru.core.visitors.RecordVisitor;
+    uses io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
     uses io.github.cbarlin.aru.core.types.ComponentAnalyser;
     uses io.github.cbarlin.aru.core.inference.AnnotationInferencer;
     uses io.github.cbarlin.aru.core.inference.ClassNameToPrismAdaptor;

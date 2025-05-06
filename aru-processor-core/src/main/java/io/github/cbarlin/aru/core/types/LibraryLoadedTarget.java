@@ -61,7 +61,7 @@ public final class LibraryLoadedTarget implements ProcessingTarget {
         return utilsClass().prism().settings();
     }
     
-    public GenerationArtifact builderArtifact() {
+    public GenerationArtifact<?> builderArtifact() {
         final String builderName = prism().builderOptions().builderName();
         return Objects.requireNonNull(preBuilt.children().get(builderName), "Target must have a builder");
     }

@@ -38,5 +38,5 @@ public sealed interface ProcessingTarget permits LibraryLoadedTarget, AnalysedTy
 
     public AdvancedRecordUtilsPrism prism();
 
-    public GenerationArtifact builderArtifact();
+    public GenerationArtifact<?> builderArtifact();
 }

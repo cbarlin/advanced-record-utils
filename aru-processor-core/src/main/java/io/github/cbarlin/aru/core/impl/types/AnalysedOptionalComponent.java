@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.lang.model.element.RecordComponentElement;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
@@ -44,12 +43,7 @@ public class AnalysedOptionalComponent extends AnalysedComponent {
         final DeclaredType decl = (DeclaredType) componentType;
         final List<? extends TypeMirror> typeArguments = decl.getTypeArguments();
         innerType = typeArguments.get(0);
-        if(innerType instanceof final DeclaredType dInner) {
-            final TypeElement te = (TypeElement) dInner.asElement();
-            this.innerTypeName = ClassName.get(te);
-        } else {
-            this.innerTypeName = TypeName.get(componentType);
-        }
+        this.innerTypeName = TypeName.get(innerType);
     }
 
     @Override

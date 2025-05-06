@@ -6,7 +6,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 import javax.lang.model.element.Modifier;
 
-import io.github.cbarlin.aru.core.APContext;
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.BuilderOptionsPrism;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
@@ -18,8 +18,6 @@ import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.visitors.CollectionRecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
@@ -56,7 +54,6 @@ public class AddFluentAdderFromInterface extends CollectionRecordVisitor {
                 .stream()
                 .filter(this::concreteImplementingType)
                 .forEach(target -> {
-                    APContext.messager().printNote("Target is " + target);
                     createAdder(target, builder, prism, name);
                     analysedComponent.addCrossReference(target);
                 });
@@ -95,7 +92,6 @@ public class AddFluentAdderFromInterface extends CollectionRecordVisitor {
     }
 
     private boolean concreteImplementingType (final ProcessingTarget processingTarget) {
-        APContext.messager().printNote("And now looking at " + processingTarget);
         return (processingTarget instanceof AnalysedRecord) || 
             (processingTarget instanceof LibraryLoadedTarget);
     }
