@@ -65,6 +65,4 @@ public class IfaceAddBuilderCopy extends InterfaceVisitor {
         return true;
     }
 
-
-
 }

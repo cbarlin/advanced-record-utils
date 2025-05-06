@@ -59,6 +59,4 @@ public class IfaceAddBuilderEmpty extends InterfaceVisitor {
         return true;
     }
 
-
-
 }

@@ -72,7 +72,13 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
     private static final String BUILD = "build";
 
     /**
-     * Compare two instances of the record builder
+     * Compare two instances of the record builder.
+     * <p>
+     * Note that it is intentional that this does not match equals/hashCode, as 
+     *   we want items to be ordered by their operation and specificity first and foremost.
+     * <p>
+     * This does <em>not</em> violate the contract even for e.g. SortedSet, since the claim 
+     *   and specificity must be constant for a given implementation.
      */
     public final int compareTo(final AruVisitor<T> that) {
         if (claimableOperation.operationName().startsWith(BUILD) && !that.claimableOperation.operationName().startsWith(BUILD)) {
@@ -93,11 +99,13 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
 
     @Override
     public final boolean equals(final Object obj) {
+        // Only include canonicalName since the claimableOperation and specificity are constant for a given implementation
         return Objects.nonNull(obj) && this.getClass().getCanonicalName().equals(obj.getClass().getCanonicalName());
     }
 
     @Override
     public final int hashCode() {
+        // Only include canonicalName since the claimableOperation and specificity are constant for a given implementation
         return new HashCodeBuilder(17, 37)
             .append(getClass().getCanonicalName())
             .build();

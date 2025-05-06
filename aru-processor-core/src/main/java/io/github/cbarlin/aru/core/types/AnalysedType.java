@@ -8,6 +8,8 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
 import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -303,18 +305,32 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
             .addMember("version", versionAnnotation)
             .addMember("settings", AnnotationSpec.get(settings().prism().mirror));
 
+        
+        final List<ToBeBuilt> childArtifacts = new ArrayList<>();
+        utilsClass.visitChildArtifacts(childArtifacts::add);
+        // Sort in ClassName order
+        Collections.sort(childArtifacts, (a, b) -> a.className().canonicalName().compareTo(b.className().canonicalName()));
         final List<String> internalUtilsFormat = new ArrayList<>();
         final List<Object> internalUtilsArgs = new ArrayList<>();
-        utilsClass.visitChildArtifacts(toBeBuilt -> {
+        childArtifacts.forEach(toBeBuilt -> {
             internalUtilsFormat.add(INTERNAL_UTILS_ANNOTATION_FORMAT);
             internalUtilsArgs.add(ARU_INTERNAL_UTILS);
             internalUtilsArgs.add(StringUtils.join(toBeBuilt.className().simpleNames(), ".").replace(utilsClass().className().simpleName() + ".", ""));
             internalUtilsArgs.add(toBeBuilt.className());
         });
+
         utilsGeneratorAnnotation.addMember("internalUtils", "{\n    " + StringUtils.join(internalUtilsFormat, ",\n    ") + "\n}", internalUtilsArgs.toArray());
+        
         final List<String> referenceFormat = new ArrayList<>(referencedUtilsClasses.size());
-        referencedUtilsClasses.forEach(ignored -> referenceFormat.add(CLASS_REFERENCE_FORMAT));
-        utilsGeneratorAnnotation.addMember("references", "{\n    " + StringUtils.join(referenceFormat, ",\n    ") + "\n}", referencedUtilsClasses.toArray());
+        final List<ClassName> sortedRefs = referencedUtilsClasses.stream()
+            .sorted(Comparator.comparing(ClassName::canonicalName))
+            .toList();
+        sortedRefs.forEach(ignored -> referenceFormat.add(CLASS_REFERENCE_FORMAT));
+        utilsGeneratorAnnotation.addMember(
+            "references",
+            "{\n    " + StringUtils.join(referenceFormat, ",\n    ") + "\n}",
+            sortedRefs.toArray()
+        );
 
         utilsBuilder.addAnnotation(utilsGeneratorAnnotation.build())
             .addJavadoc("An auto-generated utility class to work with {@link $T} objects", className())
