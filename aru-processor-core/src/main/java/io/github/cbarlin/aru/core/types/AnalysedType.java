@@ -309,7 +309,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         final List<ToBeBuilt> childArtifacts = new ArrayList<>();
         utilsClass.visitChildArtifacts(childArtifacts::add);
         // Sort in ClassName order
-        Collections.sort(childArtifacts, (a, b) -> a.className().canonicalName().compareTo(b.className().canonicalName()));
+        Collections.sort(childArtifacts, Comparator.comparing(ToBeBuilt::className));
         final List<String> internalUtilsFormat = new ArrayList<>();
         final List<Object> internalUtilsArgs = new ArrayList<>();
         childArtifacts.forEach(toBeBuilt -> {

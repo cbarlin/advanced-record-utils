@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jspecify.annotations.Nullable;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
@@ -20,7 +21,11 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 public abstract class AruVisitor<T extends AnalysedType> implements Comparable<AruVisitor<T>> {
     protected final ClaimableOperation claimableOperation;
     private LoggingGeneration loggingGeneration;
+    // While in practice these should never be null (because they are set either on first visit or by the processor externally)
+    //   they can technically be null
+    @Nullable
     private ClassName targetClassName;
+    @Nullable
     private ClassName originalClassName;
 
     protected AruVisitor(final ClaimableOperation claimableOperation) {
@@ -82,19 +87,17 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
      */
     public final int compareTo(final AruVisitor<T> that) {
         if (claimableOperation.operationName().startsWith(BUILD) && !that.claimableOperation.operationName().startsWith(BUILD)) {
-            // prefer me - but remember these are inverted!
-            return 1;
+            return -1;
         }
         if ((!claimableOperation.operationName().startsWith(BUILD)) && that.claimableOperation.operationName().startsWith(BUILD)) {
-            // prefer them - but remember these are inverted!
-            return -1;
+            return 1;
         }
 
         if(specificity() == that.specificity()) {
             // Canonical names are compared instead
             return Integer.compare(hashCode(), that.hashCode());
         }
-        return Integer.compare(specificity(), that.specificity());
+        return Integer.compare(that.specificity(), specificity());
     }
 
     @Override
@@ -119,7 +122,7 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
         final List<Object> withinLogCallParams,
         final String atInstruction
     ) {
-        if (loggingGeneration != LoggingGeneration.NONE) {
+        if (Objects.nonNull(loggingGeneration) && loggingGeneration != LoggingGeneration.NONE) {
             final List<Object> params = new ArrayList<>();
             final StringBuilder sb = new StringBuilder();
             // Don't bother putting these on new lines - while it does create a really really long generated line...

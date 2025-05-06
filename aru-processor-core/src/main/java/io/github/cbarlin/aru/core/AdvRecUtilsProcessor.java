@@ -58,7 +58,7 @@ public class AdvRecUtilsProcessor extends AbstractProcessor {
                 "There are no elements loaded by the service loader"
             );
         }
-        Collections.sort(sortable, (a, b) -> b.compareTo(a));
+        Collections.sort(sortable);
         return List.copyOf(sortable);
     };
 
@@ -68,7 +68,7 @@ public class AdvRecUtilsProcessor extends AbstractProcessor {
             .iterator()
             .forEachRemaining(sortable::add);
         // Interfaces we don't mind if there are no found operations, so no error here
-        Collections.sort(sortable, (a, b) -> b.compareTo(a));
+        Collections.sort(sortable);
         return List.copyOf(sortable);
     };
 
