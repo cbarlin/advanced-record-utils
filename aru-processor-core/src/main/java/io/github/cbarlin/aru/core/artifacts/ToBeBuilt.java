@@ -37,6 +37,8 @@ import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
     private static final String LOGGER_INITIALISER = "$T.getLogger($T.class)";
+    // We have our two generated annotations, and sometimes the `NullMarked`/`NullUnmarked`
+    private static final int GENERATED_ANNOTATIONS = 3;
     private final ClassName className;
     private final TypeSpec.Builder classBuilder;
     private final UtilsProcessingContext utilsProcessingContext;
@@ -60,7 +62,7 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
      * Determine if this artifact actually has any content
      */
     public boolean hasContent() {
-        return (!unfinishedMethods.isEmpty()) || (!childArtifacts.isEmpty()) || (!classBuilder.methodSpecs.isEmpty()) || (!classBuilder.typeSpecs.isEmpty());
+        return (!unfinishedMethods.isEmpty()) || (!childArtifacts.isEmpty()) || (!classBuilder.methodSpecs.isEmpty()) || (!classBuilder.typeSpecs.isEmpty()) || (classBuilder.annotations.size() > GENERATED_ANNOTATIONS);
     }
 
     public ClassName className() {

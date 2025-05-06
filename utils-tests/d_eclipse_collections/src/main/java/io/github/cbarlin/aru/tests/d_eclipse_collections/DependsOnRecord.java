@@ -11,7 +11,9 @@ import io.github.cbarlin.aru.tests.a_core_dependency.MyRecordA;
 public record DependsOnRecord(
     ImmutableList<MyRecordA> immutableListOfA,
     MutableList<MyRecordA> mutableListOfA,
-    ImmutableSet<MyRecordA> immutableSetOfA
+    ImmutableSet<MyRecordA> immutableSetOfA,
+    // Check to make sure that nested parameterised types works
+    ImmutableList<ImmutableList<ImmutableList<MyRecordA>>> someSillyNestedStructure
 ) {
 
 }

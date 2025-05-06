@@ -33,6 +33,7 @@ import javax.tools.StandardLocation;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 
 import io.avaje.prism.GenerateAPContext;
@@ -46,7 +47,7 @@ import io.avaje.prism.GenerateUtils;
 public class AdvRecUtilsProcessor extends AbstractProcessor {
 
     private static final String META_ANNOTATION_RESOURCE_PATH = "META-INF/cbarlin/metaannotations/io.github.cbarlin.aru.annotations.AdvancedRecordUtils";
-    private static final Supplier<List<RecordVisitor>> VISITORS = () -> {
+    private static final Supplier<List<RecordVisitor>> RECORD_VISITORS = () -> {
         final List<RecordVisitor> sortable = new ArrayList<>();
         ServiceLoader.load(RecordVisitor.class, RecordVisitor.class.getClassLoader())
             .iterator()
@@ -57,7 +58,17 @@ public class AdvRecUtilsProcessor extends AbstractProcessor {
                 "There are no elements loaded by the service loader"
             );
         }
-        Collections.sort(sortable, (a, b) -> b.compareTo(a));
+        Collections.sort(sortable);
+        return List.copyOf(sortable);
+    };
+
+    private static final Supplier<List<InterfaceVisitor>> INTERFACE_VISITORS = () -> {
+        final List<InterfaceVisitor> sortable = new ArrayList<>();
+        ServiceLoader.load(InterfaceVisitor.class, InterfaceVisitor.class.getClassLoader())
+            .iterator()
+            .forEachRemaining(sortable::add);
+        // Interfaces we don't mind if there are no found operations, so no error here
+        Collections.sort(sortable);
         return List.copyOf(sortable);
     };
 
@@ -76,7 +87,7 @@ public class AdvRecUtilsProcessor extends AbstractProcessor {
         // OK, now loop through all those and analyse them!
         findGenerationTargets(roundEnv);
         // Build all the utils classes
-        context.processElements(VISITORS);
+        context.processElements(RECORD_VISITORS, INTERFACE_VISITORS);
 
         if(roundEnv.processingOver()) {
             APContext.clear();

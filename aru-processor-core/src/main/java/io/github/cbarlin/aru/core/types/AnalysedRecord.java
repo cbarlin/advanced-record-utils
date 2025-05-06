@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.core.types;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_INTERNAL_UTILS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_MAIN_ANNOTATION;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
-import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,11 +24,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.CommonsConstants;
@@ -44,17 +36,11 @@ import io.github.cbarlin.aru.prism.prison.JsonSubTypesPrism;
 import io.github.cbarlin.aru.prism.prison.JsonSubTypesPrism.TypePrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
-
-import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
-import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 public final class AnalysedRecord extends AnalysedType {
     
-    private static final String INTERNAL_UTILS_ANNOTATION_FORMAT = "@$T(type = $S, implementation = $T.class)";
-    private static final String CLASS_REFERENCE_FORMAT = "$T.class";
     private static TypeElement useInterfaceDefaultClass;
-
     private static final List<ComponentAnalyser> COMPONENT_ANALYSERS;
 
     static {
@@ -334,43 +320,6 @@ public final class AnalysedRecord extends AnalysedType {
         return useInterfaceDefaultClass.asType();
     }
     //#endregion
-
-    public void addFullGeneratedAnnotation() {
-        final TypeSpec.Builder utilsBuilder = utilsClassBuilder();
-        final AnnotationSpec versionAnnotation = AnnotationSpec.builder(ARU_VERSION)
-            .addMember("major", "$L", AdvancedRecordUtilsGenerated.Version.MAJOR_VERSION)
-            .addMember("minor", "$L", AdvancedRecordUtilsGenerated.Version.MINOR_VERSION)
-            .addMember("patch", "$L", AdvancedRecordUtilsGenerated.Version.PATCH_VERSION)
-            .build();
-        final AnnotationSpec.Builder utilsGeneratorAnnotation = AnnotationSpec.builder(ARU_GENERATED)
-            .addMember("generatedFor", CLASS_REFERENCE_FORMAT, className())
-            .addMember("version", versionAnnotation)
-            .addMember("settings", AnnotationSpec.get(settings().prism().mirror));
-
-        final List<String> internalUtilsFormat = new ArrayList<>();
-        final List<Object> internalUtilsArgs = new ArrayList<>();
-        utilsClass.visitChildArtifacts(toBeBuilt -> {
-            internalUtilsFormat.add(INTERNAL_UTILS_ANNOTATION_FORMAT);
-            internalUtilsArgs.add(ARU_INTERNAL_UTILS);
-            internalUtilsArgs.add(StringUtils.join(toBeBuilt.className().simpleNames(), ".").replace(utilsClass().className().simpleName() + ".", ""));
-            internalUtilsArgs.add(toBeBuilt.className());
-        });
-        utilsGeneratorAnnotation.addMember("internalUtils", "{\n    " + StringUtils.join(internalUtilsFormat, ",\n    ") + "\n}", internalUtilsArgs.toArray());
-        final List<String> referenceFormat = new ArrayList<>(referencedUtilsClasses.size());
-        referencedUtilsClasses.forEach(ignored -> referenceFormat.add(CLASS_REFERENCE_FORMAT));
-        utilsGeneratorAnnotation.addMember("references", "{\n    " + StringUtils.join(referenceFormat, ",\n    ") + "\n}", referencedUtilsClasses.toArray());
-
-        utilsBuilder.addAnnotation(utilsGeneratorAnnotation.build())
-            .addJavadoc("An auto-generated utility class to work with {@link $T} objects", intendedType())
-            .addJavadoc(JDOC_PARA)
-            .addJavadoc("This includes a builder, as well as other generated utilities based on the values provided to the {@link $T} annotation", ARU_MAIN_ANNOTATION)
-            .addJavadoc(JDOC_PARA);
-        if (!intendedType().equals(className())) {
-            utilsBuilder.addJavadoc("In order to work with {@link $T} objects, this uses {@link $T} implementations", intendedType(), className())
-                .addJavadoc(JDOC_PARA);
-        }
-        utilsBuilder.addJavadoc("For more details, see the GitHub page for cbarlin/advanced-record-utils");
-    }
 
     //#region Getters etc
 

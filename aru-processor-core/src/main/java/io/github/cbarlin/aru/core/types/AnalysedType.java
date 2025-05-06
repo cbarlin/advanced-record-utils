@@ -1,7 +1,15 @@
 package io.github.cbarlin.aru.core.types;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_INTERNAL_UTILS;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_MAIN_ANNOTATION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
+import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,8 +25,10 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NonNull;
 
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
@@ -28,7 +38,7 @@ import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltClass;
 import io.github.cbarlin.aru.core.inference.Holder;
-import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.github.cbarlin.aru.core.visitors.AruVisitor;
 
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
@@ -36,6 +46,9 @@ import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 public abstract sealed class AnalysedType implements ProcessingTarget permits AnalysedInterface, AnalysedRecord {
     
+    private static final String INTERNAL_UTILS_ANNOTATION_FORMAT = "@$T(type = $S, implementation = $T.class)";
+    private static final String CLASS_REFERENCE_FORMAT = "$T.class";
+
     protected final UtilsProcessingContext utilsProcessingContext;
     protected final TypeElement typeElement;
     protected final TypeMirror typeMirror;
@@ -43,7 +56,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     protected final AdvRecUtilsSettings settings;
 
     protected final Set<ClassName> referencedUtilsClasses = new HashSet<>();
-    protected final Map<ClaimableOperation, RecordVisitor> claimedOperations = new HashMap<>();
+    protected final Map<ClaimableOperation, AruVisitor<?>> claimedOperations = new HashMap<>();
     /**
      * Annotations that are not on the Element but are "projected"
      *   into it that may be relevent (e.g. `NotNull` which is implied from a package annotation)
@@ -145,7 +158,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
      * Attempt to claim an operation
      * @return true if claimed, or if the visitor already claimed the operation, and that it should continue processing
      */
-    public final boolean attemptToClaim(final RecordVisitor visitor) {
+    public final boolean attemptToClaim(final AruVisitor<?> visitor) {
         if (!OperationType.CLASS.equals(visitor.claimableOperation().operationType())) {
             // We only track class-level claims
             return true;
@@ -160,9 +173,9 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
      * Retracting a claim that you do not hold will deliberately cause compilation to fail.
      * @param visitor The visitor retracting its claim
      */
-    public final void retractClaim(final RecordVisitor visitor) {
+    public final void retractClaim(final AruVisitor<?> visitor) {
         if(OperationType.CLASS.equals(visitor.claimableOperation().operationType())) {
-            final RecordVisitor claimant = claimedOperations.get(visitor.claimableOperation());
+            final AruVisitor<?> claimant = claimedOperations.get(visitor.claimableOperation());
             if (Objects.isNull(claimant) || visitor != claimant) {
                 processingEnv().getMessager()
                     .printMessage(Diagnostic.Kind.ERROR, "Internal Error: Visitor %s attempted to retract claim that it doesn't hold".formatted(visitor.getClass().getCanonicalName()), typeElement);
@@ -278,5 +291,52 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
                         )
                         .findFirst()
             );
+    }
+
+    public void addFullGeneratedAnnotation() {
+        final TypeSpec.Builder utilsBuilder = utilsClassBuilder();
+        final AnnotationSpec versionAnnotation = AnnotationSpec.builder(ARU_VERSION)
+            .addMember("major", "$L", AdvancedRecordUtilsGenerated.Version.MAJOR_VERSION)
+            .addMember("minor", "$L", AdvancedRecordUtilsGenerated.Version.MINOR_VERSION)
+            .addMember("patch", "$L", AdvancedRecordUtilsGenerated.Version.PATCH_VERSION)
+            .build();
+        final AnnotationSpec.Builder utilsGeneratorAnnotation = AnnotationSpec.builder(ARU_GENERATED)
+            .addMember("generatedFor", CLASS_REFERENCE_FORMAT, className())
+            .addMember("version", versionAnnotation)
+            .addMember("settings", AnnotationSpec.get(settings().prism().mirror));
+
+        
+        final List<ToBeBuilt> childArtifacts = new ArrayList<>();
+        utilsClass.visitChildArtifacts(childArtifacts::add);
+        // Sort in ClassName order
+        Collections.sort(childArtifacts, Comparator.comparing(ToBeBuilt::className));
+        final List<String> internalUtilsFormat = new ArrayList<>();
+        final List<Object> internalUtilsArgs = new ArrayList<>();
+        childArtifacts.forEach(toBeBuilt -> {
+            internalUtilsFormat.add(INTERNAL_UTILS_ANNOTATION_FORMAT);
+            internalUtilsArgs.add(ARU_INTERNAL_UTILS);
+            internalUtilsArgs.add(StringUtils.join(toBeBuilt.className().simpleNames(), ".").replace(utilsClass().className().simpleName() + ".", ""));
+            internalUtilsArgs.add(toBeBuilt.className());
+        });
+
+        utilsGeneratorAnnotation.addMember("internalUtils", "{\n    " + StringUtils.join(internalUtilsFormat, ",\n    ") + "\n}", internalUtilsArgs.toArray());
+        
+        final List<String> referenceFormat = new ArrayList<>(referencedUtilsClasses.size());
+        final List<ClassName> sortedRefs = referencedUtilsClasses.stream()
+            .sorted(Comparator.comparing(ClassName::canonicalName))
+            .toList();
+        sortedRefs.forEach(ignored -> referenceFormat.add(CLASS_REFERENCE_FORMAT));
+        utilsGeneratorAnnotation.addMember(
+            "references",
+            "{\n    " + StringUtils.join(referenceFormat, ",\n    ") + "\n}",
+            sortedRefs.toArray()
+        );
+
+        utilsBuilder.addAnnotation(utilsGeneratorAnnotation.build())
+            .addJavadoc("An auto-generated utility class to work with {@link $T} objects", className())
+            .addJavadoc(JDOC_PARA)
+            .addJavadoc("This includes a builder, as well as other generated utilities based on the values provided to the {@link $T} annotation", ARU_MAIN_ANNOTATION)
+            .addJavadoc(JDOC_PARA);
+        utilsBuilder.addJavadoc("For more details, see the GitHub page for cbarlin/advanced-record-utils");
     }
 }

@@ -69,12 +69,12 @@ public class AnalysedComponent {
         this.isIntendedConstructorParam = isIntendedConstructorParam;
         this.context = utilsProcessingContext;
         this.componentType = element.asType();
+        this.typeName = TypeName.get(componentType);
         if (componentType instanceof DeclaredType decl) {
             final TypeElement te = (TypeElement) decl.asElement();
             this.analysedTypeConverters = AnalysedTypeConverter.getTypeConverters(te);
-            this.typeName = ClassName.get(te);
         } else {
-            this.typeName = TypeName.get(componentType);
+            
             this.analysedTypeConverters = List.of();
         }
     }

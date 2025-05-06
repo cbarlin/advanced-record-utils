@@ -37,12 +37,7 @@ public class EclipseCollectionComponent extends AnalysedComponent {
         final DeclaredType decl = (DeclaredType) componentType;
         final List<? extends TypeMirror> typeArguments = decl.getTypeArguments();
         innerType = typeArguments.get(0);
-        if(innerType instanceof final DeclaredType dInner) {
-            final TypeElement te = (TypeElement) dInner.asElement();
-            this.innerTypeName = ClassName.get(te);
-        } else {
-            this.innerTypeName = TypeName.get(componentType);
-        }
+        this.innerTypeName = TypeName.get(innerType);
         final TypeElement ret = (TypeElement) decl.asElement();
         final TypeMirror wrapper = utilsProcessingContext.processingEnv().getTypeUtils().erasure(ret.asType());
         final TypeElement te = (TypeElement) ((DeclaredType) wrapper).asElement();

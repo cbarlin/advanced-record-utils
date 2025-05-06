@@ -1,5 +1,7 @@
 package io.github.cbarlin.aru.core.types;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +24,7 @@ public final class AnalysedInterface extends AnalysedType {
 
     public AnalysedInterface(final TypeElement element, final UtilsProcessingContext context, final AdvRecUtilsSettings parentSettings) {
         super(element, context, parentSettings);
+        utilsClass().builder().addAnnotation(NULL_MARKED);
     }
 
     // Do not use `computeIfAbsent` because we may end up adding to it elsewhere
@@ -107,7 +110,7 @@ public final class AnalysedInterface extends AnalysedType {
         return Set.copyOf(implementingTypes);
     }
 
-    public GenerationArtifact builderArtifact() {
+    public GenerationArtifact<?> builderArtifact() {
         throw new UnsupportedOperationException("Cannot provide a builder for an interface");
     }
 }
