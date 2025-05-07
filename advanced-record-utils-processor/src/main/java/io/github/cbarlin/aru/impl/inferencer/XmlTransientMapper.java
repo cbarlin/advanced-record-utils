@@ -20,7 +20,8 @@ import io.github.cbarlin.aru.prism.prison.JsonIgnorePrism;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-@ServiceProvider
+// Turns out Avaje will only find the first of these, not both
+@ServiceProvider({ClassNameToPrismAdaptor.class, AnnotationInferencer.class})
 public class XmlTransientMapper implements ClassNameToPrismAdaptor<XmlTransientPrism>, AnnotationInferencer {
 
     @Override
@@ -42,7 +43,7 @@ public class XmlTransientMapper implements ClassNameToPrismAdaptor<XmlTransientP
     public Optional<XmlTransientPrism> optionalInstanceOn(final Element element) {
         if (element instanceof final RecordComponentElement rce) {
             return XmlTransientPrism.getOptionalOn(rce.getAccessor())
-                .or(() -> XmlTransientPrism.getOptionalOn(element));
+                .or(() -> XmlTransientPrism.getOptionalOn(rce));
         }
         return XmlTransientPrism.getOptionalOn(element);
     }

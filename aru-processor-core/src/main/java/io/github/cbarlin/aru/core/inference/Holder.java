@@ -16,16 +16,16 @@ public class Holder {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    private static volatile List<ClassNameToPrismAdaptor> CLASS_NAME_PRISM_ADAPTORS;
+    private static volatile List<ClassNameToPrismAdaptor<?>> CLASS_NAME_PRISM_ADAPTORS;
     private static volatile List<AnnotationInferencer> INFERENCERS;
 
-    private static final Map<ClassName, List<ClassNameToPrismAdaptor>> CN_PRISM_BY_CN = new ConcurrentHashMap<>();
+    private static final Map<ClassName, List<ClassNameToPrismAdaptor<?>>> CN_PRISM_BY_CN = new ConcurrentHashMap<>();
     private static final Map<ClassName, List<AnnotationInferencer>> INF_BY_CN = new ConcurrentHashMap<>();
     
     /**
      * Return adaptors that are designed for the given annotation class name
      */
-    public static List<ClassNameToPrismAdaptor> adaptors(final ClassName annotationClassName) {
+    public static List<ClassNameToPrismAdaptor<?>> adaptors(final ClassName annotationClassName) {
         return CN_PRISM_BY_CN.computeIfAbsent(
             annotationClassName,
             c -> adaptors().stream().filter(adaptor -> c.equals(adaptor.supportedAnnotationClassName())).toList()
@@ -47,9 +47,9 @@ public class Holder {
      * <p>
      * Note: You probably want {@link #adaptors(ClassName)} - it will cache lookups
      */
-    public static List<ClassNameToPrismAdaptor> adaptors() {
+    public static List<ClassNameToPrismAdaptor<?>> adaptors() {
         if (Objects.isNull(CLASS_NAME_PRISM_ADAPTORS)) {
-            final List<ClassNameToPrismAdaptor> lst = new ArrayList<>();
+            final List<ClassNameToPrismAdaptor<?>> lst = new ArrayList<>();
             
             ServiceLoader.load(
                 ClassNameToPrismAdaptor.class,

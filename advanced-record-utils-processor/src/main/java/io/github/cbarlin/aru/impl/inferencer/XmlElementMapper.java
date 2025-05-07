@@ -3,6 +3,7 @@ package io.github.cbarlin.aru.impl.inferencer;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,10 +23,14 @@ import io.github.cbarlin.aru.core.mirrorhandlers.MapBasedAnnotationMirror;
 import io.github.cbarlin.aru.prism.prison.JsonBPrism;
 import io.github.cbarlin.aru.prism.prison.JsonBPropertyPrism;
 import io.github.cbarlin.aru.prism.prison.JsonPropertyPrism;
+import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
+import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
+import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-@ServiceProvider
+// Turns out Avaje will only find the first of these, not both
+@ServiceProvider({ClassNameToPrismAdaptor.class, AnnotationInferencer.class})
 public class XmlElementMapper implements ClassNameToPrismAdaptor<XmlElementPrism>, AnnotationInferencer {
 
     @Override
@@ -69,7 +74,7 @@ public class XmlElementMapper implements ClassNameToPrismAdaptor<XmlElementPrism
                 return JsonBPropertyPrism.getOptionalOn(rce)
                     .or(() -> JsonBPropertyPrism.getOptionalOn(rce.getAccessor()))
                     .map(propPrism -> new MapBasedAnnotationMirror(XML_ELEMENT, Map.of("name", propPrism.value())))
-                    .or(() -> Optional.ofNullable(new MapBasedAnnotationMirror(XML_ELEMENT)))
+                    .or(() -> Optional.ofNullable(new MapBasedAnnotationMirror(XML_ELEMENT, extractInferredName(rce, prism))))
                     .map(AnnotationMirror.class::cast);
             } else if (JsonPropertyPrism.isPresent(element) || JsonPropertyPrism.isPresent(rce.getAccessor())) {
                 final var vals = JsonPropertyPrism.getOptionalOn(rce.getAccessor())
@@ -77,8 +82,29 @@ public class XmlElementMapper implements ClassNameToPrismAdaptor<XmlElementPrism
                     .map(XmlElementMapper::extractJacksonProperty);
                 return Optional.of(new MapBasedAnnotationMirror(XML_ELEMENT, vals));
             }
+            return extractInferredName(rce, prism)
+                .map(mp -> new MapBasedAnnotationMirror(XML_ELEMENT, mp));
         }
         return Optional.empty();
+    }
+
+    private static Optional<Map<String, Object>> extractInferredName(final RecordComponentElement element, final AdvancedRecordUtilsPrism prism) {
+        if (XmlAttributePrism.isPresent(element) || XmlTransientPrism.isPresent(element) || XmlElementsPrism.isPresent(element)) {
+            return Optional.empty();
+        }
+        if (XmlAttributePrism.isPresent(element.getAccessor()) || XmlTransientPrism.isPresent(element.getAccessor()) || XmlElementsPrism.isPresent(element.getAccessor())) {
+            return Optional.empty();
+        }
+        return switch (prism.xmlOptions().inferXmlElementName()) {
+            case "MATCH" -> Optional.ofNullable(Map.of("name", element.getSimpleName().toString()));
+            case "UPPER_CAMEL_CASE" -> Optional.ofNullable(Map.of("name", capitalise(element.getSimpleName().toString())));
+            case null, default -> Optional.empty();
+        };
+    }
+
+    private static String capitalise(final String variableName) {
+        return (variableName.length() < 2) ? variableName.toUpperCase(Locale.ROOT)
+                : (Character.toUpperCase(variableName.charAt(0)) + variableName.substring(1));
     }
 
     private static Map<String, Object> extractJacksonProperty(JsonPropertyPrism propPrism) {

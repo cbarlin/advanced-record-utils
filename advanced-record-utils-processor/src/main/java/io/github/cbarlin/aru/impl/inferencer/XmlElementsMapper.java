@@ -22,7 +22,8 @@ import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-@ServiceProvider
+// Turns out Avaje will only find the first of these, not both
+@ServiceProvider({ClassNameToPrismAdaptor.class, AnnotationInferencer.class})
 public class XmlElementsMapper implements ClassNameToPrismAdaptor<XmlElementsPrism>, AnnotationInferencer {
 
     @Override

@@ -260,15 +260,26 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     }
     //#endregion
 
+    /**
+     * Determine if a prism is present or inferrable on the type
+     * 
+     * @param annotationClassName The ClassName of the annotation (e.g. XML_ATTRIBUTE)
+     * @param prismClass The class of the prism (e.g. XmlAttribute.class)
+     * @return if the prism is present or inferrable
+     */
+    public boolean isPrismPresent(final ClassName annotationClassName, final Class<?> prismClass) {
+        return findPrism(annotationClassName, prismClass).isPresent();
+    }
+
     private final Map<ClassName, Optional<?>> annotations = new HashMap<>();
 
     // Fine, because the only population is the known-correct impl method
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> findPrism(ClassName annotationClassName, Class<T> prismClass) {
+    public <T> Optional<T> findPrism(final ClassName annotationClassName, final Class<T> prismClass) {
         return (Optional<T>) annotations.computeIfAbsent(annotationClassName, c -> findPrismImpl(c, prismClass));
     }
 
-    private <T> Optional<T> findPrismImpl(ClassName annotationClassName, Class<T> prismClass) {
+    private <T> Optional<T> findPrismImpl(final ClassName annotationClassName, final Class<T> prismClass) {
         return Holder.adaptors(annotationClassName).stream()
             .map(cn -> cn.optionalInstanceOn(typeElement))
             .filter(Optional::isPresent)
@@ -282,7 +293,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .flatMap(
-                            (AnnotationMirror tm) -> Holder.adaptors(annotationClassName).stream()
+                            (final AnnotationMirror tm) -> Holder.adaptors(annotationClassName).stream()
                                     .map(cn -> cn.optionalInstanceOf(tm))
                                     .filter(Optional::isPresent)
                                     .map(Optional::get)

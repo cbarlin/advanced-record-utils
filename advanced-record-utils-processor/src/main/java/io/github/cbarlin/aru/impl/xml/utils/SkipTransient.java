@@ -6,6 +6,8 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_TRANSIENT;
+
 import io.avaje.spi.ServiceProvider;
 
 @ServiceProvider
@@ -22,11 +24,12 @@ public class SkipTransient extends XmlVisitor {
 
     @Override
     protected int innerSpecificity() {
-        return Integer.MAX_VALUE;
+        // Some really high number so nothing else claims transient items
+        return 25565;
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        return XmlTransientPrism.isPresent(analysedComponent.element().getAccessor());
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
+        return analysedComponent.isPrismPresent(XML_TRANSIENT, XmlTransientPrism.class);
     }
 }

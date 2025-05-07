@@ -59,10 +59,10 @@ public class AnalysedComponent {
      * Params should be self-explanatory
      */
     public AnalysedComponent(
-        RecordComponentElement element, 
-        AnalysedRecord parentRecord, 
-        boolean isIntendedConstructorParam, 
-        UtilsProcessingContext utilsProcessingContext
+        final RecordComponentElement element, 
+        final AnalysedRecord parentRecord, 
+        final boolean isIntendedConstructorParam, 
+        final UtilsProcessingContext utilsProcessingContext
     ) {
         this.element = element;
         this.parentRecord = parentRecord;
@@ -70,7 +70,7 @@ public class AnalysedComponent {
         this.context = utilsProcessingContext;
         this.componentType = element.asType();
         this.typeName = TypeName.get(componentType);
-        if (componentType instanceof DeclaredType decl) {
+        if (componentType instanceof final DeclaredType decl) {
             final TypeElement te = (TypeElement) decl.asElement();
             this.analysedTypeConverters = AnalysedTypeConverter.getTypeConverters(te);
         } else {
@@ -84,7 +84,7 @@ public class AnalysedComponent {
      *   in-scope for processing (or was processed), and thus we can "bounce"
      *   into that record (e.g. fluent builder, pass on serialisations)
      */
-    public void setAnalysedType(ProcessingTarget type) {
+    public void setAnalysedType(final ProcessingTarget type) {
         this.targetAnalysedType = Optional.of(type);
     }
 
@@ -100,7 +100,7 @@ public class AnalysedComponent {
      * Attempt to claim an operation
      * @return true if claimed, or if the visitor already claimed the operation, and that it should continue processing
      */
-    public final boolean attemptToClaim(RecordVisitor visitor) {
+    public final boolean attemptToClaim(final RecordVisitor visitor) {
         if (OperationType.CLASS.equals(visitor.claimableOperation().operationType())) {
             // We only care about field ones here
             return true;
@@ -115,7 +115,7 @@ public class AnalysedComponent {
      * Retracting a claim that you do not hold will deliberately cause compilation to fail.
      * @param visitor The visitor retracting its claim
      */
-    public final void retractClaim(RecordVisitor visitor) {
+    public final void retractClaim(final RecordVisitor visitor) {
         if(OperationType.FIELD_AND_ACCESSORS.equals(visitor.claimableOperation().operationType())) {
             final RecordVisitor claimant = claimedOperations.get(visitor.claimableOperation());
             if (Objects.isNull(claimant) || visitor != claimant) {
@@ -152,7 +152,7 @@ public class AnalysedComponent {
      * Cross-references are for when one {@code *Utils} class calls something in another. It should <strong>not</strong> be
      *   confused with classes the target class references (although usually all of those will be referenced).
      */
-    public void addCrossReference(ProcessingTarget other) {
+    public void addCrossReference(final ProcessingTarget other) {
         this.parentRecord().addCrossReference(other);
     }
 
@@ -315,7 +315,7 @@ public class AnalysedComponent {
         return Optional.empty();
     }
 
-    protected void setTargetAnalysedType(Optional<ProcessingTarget> targetAnalysedType) {
+    protected void setTargetAnalysedType(final Optional<ProcessingTarget> targetAnalysedType) {
         this.targetAnalysedType = targetAnalysedType;
     }
 
@@ -329,15 +329,26 @@ public class AnalysedComponent {
             .orElse(typeName().toString());
     }
 
+    /**
+     * Determine if a prism is present or inferrable on the type
+     * 
+     * @param annotationClassName The ClassName of the annotation (e.g. XML_ATTRIBUTE)
+     * @param prismClass The class of the prism (e.g. XmlAttribute.class)
+     * @return if the prism is present or inferrable
+     */
+    public boolean isPrismPresent(final ClassName annotationClassName, final Class<?> prismClass) {
+        return findPrism(annotationClassName, prismClass).isPresent();
+    }
+
     private final Map<ClassName, Optional<?>> annotations = new HashMap<>();
 
     // Fine because the only population is the known-correct impl method
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> findPrism(ClassName annotationClassName, Class<T> prismClass) {
+    public <T> Optional<T> findPrism(final ClassName annotationClassName, final Class<T> prismClass) {
         return (Optional<T>) annotations.computeIfAbsent(annotationClassName, c -> findPrismImpl(c, prismClass));
     }
 
-    private <T> Optional<T> findPrismImpl(ClassName annotationClassName, Class<T> prismClass) {
+    private <T> Optional<T> findPrismImpl(final ClassName annotationClassName, final Class<T> prismClass) {
         return Holder.adaptors(annotationClassName).stream()
             .map(cn -> cn.optionalInstanceOn(element))
             .filter(Optional::isPresent)
@@ -351,7 +362,7 @@ public class AnalysedComponent {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .flatMap(
-                            (AnnotationMirror tm) -> Holder.adaptors(annotationClassName).stream()
+                            (final AnnotationMirror tm) -> Holder.adaptors(annotationClassName).stream()
                                     .map(cn -> cn.optionalInstanceOf(tm))
                                     .filter(Optional::isPresent)
                                     .map(Optional::get)

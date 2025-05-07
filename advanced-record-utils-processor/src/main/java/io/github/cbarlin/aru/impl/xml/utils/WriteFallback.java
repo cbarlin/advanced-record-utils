@@ -7,8 +7,11 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPER
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ATTRIBUTE;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_TRANSIENT;
 
 import java.util.Optional;
 
@@ -22,8 +25,7 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
-
+import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
@@ -32,7 +34,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 public class WriteFallback extends XmlVisitor {
 
     private static final String CHK_NULL_OR_TO_STRING_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
-    private boolean hasWarned = false;
+    private static boolean hasWarned = false;
 
     public WriteFallback() {
         super(Claims.XML_WRITE_FIELD);
@@ -45,13 +47,15 @@ public class WriteFallback extends XmlVisitor {
 
     @Override
     protected int innerSpecificity() {
-        return 0;
+        return Integer.MIN_VALUE;
     }
 
+    // We only want to warn once per compilation so change the static field
+    @SuppressWarnings({"java:S2696"})
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         if (!hasWarned) {
-            APContext.messager().printWarning("XML writer fallback has been used - one or more types are not understood. Warning will not be repeated", analysedComponent.parentRecord().typeElement());
+            APContext.messager().printWarning("XML writer fallback has been used - one or more types are not understood. Warning will not be repeated");
             hasWarned = true;
         }
         
@@ -79,12 +83,12 @@ public class WriteFallback extends XmlVisitor {
             .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .addJavadoc("Add the {@code $L} field to the XML output", analysedComponent.name());
         logDebug(methodBuilder, "Component \"%s\" was not understood by the processor - falling back to writing using \"toString\"".formatted(analysedComponent.name()));
-        if (XmlAttributePrism.isPresent(analysedComponent.element().getAccessor())) {
+        if (analysedComponent.isPrismPresent(XML_ATTRIBUTE, XmlAttributePrism.class)) {
             handleAttribute(analysedComponent, methodBuilder);
-        } else if (XmlElementPrism.isPresent(analysedComponent.element().getAccessor())) {
+        } else if (analysedComponent.isPrismPresent(XML_ELEMENT, XmlElementPrism.class)) {
             handleElement(analysedComponent, methodBuilder);
-        } else if (XmlElementsPrism.isPresent(analysedComponent.element().getAccessor())) {
-            methodBuilder.addStatement("throw new $T($S)", UNSUPPORTED_OPERATION_EXCEPTION, "The fallback operator cannot handle XmlElements items");
+        } else if (analysedComponent.isPrismPresent(XML_TRANSIENT, XmlTransientPrism.class)) {
+            methodBuilder.addComment("$L", "No-op call to transient element");
         } else {
             APContext.messager().printError("Unable to determine output kind of record component", analysedComponent.element());
             methodBuilder.addStatement("throw new $T($S)", UNSUPPORTED_OPERATION_EXCEPTION, "No marking on record component for XML handling!");
@@ -94,9 +98,11 @@ public class WriteFallback extends XmlVisitor {
         return true;
     }
 
+    // This was checked by the call to `isPrismPresent` in the caller
+    @SuppressWarnings({"java:S3655"})
     private void handleElement(final AnalysedComponent analysedComponent, final MethodSpec.Builder methodBuilder) {
-        final XmlElementPrism prism = XmlElementPrism.getInstanceOn(analysedComponent.element().getAccessor());
-        boolean required = Boolean.TRUE.equals(prism.required());
+        final XmlElementPrism prism = analysedComponent.findPrism(XML_ELEMENT, XmlElementPrism.class).get();
+        final boolean required = Boolean.TRUE.equals(prism.required());
         final String elementName = elementName(analysedComponent, prism);
         final Optional<String> namespaceName = namespaceName(prism);
         final Optional<String> defaultValue = defaultValue(prism);
@@ -141,8 +147,10 @@ public class WriteFallback extends XmlVisitor {
         );
     }
 
+    // This was checked by the call to `isPrismPresent` in the caller
+    @SuppressWarnings({"java:S3655"})
     private void handleAttribute(final AnalysedComponent analysedComponent, final MethodSpec.Builder methodBuilder) {
-        final XmlAttributePrism prism = XmlAttributePrism.getInstanceOn(analysedComponent.element().getAccessor());
+        final XmlAttributePrism prism = analysedComponent.findPrism(XML_ATTRIBUTE, XmlAttributePrism.class).get();
         final boolean required = Boolean.TRUE.equals(prism.required());
         final String attributeName = attributeName(analysedComponent, prism);
         final Optional<String> namespaceName = namespaceName(prism);

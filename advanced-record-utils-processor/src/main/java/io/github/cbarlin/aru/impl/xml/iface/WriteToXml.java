@@ -7,8 +7,10 @@ import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ROOT_ELEMENT;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,7 @@ public class WriteToXml extends ToXmlMethod {
 
     private void writeChangeDefaultNamespace(final AnalysedRecord analysedRecord, final MethodSpec.Builder methodBuilder) {
         final ClassName xmlUtilCn = xmlStaticClass.className();
-        if (XmlRootElementPrism.isPresent(analysedRecord.typeElement())) {
+        if (analysedRecord.isPrismPresent(XML_ROOT_ELEMENT, XmlRootElementPrism.class)) {
             methodBuilder.beginControlFlow("if ($T.$L.isPresent()) ", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME)
             .addStatement(
                 "output.setDefaultNamespace($T.$L.get())", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
@@ -96,7 +98,7 @@ public class WriteToXml extends ToXmlMethod {
         final String accessOrder = accessOrder(analysedRecord);
         addWriteOrderComment(methodBuilder, accessOrder);
         // OK, now to write out all the components... attributes first, then elements, then within those in order... booooooo
-        final List<String> propOrder = XmlTypePrism.getOptionalOn(analysedRecord.typeElement())
+        final List<String> propOrder = analysedRecord.findPrism(XML_TYPE, XmlTypePrism.class)
             .map(XmlTypePrism::propOrder)
             .filter(Objects::nonNull)
             .map(props -> props.stream().filter(StringUtils::isNotBlank).toList())

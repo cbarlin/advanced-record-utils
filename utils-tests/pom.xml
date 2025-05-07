@@ -16,6 +16,7 @@
         <module>c_deeply_nested_structure</module>
         <module>d_eclipse_collections</module>
         <module>b_type_alias</module>
+        <module>b_infer_xml</module>
     </modules>
     <name>Advanced Record Utils - Tests</name>
 
