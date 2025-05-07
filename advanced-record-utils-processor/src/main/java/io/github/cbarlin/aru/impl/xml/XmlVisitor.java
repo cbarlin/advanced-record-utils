@@ -22,6 +22,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.XmlOptionsPrism;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
@@ -54,8 +55,11 @@ public abstract class XmlVisitor extends RecordVisitor {
     protected static final String STATIC_WRITE_XML_NAME = "writeToXml";
     protected static final String XML_CANNOT_NULL_REQUIRED_ATTRIBUTE = "Attribute is marked as required - cannot provide a null/blank value for field %s (attribute name: %s)";
     protected static final String XML_CANNOT_NULL_REQUIRED_ELEMENT = "Element is marked as required - cannot provide a null/blank value for field %s (element name: %s)";
+    @Nullable
     protected ToBeBuilt xmlInterface;
+    @Nullable
     protected ToBeBuilt xmlStaticClass;
+    @Nullable
     protected XmlOptionsPrism xmlOptionsPrism;
 
     protected XmlVisitor(final ClaimableOperation claimableOperation) {

@@ -228,6 +228,7 @@
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <proc>full</proc>
+                        <debug>false</debug>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>io.avaje</groupId>
