@@ -14,6 +14,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_TRANSIENT;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.lang.model.element.Modifier;
 
@@ -34,7 +35,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 public class WriteFallback extends XmlVisitor {
 
     private static final String CHK_NULL_OR_TO_STRING_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
-    private static boolean hasWarned = false;
+    private static AtomicBoolean hasWarned = new AtomicBoolean(false);
 
     public WriteFallback() {
         super(Claims.XML_WRITE_FIELD);
@@ -54,9 +55,8 @@ public class WriteFallback extends XmlVisitor {
     @SuppressWarnings({"java:S2696"})
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        if (!hasWarned) {
+        if (hasWarned.compareAndSet(false, true)) {
             APContext.messager().printWarning("XML writer fallback has been used - one or more types are not understood. Warning will not be repeated");
-            hasWarned = true;
         }
         
         final MethodSpec.Builder methodBuilder = xmlStaticClass.createMethod(analysedComponent.name(), claimableOperation);
@@ -153,7 +153,7 @@ public class WriteFallback extends XmlVisitor {
 
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);
-            methodBuilder.addStatement("$T.requireNonNull(val, $S)", errMsg);
+            methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
         } else {
             methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
