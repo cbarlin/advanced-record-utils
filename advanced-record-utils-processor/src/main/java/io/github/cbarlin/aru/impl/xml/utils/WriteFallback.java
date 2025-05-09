@@ -34,8 +34,8 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 @ServiceProvider
 public class WriteFallback extends XmlVisitor {
 
-    private static final String CHK_NULL_OR_TO_STRING_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
-    private static AtomicBoolean hasWarned = new AtomicBoolean(false);
+    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
+    private static final AtomicBoolean HAS_WARNED = new AtomicBoolean(false);
 
     public WriteFallback() {
         super(Claims.XML_WRITE_FIELD);
@@ -55,7 +55,7 @@ public class WriteFallback extends XmlVisitor {
     @SuppressWarnings({"java:S2696"})
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        if (hasWarned.compareAndSet(false, true)) {
+        if (HAS_WARNED.compareAndSet(false, true)) {
             APContext.messager().printWarning("XML writer fallback has been used - one or more types are not understood. Warning will not be repeated");
         }
         
@@ -108,11 +108,11 @@ public class WriteFallback extends XmlVisitor {
         if (defaultValue.isPresent()) {
             final String writeAsDefaultValue = defaultValue.get();
             writeStartElement(methodBuilder, elementName, namespaceName);
-            methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS)
+                .addStatement("output.writeCharacters(val.toString())")
+                .nextControlFlow("else");
             logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
             methodBuilder.addStatement("output.writeCharacters($S)", writeAsDefaultValue)
-                .nextControlFlow("else")
-                .addStatement("output.writeCharacters(val.toString())")
                 .endControlFlow()
                 .addStatement("output.writeEndElement()");
             return;
@@ -120,10 +120,10 @@ public class WriteFallback extends XmlVisitor {
 
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
-            methodBuilder.addStatement("$T.requireNonNull(val, $S)", errMsg);
+            methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
         }
 
         writeStartElement(methodBuilder, elementName, namespaceName);
@@ -156,7 +156,7 @@ public class WriteFallback extends XmlVisitor {
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
         }
 
         namespaceName.ifPresentOrElse(
