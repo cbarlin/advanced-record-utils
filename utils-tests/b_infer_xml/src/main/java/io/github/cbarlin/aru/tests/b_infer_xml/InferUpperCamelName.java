@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-@AdvancedRecordUtils(xmlable = true, xmlOptions = @XmlOptions(inferXmlElementName = NameGeneration.UPPER_CAMEL_CASE))
+@AdvancedRecordUtils(xmlable = true, xmlOptions = @XmlOptions(inferXmlElementName = NameGeneration.UPPER_FIRST_LETTER))
 public record InferUpperCamelName(
     String iShouldBeAnElement,
     OffsetDateTime soShouldI,

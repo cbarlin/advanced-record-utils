@@ -97,7 +97,7 @@ public class XmlElementMapper implements ClassNameToPrismAdaptor<XmlElementPrism
         }
         return switch (prism.xmlOptions().inferXmlElementName()) {
             case "MATCH" -> Optional.of(Map.of("name", element.getSimpleName().toString()));
-            case "UPPER_CAMEL_CASE" -> Optional.of(Map.of("name", capitalise(element.getSimpleName().toString())));
+            case "UPPER_FIRST_LETTER" -> Optional.of(Map.of("name", capitalise(element.getSimpleName().toString())));
             case null, default -> Optional.empty();
         };
     }

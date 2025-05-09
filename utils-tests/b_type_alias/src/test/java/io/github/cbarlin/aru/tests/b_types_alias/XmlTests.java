@@ -20,7 +20,7 @@ class XmlTests {
             .build();
             
         final String xmlString = assertDoesNotThrow(() -> ConvertToXml.convertToXml(out -> assertDoesNotThrow(() -> someRecord.writeSelfTo(out))));
-        assertEquals("<?xml version=\"1.0\" ?><SomeTest AuthorName=\"This is an author\" one=\"42\" B=\"69\" C=\"13\"><BookName>And this is a book</BookName></SomeTest>", xmlString);
+        assertEquals("<?xml version='1.0' encoding='UTF-8'?><SomeTest AuthorName=\"This is an author\" one=\"42\" B=\"69\" C=\"13\"><BookName>And this is a book</BookName></SomeTest>", xmlString);
 
     }
 }

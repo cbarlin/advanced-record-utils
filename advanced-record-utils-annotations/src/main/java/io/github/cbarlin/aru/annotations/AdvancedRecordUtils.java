@@ -239,7 +239,7 @@ public @interface AdvancedRecordUtils {
         /**
          * Generate names by using UpperCamelCase naming convention
          */
-        UPPER_CAMEL_CASE
+        UPPER_FIRST_LETTER
     }
     //#endregion
 
