@@ -5,8 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.junit.jupiter.api.Test;
 
@@ -104,14 +107,12 @@ class NestedTests {
         assertEquals("<?xml version=\"1.0\" ?><RootItem xmlns:wooo=\"ns://namedA\" xmlns:yayyyyy=\"ns://namedB\" xmlns=\"ns://nxA\" butIHaveAnotherName=\"I am required!\" anotherField=\"0\"><WithValueDefault>NotThis!</WithValueDefault></RootItem>", xmlString);
     }
 
-    void notSetRequired() {
+    @Test
+    void notSetRequired() throws IOException, XMLStreamException {
         final RootItem someRecord = RootItemUtils.builder()
             .testDefault("NotThis!")
             .build();
         
-        assertThrows(
-            NullPointerException.class, 
-            () -> ConvertToXml.convertToXml(out -> assertThrows(NullPointerException.class, () -> someRecord.writeSelfTo(out)))
-        );
+        ConvertToXml.convertToXml(out -> assertThrows(NullPointerException.class, () -> someRecord.writeSelfTo(out)));
     }
 }
