@@ -15,16 +15,15 @@
     <dependencies>
         <dependency>
             <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>xml_util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
             <artifactId>a_core_dependency</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
             <groupId>io.avaje</groupId>

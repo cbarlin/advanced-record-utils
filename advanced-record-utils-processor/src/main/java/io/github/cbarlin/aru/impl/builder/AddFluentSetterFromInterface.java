@@ -39,6 +39,7 @@ public class AddFluentSetterFromInterface extends RecordVisitor {
     public boolean isApplicable(final AnalysedRecord analysedRecord) {
         return !Boolean.FALSE.equals(analysedRecord.settings().prism().builderOptions().fluent());
     }
+    
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
         if (supportedComponent(analysedComponent)) {

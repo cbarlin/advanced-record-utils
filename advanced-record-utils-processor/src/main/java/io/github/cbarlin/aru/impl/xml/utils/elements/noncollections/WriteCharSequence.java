@@ -20,7 +20,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 @ServiceProvider
 public class WriteCharSequence extends XmlVisitor {
 
-    private static final String CHK_NULL_OR_TO_STRING_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
+    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
 
     public WriteCharSequence() {
         super(Claims.XML_WRITE_FIELD);
@@ -70,7 +70,7 @@ public class WriteCharSequence extends XmlVisitor {
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
         }
       
         namespaceName.ifPresentOrElse(
@@ -96,11 +96,11 @@ public class WriteCharSequence extends XmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NULL_OR_TO_STRING_BLANK, OBJECTS, STRINGUTILS);
+        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS)
+            .addStatement("output.writeCharacters(val.toString())")
+            .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
         methodBuilder.addStatement("output.writeCharacters($S)", writeAsDefaultValue)
-            .nextControlFlow("else")
-            .addStatement("output.writeCharacters(val.toString())")
             .endControlFlow()
             .addStatement("output.writeEndElement()");
     }

@@ -11,8 +11,10 @@ import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ROOT_ELEMENT;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,12 +81,12 @@ public class WriteToXml extends ToXmlMethod {
     }
 
     private void writeDefaultNamespaceVar(final AnalysedRecord analysedRecord) {
-        final Optional<XmlRootElementPrism> optionalRootPrism = XmlRootElementPrism.getOptionalOn(analysedRecord.typeElement());
+        final Optional<XmlRootElementPrism> optionalRootPrism = analysedRecord.findPrism(XML_ROOT_ELEMENT, XmlRootElementPrism.class);
         optionalRootPrism.map(XmlRootElementPrism::namespace)
             .filter(StringUtils::isNotBlank)
             .filter(Predicate.not(XML_DEFAULT_STRING::equals))
             .or(
-                () -> XmlTypePrism.getOptionalOn(analysedRecord.typeElement())
+                () -> analysedRecord.findPrism(XML_TYPE, XmlTypePrism.class)
                         .map(XmlTypePrism::namespace)
                         .filter(StringUtils::isNotBlank)
                         .filter(Predicate.not(XML_DEFAULT_STRING::equals))
@@ -237,7 +239,7 @@ public class WriteToXml extends ToXmlMethod {
 
     private void writeChangeDefaultNamespace(final AnalysedRecord analysedRecord, final MethodSpec.Builder methodBuilder) {
         final ClassName xmlUtilCn = xmlStaticClass.className();
-        if (XmlRootElementPrism.isPresent(analysedRecord.typeElement())) {
+        if (analysedRecord.findPrism(XML_ROOT_ELEMENT, XmlRootElementPrism.class).isPresent()) {
             methodBuilder.beginControlFlow("if ($T.$L.isPresent()) ", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME)
             .addStatement(
                 "output.setDefaultNamespace($T.$L.get())", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME

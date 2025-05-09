@@ -36,5 +36,7 @@ public record RootItem(
     @XmlAttribute
     OffsetDateTime testOdtAttr,
     @XmlElement
-    OffsetDateTime testOdtEl
+    OffsetDateTime testOdtEl,
+    @XmlElement(defaultValue = "hiThere", name = "WithValueDefault")
+    String testDefault
 ) implements RootItemUtils.All {}

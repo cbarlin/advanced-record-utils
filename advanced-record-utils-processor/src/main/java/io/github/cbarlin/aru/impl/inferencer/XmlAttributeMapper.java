@@ -14,7 +14,7 @@ import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 @ServiceProvider
-public class XmlAnnotationMapper implements ClassNameToPrismAdaptor<XmlAttributePrism> {
+public class XmlAttributeMapper implements ClassNameToPrismAdaptor<XmlAttributePrism> {
 
     @Override
     public ClassName supportedAnnotationClassName() {

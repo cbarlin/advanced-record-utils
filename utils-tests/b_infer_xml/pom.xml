@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.cbarlin.aru.tests</groupId>
@@ -10,8 +10,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>b_type_alias</artifactId>
-    <name>Advanced Record Utils - Tests - Type Aliases</name>
+    <name>Advanced Record Utils - Tests - Inferring XML names</name>
+    <artifactId>b_infer_xml</artifactId>
 
     <dependencies>
         <dependency>
@@ -34,6 +34,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <proc>full</proc>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>io.github.cbarlin</groupId>
+                            <artifactId>advanced-record-utils-processor</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                     <fork>true</fork>
                     <compilerArgs>
                         <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->

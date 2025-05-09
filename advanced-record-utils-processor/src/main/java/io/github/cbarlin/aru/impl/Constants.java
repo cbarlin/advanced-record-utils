@@ -88,6 +88,8 @@ public enum Constants {
         public static final ClassName XML_ELEMENT_DEFAULT = XML_ELEMENT.nestedClass("DEFAULT");
         public static final ClassName XML_ELEMENT_WRAPPER = ClassName.get(XML_ANNOTATIONS, "XmlElementWrapper");
         public static final ClassName XML_ELEMENTS = ClassName.get(XML_ANNOTATIONS, "XmlElements");
+        public static final ClassName XML_ROOT_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlRootElement");
+        public static final ClassName XML_TYPE = ClassName.get(XML_ANNOTATIONS, "XmlType");
         public static final ClassName XML_NAMESPACE_CONTEXT = ClassName.get("javax.xml.namespace", "NamespaceContext");
         public static final ClassName XML_STREAM_EXCEPTION = ClassName.get("javax.xml.stream", "XMLStreamException");
         public static final ClassName XML_STREAM_WRITER = ClassName.get("javax.xml.stream", "XMLStreamWriter");

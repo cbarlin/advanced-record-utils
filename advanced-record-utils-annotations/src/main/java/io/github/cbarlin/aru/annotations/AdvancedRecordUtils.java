@@ -223,6 +223,24 @@ public @interface AdvancedRecordUtils {
          */
         AVAJE
     }
+    
+    /**
+     * How should we generate names?
+     */
+    public enum NameGeneration {
+        /**
+         * Do not generate names at all
+         */
+        NONE,
+        /**
+         * Generate names by matching what's been written
+         */
+        MATCH,
+        /**
+         * Generate names by using UpperCamelCase naming convention
+         */
+        UPPER_FIRST_LETTER
+    }
     //#endregion
 
     //#region Enclosed Element anntoations
@@ -479,6 +497,14 @@ public @interface AdvancedRecordUtils {
          * do we write an empty element e.g. {@code <MyList />} (true) or don't write the wrapping element (false)
          */
         boolean writeEmptyCollectionsWithWrapperAsEmptyElement() default false;
+
+        /**
+         * Should we infer the presence of {@code @XmlElement} annotations?
+         * <p>
+         * The (default) value of "NONE" will cause compilation to fail if there is a missing XmlAnnotation 
+         *   and it's not inferred from another item
+         */
+        NameGeneration inferXmlElementName() default NameGeneration.NONE;
     }
     //#endregion
 

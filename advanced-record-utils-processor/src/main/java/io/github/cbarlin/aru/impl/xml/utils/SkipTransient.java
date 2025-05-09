@@ -6,10 +6,17 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_TRANSIENT;
+
 import io.avaje.spi.ServiceProvider;
 
 @ServiceProvider
 public class SkipTransient extends XmlVisitor {
+
+    // This visitor should go first of the Xml Visitors as we want to skip over everything
+    //   if something is transient. However, we can't use e.g. Integer.MAX_VALUE because
+    //   this gets added to and we don't want an integer overflow
+    private static final int HIGH_SPECIFICITY = 25565;
 
     public SkipTransient() {
         super(Claims.XML_WRITE_FIELD);
@@ -22,11 +29,11 @@ public class SkipTransient extends XmlVisitor {
 
     @Override
     protected int innerSpecificity() {
-        return Integer.MAX_VALUE;
+        return HIGH_SPECIFICITY;
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        return XmlTransientPrism.isPresent(analysedComponent.element().getAccessor());
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
+        return analysedComponent.isPrismPresent(XML_TRANSIENT, XmlTransientPrism.class);
     }
 }

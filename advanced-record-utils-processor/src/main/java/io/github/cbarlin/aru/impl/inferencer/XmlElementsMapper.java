@@ -22,7 +22,8 @@ import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-@ServiceProvider
+// Unless manually specified like this, the Avaje SPI only picks up the `ClassNameToPrismAdaptor`
+@ServiceProvider({ClassNameToPrismAdaptor.class, AnnotationInferencer.class})
 public class XmlElementsMapper implements ClassNameToPrismAdaptor<XmlElementsPrism>, AnnotationInferencer {
 
     @Override
