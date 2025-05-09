@@ -11,6 +11,7 @@
     <artifactId>utils-tests</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>xml_util</module>
         <module>a_core_dependency</module>
         <module>a_core_dependent</module>
         <module>c_deeply_nested_structure</module>
@@ -37,6 +38,16 @@
                 <version>${junit.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.github.cbarlin.aru.tests</groupId>
+                <artifactId>a_core_dependency</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.cbarlin.aru.tests</groupId>
+                <artifactId>xml_util</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

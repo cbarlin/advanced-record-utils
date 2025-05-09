@@ -1,23 +1,16 @@
 package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals; 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-
-import org.apache.commons.io.output.StringBuilderWriter;
-import org.apache.commons.io.output.WriterOutputStream;
-
-import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import io.avaje.jsonb.Jsonb;
+import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
 
 class NestedTests {
 
@@ -89,29 +82,7 @@ class NestedTests {
             .doesNotContainNull();
             
         // OK, time to convert to XML
-        final StringBuilder xmlStringBuilder = new StringBuilder();
-        assertDoesNotThrow(() -> {
-            final XMLOutputFactory factory = XMLOutputFactory.newFactory();
-            factory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
-            try (
-                final StringBuilderWriter stringBuilderWriter = new StringBuilderWriter(xmlStringBuilder);
-                final WriterOutputStream ws = WriterOutputStream.builder()
-                    .setWriter(stringBuilderWriter)
-                    .setCharset(StandardCharsets.UTF_8)
-                    .get();
-            ) {
-                final XMLStreamWriter streamWriter = factory.createXMLStreamWriter(ws, StandardCharsets.UTF_8.name());
-                streamWriter.writeStartDocument();
-                merged.writeSelfTo(streamWriter);
-                streamWriter.writeEndDocument();
-                // Flush and close the XML streams beacause apparently xml doesn't have autocloseable...
-                streamWriter.flush();
-                streamWriter.close();
-                ws.flush();
-                stringBuilderWriter.flush();
-            }
-        });
-        final String xmlString = xmlStringBuilder.toString();
+        final String xmlString = assertDoesNotThrow(() -> ConvertToXml.convertToXml(out -> assertDoesNotThrow(() -> merged.writeSelfTo(out))));
         assertEquals("<?xml version=\"1.0\" ?><RootItem xmlns:wooo=\"ns://namedA\" xmlns:yayyyyy=\"ns://namedB\" xmlns=\"ns://nxA\" butIHaveAnotherName=\"I should be in the output!\" anotherField=\"42\" testOdtAttr=\"2025-01-01T08:15:42Z\"><FirstLevels><recurringReference itemA=\"A\" itemB=\"B\" itemC=\"C\"><recurisveItems notRecursiveB=\"E\" notRecursiveC=\"F\"><notRecursiveA>D</notRecursiveA><recursionFtw><notRecursiveA>G</notRecursiveA></recursionFtw></recurisveItems></recurringReference><secondLevelA><ThirdLevelAFromA><thirdString>This is a string!</thirdString></ThirdLevelAFromA></secondLevelA></FirstLevels><FirstLevels><secondLevelB><thirdLevelAFromB><fourthLevelA><letsGoFive><nowToSix><woo><andImDone itemA=\"Hi!\"></andImDone></woo></nowToSix></letsGoFive><oohNotLinear><andImDone itemB=\"Probs not\"></andImDone></oohNotLinear></fourthLevelA></thirdLevelAFromB></secondLevelB><secondLevelC><endOfTheLineHere>Nice</endOfTheLineHere></secondLevelC></FirstLevels><testOdtEl>2025-07-01T08:15:42Z</testOdtEl></RootItem>", xmlString);
 
         Jsonb jsonb = Jsonb.builder().build();

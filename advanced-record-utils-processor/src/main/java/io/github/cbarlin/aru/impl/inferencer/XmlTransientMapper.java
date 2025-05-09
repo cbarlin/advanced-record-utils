@@ -20,7 +20,7 @@ import io.github.cbarlin.aru.prism.prison.JsonIgnorePrism;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-// Turns out Avaje will only find the first of these, not both
+// Unless manually specified like this, the Avaje SPI only picks up the `ClassNameToPrismAdaptor`
 @ServiceProvider({ClassNameToPrismAdaptor.class, AnnotationInferencer.class})
 public class XmlTransientMapper implements ClassNameToPrismAdaptor<XmlTransientPrism>, AnnotationInferencer {
 

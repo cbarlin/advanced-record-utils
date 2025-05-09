@@ -29,7 +29,7 @@ import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-// Turns out Avaje will only find the first of these, not both
+// Unless manually specified like this, the Avaje SPI only picks up the `ClassNameToPrismAdaptor`
 @ServiceProvider({ClassNameToPrismAdaptor.class, AnnotationInferencer.class})
 public class XmlElementMapper implements ClassNameToPrismAdaptor<XmlElementPrism>, AnnotationInferencer {
 
@@ -96,8 +96,8 @@ public class XmlElementMapper implements ClassNameToPrismAdaptor<XmlElementPrism
             return Optional.empty();
         }
         return switch (prism.xmlOptions().inferXmlElementName()) {
-            case "MATCH" -> Optional.ofNullable(Map.of("name", element.getSimpleName().toString()));
-            case "UPPER_CAMEL_CASE" -> Optional.ofNullable(Map.of("name", capitalise(element.getSimpleName().toString())));
+            case "MATCH" -> Optional.of(Map.of("name", element.getSimpleName().toString()));
+            case "UPPER_CAMEL_CASE" -> Optional.of(Map.of("name", capitalise(element.getSimpleName().toString())));
             case null, default -> Optional.empty();
         };
     }

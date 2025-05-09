@@ -98,10 +98,8 @@ public class WriteFallback extends XmlVisitor {
         return true;
     }
 
-    // This was checked by the call to `isPrismPresent` in the caller
-    @SuppressWarnings({"java:S3655"})
     private void handleElement(final AnalysedComponent analysedComponent, final MethodSpec.Builder methodBuilder) {
-        final XmlElementPrism prism = analysedComponent.findPrism(XML_ELEMENT, XmlElementPrism.class).get();
+        final XmlElementPrism prism = analysedComponent.findPrism(XML_ELEMENT, XmlElementPrism.class).orElseThrow();
         final boolean required = Boolean.TRUE.equals(prism.required());
         final String elementName = elementName(analysedComponent, prism);
         final Optional<String> namespaceName = namespaceName(prism);
@@ -147,10 +145,8 @@ public class WriteFallback extends XmlVisitor {
         );
     }
 
-    // This was checked by the call to `isPrismPresent` in the caller
-    @SuppressWarnings({"java:S3655"})
     private void handleAttribute(final AnalysedComponent analysedComponent, final MethodSpec.Builder methodBuilder) {
-        final XmlAttributePrism prism = analysedComponent.findPrism(XML_ATTRIBUTE, XmlAttributePrism.class).get();
+        final XmlAttributePrism prism = analysedComponent.findPrism(XML_ATTRIBUTE, XmlAttributePrism.class).orElseThrow();
         final boolean required = Boolean.TRUE.equals(prism.required());
         final String attributeName = attributeName(analysedComponent, prism);
         final Optional<String> namespaceName = namespaceName(prism);
