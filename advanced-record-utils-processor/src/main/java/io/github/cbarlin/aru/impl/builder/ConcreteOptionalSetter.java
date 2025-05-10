@@ -1,5 +1,6 @@
 package io.github.cbarlin.aru.impl.builder;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 
@@ -33,13 +34,14 @@ public class ConcreteOptionalSetter extends OptionalRecordVisitor {
             final String name = analysedComponent.name();
             final ParameterSpec param = ParameterSpec.builder(analysedComponent.unNestedPrimaryTypeName(), name, Modifier.FINAL)
                 .addJavadoc("The replacement value")
+                .addAnnotation(NULLABLE)
                 .build();
             
             final var method = analysedComponent.builderArtifact().createMethod(name, claimableOperation, analysedComponent)
                 .addJavadoc("Updates the value of {@code $L}", name)
                 .returns(builderClassName)
                 .addParameter(param)
-                .addAnnotation(NULLABLE)
+                .addAnnotation(NOT_NULL)
                 .addModifiers(Modifier.PUBLIC)
                 .addStatement("return this.$L($T.ofNullable($L))", name, OPTIONAL, name);
             AnnotationSupplier.addGeneratedAnnotation(method, this);

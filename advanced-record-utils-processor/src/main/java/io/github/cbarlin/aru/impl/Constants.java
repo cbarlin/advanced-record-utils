@@ -43,9 +43,10 @@ public enum Constants {
         public static final ClaimableOperation WITHER_TO_BUILDER = new ClaimableOperation("witherToBuilder", CLASS);
         public static final ClaimableOperation WITHER_USE_TYPE_CONVERTER = new ClaimableOperation("witherUseTypeConverter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH = new ClaimableOperation("witherWith", FIELD_AND_ACCESSORS);
-        public static final ClaimableOperation WITHER_WITH_ALIAS = new ClaimableOperation("witherWithAlias", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_ADD = new ClaimableOperation("witherWithAdd", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation WITHER_WITH_ALIAS = new ClaimableOperation("witherWithAlias", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_FLUENT = new ClaimableOperation("witherWithFluent", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation WITHER_WITH_OPTIONAL = new ClaimableOperation("witherWithOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation XML_IFACE = new ClaimableOperation("xmlInterface", CLASS);
         public static final ClaimableOperation XML_IFACE_TO_XML = new ClaimableOperation("xmlInterfaceToXml", CLASS);
         public static final ClaimableOperation XML_IFACE_TO_XML_NO_DEF_NAMESPACE = new ClaimableOperation("xmlInterfaceToXmlNoDefNs", CLASS);
@@ -70,6 +71,7 @@ public enum Constants {
         public static final ClassName CONSTRAINT_VIOLATION = ClassName.get("jakarta.validation", "ConstraintViolation");
         public static final ClassName CONSUMER = ClassName.get(Consumer.class);
         public static final ClassName DATE_TIME_FORMATTER = ClassName.get(DateTimeFormatter.class);
+        public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(IllegalArgumentException.class);
         public static final ClassName ITERABLE = ClassName.get(Iterable.class);
         public static final ClassName JAKARTA_VALIDATOR = ClassName.get("jakarta.validator", "Validator");
         public static final ClassName LOCAL_DATE_TIME = ClassName.get(LocalDateTime.class);
@@ -88,12 +90,12 @@ public enum Constants {
         public static final ClassName XML_ELEMENT_DEFAULT = XML_ELEMENT.nestedClass("DEFAULT");
         public static final ClassName XML_ELEMENT_WRAPPER = ClassName.get(XML_ANNOTATIONS, "XmlElementWrapper");
         public static final ClassName XML_ELEMENTS = ClassName.get(XML_ANNOTATIONS, "XmlElements");
-        public static final ClassName XML_ROOT_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlRootElement");
-        public static final ClassName XML_TYPE = ClassName.get(XML_ANNOTATIONS, "XmlType");
         public static final ClassName XML_NAMESPACE_CONTEXT = ClassName.get("javax.xml.namespace", "NamespaceContext");
+        public static final ClassName XML_ROOT_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlRootElement");
         public static final ClassName XML_STREAM_EXCEPTION = ClassName.get("javax.xml.stream", "XMLStreamException");
         public static final ClassName XML_STREAM_WRITER = ClassName.get("javax.xml.stream", "XMLStreamWriter");
         public static final ClassName XML_TRANSIENT = ClassName.get(XML_ANNOTATIONS, "XmlTransient");
+        public static final ClassName XML_TYPE = ClassName.get(XML_ANNOTATIONS, "XmlType");
         public static final ClassName ZONE_ID = ClassName.get(ZoneId.class);
         public static final ClassName ZONE_OFFSET = ClassName.get(ZoneOffset.class);
         public static final ClassName ZONED_DATE_TIME = ClassName.get(ZonedDateTime.class);

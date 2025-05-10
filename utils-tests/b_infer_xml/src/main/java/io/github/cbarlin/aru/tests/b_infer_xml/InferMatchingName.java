@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-@AdvancedRecordUtils(xmlable = true, xmlOptions = @XmlOptions(inferXmlElementName = NameGeneration.MATCH))
+@AdvancedRecordUtils(xmlable = true, merger = true, xmlOptions = @XmlOptions(inferXmlElementName = NameGeneration.MATCH))
 public record InferMatchingName(
     String iShouldBeAnElement,
     OffsetDateTime soShouldI,
