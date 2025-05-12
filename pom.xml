@@ -65,7 +65,7 @@
         <eclipse-collections.version>11.1.0</eclipse-collections.version>
         <avaje.validator.version>2.11</avaje.validator.version>
         <avaje.prism.version>1.42</avaje.prism.version>
-        <avaje-spi.version>2.12</avaje-spi.version>
+        <avaje-spi.version>2.13</avaje-spi.version>
         <avaje-jsonb.version>3.4</avaje-jsonb.version>
         <jackson-annotations.version>2.19.0</jackson-annotations.version>
         <mockito.version>5.17.0</mockito.version>
