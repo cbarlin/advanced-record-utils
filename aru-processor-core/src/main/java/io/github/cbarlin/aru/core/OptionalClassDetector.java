@@ -18,7 +18,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 /**
  * Utility for detecting dependencies and comparing them via TypeNames.
  * <p>
- * Doesn't neecessarily need to be optional dependencies either, I suppose.
+ * Doesn't necessarily need to be optional dependencies either, I suppose.
  */
 public class OptionalClassDetector {
 
@@ -83,12 +83,7 @@ public class OptionalClassDetector {
             return in -> false;
         } else {
             final TypeMirror dependencyTypeMirror = optionalTypeMirror.get();
-            final Types types = APContext.types();
-            final TypeMirror erasedDep = types.erasure(dependencyTypeMirror);
-            return (TypeMirror returnType) -> {
-                final TypeMirror erasedReturn = types.erasure(returnType);
-                return types.isAssignable(erasedReturn, erasedDep) || types.isSubtype(erasedReturn, erasedDep) ;
-            };
+            return (TypeMirror returnType) -> eraseAndCompare(returnType, dependencyTypeMirror);
         }
     }
 
@@ -112,13 +107,15 @@ public class OptionalClassDetector {
         return Boolean.TRUE == optionalDependencyTypeMirror(compareTo)
             .flatMap(
                 compTo -> optionalDependencyTypeMirror(compareFrom)
-                    .map(compFrom -> {
-                        final Types types = APContext.types();
-                        final TypeMirror erasedFrom = types.erasure(compFrom);
-                        final TypeMirror erasedTo = types.erasure(compTo);
-                        return types.isAssignable(erasedFrom, erasedTo) || types.isSubtype(erasedFrom, erasedTo);
-                    })
+                    .map(compFrom -> eraseAndCompare(compTo, compFrom))
             )
             .orElse(Boolean.FALSE);
+    }
+
+    private static boolean eraseAndCompare(TypeMirror compTo, TypeMirror compFrom) {
+        final Types types = APContext.types();
+        final TypeMirror erasedFrom = types.erasure(compFrom);
+        final TypeMirror erasedTo = types.erasure(compTo);
+        return types.isAssignable(erasedFrom, erasedTo) || types.isSubtype(erasedFrom, erasedTo);
     }
 }

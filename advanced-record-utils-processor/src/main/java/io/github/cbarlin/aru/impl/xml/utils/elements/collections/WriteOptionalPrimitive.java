@@ -65,8 +65,10 @@ public class WriteOptionalPrimitive extends XmlVisitor {
                 methodName = "getAsInt";
             } else if (OPTIONAL_LONG.equals(analysedComponent.unNestedPrimaryTypeName())) {
                 methodName = "getAsLong";
-            } else {
+            } else if (OPTIONAL_DOUBLE.equals(analysedComponent.unNestedPrimaryTypeName())) {
                 methodName = "getAsDouble";
+            } else {
+                throw new IllegalArgumentException("Unrecognised optional primitive type: " + analysedComponent.unNestedPrimaryComponentType());
             }
 
             analysedComponent.withinUnwrapped(

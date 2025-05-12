@@ -35,6 +35,12 @@ public class AnalysedOptionalCollection extends AnalysedComponent implements Opt
     private final TypeMirror innerType;
     private final TypeName innerTypeName;
 
+    /**
+     * Note: The constructor will *not* validate the arguments passed to it.
+     * <p>
+     * It is expected that the validation, including the ability to read type arguments, is
+     *   done externally
+     */
     public AnalysedOptionalCollection(
         final RecordComponentElement element, 
         final AnalysedRecord parentRecord,

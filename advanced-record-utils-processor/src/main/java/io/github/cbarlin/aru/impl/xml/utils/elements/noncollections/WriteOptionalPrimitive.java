@@ -1,7 +1,9 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_DOUBLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_INT;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_LONG;
+import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
 import java.util.Optional;
@@ -48,8 +50,10 @@ public class WriteOptionalPrimitive extends XmlVisitor {
                 methodName = "getAsInt";
             } else if (OPTIONAL_LONG.equals(component.typeName())) {
                 methodName = "getAsLong";
-            } else {
+            } else if (OPTIONAL_DOUBLE.equals(analysedComponent.typeName())) {
                 methodName = "getAsDouble";
+            } else {
+                throw new IllegalArgumentException("Unrecognised optional primitive type: " + analysedComponent.typeName());
             }
 
             if (defaultValue.isPresent()) {
@@ -74,7 +78,7 @@ public class WriteOptionalPrimitive extends XmlVisitor {
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(component.name(), elementName);
             methodBuilder.beginControlFlow("if (val.isEmpty())")
-                .addStatement("throw new $T($S)", STRING, errMsg)
+                .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
                 .endControlFlow();
         } else {
             methodBuilder.beginControlFlow("if (val.isEmpty())")

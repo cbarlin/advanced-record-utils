@@ -7,14 +7,13 @@ import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 
 import java.util.Optional;
 
-import io.github.cbarlin.aru.core.APContext;
+import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
@@ -40,7 +39,7 @@ public class WriteCharSequence extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && APContext.types().isSubtype(analysedComponent.unNestedPrimaryComponentType(), APContext.elements().getTypeElement(CharSequence.class.getCanonicalName()).asType())) {
+        if (optPrism.isPresent() && OptionalClassDetector.checkSameOrSubType(analysedComponent.unNestedPrimaryTypeName(), CHAR_SEQUENCE)) {
             // Nice!
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);

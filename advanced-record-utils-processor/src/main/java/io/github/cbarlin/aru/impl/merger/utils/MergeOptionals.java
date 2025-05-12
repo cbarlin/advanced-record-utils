@@ -1,7 +1,9 @@
 package io.github.cbarlin.aru.impl.merger.utils;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 
 import javax.lang.model.element.Modifier;
 
@@ -48,12 +50,14 @@ public class MergeOptionals extends MergerVisitor {
             final MethodSpec.Builder method = mergerStaticClass.createMethod(analysedComponent.name(), claimableOperation);
             method.modifiers.clear();
             method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                .addAnnotation(NULLABLE)
+                .addAnnotation(NOT_NULL)
                 .addParameter(paramA)
                 .addParameter(paramB)
                 .returns(targetTn)
                 .addJavadoc("Merger for the field {@code $L}", analysedComponent.name())
-                .beginControlFlow("if ($T.isNull(elA))", OBJECTS)
+                .beginControlFlow("if ($T.isNull(elA) && $T.isNull(elB))", OBJECTS, OBJECTS)
+                .addStatement("return $T.empty()", OPTIONAL)
+                .nextControlFlow("else if($T.isNull(elA))", OBJECTS)
                 .addStatement("return elB")
                 .nextControlFlow("else if($T.isNull(elB))", OBJECTS)
                 .addStatement("return elA")

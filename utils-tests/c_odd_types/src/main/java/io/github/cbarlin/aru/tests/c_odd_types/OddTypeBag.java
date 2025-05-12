@@ -32,6 +32,8 @@ public record OddTypeBag(
     String thisShouldNotBeInTheBuilder
 ) implements OddTypeBagUtils.All {
 
+    private static final String DEFAULT_NOT_IN_BUILDER = "This is horse isn't from here";
+
     @AdvancedRecordUtils.TargetConstructor
     public OddTypeBag(
         Optional<List<String>> listOfItems,
@@ -40,7 +42,7 @@ public record OddTypeBag(
         OptionalDouble optionalDouble,
         Optional<Set<MyRecordA>> setOfMyRecA
     ) {
-        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, "This is horse isn't from here");
+        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, DEFAULT_NOT_IN_BUILDER);
     }
 
 }
