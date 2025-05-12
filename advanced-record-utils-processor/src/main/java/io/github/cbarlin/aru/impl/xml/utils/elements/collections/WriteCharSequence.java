@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -35,7 +36,6 @@ public class WriteCharSequence extends XmlVisitor {
     protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
         return true;
     }
-
 
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
@@ -85,13 +85,9 @@ public class WriteCharSequence extends XmlVisitor {
     }
 
     private boolean isSupported(AnalysedComponent analysedComponent, final Optional<XmlElementPrism> optPrism) {
-        final var types = APContext.types();
         return optPrism.isPresent() && 
             analysedComponent.isLoopable() && 
-            types.isAssignable(
-                analysedComponent.unNestedPrimaryComponentType(), 
-                APContext.elements().getTypeElement(CHAR_SEQUENCE.canonicalName()).asType()
-            );
+            OptionalClassDetector.checkSameOrSubType(analysedComponent.unNestedPrimaryTypeName(), CHAR_SEQUENCE);
     }
 
     private void handleWrapperEnd(final boolean required, final MethodSpec.Builder methodBuilder) {

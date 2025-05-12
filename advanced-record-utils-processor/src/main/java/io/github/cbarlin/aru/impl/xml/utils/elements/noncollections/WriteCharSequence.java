@@ -18,6 +18,7 @@ import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
+@SuppressWarnings({"java:S1192"})
 public class WriteCharSequence extends XmlVisitor {
 
     private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
@@ -39,7 +40,7 @@ public class WriteCharSequence extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && (!analysedComponent.requiresUnwrapping()) && APContext.types().isSubtype(analysedComponent.componentType(), APContext.elements().getTypeElement(CharSequence.class.getCanonicalName()).asType())) {
+        if (optPrism.isPresent() && APContext.types().isSubtype(analysedComponent.unNestedPrimaryComponentType(), APContext.elements().getTypeElement(CharSequence.class.getCanonicalName()).asType())) {
             // Nice!
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
@@ -72,13 +73,31 @@ public class WriteCharSequence extends XmlVisitor {
         } else {
             methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
         }
+
+        if (analysedComponent.requiresUnwrapping()) {
+            analysedComponent.withinUnwrapped(
+                varName -> {
+                    namespaceName.ifPresentOrElse(
+                        namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
+                        () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                    );
+                    methodBuilder.addStatement("output.writeCharacters($L.toString())", varName)
+                        .addStatement("output.writeEndElement()");
+                }, 
+                methodBuilder,
+                "val",
+                CHAR_SEQUENCE
+            );
+        } else {
+            namespaceName.ifPresentOrElse(
+                namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
+                () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+            );
+            methodBuilder.addStatement("output.writeCharacters(val.toString())")
+                .addStatement("output.writeEndElement()");
+        }
       
-        namespaceName.ifPresentOrElse(
-            namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
-        );
-        methodBuilder.addStatement("output.writeCharacters(val.toString())")
-            .addStatement("output.writeEndElement()");
+        
       
         if (!required) {
             methodBuilder.endControlFlow();
@@ -96,9 +115,20 @@ public class WriteCharSequence extends XmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS)
-            .addStatement("output.writeCharacters(val.toString())")
-            .nextControlFlow("else");
+        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
+        
+        if (analysedComponent.requiresUnwrapping()) {
+            analysedComponent.withinUnwrapped(
+                varName -> methodBuilder.addStatement("output.writeCharacters($L.toString())", varName), 
+                methodBuilder,
+                "val",
+                CHAR_SEQUENCE
+            );
+        } else {
+            methodBuilder.addStatement("output.writeCharacters(val.toString())");
+        }
+        
+        methodBuilder.nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
         methodBuilder.addStatement("output.writeCharacters($S)", writeAsDefaultValue)
             .endControlFlow()

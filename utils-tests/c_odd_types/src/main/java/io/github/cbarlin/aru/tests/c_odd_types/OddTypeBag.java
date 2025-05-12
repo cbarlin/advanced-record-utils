@@ -23,12 +23,11 @@ import jakarta.xml.bind.annotation.XmlElementWrapper;
     logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE
 )
 public record OddTypeBag(
+    @XmlElementWrapper(name = "WrapperOfLSO")
     Optional<List<String>> listOfItems,
     OptionalInt someOptionalInt,
     OptionalLong someOptionalLong,
     OptionalDouble optionalDouble,
-    @XmlElementWrapper(name = "WrapperOfLSO")
-    List<Optional<String>> listOfStringOptionals,
     Optional<Set<MyRecordA>> setOfMyRecA,
     String thisShouldNotBeInTheBuilder
 ) implements OddTypeBagUtils.All {
@@ -39,10 +38,9 @@ public record OddTypeBag(
         OptionalInt someOptionalInt,
         OptionalLong someOptionalLong,
         OptionalDouble optionalDouble,
-        List<Optional<String>> listOfStringOptionals,
         Optional<Set<MyRecordA>> setOfMyRecA
     ) {
-        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, listOfStringOptionals, setOfMyRecA, "This is horse isn't from here");
+        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, "This is horse isn't from here");
     }
 
 }

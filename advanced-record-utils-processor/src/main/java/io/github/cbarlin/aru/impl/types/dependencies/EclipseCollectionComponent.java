@@ -1,6 +1,12 @@
 package io.github.cbarlin.aru.impl.types.dependencies;
 
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.*;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.LIST;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__IMMUTABLE_COLLECTION;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__IMMUTABLE_LIST;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__IMMUTABLE_SET;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_COLLECTION;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_LIST;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_SET;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,15 +17,14 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
-import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
-
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
-import io.github.cbarlin.aru.core.types.*;
 
 public class EclipseCollectionComponent extends AnalysedComponent {
 
@@ -42,10 +47,6 @@ public class EclipseCollectionComponent extends AnalysedComponent {
         final TypeMirror wrapper = utilsProcessingContext.processingEnv().getTypeUtils().erasure(ret.asType());
         final TypeElement te = (TypeElement) ((DeclaredType) wrapper).asElement();
         erasedWrapperClassName = ClassName.get(te);
-    }
-
-    public static boolean isEclipseCollection(final RecordComponentElement recordComponentElement) {
-        return OptionalClassDetector.checkSameOrSubType(recordComponentElement, ECLIPSE_COLLECTIONS__RICH_ITERABLE);
     }
 
     public boolean isImmutableCollection() {
@@ -113,7 +114,7 @@ public class EclipseCollectionComponent extends AnalysedComponent {
     @Override
     public TypeName serialisedTypeName() {
         // Always consider a collection of any type a simple list
-        return ParameterizedTypeName.get(Names.LIST, innerTypeName);
+        return ParameterizedTypeName.get(LIST, innerTypeName);
     }
 
     @Override

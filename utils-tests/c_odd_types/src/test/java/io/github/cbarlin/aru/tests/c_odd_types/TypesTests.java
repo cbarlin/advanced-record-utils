@@ -7,9 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
@@ -20,7 +18,6 @@ class TypesTests {
     void builder() {
         final OddTypeBag someRecord = assertDoesNotThrow(() -> {
             return OddTypeBagUtils.builder()
-                .addListOfStringOptionals(Optional.ofNullable("Blue cheese has mold in it"))
                 .listOfItems(
                     List.of(
                         "Turning Random Internet Drama into Songs Part 4 with Lubalin and Alison Brie",
@@ -48,7 +45,6 @@ class TypesTests {
     void wither() {
         final OddTypeBag someRecord = assertDoesNotThrow(() -> {
             return OddTypeBagUtils.builder()
-                .addListOfStringOptionals(Optional.ofNullable("Blue cheese has mold in it"))
                 .listOfItems(
                     List.of(
                         "Turning Random Internet Drama into Songs Part 4 with Lubalin and Alison Brie",
@@ -104,11 +100,9 @@ class TypesTests {
     }
     
     @Test
-    @Disabled("Not yet finished - need to add support for List->Optional->X or Optional->List->X")
     void xml() {
         final OddTypeBag someRecord = assertDoesNotThrow(() -> {
             return OddTypeBagUtils.builder()
-                .addListOfStringOptionals(Optional.ofNullable("Blue cheese has mold in it"))
                 .listOfItems(
                     List.of(
                         "Turning Random Internet Drama into Songs Part 4 with Lubalin and Alison Brie",
@@ -124,7 +118,7 @@ class TypesTests {
         final String xmlString = assertDoesNotThrow(() -> ConvertToXml.convertToXml(out -> assertDoesNotThrow(() -> someRecord.writeSelfTo(out))));
         assertEquals(
             //language=XML
-            "<?xml version=\"1.0\" ?><OddTypeBag><ListOfItems>Turning Random Internet Drama into Songs Part 4 with Lubalin and Alison Brie</ListOfItems><ListOfItems>What did Caroline do Helen?</ListOfItems><SomeOptionalInt>69</SomeOptionalInt><SomeOptionalLong>12345678987654321</SomeOptionalLong><OptionalDouble>2.2</OptionalDouble><WrapperOfLSO><ListOfStringOptionals>Blue cheese has mold in it</ListOfStringOptionals></WrapperOfLSO><ThisShouldNotBeInTheBuilder>This is horse isn't from here</ThisShouldNotBeInTheBuilder></OddTypeBag>", 
+            "<?xml version=\"1.0\" ?><OddTypeBag><WrapperOfLSO><ListOfItems>Turning Random Internet Drama into Songs Part 4 with Lubalin and Alison Brie</ListOfItems><ListOfItems>What did Caroline do Helen?</ListOfItems></WrapperOfLSO><SomeOptionalInt>69</SomeOptionalInt><SomeOptionalLong>12345678987654321</SomeOptionalLong><OptionalDouble>2.2</OptionalDouble><ThisShouldNotBeInTheBuilder>This is horse isn't from here</ThisShouldNotBeInTheBuilder></OddTypeBag>", 
             xmlString
         );
 
