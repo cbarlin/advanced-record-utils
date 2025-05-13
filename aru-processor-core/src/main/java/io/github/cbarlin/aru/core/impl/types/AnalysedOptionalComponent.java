@@ -28,7 +28,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  * 
  * @see AnalysedComponent
  */
-public class AnalysedOptionalComponent extends AnalysedComponent {
+public class AnalysedOptionalComponent extends AnalysedComponent implements OptionalComponent<AnalysedOptionalComponent> {
 
     private static final String UNWRAPPING_VARIABLE_NAME = "__innerValue";
     private final TypeMirror innerType;
@@ -77,5 +77,10 @@ public class AnalysedOptionalComponent extends AnalysedComponent {
             .addStatement("final $T $L = $L.get()", unwrappedTn, UNWRAPPING_VARIABLE_NAME, incomingName);
         withUnwrappedName.accept(UNWRAPPING_VARIABLE_NAME);
         methodBuilder.endControlFlow();
+    }
+
+    @Override
+    public AnalysedOptionalComponent component() {
+        return this;
     }
 }

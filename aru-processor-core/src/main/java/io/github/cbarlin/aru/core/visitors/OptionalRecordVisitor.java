@@ -1,7 +1,7 @@
 package io.github.cbarlin.aru.core.visitors;
 
 import io.github.cbarlin.aru.core.ClaimableOperation;
-import io.github.cbarlin.aru.core.impl.types.AnalysedOptionalComponent;
+import io.github.cbarlin.aru.core.impl.types.OptionalComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 
 /**
@@ -25,9 +25,9 @@ public abstract class OptionalRecordVisitor extends RecordVisitor {
 
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        return analysedComponent instanceof AnalysedOptionalComponent apc && visitOptionalComponent(apc);
+        return analysedComponent instanceof OptionalComponent apc && visitOptionalComponent(apc);
     }
 
-    protected abstract boolean visitOptionalComponent(AnalysedOptionalComponent analysedOptionalComponent);
+    protected abstract boolean visitOptionalComponent(OptionalComponent<?> analysedOptionalComponent);
 
 }

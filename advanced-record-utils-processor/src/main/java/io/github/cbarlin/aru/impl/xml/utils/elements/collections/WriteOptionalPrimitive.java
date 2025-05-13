@@ -1,8 +1,8 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.collections;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
-import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -11,25 +11,25 @@ import org.apache.commons.lang3.StringUtils;
 
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
-import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.AnalysedOptionalPrimitiveComponent;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteCharSequence extends XmlVisitor {
+public class WriteOptionalPrimitive extends XmlVisitor {
 
-    public WriteCharSequence() {
+    public WriteOptionalPrimitive() {
         super(Claims.XML_WRITE_FIELD);
     }
 
     @Override
     protected int innerSpecificity() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class WriteCharSequence extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
         final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (isSupported(analysedComponent, optPrism)) {
+        if (optPrism.isPresent() && isSupported(analysedComponent)) {
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
@@ -51,43 +51,41 @@ public class WriteCharSequence extends XmlVisitor {
             if (defaultValue.isPresent()) {
                 APContext.messager().printWarning("Cannot process default value on an XmlElement that's pointing at a collection", analysedComponent.element());
             }
-
+            
             final Optional<XmlElementWrapperPrism> wrapper = xmlElementWrapperPrism(analysedComponent);
             if (wrapper.isPresent()) {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }
 
+            final String methodName = AnalysedOptionalPrimitiveComponent.getterMethod(analysedComponent.unNestedPrimaryTypeName());
+
             analysedComponent.withinUnwrapped(
                 variableName -> {
-                    methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                    methodBuilder.beginControlFlow("if($T.isNull($L) || $L.isEmpty())", OBJECTS, variableName, variableName)
                         .addStatement("continue")
                         .endControlFlow();
                     namespaceName.ifPresentOrElse(
                         namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
                         () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
                     );
-                    methodBuilder.addStatement("output.writeCharacters($L.toString())", variableName)
+                    methodBuilder.addStatement("output.writeCharacters($T.valueOf($L.$L()))", STRING, variableName, methodName)
                         .addStatement("output.writeEndElement()");
                 },
                 methodBuilder,
-                "val",
-                CHAR_SEQUENCE
+                "val"
             );
 
             if (wrapper.isPresent()) {
                 handleWrapperEnd(required, methodBuilder);
             }
-
             return true;
         }
-
         return false;
     }
 
-    private boolean isSupported(AnalysedComponent analysedComponent, final Optional<XmlElementPrism> optPrism) {
-        return optPrism.isPresent() && 
-            analysedComponent.isLoopable() && 
-            OptionalClassDetector.checkSameOrSubType(analysedComponent.unNestedPrimaryTypeName(), CHAR_SEQUENCE);
+    private boolean isSupported(final AnalysedComponent analysedComponent) {
+        return analysedComponent.isLoopable() &&
+          AnalysedOptionalPrimitiveComponent.TYPE_TO_GETTER.containsKey(analysedComponent.unNestedPrimaryTypeName());
     }
 
     private void handleWrapperEnd(final boolean required, final MethodSpec.Builder methodBuilder) {

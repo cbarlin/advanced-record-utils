@@ -1,5 +1,7 @@
 package io.github.cbarlin.aru.core.impl.visitors.builder;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+
 import javax.lang.model.element.Modifier;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
@@ -38,6 +40,7 @@ public class AddSetter extends RecordVisitor {
             final String name = analysedComponent.name();
             final ParameterSpec param = ParameterSpec.builder(analysedComponent.typeName(), name, Modifier.FINAL)
                 .addJavadoc("The replacement value")
+                .addAnnotation(NULLABLE)
                 .build();
             
             final var method = analysedComponent.builderArtifact().createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
