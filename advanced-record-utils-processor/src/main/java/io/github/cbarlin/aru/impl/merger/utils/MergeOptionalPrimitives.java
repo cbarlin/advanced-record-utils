@@ -35,8 +35,8 @@ public class MergeOptionalPrimitives extends MergerVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        if (analysedComponent instanceof AnalysedOptionalPrimitiveComponent) {
-            final var targetTn = analysedComponent.typeName();
+        if (analysedComponent instanceof AnalysedOptionalPrimitiveComponent component) {
+            final var targetTn = component.typeName();
             final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
                 .addAnnotation(NULLABLE)
                 .addJavadoc("The preferred input")
@@ -46,20 +46,20 @@ public class MergeOptionalPrimitives extends MergerVisitor {
                 .addJavadoc("The non-preferred input")
                 .build();
             
-            final MethodSpec.Builder method = mergerStaticClass.createMethod(analysedComponent.name(), claimableOperation);
+            final MethodSpec.Builder method = mergerStaticClass.createMethod(component.name(), claimableOperation);
             method.modifiers.clear();
             method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                 .addAnnotation(NOT_NULL)
                 .addParameter(paramA)
                 .addParameter(paramB)
                 .returns(targetTn)
-                .addJavadoc("Merger for the field {@code $L}", analysedComponent.name())
+                .addJavadoc("Merger for the field {@code $L}", component.name())
                 .beginControlFlow("if ($T.nonNull(elA) && elA.isPresent())", OBJECTS)
                 .addStatement("return elA")
                 .nextControlFlow("else if($T.nonNull(elB) && elB.isPresent())", OBJECTS)
                 .addStatement("return elB")
                 .endControlFlow()
-                .addStatement("return $T.empty()", analysedComponent.typeName());
+                .addStatement("return $T.empty()", component.typeName());
 
             AnnotationSupplier.addGeneratedAnnotation(method, this);
             return true;

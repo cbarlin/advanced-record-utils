@@ -29,7 +29,13 @@ import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 /**
- * Handles e.g. {@code Optional<ImmutableList<T>>}
+ * Handles record components typed as {@code Optional<ImmutableList<T>>} and similar Eclipse Collections types.
+ * <p>
+ * This class specializes in extracting information and unwrapping Eclipse Collections
+ *   types enclosed within Java's Optional container. It supports various Eclipse collection
+ *   implementations including immutable/mutable lists and sets.
+ * <p>
+ * Analysis and construction is performed in the EclipseOptionalCollectionAnalyser
  */
 public class EclipseAnalysedOptionalCollection extends AnalysedComponent implements OptionalComponent<EclipseAnalysedOptionalCollection> {
 
@@ -132,6 +138,10 @@ public class EclipseAnalysedOptionalCollection extends AnalysedComponent impleme
         return ParameterizedTypeName.get(LIST, innerTypeName);
     }
 
+    /**
+     * Returns the erased type name of the collection (without generic parameters).
+     * @return the raw ClassName of the collection without type parameters
+     */
     public ClassName erasedCollectionTypeName() {
         return erasedCollectionTypeName;
     }

@@ -18,6 +18,7 @@ import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.AnalysedOptionalPrimitiveComponent;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
@@ -60,16 +61,7 @@ public class WriteOptionalPrimitive extends XmlVisitor {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }
 
-            final String methodName;
-            if (OPTIONAL_INT.equals(analysedComponent.unNestedPrimaryTypeName())) {
-                methodName = "getAsInt";
-            } else if (OPTIONAL_LONG.equals(analysedComponent.unNestedPrimaryTypeName())) {
-                methodName = "getAsLong";
-            } else if (OPTIONAL_DOUBLE.equals(analysedComponent.unNestedPrimaryTypeName())) {
-                methodName = "getAsDouble";
-            } else {
-                throw new IllegalArgumentException("Unrecognised optional primitive type: " + analysedComponent.unNestedPrimaryComponentType());
-            }
+            final String methodName = AnalysedOptionalPrimitiveComponent.getterMethod(analysedComponent.typeName());
 
             analysedComponent.withinUnwrapped(
                 variableName -> {

@@ -1,6 +1,5 @@
 package io.github.cbarlin.aru.impl.xml.utils.attribute;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.*;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
 import java.util.Optional;
@@ -41,14 +40,7 @@ public class WriteOptionalPrimitive extends XmlVisitor {
             final Optional<String> namespaceName = namespaceName(prism);
             component.withinUnwrapped(
                 varName -> {
-                    final String methodName;
-                    if (OPTIONAL_INT.equals(component.typeName())) {
-                        methodName = "getAsInt";
-                    } else if (OPTIONAL_LONG.equals(component.typeName())) {
-                        methodName = "getAsLong";
-                    } else {
-                        methodName = "getAsDouble";
-                    }
+                    final String methodName = component.getterMethod();
                     namespaceName.ifPresentOrElse(
                         namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, $T.valueOf($L.$L()))", namespace, attributeName, STRING, varName, methodName),
                         () -> methodBuilder.addStatement("output.writeAttribute($S, $T.valueOf($L.$L()))", attributeName, STRING, varName, methodName)

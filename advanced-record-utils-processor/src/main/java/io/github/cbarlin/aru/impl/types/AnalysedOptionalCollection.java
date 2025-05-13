@@ -103,6 +103,10 @@ public class AnalysedOptionalCollection extends AnalysedComponent implements Opt
         return ParameterizedTypeName.get(LIST, innerTypeName);
     }
 
+    /**
+     * Returns the erased type name of the collection (without generic parameters).
+     * @return the raw ClassName of the collection without type parameters
+     */
     public ClassName erasedCollectionTypeName() {
         return erasedCollectionTypeName;
     }

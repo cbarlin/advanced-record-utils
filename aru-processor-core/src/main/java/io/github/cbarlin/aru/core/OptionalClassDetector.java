@@ -104,15 +104,15 @@ public class OptionalClassDetector {
      * @return Assignability or subtype check
      */
     public static boolean checkSameOrSubType(final TypeName compareFrom, final TypeName compareTo) {
-        return Boolean.TRUE == optionalDependencyTypeMirror(compareTo)
+        return optionalDependencyTypeMirror(compareTo)
             .flatMap(
                 compTo -> optionalDependencyTypeMirror(compareFrom)
-                    .map(compFrom -> eraseAndCompare(compTo, compFrom))
+                    .map(compFrom -> eraseAndCompare(compFrom, compTo))
             )
-            .orElse(Boolean.FALSE);
+            .orElse(false);
     }
 
-    private static boolean eraseAndCompare(TypeMirror compTo, TypeMirror compFrom) {
+    private static boolean eraseAndCompare(TypeMirror compFrom, TypeMirror compTo) {
         final Types types = APContext.types();
         final TypeMirror erasedFrom = types.erasure(compFrom);
         final TypeMirror erasedTo = types.erasure(compTo);

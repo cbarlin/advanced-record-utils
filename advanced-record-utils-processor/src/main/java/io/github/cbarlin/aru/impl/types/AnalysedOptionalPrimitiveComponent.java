@@ -1,9 +1,12 @@
 package io.github.cbarlin.aru.impl.types;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_DOUBLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_INT;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_LONG;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -23,6 +26,12 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  * An analysed component for optional primitives like {@link java.util.OptionalInt}
  */
 public class AnalysedOptionalPrimitiveComponent extends AnalysedComponent {
+
+    private static final Map<TypeName, String> TYPE_TO_GETTER = Map.of(
+        OPTIONAL_LONG, "getAsLong",
+        OPTIONAL_INT, "getAsInt",
+        OPTIONAL_DOUBLE, "getAsDouble"
+    );
 
     private final TypeName innerTypeName;
     private final TypeMirror innerType;
@@ -49,6 +58,14 @@ public class AnalysedOptionalPrimitiveComponent extends AnalysedComponent {
         }
     }
 
+    public static String getterMethod(TypeName typeName) {
+        return Objects.requireNonNull(TYPE_TO_GETTER.get(typeName), "AnalysedOptionalPrimitiveComponent applied incorrectly and no getter method can be found");
+    }
+
+    public String getterMethod() {
+        return getterMethod(typeName);
+    }
+
     @Override
     public TypeMirror unNestedPrimaryComponentType() {
         return innerType;
@@ -71,15 +88,8 @@ public class AnalysedOptionalPrimitiveComponent extends AnalysedComponent {
 
     @Override
     public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTn) {
-        final String methodName;
-        if (OPTIONAL_INT.equals(typeName())) {
-            methodName = "getAsInt";
-        } else if (OPTIONAL_LONG.equals(typeName())) {
-            methodName = "getAsLong";
-        } else {
-            methodName = "getAsDouble";
-        }
-        methodBuilder.beginControlFlow("if ($L.isPresent())", incomingName)
+        final String methodName = getterMethod();
+        methodBuilder.beginControlFlow("if ($T.nonNull($L) && $L.isPresent())", OBJECTS, incomingName)
             .addStatement("final $T $L = $L.$L()", unwrappedTn, "__innerPrimitive", incomingName, methodName);
         withUnwrappedName.accept("__innerPrimitive");
         methodBuilder.endControlFlow();

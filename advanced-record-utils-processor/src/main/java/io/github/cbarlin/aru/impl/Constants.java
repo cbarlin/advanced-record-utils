@@ -57,6 +57,7 @@ public enum Constants {
         public static final ClaimableOperation XML_STATIC_CLASS_TO_XML_NO_DEF_NAMESPACE = new ClaimableOperation("xmlStaticClassToXmlNoDefNS", CLASS);
         public static final ClaimableOperation XML_STATIC_CLASS_TO_XML_NO_NAMESPACE = new ClaimableOperation("xmlStaticClassToXmlNoNS", CLASS);
         public static final ClaimableOperation XML_STATIC_CLASS_TO_XML_NO_TAG = new ClaimableOperation("xmlStaticClassToXmlNoTag", CLASS);
+        public static final ClaimableOperation XML_UNWRAP_OPTIONAL = new ClaimableOperation("xmlUnwrapOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation XML_WRITE_FIELD = new ClaimableOperation("xmlWriteField", FIELD_AND_ACCESSORS);
     }
     

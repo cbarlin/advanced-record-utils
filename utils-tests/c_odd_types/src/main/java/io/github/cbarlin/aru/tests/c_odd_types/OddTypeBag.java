@@ -14,6 +14,9 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.XmlOptions;
 import io.github.cbarlin.aru.tests.a_core_dependency.MyRecordA;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 
+// Order of components vs the constructor is intentional. We need to ensure that
+//   the "targetConstructor" does not care about the order of the original components,
+//   or where the omitted element is
 @AdvancedRecordUtils(
     merger = true,
     wither = true,
@@ -29,7 +32,8 @@ public record OddTypeBag(
     OptionalLong someOptionalLong,
     OptionalDouble optionalDouble,
     Optional<Set<MyRecordA>> setOfMyRecA,
-    String thisShouldNotBeInTheBuilder
+    String thisShouldNotBeInTheBuilder,
+    Optional<String> someOptional
 ) implements OddTypeBagUtils.All {
 
     private static final String DEFAULT_NOT_IN_BUILDER = "This is horse isn't from here";
@@ -37,12 +41,13 @@ public record OddTypeBag(
     @AdvancedRecordUtils.TargetConstructor
     public OddTypeBag(
         Optional<List<String>> listOfItems,
-        OptionalInt someOptionalInt,
-        OptionalLong someOptionalLong,
         OptionalDouble optionalDouble,
-        Optional<Set<MyRecordA>> setOfMyRecA
+        OptionalInt someOptionalInt,
+        Optional<Set<MyRecordA>> setOfMyRecA,
+        Optional<String> someOptional,
+        OptionalLong someOptionalLong
     ) {
-        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, DEFAULT_NOT_IN_BUILDER);
+        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, DEFAULT_NOT_IN_BUILDER, someOptional);
     }
 
 }

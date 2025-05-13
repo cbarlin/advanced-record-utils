@@ -73,30 +73,12 @@ public class WriteCharSequence extends XmlVisitor {
             methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
         }
 
-        if (analysedComponent.requiresUnwrapping()) {
-            analysedComponent.withinUnwrapped(
-                varName -> {
-                    namespaceName.ifPresentOrElse(
-                        namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                        () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
-                    );
-                    methodBuilder.addStatement("output.writeCharacters($L.toString())", varName)
-                        .addStatement("output.writeEndElement()");
-                }, 
-                methodBuilder,
-                "val",
-                CHAR_SEQUENCE
-            );
-        } else {
-            namespaceName.ifPresentOrElse(
-                namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
-            );
-            methodBuilder.addStatement("output.writeCharacters(val.toString())")
-                .addStatement("output.writeEndElement()");
-        }
-      
-        
+        namespaceName.ifPresentOrElse(
+            namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
+            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+        );
+        methodBuilder.addStatement("output.writeCharacters(val.toString())")
+            .addStatement("output.writeEndElement()");
       
         if (!required) {
             methodBuilder.endControlFlow();
@@ -114,20 +96,9 @@ public class WriteCharSequence extends XmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
-        
-        if (analysedComponent.requiresUnwrapping()) {
-            analysedComponent.withinUnwrapped(
-                varName -> methodBuilder.addStatement("output.writeCharacters($L.toString())", varName), 
-                methodBuilder,
-                "val",
-                CHAR_SEQUENCE
-            );
-        } else {
-            methodBuilder.addStatement("output.writeCharacters(val.toString())");
-        }
-        
-        methodBuilder.nextControlFlow("else");
+        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS)
+            .addStatement("output.writeCharacters(val.toString())")
+            .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
         methodBuilder.addStatement("output.writeCharacters($S)", writeAsDefaultValue)
             .endControlFlow()

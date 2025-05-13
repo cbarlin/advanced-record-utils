@@ -1,8 +1,5 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_DOUBLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_INT;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_LONG;
 import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
@@ -45,16 +42,7 @@ public class WriteOptionalPrimitive extends XmlVisitor {
             final Optional<String> namespaceName = namespaceName(prism);
             final MethodSpec.Builder methodBuilder = createMethod(component, component.typeName());
 
-            final String methodName;
-            if (OPTIONAL_INT.equals(component.typeName())) {
-                methodName = "getAsInt";
-            } else if (OPTIONAL_LONG.equals(component.typeName())) {
-                methodName = "getAsLong";
-            } else if (OPTIONAL_DOUBLE.equals(analysedComponent.typeName())) {
-                methodName = "getAsDouble";
-            } else {
-                throw new IllegalArgumentException("Unrecognised optional primitive type: " + analysedComponent.typeName());
-            }
+            final String methodName = component.getterMethod();
 
             if (defaultValue.isPresent()) {
                 final String writeAsDefaultValue = defaultValue.get();
