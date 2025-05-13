@@ -27,7 +27,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  */
 public class AnalysedOptionalPrimitiveComponent extends AnalysedComponent {
 
-    private static final Map<TypeName, String> TYPE_TO_GETTER = Map.of(
+    public static final Map<TypeName, String> TYPE_TO_GETTER = Map.of(
         OPTIONAL_LONG, "getAsLong",
         OPTIONAL_INT, "getAsInt",
         OPTIONAL_DOUBLE, "getAsDouble"
@@ -89,7 +89,7 @@ public class AnalysedOptionalPrimitiveComponent extends AnalysedComponent {
     @Override
     public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTn) {
         final String methodName = getterMethod();
-        methodBuilder.beginControlFlow("if ($T.nonNull($L) && $L.isPresent())", OBJECTS, incomingName)
+        methodBuilder.beginControlFlow("if ($T.nonNull($L) && $L.isPresent())", OBJECTS, incomingName, incomingName)
             .addStatement("final $T $L = $L.$L()", unwrappedTn, "__innerPrimitive", incomingName, methodName);
         withUnwrappedName.accept("__innerPrimitive");
         methodBuilder.endControlFlow();

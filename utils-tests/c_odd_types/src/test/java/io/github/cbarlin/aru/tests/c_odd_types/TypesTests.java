@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.OptionalInt;
 
 import org.junit.jupiter.api.Test;
 
@@ -112,13 +113,15 @@ class TypesTests {
                 .optionalDouble(2.2)
                 .someOptionalInt(69)
                 .someOptionalLong(12345678987654321l)
+                .addMoreOptionalInts(OptionalInt.of(42))
+                .addMoreOptionalInts(OptionalInt.of(84))
                 .build();
         });
 
         final String xmlString = assertDoesNotThrow(() -> ConvertToXml.convertToXml(out -> assertDoesNotThrow(() -> someRecord.writeSelfTo(out))));
         assertEquals(
             //language=XML
-            "<?xml version=\"1.0\" ?><OddTypeBag><WrapperOfLSO><ListOfItems>Turning Random Internet Drama into Songs Part 4 with Lubalin and Alison Brie</ListOfItems><ListOfItems>What did Caroline do Helen?</ListOfItems></WrapperOfLSO><SomeOptionalInt>69</SomeOptionalInt><SomeOptionalLong>12345678987654321</SomeOptionalLong><OptionalDouble>2.2</OptionalDouble><ThisShouldNotBeInTheBuilder>This is horse isn't from here</ThisShouldNotBeInTheBuilder></OddTypeBag>", 
+            "<?xml version=\"1.0\" ?><OddTypeBag><WrapperOfLSO><ListOfItems>Turning Random Internet Drama into Songs Part 4 with Lubalin and Alison Brie</ListOfItems><ListOfItems>What did Caroline do Helen?</ListOfItems></WrapperOfLSO><SomeOptionalInt>69</SomeOptionalInt><SomeOptionalLong>12345678987654321</SomeOptionalLong><OptionalDouble>2.2</OptionalDouble><ThisShouldNotBeInTheBuilder>This is horse isn't from here</ThisShouldNotBeInTheBuilder><MoreOptionalInts>42</MoreOptionalInts><MoreOptionalInts>84</MoreOptionalInts></OddTypeBag>", 
             xmlString
         );
 

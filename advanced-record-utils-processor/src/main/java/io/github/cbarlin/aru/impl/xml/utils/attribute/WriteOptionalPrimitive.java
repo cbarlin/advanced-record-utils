@@ -1,5 +1,7 @@
 package io.github.cbarlin.aru.impl.xml.utils.attribute;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
 import java.util.Optional;
@@ -38,6 +40,11 @@ public class WriteOptionalPrimitive extends XmlVisitor {
             final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.serialisedTypeName());
             final String attributeName = attributeName(analysedComponent, prism);
             final Optional<String> namespaceName = namespaceName(prism);
+
+            final boolean required = Boolean.TRUE.equals(prism.required());
+            methodBuilder.beginControlFlow("if ($T.nonNull(val) && val.isPresent)", OBJECTS);
+            
+
             component.withinUnwrapped(
                 varName -> {
                     final String methodName = component.getterMethod();
@@ -49,7 +56,15 @@ public class WriteOptionalPrimitive extends XmlVisitor {
                 methodBuilder,
                 "val"
             );
+
+            if (required) {
+                final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);
+                methodBuilder.nextControlFlow("else")
+                    .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg);
+            }
             
+            methodBuilder.endControlFlow();
+
             return true;
         }
         return false;

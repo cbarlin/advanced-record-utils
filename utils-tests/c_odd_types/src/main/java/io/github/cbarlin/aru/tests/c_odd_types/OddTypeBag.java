@@ -33,7 +33,8 @@ public record OddTypeBag(
     OptionalDouble optionalDouble,
     Optional<Set<MyRecordA>> setOfMyRecA,
     String thisShouldNotBeInTheBuilder,
-    Optional<String> someOptional
+    Optional<String> someOptional,
+    List<OptionalInt> moreOptionalInts
 ) implements OddTypeBagUtils.All {
 
     private static final String DEFAULT_NOT_IN_BUILDER = "This is horse isn't from here";
@@ -45,9 +46,10 @@ public record OddTypeBag(
         OptionalInt someOptionalInt,
         Optional<Set<MyRecordA>> setOfMyRecA,
         Optional<String> someOptional,
-        OptionalLong someOptionalLong
+        OptionalLong someOptionalLong,
+        List<OptionalInt> moreOptionalInts
     ) {
-        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, DEFAULT_NOT_IN_BUILDER, someOptional);
+        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, DEFAULT_NOT_IN_BUILDER, someOptional, moreOptionalInts);
     }
 
 }

@@ -1,7 +1,6 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.collections;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_INT;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_LONG;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
@@ -9,9 +8,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
-
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_DOUBLE;
 
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
@@ -61,7 +57,7 @@ public class WriteOptionalPrimitive extends XmlVisitor {
                 handleWrapperStart(analysedComponent, elementName, required, methodBuilder, wrapper.get());
             }
 
-            final String methodName = AnalysedOptionalPrimitiveComponent.getterMethod(analysedComponent.typeName());
+            final String methodName = AnalysedOptionalPrimitiveComponent.getterMethod(analysedComponent.unNestedPrimaryTypeName());
 
             analysedComponent.withinUnwrapped(
                 variableName -> {
@@ -89,11 +85,7 @@ public class WriteOptionalPrimitive extends XmlVisitor {
 
     private boolean isSupported(final AnalysedComponent analysedComponent) {
         return analysedComponent.isLoopable() &&
-          (
-            analysedComponent.unNestedPrimaryTypeName().equals(OPTIONAL_INT) ||
-            analysedComponent.unNestedPrimaryTypeName().equals(OPTIONAL_LONG) ||
-            analysedComponent.unNestedPrimaryTypeName().equals(OPTIONAL_DOUBLE)
-          );
+          AnalysedOptionalPrimitiveComponent.TYPE_TO_GETTER.containsKey(analysedComponent.unNestedPrimaryTypeName());
     }
 
     private void handleWrapperEnd(final boolean required, final MethodSpec.Builder methodBuilder) {
