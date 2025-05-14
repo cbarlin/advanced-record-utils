@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 
 import io.avaje.spi.ServiceProvider;
@@ -66,6 +67,10 @@ public class XmlElementsMapper implements ClassNameToPrismAdaptor<XmlElementsPri
 
     @Override
     public Optional<XmlElementsPrism> optionalInstanceOn(Element element) {
+        if (element instanceof final RecordComponentElement rce) {
+            return XmlElementsPrism.getOptionalOn(rce.getAccessor())
+                .or(() -> XmlElementsPrism.getOptionalOn(element));
+        }
         return XmlElementsPrism.getOptionalOn(element);
     }
 
