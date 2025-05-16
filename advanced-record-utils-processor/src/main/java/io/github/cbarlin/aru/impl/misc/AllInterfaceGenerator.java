@@ -7,6 +7,8 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERNAL_MATCHING_IFACE_NAME;
+
 import io.avaje.spi.ServiceProvider;
 
 @ServiceProvider
@@ -35,7 +37,7 @@ public class AllInterfaceGenerator extends RecordVisitor  {
         builder.builder().addAnnotation(CommonsConstants.Names.NULL_MARKED);
 
         analysedRecord.utilsClass().visitChildArtifacts(artifact -> {
-            if (artifact != builder && artifact instanceof final ToBeBuiltInterface tbbi) {
+            if (artifact != builder && artifact instanceof final ToBeBuiltInterface tbbi && (!tbbi.className().canonicalName().endsWith(INTERNAL_MATCHING_IFACE_NAME))) {
                 builder.builder().addSuperinterface(tbbi.className());
             }
         });

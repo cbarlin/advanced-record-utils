@@ -86,8 +86,7 @@ class NestedTests {
             .doesNotContainNull();
             
         // OK, time to convert to XML
-        final String xmlString = assertDoesNotThrow(() -> ConvertToXml.convertToXml(out -> assertDoesNotThrow(() -> merged.writeSelfTo(out))));
-        assertEquals("<?xml version=\"1.0\" ?><RootItem xmlns:wooo=\"ns://namedA\" xmlns:yayyyyy=\"ns://namedB\" xmlns=\"ns://nxA\" butIHaveAnotherName=\"I should be in the output!\" anotherField=\"42\" testOdtAttr=\"2025-01-01T08:15:42Z\"><FirstLevels><recurringReference itemA=\"A\" itemB=\"B\" itemC=\"C\"><recurisveItems notRecursiveB=\"E\" notRecursiveC=\"F\"><notRecursiveA>D</notRecursiveA><recursionFtw><notRecursiveA>G</notRecursiveA></recursionFtw></recurisveItems></recurringReference><secondLevelA><ThirdLevelAFromA><thirdString>This is a string!</thirdString></ThirdLevelAFromA></secondLevelA></FirstLevels><FirstLevels><secondLevelB><thirdLevelAFromB><fourthLevelA><letsGoFive><nowToSix><woo><andImDone itemA=\"Hi!\"></andImDone></woo></nowToSix></letsGoFive><oohNotLinear><andImDone itemB=\"Probs not\"></andImDone></oohNotLinear></fourthLevelA></thirdLevelAFromB></secondLevelB><secondLevelC><endOfTheLineHere>Nice</endOfTheLineHere></secondLevelC></FirstLevels><testOdtEl>2025-07-01T08:15:42Z</testOdtEl><WithValueDefault>hiThere</WithValueDefault></RootItem>", xmlString);
+        ConvertToXml.compareXml(out -> assertDoesNotThrow(() -> merged.writeSelfTo(out)), "expected_b.xml");
 
         Jsonb jsonb = Jsonb.builder().build();
         final String result = assertDoesNotThrow(() -> jsonb.toJson(merged));
@@ -103,8 +102,7 @@ class NestedTests {
             .yetAnotherField("I am required!")
             .build();
 
-        final String xmlString = assertDoesNotThrow(() -> ConvertToXml.convertToXml(out -> assertDoesNotThrow(() -> someRecord.writeSelfTo(out))));
-        assertEquals("<?xml version=\"1.0\" ?><RootItem xmlns:wooo=\"ns://namedA\" xmlns:yayyyyy=\"ns://namedB\" xmlns=\"ns://nxA\" butIHaveAnotherName=\"I am required!\" anotherField=\"0\"><WithValueDefault>NotThis!</WithValueDefault></RootItem>", xmlString);
+        ConvertToXml.compareXml(out -> assertDoesNotThrow(() -> someRecord.writeSelfTo(out)), "expected_a.xml");
     }
 
     @Test

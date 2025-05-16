@@ -69,6 +69,7 @@
         <avaje-jsonb.version>3.4</avaje-jsonb.version>
         <jackson-annotations.version>2.19.0</jackson-annotations.version>
         <mockito.version>5.17.0</mockito.version>
+        <xmlunit.version>2.10.0</xmlunit.version>
 
         <!-- Maven versions -->
         <maven-clean-plugin.version>3.4.1</maven-clean-plugin.version>
@@ -95,6 +96,11 @@
                 <version>${jackson-annotations.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-assertj3</artifactId>
+                <version>${xmlunit.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.junit</groupId>
