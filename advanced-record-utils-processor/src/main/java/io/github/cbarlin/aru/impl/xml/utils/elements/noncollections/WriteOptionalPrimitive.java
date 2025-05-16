@@ -23,7 +23,7 @@ public class WriteOptionalPrimitive extends XmlVisitor {
 
     @Override
     protected int innerSpecificity() {
-        return 1;
+        return 2;
     }
 
     @Override

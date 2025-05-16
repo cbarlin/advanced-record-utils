@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<NumericsTest
+    xmlns="nx://Numerics"
+
+    primitiveByteAttribute="69"
+    boxedByteAttribute="69"
+    boxedByteAttributeRequired="69"
+
+    primitiveDoubleAttribute="69.0"
+    boxedDoubleAttribute="69.0"
+    boxedDoubleAttributeRequired="69.0"
+
+    primitiveCharAttribute="E"
+    boxedCharAttribute="E"
+    boxedCharAttributeRequired="E"
+
+    primitiveIntAttribute="69"
+    boxedIntAttribute="69"
+    boxedIntAttributeRequired="69"
+
+    primitiveLongAttribute="69"
+    boxedLongAttribute="69"
+    boxedLongAttributeRequired="69"
+
+    primitiveFloatAttribute="69.0"
+    boxedFloatAttribute="69.0"
+    boxedFloatAttributeRequired="69.0"
+
+    primitiveShortAttribute="69"
+    boxedShortAttribute="69"
+    boxedShortAttributeRequired="69"
+
+    bigIntegerAttribute="10"
+    bigIntegerAttributeRequired="10"
+
+    bigDecimalAttribute="10"
+    bigDecimalAttributeRequired="10"
+>
+    <!-- Bytes -->
+    <primitiveByteElement>69</primitiveByteElement>
+    <boxedByteElement>69</boxedByteElement>
+    <boxedByteElementRequired>69</boxedByteElementRequired>
+    <boxedByteElementDefault>1</boxedByteElementDefault>
+    <boxedByteElementRequiredDefault>1</boxedByteElementRequiredDefault>
+    <!-- Chars -->
+    <primitiveCharElement>E</primitiveCharElement>
+    <boxedCharElement>E</boxedCharElement>
+    <boxedCharElementRequired>E</boxedCharElementRequired>
+    <boxedCharElementDefault>1</boxedCharElementDefault>
+    <boxedCharElementRequiredDefault>1</boxedCharElementRequiredDefault>
+    <!-- Doubles -->
+    <primitiveDoubleElement>69.0</primitiveDoubleElement>
+    <boxedDoubleElement>69.0</boxedDoubleElement>
+    <boxedDoubleElementRequired>69.0</boxedDoubleElementRequired>
+    <boxedDoubleElementDefault>1</boxedDoubleElementDefault>
+    <boxedDoubleElementRequiredDefault>1</boxedDoubleElementRequiredDefault>
+    <!-- Ints -->
+    <primitiveIntElement>69</primitiveIntElement>
+    <boxedIntElement>69</boxedIntElement>
+    <boxedIntElementRequired>69</boxedIntElementRequired>
+    <boxedIntElementDefault>1</boxedIntElementDefault>
+    <boxedIntElementRequiredDefault>1</boxedIntElementRequiredDefault>
+    <!-- Longs -->
+    <primitiveLongElement>69</primitiveLongElement>
+    <boxedLongElement>69</boxedLongElement>
+    <boxedLongElementRequired>69</boxedLongElementRequired>
+    <boxedLongElementDefault>1</boxedLongElementDefault>
+    <boxedLongElementRequiredDefault>1</boxedLongElementRequiredDefault>
+    <!-- Floats -->
+    <primitiveFloatElement>69.0</primitiveFloatElement>
+    <boxedFloatElement>69.0</boxedFloatElement>
+    <boxedFloatElementRequired>69.0</boxedFloatElementRequired>
+    <boxedFloatElementDefault>1</boxedFloatElementDefault>
+    <boxedFloatElementRequiredDefault>1</boxedFloatElementRequiredDefault>
+    <!-- Shorts -->
+    <primitiveShortElement>69</primitiveShortElement>
+    <boxedShortElement>69</boxedShortElement>
+    <boxedShortElementRequired>69</boxedShortElementRequired>
+    <boxedShortElementDefault>1</boxedShortElementDefault>
+    <boxedShortElementRequiredDefault>1</boxedShortElementRequiredDefault>
+
+    <!-- Bigs -->
+    <bigIntegerElement>10</bigIntegerElement>
+    <bigIntegerElementRequired>10</bigIntegerElementRequired>
+    <bigIntegerElementDefault>1</bigIntegerElementDefault>
+    <bigIntegerElementRequiredDefault>1</bigIntegerElementRequiredDefault>
+
+    <bigDecimalElement>10</bigDecimalElement>
+    <bigDecimalElementRequired>10</bigDecimalElementRequired>
+    <bigDecimalElementDefault>1</bigDecimalElementDefault>
+    <bigDecimalElementRequiredDefault>1</bigDecimalElementRequiredDefault>
+    
+
+</NumericsTest>

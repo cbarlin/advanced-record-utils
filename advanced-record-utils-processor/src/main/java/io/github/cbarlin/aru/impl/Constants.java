@@ -68,6 +68,8 @@ public enum Constants {
         public static final ClassName AVAJE_JSONB_IMPORT = ClassName.get("io.avaje.jsonb", "Json", "Import");
         public static final ClassName AVAJE_VALIDATOR = ClassName.get("io.avaje.validation", "Validator");
         public static final ClassName BI_CONSUMER = ClassName.get(BiConsumer.class);
+        public static final ClassName BIG_DECIMAL = ClassName.get("java.math", "BigDecimal");
+        public static final ClassName BIG_INTEGER = ClassName.get("java.math", "BigInteger");
         public static final ClassName CHAR_SEQUENCE = ClassName.get(CharSequence.class);
         public static final ClassName CONSTRAINT_VIOLATION = ClassName.get("jakarta.validation", "ConstraintViolation");
         public static final ClassName CONSUMER = ClassName.get(Consumer.class);
