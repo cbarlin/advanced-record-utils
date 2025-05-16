@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.cbarlin.aru.tests.a_core_dependency.MyRecordB;
-import io.github.cbarlin.aru.tests.a_core_dependency.SomeInterface;
-
 class BasicBuildTest {
 
     @Test

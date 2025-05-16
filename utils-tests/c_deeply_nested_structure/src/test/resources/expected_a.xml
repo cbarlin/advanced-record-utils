@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<RootItem xmlns:wooo="ns://namedA" xmlns:yayyyyy="ns://namedB" xmlns="ns://nxA"
+    butIHaveAnotherName="I am required!" anotherField="0">
+    <WithValueDefault>NotThis!</WithValueDefault>
+</RootItem>

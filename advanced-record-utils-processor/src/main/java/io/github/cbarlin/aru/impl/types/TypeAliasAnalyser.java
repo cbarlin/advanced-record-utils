@@ -22,7 +22,6 @@ import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.ComponentAnalyser;
-import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider

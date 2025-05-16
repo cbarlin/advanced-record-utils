@@ -14,7 +14,8 @@ public record CanXmlTheRecord (
     @XmlElement(name = "SelfReflection")
     @XmlElementWrapper(name = "WrapMe")
     ImmutableList<CanXmlTheRecord> anotherObject,
-    @XmlElement(name = "SomeElementStrings")
+    @XmlElementWrapper(name = "SomeElementStrings")
+    @XmlElement(name = "SomeElementString")
     ImmutableList<String> someItemsAsElements
 ) implements CanXmlTheRecordUtils.All {
 

@@ -139,6 +139,7 @@ if [ $BUILD_VALIDATE_SUCCESS -eq 0 ]; then
 
     echo "Checking back out to $MAIN_BRANCH..."
     git checkout "$MAIN_BRANCH"
+    mvn versions:commit
 
     echo "------------------------------------------------------------------------"
     echo "Release $RELEASE_VERSION successful!"

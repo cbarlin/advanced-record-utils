@@ -9,7 +9,6 @@ import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ATTRIBUTE;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_TRANSIENT;
@@ -19,6 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -27,9 +27,7 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 

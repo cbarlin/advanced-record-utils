@@ -2,6 +2,8 @@ package io.github.cbarlin.aru.impl.misc;
 
 import javax.lang.model.element.Modifier;
 
+import org.jspecify.annotations.Nullable;
+
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.*;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
@@ -17,6 +19,7 @@ import io.avaje.spi.ServiceProvider;
 @ServiceProvider
 public class MatchingInterfaceGenerator extends RecordVisitor {
 
+    @Nullable
     private ToBeBuilt allerBuilder;
 
     public MatchingInterfaceGenerator() {

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<CanXmlTheRecord SomeString="ItemA">
+    <WrapMe>
+        <SelfReflection SomeString="ItemB">
+            <SomeElementStrings>
+                <SomeElementString>ThisIsAThirdButItsInside</SomeElementString>
+            </SomeElementStrings>
+        </SelfReflection>
+    </WrapMe>
+    <SomeElementStrings>
+        <SomeElementString>ThisIsAnElement</SomeElementString>
+        <SomeElementString>AndThisIsTheSecond</SomeElementString>
+        <SomeElementString>And this is the forth, but it will show as the 3rd</SomeElementString>
+        <SomeElementString>Let's have some fun characters: オルフェウス</SomeElementString>
+        <SomeElementString>!@#$%^%&amp;*DF^D&amp;S^&amp;*^$%$ &lt;&lt; [[]] &gt;</SomeElementString>
+        <SomeElementString>Awesomes</SomeElementString>
+    </SomeElementStrings>
+</CanXmlTheRecord>
