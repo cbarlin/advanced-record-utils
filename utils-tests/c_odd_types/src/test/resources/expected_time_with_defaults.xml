@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<TimeBag
+    xmlns="nx://TimeTests"
+    localDateTimeAttribute="2025-05-03T10:27:18.000000044Z"
+    localDateTimeAttributeRequired="2025-05-03T10:27:18.000000044Z"
+    offsetDateTimeAttribute="2025-05-03T10:27:18.000000044Z"
+    offsetDateTimeAttributeRequired="2025-05-03T10:27:18.000000044Z"
+    zonedDateTimeAttribute="2025-05-03T10:27:18.000000044Z"
+    zonedDateTimeAttributeRequired="2025-05-03T10:27:18.000000044Z"
+>
+    <!-- 8pm Australia/Sydney becomes 10am UTC -->
+    <offsetDateTimeElement>2025-05-03T10:27:18.000000044Z</offsetDateTimeElement>
+    <offsetDateTimeElementDefault>2025-05-03T10:27:18.000000044Z</offsetDateTimeElementDefault>
+    <offsetDateTimeElementRequired>2025-05-03T10:27:18.000000044Z</offsetDateTimeElementRequired>
+    <offsetDateTimeElementRequiredDefault>2025-05-03T10:27:18.000000044Z</offsetDateTimeElementRequiredDefault>
+    <zonedDateTimeElement>2025-05-03T10:27:18.000000044Z</zonedDateTimeElement>
+    <zonedDateTimeElementDefault>2025-05-03T10:27:18.000000044Z</zonedDateTimeElementDefault>
+    <zonedDateTimeElementRequired>2025-05-03T10:27:18.000000044Z</zonedDateTimeElementRequired>
+    <zonedDateTimeElementRequiredDefault>2025-05-03T10:27:18.000000044Z</zonedDateTimeElementRequiredDefault>
+    <localDateTimeElement>2025-05-03T10:27:18.000000044Z</localDateTimeElement>
+    <localDateTimeElementDefault>2025-05-03T10:27:18.000000044Z</localDateTimeElementDefault>
+    <localDateTimeElementRequired>2025-05-03T10:27:18.000000044Z</localDateTimeElementRequired>
+    <localDateTimeElementRequiredDefault>2025-05-03T10:27:18.000000044Z</localDateTimeElementRequiredDefault>
+</TimeBag>

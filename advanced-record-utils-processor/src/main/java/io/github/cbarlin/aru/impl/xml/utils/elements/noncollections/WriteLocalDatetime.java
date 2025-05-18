@@ -2,7 +2,8 @@ package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.DATE_TIME_FORMATTER;
-import static io.github.cbarlin.aru.impl.Constants.Names.OFFSET_DATE_TIME;
+import static io.github.cbarlin.aru.impl.Constants.Names.LOCAL_DATE_TIME;
+import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_ID;
 import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_OFFSET;
 
 import java.util.Optional;
@@ -16,11 +17,11 @@ import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteOffsetDatetime extends XmlVisitor {
+public class WriteLocalDatetime extends XmlVisitor {
 
     private static final String CHK_NULL = "if ($T.nonNull(val))";
 
-    public WriteOffsetDatetime() {
+    public WriteLocalDatetime() {
         super(Claims.XML_WRITE_FIELD);
     }
 
@@ -37,7 +38,7 @@ public class WriteOffsetDatetime extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && OFFSET_DATE_TIME.equals(analysedComponent.typeName())) {
+        if (optPrism.isPresent() && LOCAL_DATE_TIME.equals(analysedComponent.typeName())) {
             // Nice!
             final XmlElementPrism prism = optPrism.get();
             final String elementName = elementName(analysedComponent, prism);
@@ -74,7 +75,7 @@ public class WriteOffsetDatetime extends XmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.addStatement("output.writeCharacters(val.atZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_OFFSET, DATE_TIME_FORMATTER)
+        methodBuilder.addStatement("output.writeCharacters(val.atZone($T.systemDefault()).withZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER)
             .addStatement("output.writeEndElement()");
       
         if (!required) {
@@ -94,7 +95,7 @@ public class WriteOffsetDatetime extends XmlVisitor {
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
         methodBuilder.beginControlFlow(CHK_NULL, OBJECTS)
-            .addStatement("output.writeCharacters(val.atZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_OFFSET, DATE_TIME_FORMATTER)
+            .addStatement("output.writeCharacters(val.atZone($T.systemDefault()).withZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER)
             .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
         methodBuilder.addStatement("output.writeCharacters($S)", writeAsDefaultValue)
