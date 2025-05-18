@@ -17,6 +17,9 @@ knowledge_base:
     scope: 'local'
 reviews:
   profile: 'assertive'
+  finishing_touches:
+    docstrings:
+      enabled: false
   auto_review:
     base_branches:
       - 'main'

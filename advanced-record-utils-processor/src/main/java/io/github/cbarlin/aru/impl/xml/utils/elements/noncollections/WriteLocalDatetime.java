@@ -19,7 +19,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 @ServiceProvider
 public class WriteLocalDatetime extends XmlVisitor {
 
-    private static final String CHK_NULL = "if ($T.nonNull(val))";
+    private static final String CHK_NON_NULL = "if ($T.nonNull(val))";
 
     public WriteLocalDatetime() {
         super(Claims.XML_WRITE_FIELD);
@@ -68,7 +68,7 @@ public class WriteLocalDatetime extends XmlVisitor {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NULL, OBJECTS);
+            methodBuilder.beginControlFlow(CHK_NON_NULL, OBJECTS);
         }
       
         namespaceName.ifPresentOrElse(
@@ -94,7 +94,7 @@ public class WriteLocalDatetime extends XmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NULL, OBJECTS)
+        methodBuilder.beginControlFlow(CHK_NON_NULL, OBJECTS)
             .addStatement("output.writeCharacters(val.atZone($T.systemDefault()).withZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER)
             .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));

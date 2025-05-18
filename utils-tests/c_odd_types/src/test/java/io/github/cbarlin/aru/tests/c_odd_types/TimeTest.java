@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.TimeZone;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
@@ -12,6 +14,11 @@ import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
 class TimeTest {
 
     private static final ZonedDateTime TEST_TIME = ZonedDateTime.of(2025, 05, 3, 20, 27, 18, 44, ZoneId.of("Australia/Sydney"));
+
+    @BeforeAll
+    static void setSydneyTZ() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Australia/Sydney"));
+    }
 
     TimeBag buildNoDefaults() {
         return TimeBagUtils.builder()
