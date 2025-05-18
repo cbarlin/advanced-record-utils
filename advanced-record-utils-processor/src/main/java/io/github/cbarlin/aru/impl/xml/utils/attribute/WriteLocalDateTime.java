@@ -43,8 +43,8 @@ public class WriteLocalDateTime extends WriteXmlAttribute {
         }
         logTrace(methodBuilder, "Converting value to UTC - assuming that LocalDateTime has the System Default time zone");
         namespaceName.ifPresentOrElse(
-            namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, val.atZone($T.systemDefault()).toOffsetDateTime().atZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", namespace, attributeName, ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER),
-            () -> methodBuilder.addStatement("output.writeAttribute($S, val.atZone($T.systemDefault()).toOffsetDateTime().atZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", attributeName, ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER)
+            namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, val.atZone($T.systemDefault()).withZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", namespace, attributeName, ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER),
+            () -> methodBuilder.addStatement("output.writeAttribute($S, val.atZone($T.systemDefault()).withZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", attributeName, ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER)
         );
 
         if (!required) {

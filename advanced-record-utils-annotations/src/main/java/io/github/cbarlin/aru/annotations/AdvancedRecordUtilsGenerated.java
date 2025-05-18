@@ -35,8 +35,8 @@ public @interface AdvancedRecordUtilsGenerated {
 
     public @interface Version {
         public static final int MAJOR_VERSION = 0;
-        public static final int MINOR_VERSION = 1;
-        public static final int PATCH_VERSION = 6;
+        public static final int MINOR_VERSION = 2;
+        public static final int PATCH_VERSION = 2;
 
         int major() default MAJOR_VERSION;
 
