@@ -41,7 +41,9 @@ reviews:
       instructions: |
         This folder, including "main" files, are all for the purpose of testing. This is because an annotation processor can only really be tested by applying it to a build
 
-        Coding standards can be relaxed a little here, as the code isn't published and isn't used by anyone except for tests
+        Coding standards can be relaxed a little here, as the code isn't published and isn't used by anyone except for tests. 
+        
+        We also don't have to be "formal" with the content - using references for test content is fine.
     - path: 'advanced-record-utils-annotations/**/*.java'
       instructions: |
         This is the user-facing part of the library. It must be well-documented

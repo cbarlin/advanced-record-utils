@@ -27,7 +27,7 @@ public record TimeBag(
     OffsetDateTime offsetDateTimeAttributeRequired,
     @XmlElement(name = "offsetDateTimeElement")
     OffsetDateTime offsetDateTimeElement,
-    @XmlElement(name = "offsetDateTimeElementDefault", defaultValue = "1999-01-02T03:04:05.0001")
+    @XmlElement(name = "offsetDateTimeElementDefault", defaultValue = "This is a default value and not a valid date - lol")
     OffsetDateTime offsetDateTimeElementDefault,
     @XmlElement(name = "offsetDateTimeElementRequired", required = true)
     OffsetDateTime offsetDateTimeElementRequired,
@@ -40,7 +40,7 @@ public record TimeBag(
     ZonedDateTime zonedDateTimeAttributeRequired,
     @XmlElement(name = "zonedDateTimeElement")
     ZonedDateTime zonedDateTimeElement,
-    @XmlElement(name = "zonedDateTimeElementDefault", defaultValue = "1999-01-02T03:04:05.0001")
+    @XmlElement(name = "zonedDateTimeElementDefault", defaultValue = "This is a default value and not a valid date - lol")
     ZonedDateTime zonedDateTimeElementDefault,
     @XmlElement(name = "zonedDateTimeElementRequired", required = true)
     ZonedDateTime zonedDateTimeElementRequired,
@@ -53,7 +53,7 @@ public record TimeBag(
     LocalDateTime localDateTimeAttributeRequired,
     @XmlElement(name = "localDateTimeElement")
     LocalDateTime localDateTimeElement,
-    @XmlElement(name = "localDateTimeElementDefault", defaultValue = "1999-01-02T03:04:05.0001")
+    @XmlElement(name = "localDateTimeElementDefault", defaultValue = "This is a default value and not a valid date - lol")
     LocalDateTime localDateTimeElementDefault,
     @XmlElement(name = "localDateTimeElementRequired", required = true)
     LocalDateTime localDateTimeElementRequired,

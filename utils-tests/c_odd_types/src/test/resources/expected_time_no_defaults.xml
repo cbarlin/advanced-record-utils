@@ -10,15 +10,15 @@
 >
     <!-- 8pm Australia/Sydney becomes 10am UTC -->
     <offsetDateTimeElement>2025-05-03T10:27:18.000000044Z</offsetDateTimeElement>
-    <offsetDateTimeElementDefault>1999-01-02T03:04:05.0001</offsetDateTimeElementDefault>
+    <offsetDateTimeElementDefault>This is a default value and not a valid date - lol</offsetDateTimeElementDefault>
     <offsetDateTimeElementRequired>2025-05-03T10:27:18.000000044Z</offsetDateTimeElementRequired>
     <offsetDateTimeElementRequiredDefault>1999-01-02T03:04:55.0001</offsetDateTimeElementRequiredDefault>
     <zonedDateTimeElement>2025-05-03T10:27:18.000000044Z</zonedDateTimeElement>
-    <zonedDateTimeElementDefault>1999-01-02T03:04:05.0001</zonedDateTimeElementDefault>
+    <zonedDateTimeElementDefault>This is a default value and not a valid date - lol</zonedDateTimeElementDefault>
     <zonedDateTimeElementRequired>2025-05-03T10:27:18.000000044Z</zonedDateTimeElementRequired>
     <zonedDateTimeElementRequiredDefault>1999-01-02T03:04:55.0001</zonedDateTimeElementRequiredDefault>
     <localDateTimeElement>2025-05-03T10:27:18.000000044Z</localDateTimeElement>
-    <localDateTimeElementDefault>1999-01-02T03:04:05.0001</localDateTimeElementDefault>
+    <localDateTimeElementDefault>This is a default value and not a valid date - lol</localDateTimeElementDefault>
     <localDateTimeElementRequired>2025-05-03T10:27:18.000000044Z</localDateTimeElementRequired>
     <localDateTimeElementRequiredDefault>1999-01-02T03:04:55.0001</localDateTimeElementRequiredDefault>
 </TimeBag>
