@@ -22,6 +22,12 @@
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-assertj3</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>assertj-core</artifactId>
+                    <groupId>org.assertj</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.bind</groupId>

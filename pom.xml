@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.cbarlin</groupId>
@@ -72,6 +74,7 @@
         <xmlunit.version>2.10.0</xmlunit.version>
 
         <!-- Maven versions -->
+        <maven.core.version>3.9.9</maven.core.version>
         <maven-clean-plugin.version>3.4.1</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
@@ -87,6 +90,8 @@
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <central-publishing.version>0.7.0</central-publishing.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <maven-dependency-plugin.version>3.7.0</maven-dependency-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -208,6 +213,12 @@
                 <optional>true</optional>
                 <scope>provided</scope>
             </dependency>
+            <!-- to make dependabot check for latest maven version -->
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>${maven.core.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -227,6 +238,11 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>${maven-clean-plugin.version}</version>
@@ -290,6 +306,41 @@
                         <ignoredVersions>(?i).*-(alpha|beta|m|rc)([-.]?\d+)?</ignoredVersions>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>ban-dynamic-versions</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <banDynamicVersions>
+                                        <ignores>
+                                            <ignore>io.github.cbarlin</ignore>
+                                            <ignore>io.github.cbarlin.aru</ignore>
+                                            <ignore>io.github.cbarlin.aru.tests</ignore>
+                                        </ignores>
+                                    </banDynamicVersions>
+                                    <dependencyConvergence />
+                                    <reactorModuleConvergence />
+                                    <banDuplicatePomDependencyVersions />
+                                    <requireSameVersions>
+                                        <plugins>
+                                            <plugin>org.apache.maven.plugins:maven-surefire-plugin</plugin>
+                                            <plugin>org.apache.maven.plugins:maven-failsafe-plugin</plugin>
+                                            <plugin>org.apache.maven.plugins:maven-surefire-report-plugin</plugin>
+                                        </plugins>
+                                    </requireSameVersions>
+                                    <requirePluginVersions />
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -304,7 +355,10 @@
                     </execution>
                 </executions>
             </plugin>
-            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -334,7 +388,7 @@
                             <failOnWarnings>false</failOnWarnings>
                             <quiet>true</quiet>
                             <doclint>all,-missing</doclint>
-                            <sourcepath>${project.build.sourceDirectory}</sourcepath>                       
+                            <sourcepath>${project.build.sourceDirectory}</sourcepath>
                         </configuration>
                     </execution>
                 </executions>
