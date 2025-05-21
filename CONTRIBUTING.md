@@ -123,7 +123,7 @@ A `RecordVisitor` represents a component of the processor that produces generate
 
 The methods to visit the start of a record and to visit a component in that record return booleans. A `RecordVisitor` should make any checks it needs to for that specific item, and then return true if and only if it performs work for that element.
 
-Repeated operations can also be broken into an extension of the `RecordVisitor` class with child elements. A good example to check is the `SetToNow` visitor family - they are reasonbly small but they do a few checks and ultimately delegate to the core plain setter.
+Repeated operations or helper operations can also be broken into an extension of the `RecordVisitor` class with child elements. A good example to check is the `SetToNow` visitor family - they are reasonbly small but they do a few checks and ultimately delegate to the core plain setter.
 
 Specificity of items that generate the utils class structure generally work backwards from max int or forwards from min int. The reasoning is that this structure isn't intended to be overriden (as in, why override the `TypeSpec.Builder` for the `builder` class?).
 
