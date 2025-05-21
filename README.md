@@ -2,12 +2,11 @@
 
 ## What is Advanced Record Utils?
 
-Advanced Record Utils is an annotation-processor based code generator that creates a companion `*Utils` class (e.g., `PersonUtils` for a `Person` record) containing:
+Advanced Record Utils is an annotation-processor based code generator that creates a companion `*Utils` class (e.g., `PersonUtils` for a `Person` record) that contains a builder, and then optionally:
  * A "Builder" for the record
- * A "Wither" interface
+ * A "With"er interface
  * A "Merger" utlity and interface
  * An "XML" utility and interface for serialisation to XML
-   * Deserialisation not (yet!) supported
  * An "All" interface that bundles all the other interfaces together
 
 It's configurable, and does away with a lot of boilerplate. It can also import records from libraries (in case you can't control their source code), and can work recursively down a tree of records that reference other records/interfaces.
@@ -142,20 +141,13 @@ Major:
 
 With the same settings, changing the minor or patch version of the processor should be completely transparent to a consumer, even if the code the processor generates completely changes. A major version would only be needed if the end-user would be required to change their code. Alterations that do change "internal" implementation details are marked as "minor" as a way of flagging that, while it *should* externally be the same there is a non-zero risk it isn't.
 
-## Path to version 1.0
-
-More detail is included in the contributing guide, but broadly:
-* **Wiki**: Wikis are nice
-* **Support for TypeAlias**
-* **XML Deserialisation support**
-* **More Tests!**: Because there is only a handful
-
 ## Desired features:
 
 Some of these may be quite large:
  * Avaje JSONB support (as in, generate their handlers by using Jakarta XML annotations)
     * This includes hooking into e.g. Eclipse Collection support
  * Memoized operations (using `vavr` maybe?)
+ * XML Deserialisation
  * Diffs:
     * Collections should have `addedElements` and `removedElements`
     * Other fields should have `hasXYZChanged` and `oldXYZ`/`newXYZ`
