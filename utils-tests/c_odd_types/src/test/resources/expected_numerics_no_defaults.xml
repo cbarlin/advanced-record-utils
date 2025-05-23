@@ -35,6 +35,11 @@
 
     bigDecimalAttribute="10"
     bigDecimalAttributeRequired="10"
+
+    optionalIntAttributeRequired="10"
+
+    boxedBool="true"
+    boxedBoolRequired="false"
 >
     <!-- Bytes -->
     <primitiveByteElement>69</primitiveByteElement>
@@ -90,5 +95,6 @@
     <bigDecimalElementDefault>1</bigDecimalElementDefault>
     <bigDecimalElementRequiredDefault>1</bigDecimalElementRequiredDefault>
     
-
+    <opt:optionalIntElementDefaultNs xmlns:opt="ns://Optionals">5</opt:optionalIntElementDefaultNs>
+    <optionalIntElementDefault>5</optionalIntElementDefault>
 </NumericsTest>

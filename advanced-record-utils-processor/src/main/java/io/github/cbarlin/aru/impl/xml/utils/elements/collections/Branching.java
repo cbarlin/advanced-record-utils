@@ -29,6 +29,7 @@ import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
 public class Branching extends XmlVisitor {
@@ -71,16 +72,15 @@ public class Branching extends XmlVisitor {
             analysedComponent.withinUnwrapped(
                 variableName -> {
                     methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
-                        .addStatement("continue")
-                        .endControlFlow();
+                        .addStatement("continue");
                     for (final ProcessingTarget target : targets) {
-                        writeTargetIfStatement(methodBuilder, extractedName, target);
+                        writeTargetIfStatement(methodBuilder, extractedName, target, variableName);
                     }
                     methodBuilder.endControlFlow();
                 },
                 methodBuilder,
                 "val",
-                other.className()
+                TypeName.get(other.typeMirror())
             );
 
             if (wrapper.isPresent()) {
@@ -108,13 +108,13 @@ public class Branching extends XmlVisitor {
             );
     }
 
-    private void writeTargetIfStatement(final MethodSpec.Builder methodBuilder, final Map<ClassName, NameAndNamespace> extractedName, final ProcessingTarget target) {
+    private void writeTargetIfStatement(final MethodSpec.Builder methodBuilder, final Map<ClassName, NameAndNamespace> extractedName, final ProcessingTarget target, final String varName) {
         final ClassName otherUtilsClassName = getOtherXmlUtils(target);
         if (Objects.isNull(otherUtilsClassName)) {
             return;
         }
         final ClassName targetClassName = ClassName.get(target.typeElement());
-        methodBuilder.nextControlFlow("else if (v instanceof $T tVal)");
+        methodBuilder.nextControlFlow("else if ($L instanceof $T tVal)", varName, targetClassName);
         final String name = Optional.ofNullable(extractedName.get(targetClassName))
             .flatMap(NameAndNamespace::name)
             .orElseGet(() -> elementName(target.typeElement()));
@@ -124,14 +124,14 @@ public class Branching extends XmlVisitor {
          
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement(
-                "$T.$L(tVal, output, $S, $S, currDefaultNamespace)", 
+                "$T.$L(tVal, output, $S, $S, currentDefaultNamespace)", 
                 otherUtilsClassName,
                 STATIC_WRITE_XML_NAME,
                 name,
                 namespace
             ),
             () -> methodBuilder.addStatement(
-                "$T.$L(tVal, output, $S, null, currDefaultNamespace)", 
+                "$T.$L(tVal, output, $S, null, currentDefaultNamespace)", 
                 otherUtilsClassName,
                 STATIC_WRITE_XML_NAME,
                 name

@@ -96,7 +96,11 @@ class NumericsTest {
             .bigDecimalAttributeRequired(BIG_DECIMAL)
             .bigDecimalElement(BIG_DECIMAL)
             .bigDecimalElementRequired(BIG_DECIMAL)
-
+            // OptionalInt
+            .optionalIntAttributeRequired(10)
+            // Boolean
+            .boxedBool(Boolean.TRUE)
+            .boxedBoolRequired(Boolean.FALSE)
             .build();
     }
 
@@ -129,6 +133,11 @@ class NumericsTest {
             // BigDecimal
             .bigDecimalElementDefault(BIG_DECIMAL)
             .bigDecimalElementRequiredDefault(BIG_DECIMAL)
+            // Optional Int
+            .optionalIntAttribute(10)
+            .optionalIntElementDefaultNs(10)
+            .optionalIntElementDefault(10)
+            // Boolean
 
             .build();
     }

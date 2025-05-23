@@ -111,8 +111,9 @@
                             <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
-                    <fork>false</fork>
+                    <fork>true</fork>
                     <compilerArgs>
+                        <arg>-J${jacoco.agent.argLine}</arg>
                         <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
                     </compilerArgs>
                 </configuration>

@@ -6,6 +6,7 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlElements;
 
 @AdvancedRecordUtils(xmlable = true)
 public record CanXmlTheRecord (
@@ -16,7 +17,13 @@ public record CanXmlTheRecord (
     ImmutableList<CanXmlTheRecord> anotherObject,
     @XmlElementWrapper(name = "SomeElementStrings")
     @XmlElement(name = "SomeElementString")
-    ImmutableList<String> someItemsAsElements
+    ImmutableList<String> someItemsAsElements,
+    @XmlElementWrapper(name = "woot")
+    @XmlElements({
+        @XmlElement(name = "SomeA", type = SomeImplA.class),
+        @XmlElement(name = "SomeB", type = SomeImplB.class),
+    })
+    ImmutableList<SomeIface> ifaceList
 ) implements CanXmlTheRecordUtils.All {
 
 }

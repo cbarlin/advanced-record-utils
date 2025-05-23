@@ -42,17 +42,14 @@ public class WriteOptionalPrimitive extends XmlVisitor {
             final Optional<String> namespaceName = namespaceName(prism);
 
             final boolean required = Boolean.TRUE.equals(prism.required());
-            methodBuilder.beginControlFlow("if ($T.nonNull(val) && val.isPresent)", OBJECTS);
+            methodBuilder.beginControlFlow("if ($T.nonNull(val) && val.isPresent())", OBJECTS);
             
 
             component.withinUnwrapped(
-                varName -> {
-                    final String methodName = component.getterMethod();
-                    namespaceName.ifPresentOrElse(
-                        namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, $T.valueOf($L.$L()))", namespace, attributeName, STRING, varName, methodName),
-                        () -> methodBuilder.addStatement("output.writeAttribute($S, $T.valueOf($L.$L()))", attributeName, STRING, varName, methodName)
-                    );
-                },
+                varName -> namespaceName.ifPresentOrElse(
+                    namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, $T.valueOf($L))", namespace, attributeName, STRING, varName),
+                    () -> methodBuilder.addStatement("output.writeAttribute($S, $T.valueOf($L))", attributeName, STRING, varName)
+                ),
                 methodBuilder,
                 "val"
             );

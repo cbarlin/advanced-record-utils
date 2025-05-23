@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -115,6 +116,7 @@ class TypesTests {
                 .someOptionalLong(12345678987654321l)
                 .addMoreOptionalInts(OptionalInt.of(42))
                 .addMoreOptionalInts(OptionalInt.of(84))
+                .id(UUID.fromString("11f42990-d9ad-42ac-998d-74e2243b01a2"))
                 .build();
         });
 

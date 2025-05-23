@@ -72,6 +72,7 @@
         <jackson-annotations.version>2.19.0</jackson-annotations.version>
         <mockito.version>5.17.0</mockito.version>
         <xmlunit.version>2.10.1</xmlunit.version>
+        <jacoco.version>0.8.13</jacoco.version>
 
         <!-- Maven versions -->
         <maven.core.version>3.9.9</maven.core.version>
@@ -271,6 +272,30 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.version}</version>
+                    <executions>
+                        <execution>
+                            <id>prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <propertyName>jacoco.agent.argLine</propertyName>
+                                <append>true</append>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
@@ -356,6 +381,10 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
@@ -408,6 +437,7 @@
                 <module>aru-processor-core</module>
                 <module>advanced-record-utils-processor</module>
                 <module>utils-tests</module>
+                <module>z_report_module</module>
             </modules>
         </profile>
         <profile>

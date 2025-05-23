@@ -3,6 +3,8 @@
 
     xmlns="nx://Numerics"
 
+    xmlns:opt="ns://Optionals"
+
     primitiveByteAttribute="69"
     boxedByteAttribute="69"
     boxedByteAttributeRequired="69"
@@ -37,6 +39,11 @@
     bigDecimalAttribute="10"
     bigDecimalAttributeRequired="10"
 
+    optionalIntAttributeRequired="10"
+    opt:optionalIntAttribute="10"
+
+    boxedBool="true"
+    boxedBoolRequired="false"
 >
     <!-- Bytes -->
     <primitiveByteElement>69</primitiveByteElement>
@@ -91,5 +98,8 @@
     <bigDecimalElementRequired>10</bigDecimalElementRequired>
     <bigDecimalElementDefault>10</bigDecimalElementDefault>
     <bigDecimalElementRequiredDefault>10</bigDecimalElementRequiredDefault>
+
+    <opt:optionalIntElementDefaultNs>10</opt:optionalIntElementDefaultNs>
+    <optionalIntElementDefault>10</optionalIntElementDefault>
 
 </NumericsTest>

@@ -10,4 +10,5 @@
     <ThisShouldNotBeInTheBuilder>This is horse isn't from here</ThisShouldNotBeInTheBuilder>
     <MoreOptionalInts>42</MoreOptionalInts>
     <MoreOptionalInts>84</MoreOptionalInts>
+    <Id>11f42990-d9ad-42ac-998d-74e2243b01a2</Id>
 </OddTypeBag>
