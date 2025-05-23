@@ -9,10 +9,17 @@ rm -rf ~/.m2/io/github/cbarlin && \
     mvn clean verify artifact:compare && \
     rm -rf ~/.m2/io/github/cbarlin
 
-java -jar ~/Downloads/jacococli.jar report ./z_report_module/target/jacoco.exec \
-    --classfiles advanced-record-utils-processor/target/classes \
-    --classfiles aru-processor-core/target/classes \
-    --sourcefiles advanced-record-utils-processor/src/main/java/ \
-    --sourcefiles aru-processor-core/src/main/java/ \
-    --sourcefiles aru-processor-core/target/generated-sources/annotations/ \
-    --html target/test
+# Generate JaCoCo coverage report if jacococli.jar is available
+JACOCO_CLI="${JACOCO_CLI:-~/Downloads/jacococli.jar}"
+if [ -f "$JACOCO_CLI" ] && [ -f "./z_report_module/target/jacoco.exec" ]; then
+    echo "Generating JaCoCo coverage report..."
+    java -jar "$JACOCO_CLI" report ./z_report_module/target/jacoco.exec \
+        --classfiles advanced-record-utils-processor/target/classes \
+        --classfiles aru-processor-core/target/classes \
+        --sourcefiles advanced-record-utils-processor/src/main/java/ \
+        --sourcefiles aru-processor-core/src/main/java/ \
+        --sourcefiles aru-processor-core/target/generated-sources/annotations/ \
+        --html target/test
+else
+    echo "Skipping JaCoCo report generation (jacococli.jar not found or no execution data)"
+fi
