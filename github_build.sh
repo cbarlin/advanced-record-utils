@@ -10,7 +10,7 @@ rm -rf ~/.m2/io/github/cbarlin && \
     rm -rf ~/.m2/io/github/cbarlin
 
 # Generate JaCoCo coverage report if jacococli.jar is available
-JACOCO_CLI="${JACOCO_CLI:-~/Downloads/jacococli.jar}"
+JACOCO_CLI="${JACOCO_CLI:-$HOME/Downloads/jacococli.jar}"
 if [ -f "$JACOCO_CLI" ] && [ -f "./z_report_module/target/jacoco.exec" ]; then
     echo "Generating JaCoCo coverage report..."
     java -jar "$JACOCO_CLI" report ./z_report_module/target/jacoco.exec \
@@ -19,7 +19,7 @@ if [ -f "$JACOCO_CLI" ] && [ -f "./z_report_module/target/jacoco.exec" ]; then
         --sourcefiles advanced-record-utils-processor/src/main/java/ \
         --sourcefiles aru-processor-core/src/main/java/ \
         --sourcefiles aru-processor-core/target/generated-sources/annotations/ \
-        --html target/test
+        --html target/site
 else
     echo "Skipping JaCoCo report generation (jacococli.jar not found or no execution data)"
 fi
