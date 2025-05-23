@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.tests.c_odd_types;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.OptionalInt;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
@@ -166,5 +167,19 @@ public record NumericsBag(
     @XmlElement(name = "bigDecimalElementDefault", defaultValue = "1")
     BigDecimal bigDecimalElementDefault,
     @XmlElement(name = "bigDecimalElementRequiredDefault", required = true, defaultValue = "1")
-    BigDecimal bigDecimalElementRequiredDefault
+    BigDecimal bigDecimalElementRequiredDefault,
+    // Optionals
+    @XmlAttribute(name = "optionalIntAttribute", namespace = "ns://Optionals")
+    OptionalInt optionalIntAttribute,
+    @XmlAttribute(name = "optionalIntAttributeRequired", required = true)
+    OptionalInt optionalIntAttributeRequired,
+    @XmlElement(name = "optionalIntElementDefaultNs", namespace = "ns://Optionals", defaultValue = "5")
+    OptionalInt optionalIntElementDefaultNs,
+    @XmlElement(name = "optionalIntElementDefault", defaultValue = "5")
+    OptionalInt optionalIntElementDefault,
+    // Boolean
+    @XmlAttribute(name = "boxedBool")
+    Boolean boxedBool,
+    @XmlAttribute(name = "boxedBoolRequired", required = true)
+    Boolean boxedBoolRequired
 ) implements NumericsBagUtils.All {}

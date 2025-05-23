@@ -5,6 +5,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.UUID;
 
 import java.util.Optional;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -14,6 +15,7 @@ import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
+@ServiceProvider
 public class WriteUUID extends XmlVisitor {
 
     public WriteUUID() {

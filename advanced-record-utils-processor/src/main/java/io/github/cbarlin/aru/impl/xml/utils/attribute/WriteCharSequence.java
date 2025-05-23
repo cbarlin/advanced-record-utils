@@ -6,7 +6,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 
 import java.util.Optional;
 
-import io.github.cbarlin.aru.core.APContext;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -33,7 +33,8 @@ public class WriteCharSequence extends XmlVisitor {
         return Boolean.TRUE.equals(
             xmlAttributePrism(analysedComponent)
                 .map(prism -> {
-                    if (APContext.types().isSubtype(analysedComponent.componentType(), APContext.elements().getTypeElement(CharSequence.class.getCanonicalName()).asType())) {
+                    final boolean isApplicable = OptionalClassDetector.checkSameOrSubType(analysedComponent.serialisedTypeName(), CHAR_SEQUENCE);
+                    if (isApplicable) {
                         visitAttributeComponent(analysedComponent, prism);
                         return Boolean.TRUE;
                     }

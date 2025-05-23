@@ -6,6 +6,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.Set;
+import java.util.UUID;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
@@ -34,7 +35,8 @@ public record OddTypeBag(
     Optional<Set<MyRecordA>> setOfMyRecA,
     String thisShouldNotBeInTheBuilder,
     Optional<String> someOptional,
-    List<OptionalInt> moreOptionalInts
+    List<OptionalInt> moreOptionalInts,
+    UUID id
 ) implements OddTypeBagUtils.All {
 
     private static final String DEFAULT_NOT_IN_BUILDER = "This is horse isn't from here";
@@ -47,9 +49,10 @@ public record OddTypeBag(
         Optional<Set<MyRecordA>> setOfMyRecA,
         Optional<String> someOptional,
         OptionalLong someOptionalLong,
-        List<OptionalInt> moreOptionalInts
+        List<OptionalInt> moreOptionalInts,
+        UUID id
     ) {
-        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, DEFAULT_NOT_IN_BUILDER, someOptional, moreOptionalInts);
+        this(listOfItems, someOptionalInt, someOptionalLong, optionalDouble, setOfMyRecA, DEFAULT_NOT_IN_BUILDER, someOptional, moreOptionalInts, id);
     }
 
 }

@@ -71,6 +71,7 @@ public enum CommonsConstants {
         public static final ClassName COLLECTION = ClassName.get(Collection.class);
         public static final ClassName UNSUPPORTED_OPERATION_EXCEPTION = ClassName.get(UnsupportedOperationException.class);
         public static final ClassName XML_SEE_ALSO = ClassName.get(JAKARTA_XML_BIND, "XmlSeeAlso");
+        public static final ClassName XML_ELEMENTS = ClassName.get(JAKARTA_XML_BIND, "XmlElements");
 
 
         // Cross references the above. Used to resolve confusion

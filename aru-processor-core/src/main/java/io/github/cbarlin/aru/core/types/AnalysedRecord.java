@@ -1,11 +1,14 @@
 package io.github.cbarlin.aru.core.types;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.XML_ELEMENTS;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -140,27 +143,18 @@ public final class AnalysedRecord extends AnalysedType {
                                                 final ProcessingEnvironment env,
                                                 final AnalysedInterface analysedInterface
     ) {
-        checkForXmlImplAnnotations(analysed, analysisTarget, componentElement, env, analysedInterface);
+        checkForXmlImplAnnotations(analysed, analysisTarget, env, analysedInterface);
         checkForJacksonImplAnnotations(analysed, analysisTarget, componentElement, env, analysedInterface);
     }
 
     private static void checkForXmlImplAnnotations(final Map<TypeElement, ProcessingTarget> analysed, 
                                                    final AnalysedRecord analysisTarget,
-                                                   final RecordComponentElement componentElement, 
-                                                   final ProcessingEnvironment env,
+                                                   final ProcessingEnvironment env, 
                                                    final AnalysedInterface analysedInterface
     ) {
-        if (XmlElementsPrism.isPresent(componentElement)) {
-            final XmlElementsPrism prism = XmlElementsPrism.getInstanceOn(componentElement);
-            for (final XmlElementPrism value : prism.value()) {
-                final ProcessingTarget prismPull = extractReference(analysed, analysisTarget, env, value.type());
-                if (Objects.nonNull(prismPull)) {
-                    analysedInterface.addImplementingType(prismPull);
-                }
-            }
-        }
-        if (XmlElementsPrism.isPresent(componentElement.getAccessor())) {
-            final XmlElementsPrism prism = XmlElementsPrism.getInstanceOn(componentElement.getAccessor());
+        final Optional<XmlElementsPrism> xmlElements = analysisTarget.findPrism(XML_ELEMENTS, XmlElementsPrism.class);
+        if (xmlElements.isPresent()) {
+            final XmlElementsPrism prism = xmlElements.get();
             for (final XmlElementPrism value : prism.value()) {
                 final ProcessingTarget prismPull = extractReference(analysed, analysisTarget, env, value.type());
                 if (Objects.nonNull(prismPull)) {
