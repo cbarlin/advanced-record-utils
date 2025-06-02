@@ -1,4 +1,4 @@
-package io.github.cbarlin.aru.impl.types.dependencies;
+package io.github.cbarlin.aru.impl.types.dependencies.eclipse;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.LIST;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__IMMUTABLE_COLLECTION;

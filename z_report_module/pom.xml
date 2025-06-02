@@ -93,6 +93,12 @@
                                         <include>*.exec</include>
                                     </includes>
                                 </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../utils-tests/d_fastutils/target</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
                             </fileSets>
                         </configuration>
                     </execution>

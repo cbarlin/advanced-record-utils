@@ -14,6 +14,7 @@ import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.Queue;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
@@ -57,6 +58,7 @@ public enum CommonsConstants {
         public static final ClassName ARRAY_LIST = ClassName.get(ArrayList.class);
         public static final ClassName LIST = ClassName.get(List.class);
         public static final ClassName SET = ClassName.get(Set.class);
+        public static final ClassName SORTED_SET = ClassName.get(SortedSet.class);
         public static final ClassName HASH_SET = ClassName.get(HashSet.class);
         public static final ClassName QUEUE = ClassName.get(Queue.class);
         public static final ClassName LOGGER = ClassName.get("org.slf4j", "Logger");

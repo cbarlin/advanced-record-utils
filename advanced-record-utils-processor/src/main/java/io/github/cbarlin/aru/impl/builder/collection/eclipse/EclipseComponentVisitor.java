@@ -7,7 +7,7 @@ import java.util.Locale;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.BuilderOptionsPrism;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
+import io.github.cbarlin.aru.impl.types.dependencies.eclipse.EclipseCollectionComponent;
 
 public abstract class EclipseComponentVisitor extends RecordVisitor {
 

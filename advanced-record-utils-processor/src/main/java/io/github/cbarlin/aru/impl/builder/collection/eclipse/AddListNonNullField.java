@@ -7,8 +7,7 @@ import javax.lang.model.element.Modifier;
 
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
-
+import io.github.cbarlin.aru.impl.types.dependencies.eclipse.EclipseCollectionComponent;
 import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;

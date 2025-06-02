@@ -17,7 +17,7 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.OptionalRecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.AnalysedOptionalCollection;
-import io.github.cbarlin.aru.impl.types.dependencies.EclipseAnalysedOptionalCollection;
+import io.github.cbarlin.aru.impl.types.dependencies.eclipse.EclipseAnalysedOptionalCollection;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;

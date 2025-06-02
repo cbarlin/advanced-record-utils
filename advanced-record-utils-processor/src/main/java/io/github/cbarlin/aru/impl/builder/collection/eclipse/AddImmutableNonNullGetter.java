@@ -5,8 +5,7 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
-
+import io.github.cbarlin.aru.impl.types.dependencies.eclipse.EclipseCollectionComponent;
 import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
