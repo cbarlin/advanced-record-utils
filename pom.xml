@@ -121,16 +121,6 @@
                 <version>${jakarta-xml-bind-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-params</artifactId>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>io.avaje</groupId>
                 <artifactId>avaje-jsonb</artifactId>
                 <version>${avaje-jsonb.version}</version>

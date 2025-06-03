@@ -12,7 +12,9 @@
 
     <artifactId>xml_util</artifactId>
     <name>Advanced Record Utils - Tests - Dependencies - XML Utils</name>
-
+    <properties>
+        <junit-bom.version>5.13.0</junit-bom.version>
+    </properties>
 
     <dependencies>
         <dependency>
