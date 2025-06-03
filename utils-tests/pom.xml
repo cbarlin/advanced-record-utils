@@ -23,7 +23,6 @@
     <name>Advanced Record Utils - Tests</name>
 
     <properties>
-        <junit.version>5.12.2</junit.version>
         <rainbowgum.version>0.8.1</rainbowgum.version>
         <assertj.version>3.27.3</assertj.version>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -36,7 +35,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>${junit.version}</version>
+                <version>${junit-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
