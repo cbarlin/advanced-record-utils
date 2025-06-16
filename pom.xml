@@ -69,7 +69,7 @@
         <avaje.prism.version>1.42</avaje.prism.version>
         <avaje-spi.version>2.13</avaje-spi.version>
         <avaje-jsonb.version>3.5</avaje-jsonb.version>
-        <jackson-annotations.version>2.19.0</jackson-annotations.version>
+        <jackson-annotations.version>2.19.1</jackson-annotations.version>
         <mockito.version>5.18.0</mockito.version>
         <xmlunit.version>2.10.2</xmlunit.version>
         <jacoco.version>0.8.13</jacoco.version>
