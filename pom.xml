@@ -64,14 +64,14 @@
         <jakarta-xml-bind-api.version>4.0.2</jakarta-xml-bind-api.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
         <guava.version>33.4.8-jre</guava.version>
-        <eclipse-collections.version>11.1.0</eclipse-collections.version>
+        <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <avaje.validator.version>2.11</avaje.validator.version>
         <avaje.prism.version>1.42</avaje.prism.version>
         <avaje-spi.version>2.13</avaje-spi.version>
         <avaje-jsonb.version>3.5</avaje-jsonb.version>
         <jackson-annotations.version>2.19.1</jackson-annotations.version>
         <mockito.version>5.18.0</mockito.version>
-        <xmlunit.version>2.10.2</xmlunit.version>
+        <xmlunit.version>2.10.3</xmlunit.version>
         <jacoco.version>0.8.13</jacoco.version>
 
         <!-- Maven versions -->
@@ -89,7 +89,7 @@
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-        <central-publishing.version>0.7.0</central-publishing.version>
+        <central-publishing.version>0.8.0</central-publishing.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
         <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
