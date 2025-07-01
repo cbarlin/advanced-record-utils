@@ -53,7 +53,7 @@
         <project.build.outputTimestamp>2025-06-25T09:15:47Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
-        <junit-bom.version>5.13.1</junit-bom.version>
+        <junit-bom.version>5.13.2</junit-bom.version>
         <vavr.version>0.10.6</vavr.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
