@@ -23,7 +23,7 @@
     <name>Advanced Record Utils - Tests</name>
 
     <properties>
-        <junit-bom.version>5.13.1</junit-bom.version>
+        <junit-bom.version>5.13.2</junit-bom.version>
         <rainbowgum.version>0.8.1</rainbowgum.version>
         <assertj.version>3.27.3</assertj.version>
         <maven.deploy.skip>true</maven.deploy.skip>
