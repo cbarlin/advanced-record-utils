@@ -53,7 +53,7 @@
         <project.build.outputTimestamp>2025-06-25T09:15:47Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
-        <junit-bom.version>5.13.2</junit-bom.version>
+        <junit-bom.version>5.13.3</junit-bom.version>
         <vavr.version>0.10.6</vavr.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
@@ -86,12 +86,12 @@
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
         <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
         <versions-plugin.version>2.18.0</versions-plugin.version>
-        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
         <central-publishing.version>0.8.0</central-publishing.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.6.0</maven-enforcer-plugin.version>
         <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
     </properties>
     <dependencyManagement>
