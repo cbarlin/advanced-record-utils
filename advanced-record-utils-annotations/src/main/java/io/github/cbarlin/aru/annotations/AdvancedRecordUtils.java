@@ -68,6 +68,11 @@ public @interface AdvancedRecordUtils {
     boolean xmlable() default false;
 
     /**
+     * Should the creator generate a diff interface?
+     */
+    boolean diffable() default false;
+
+    /**
      * Options for generating log lines in output code.
      * <p>
      * Logging is mostly done at debug or at trace level. Logging also includes the following attributes as key/values
@@ -124,6 +129,13 @@ public @interface AdvancedRecordUtils {
      * Only relevant if xmlable is enabled
      */
     XmlOptions xmlOptions() default @XmlOptions();
+
+    /**
+     * Any settings that should be applied to the Diffing
+     * <p>
+     * Only relevant if diffable is enabled
+     */
+    DiffOptions diffOptions() default @DiffOptions();
 
     /**
      * Any settings that should be applied to the Wither
@@ -240,6 +252,22 @@ public @interface AdvancedRecordUtils {
          * Generate names by using UpperCamelCase naming convention
          */
         UPPER_FIRST_LETTER
+    }
+
+    /**
+     * How should diffs be evaluated?
+     */
+    public enum DiffEvaluationMode {
+        /**
+         * Diff is computed as soon as you call the "diff" method
+         */
+        EAGER,
+        /**
+         * Diff is computed when you make a request of a field.
+         * <p>
+         * Diffs are computed once
+         */
+        LAZY
     }
     //#endregion
 
@@ -506,6 +534,68 @@ public @interface AdvancedRecordUtils {
          */
         NameGeneration inferXmlElementName() default NameGeneration.NONE;
     }
+    
+    /**
+     * Options for the diff interface and utility generation
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    @Target({})
+    public @interface DiffOptions {
+        /**
+         * Name of the interface generated
+         */
+        String differName() default "Diffable";
+
+        /**
+         * Name of the method to create a diff of two instances
+         */
+        String differMethodName() default "diff";
+
+        /**
+         * Prefix to use for the class name of the result of the diff
+         */
+        String diffResultPrefix() default "DiffOf";
+
+        /**
+         * Suffix to use for the class name of the result of the diff
+         */
+        String diffResultSuffix() default "";
+
+        /**
+         * The name given to the originating element.
+         * <p>
+         * Examples could be "original", "left"
+         */
+        String originatingElementName() default "original";
+
+        /**
+         * The name given to the other element.
+         * <p>
+         * Examples could be "updated", "right"
+         */
+        String comparedToElementName() default "updated";
+
+        /**
+         * The method name that will inform you if any field has changed at all
+         */
+        String changedAnyMethodName() default "hasChanged";
+
+        /**
+         * The prefix to a field when checking if there was a change
+         */
+        String changedCheckPrefix() default "has";
+
+        /**
+         * The suffix to a field when checking if there was a change
+         */
+        String changedCheckSuffix() default "Changed";
+
+        /**
+         * Should diffs be evaluated immediately or lazily?
+         */
+        DiffEvaluationMode evaluationMode() default DiffEvaluationMode.EAGER;
+    }
+    
     //#endregion
 
     // A default class type to be used internally (for when nothing has been set for a class field)
