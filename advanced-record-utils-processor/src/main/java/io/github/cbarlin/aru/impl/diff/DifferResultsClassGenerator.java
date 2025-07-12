@@ -7,7 +7,6 @@ import javax.lang.model.element.Modifier;
 
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffEvaluationMode;
-import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -34,9 +33,6 @@ public class DifferResultsClassGenerator extends DifferVisitor {
 
     @Override
     protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
-        if (!analysedRecord.isClaimed(io.github.cbarlin.aru.core.CommonsConstants.Claims.CORE_BUILDER_CLASS)) {
-            APContext.messager().printError("The builder wasn't claimed before the Differ!");
-        }
         AnnotationSupplier.addGeneratedAnnotation(differResult, this);
         AnnotationSupplier.addGeneratedAnnotation(differResultConstructor, this);
         TypeSpec.Builder classSpec = differResult.builder();

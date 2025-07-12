@@ -43,7 +43,7 @@ public class StandardEagerDiffCheck extends DifferVisitor {
         );
         logTrace(differResultConstructor, "$S + $S + $S", List.of("Computing the diff of ", analysedComponent.name(), " by calling Objects.equals"));
         differResultConstructor.addStatement(
-            "this.$L = $T.equals($L.$L(), $L.$L())",
+            "this.$L = !$T.equals($L.$L(), $L.$L())",
             analysedComponent.name(),
             OBJECTS,
             diffOptionsPrism.originatingElementName(),

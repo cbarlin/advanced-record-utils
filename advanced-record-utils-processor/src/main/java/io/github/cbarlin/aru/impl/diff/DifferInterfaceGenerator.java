@@ -9,7 +9,6 @@ import javax.lang.model.element.Modifier;
 
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffEvaluationMode;
-import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -35,15 +34,12 @@ public class DifferInterfaceGenerator extends DifferVisitor {
 
     @Override
     protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
-        if (!analysedRecord.isClaimed(io.github.cbarlin.aru.core.CommonsConstants.Claims.CORE_BUILDER_CLASS)) {
-            APContext.messager().printError("The builder wasn't claimed before the Differ!");
-        }
         AnnotationSupplier.addGeneratedAnnotation(differInterface, this);
         differInterface.builder()
             .addAnnotation(NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .addJavadoc("Interface for a record that can be diffed against itself")
+            .addJavadoc("Interface for a record that can compute differences against another instance of the same type")
             .addSuperinterface(
                   analysedRecord.utilsClassChildInterface(INTERNAL_MATCHING_IFACE_NAME, INTERNAL_MATCHING_IFACE)
                     .className()
