@@ -24,6 +24,8 @@ Goals include:
  * JPMS support
  * Opt-in dependencies based on the settings chosen
  * Readble generated source code
+ * Reproduceable builds - [![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md)
+    * The tests that get run by GitHub validate that not only our published JARs are reproduceable, but that the code we generate is also reproduceable too!
 
 Kinda-goals:
  * Keep the dependency tree small - some settings would either require a lot of code... or just delegate to a library that's intended for that use

@@ -50,49 +50,49 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.proc>full</maven.compiler.proc>
-        <project.build.outputTimestamp>2025-06-25T09:15:47Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2025-07-12T10:15:43Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
-        <junit-bom.version>5.13.3</junit-bom.version>
-        <vavr.version>0.10.6</vavr.version>
-        <commons-collections4.version>4.5.0</commons-collections4.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
-        <commons-io.version>2.19.0</commons-io.version>
-        <stax2-api.version>4.2.2</stax2-api.version>
-        <woodstox.version>7.1.1</woodstox.version>
-        <jspecify.version>1.0.0</jspecify.version>
-        <jakarta-xml-bind-api.version>4.0.2</jakarta-xml-bind-api.version>
-        <jakarta-validation.version>3.1.1</jakarta-validation.version>
-        <guava.version>33.4.8-jre</guava.version>
-        <eclipse-collections.version>13.0.0</eclipse-collections.version>
-        <avaje.validator.version>2.11</avaje.validator.version>
-        <avaje.prism.version>1.42</avaje.prism.version>
-        <avaje-spi.version>2.13</avaje-spi.version>
         <avaje-jsonb.version>3.5</avaje-jsonb.version>
+        <avaje-prism.version>1.42</avaje-prism.version>
+        <avaje-spi.version>2.13</avaje-spi.version>
+        <avaje-validator.version>2.12</avaje-validator.version>
+        <commons-collections4.version>4.5.0</commons-collections4.version>
+        <commons-io.version>2.19.0</commons-io.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <eclipse-collections.version>13.0.0</eclipse-collections.version>
+        <guava.version>33.4.8-jre</guava.version>
         <jackson-annotations.version>2.19.1</jackson-annotations.version>
-        <mockito.version>5.18.0</mockito.version>
-        <xmlunit.version>2.10.3</xmlunit.version>
         <jacoco.version>0.8.13</jacoco.version>
+        <jakarta-validation.version>3.1.1</jakarta-validation.version>
+        <jakarta-xml-bind-api.version>4.0.2</jakarta-xml-bind-api.version>
+        <jspecify.version>1.0.0</jspecify.version>
+        <junit-bom.version>5.13.3</junit-bom.version>
+        <mockito.version>5.18.0</mockito.version>
+        <stax2-api.version>4.2.2</stax2-api.version>
+        <vavr.version>0.10.6</vavr.version>
+        <woodstox.version>7.1.1</woodstox.version>
+        <xmlunit.version>2.10.3</xmlunit.version>
 
         <!-- Maven versions -->
-        <maven.core.version>3.9.10</maven.core.version>
+        <central-publishing.version>0.8.0</central-publishing.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
-        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-        <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
-        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
-        <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
-        <versions-plugin.version>2.18.0</versions-plugin.version>
-        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
-        <central-publishing.version>0.8.0</central-publishing.version>
-        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
-        <maven-enforcer-plugin.version>3.6.0</maven-enforcer-plugin.version>
+        <maven-core.version>3.9.10</maven-core.version>
         <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>3.6.0</maven-enforcer-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
+        <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <versions-plugin.version>2.18.0</versions-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -168,12 +168,12 @@
             <dependency>
                 <groupId>io.avaje</groupId>
                 <artifactId>avaje-validator</artifactId>
-                <version>${avaje.validator.version}</version>
+                <version>${avaje-validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.avaje</groupId>
                 <artifactId>avaje-validator-constraints</artifactId>
-                <version>${avaje.validator.version}</version>
+                <version>${avaje-validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
@@ -193,7 +193,7 @@
             <dependency>
                 <groupId>io.avaje</groupId>
                 <artifactId>avaje-prisms</artifactId>
-                <version>${avaje.prism.version}</version>
+                <version>${avaje-prism.version}</version>
                 <optional>true</optional>
                 <scope>provided</scope>
             </dependency>
@@ -208,7 +208,7 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-core</artifactId>
-                <version>${maven.core.version}</version>
+                <version>${maven-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -251,7 +251,7 @@
                             <path>
                                 <groupId>io.avaje</groupId>
                                 <artifactId>avaje-prisms</artifactId>
-                                <version>${avaje.prism.version}</version>
+                                <version>${avaje-prism.version}</version>
                             </path>
                             <path>
                                 <groupId>io.avaje</groupId>
