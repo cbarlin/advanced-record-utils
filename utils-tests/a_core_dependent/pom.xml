@@ -15,7 +15,6 @@
         <dependency>
             <groupId>io.github.cbarlin.aru.tests</groupId>
             <artifactId>a_core_dependency</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
