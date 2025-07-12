@@ -22,7 +22,8 @@ import jakarta.xml.bind.annotation.XmlType;
     logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE,
     witherOptions = @WitherOptions(convertToBuilder = "toBuilder"),
     builderOptions = @BuilderOptions(builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE),
-    addJsonbImportAnnotation = true
+    addJsonbImportAnnotation = true,
+    diffable = true
 )
 @XmlRootElement(name = "RootItem", namespace = "ns://nxA")
 @XmlType(name = "", propOrder = {"yetAnotherField"})

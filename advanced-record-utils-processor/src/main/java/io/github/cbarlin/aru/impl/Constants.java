@@ -30,6 +30,10 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_SET_TIME_TO_NOW = new ClaimableOperation("builderSetTimeToNow", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_USE_TYPE_CONVERTER = new ClaimableOperation("builderUseTypeConverter", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation DIFFER_COMPUTE_CHANGE = new ClaimableOperation("differComputation", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation DIFFER_OVERALL_HAS_CHANGED = new ClaimableOperation("differGlobalHasChanged", CLASS);
+        public static final ClaimableOperation DIFFER_IFACE = new ClaimableOperation("differInterface", CLASS);
+        public static final ClaimableOperation DIFFER_RESULT = new ClaimableOperation("differResult", CLASS);
         public static final ClaimableOperation INTERNAL_MATCHING_IFACE = new ClaimableOperation("internalMatchingIface", CLASS);
         public static final ClaimableOperation MERGE_IFACE_MERGE = new ClaimableOperation("mergeInterfaceMergeMethod", CLASS);
         public static final ClaimableOperation MERGE_IFACE_MERGE_OPTIONAL = new ClaimableOperation("mergeInterfaceMergeOptionalMethod", CLASS);

@@ -27,7 +27,8 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
     logGeneration = LoggingGeneration.SLF4J_UTILS_CLASS,
     builderOptions = @BuilderOptions(
         builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE
-    )
+    ),
+    createAllInterface = true
 )
 public @interface AdvancedRecordUtilsFull {
 

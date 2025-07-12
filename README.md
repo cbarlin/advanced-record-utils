@@ -7,6 +7,10 @@ Advanced Record Utils is an annotation-processor based code generator that creat
  * A "With"er interface
  * A "Merger" utlity and interface
  * An "XML" utility and interface for serialisation to XML
+ * A "Diff" interface and result class:
+    * Collections compute added/removed elements, as well as changed/unchanged ones (if the elements themselves are diffable)
+    * Standard fields can tell you if they have/have not changed
+    * A choice between eager evaluation and lazy evalutation
  * An "All" interface that bundles all the other interfaces together
 
 It's configurable, and does away with a lot of boilerplate. It can also import records from libraries (in case you can't control their source code), and can work recursively down a tree of records that reference other records/interfaces.
@@ -148,9 +152,6 @@ Some of these may be quite large:
     * This includes hooking into e.g. Eclipse Collection support
  * Memoized operations (using `vavr` maybe?)
  * XML Deserialisation
- * Diffs:
-    * Collections should have `addedElements` and `removedElements`
-    * Other fields should have `hasXYZChanged` and `oldXYZ`/`newXYZ`
  * `Map` support - the plumbing is there, just need it to be done!
  * (Very tentitive) not depend on commons-lang3 and simply detect its presence to use it (most of the uses are `StringUtils`)
 
