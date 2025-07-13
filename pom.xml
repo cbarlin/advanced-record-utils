@@ -6,7 +6,7 @@
 
     <groupId>io.github.cbarlin</groupId>
     <artifactId>aru-parent</artifactId>
-    <version>0.2.7-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
 
     <name>Advanced Record Utils - Parent</name>
     <description>A collection of record utilities, covering quite a wide variety of use-cases.</description>

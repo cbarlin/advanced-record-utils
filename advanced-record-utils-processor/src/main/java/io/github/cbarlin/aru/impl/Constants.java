@@ -30,6 +30,13 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_SET_TIME_TO_NOW = new ClaimableOperation("builderSetTimeToNow", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_USE_TYPE_CONVERTER = new ClaimableOperation("builderUseTypeConverter", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation DIFFER_COMPUTE_CHANGE = new ClaimableOperation("differComputation", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation DIFFER_IFACE = new ClaimableOperation("differInterface", CLASS);
+        public static final ClaimableOperation DIFFER_OVERALL_HAS_CHANGED = new ClaimableOperation("differGlobalHasChanged", CLASS);
+        public static final ClaimableOperation DIFFER_RESULT = new ClaimableOperation("differResult", CLASS);
+        public static final ClaimableOperation DIFFER_UTILS = new ClaimableOperation("differUtils", CLASS);
+        public static final ClaimableOperation DIFFER_UTILS_COMPUTE_CHANGE = new ClaimableOperation("differUtilsComputation", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation DIFFER_VALUE_HOLDING = new ClaimableOperation("differValueHolding", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation INTERNAL_MATCHING_IFACE = new ClaimableOperation("internalMatchingIface", CLASS);
         public static final ClaimableOperation MERGE_IFACE_MERGE = new ClaimableOperation("mergeInterfaceMergeMethod", CLASS);
         public static final ClaimableOperation MERGE_IFACE_MERGE_OPTIONAL = new ClaimableOperation("mergeInterfaceMergeOptionalMethod", CLASS);
@@ -109,6 +116,7 @@ public enum Constants {
 
     public enum InternalReferenceNames {
         ;
+        public static final String DIFFER_UTILS_CLASS = "_DifferUtils";
         public static final String INTERNAL_MATCHING_IFACE_NAME = "_MatchingInterface";
         public static final String MERGER_UTILS_CLASS = "_MergerUtils";
         public static final String XML_UTILS_CLASS = "_XmlUtils";

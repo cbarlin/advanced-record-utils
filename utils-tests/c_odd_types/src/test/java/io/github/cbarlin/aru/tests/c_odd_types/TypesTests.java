@@ -3,6 +3,7 @@ package io.github.cbarlin.aru.tests.c_odd_types;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -99,6 +100,31 @@ class TypesTests {
         assertEquals(69, objA.someOptionalInt().getAsInt());
         assertEquals(13, objB.someOptionalInt().getAsInt());
         assertEquals(69, merged.someOptionalInt().getAsInt());
+    }
+
+    @Test
+    void differ() {
+        final OddTypeBag objA = OddTypeBagUtils.builder()
+            .optionalDouble(15.0)
+            .someOptionalInt(69)
+            .build();
+
+        final OddTypeBag objB = OddTypeBagUtils.builder()
+            .someOptionalLong(420)
+            .someOptionalInt(69)
+            .build();
+
+        final var diff = objA.diff(objB);
+
+        assertTrue(diff.hasChanged());
+        assertFalse(diff.hasListOfItemsChanged());
+        assertFalse(diff.hasMoreOptionalIntsChanged());
+        assertTrue(diff.hasSomeOptionalLongChanged());
+        assertFalse(diff.hasSomeOptionalIntChanged());
+
+        assertEquals(diff.originalSomeOptionalLong(), objA.someOptionalLong());
+        assertNotEquals(diff.originalSomeOptionalLong(), objB.someOptionalLong());
+        assertEquals(diff.updatedSomeOptionalLong(), objB.someOptionalLong());
     }
     
     @Test

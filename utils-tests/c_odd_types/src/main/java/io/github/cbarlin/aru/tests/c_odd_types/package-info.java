@@ -8,6 +8,7 @@
 )
 @io.github.cbarlin.aru.annotations.AdvancedRecordUtils(
     merger = true,
-    applyToAllInPackage = true
+    applyToAllInPackage = true,
+    diffable = true
 )
 package io.github.cbarlin.aru.tests.c_odd_types;
