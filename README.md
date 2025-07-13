@@ -155,7 +155,6 @@ Some of these may be quite large:
  * Memoized operations (using `vavr` maybe?)
  * XML Deserialisation
  * `Map` support - the plumbing is there, just need it to be done!
- * (Very tentitive) not depend on commons-lang3 and simply detect its presence to use it (most of the uses are `StringUtils`)
 
 ## Known defects
 

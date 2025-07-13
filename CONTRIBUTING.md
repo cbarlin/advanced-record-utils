@@ -51,7 +51,7 @@ The intent of the layout is that it should be easy to "plug-in" capabilties into
 
 ## The annotations library
 
-The `advanced-record-utils-annotations` should not gain any new required dependencies. `commons-lang3` and `jspecify` are pushing it already.
+The `advanced-record-utils-annotations` should not gain any required dependencies.
 
 The `optional` dependencies that are applied to it are to indicate to consumers that, based on their settings for the generator, we can (potentially, maybe not yet) use/integrate with those dependencies. An example would be if they enabled validation for the `build` method of their builder - we would use the requested api to do that. The "sane" defaults for the annotation should require none of these (though detecting them and working with those is fine).
 
