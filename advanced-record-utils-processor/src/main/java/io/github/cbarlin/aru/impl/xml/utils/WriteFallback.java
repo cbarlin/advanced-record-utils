@@ -4,9 +4,8 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPERATION_EXCEPTION;
+import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
-import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
-import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ATTRIBUTE;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
@@ -34,7 +33,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 @ServiceProvider
 public class WriteFallback extends XmlVisitor {
 
-    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
+    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
     private static final AtomicBoolean HAS_WARNED = new AtomicBoolean(false);
 
     public WriteFallback() {
@@ -108,7 +107,7 @@ public class WriteFallback extends XmlVisitor {
         if (defaultValue.isPresent()) {
             final String writeAsDefaultValue = defaultValue.get();
             writeStartElement(methodBuilder, elementName, namespaceName);
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS)
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS)
                 .addStatement("output.writeCharacters(val.toString())")
                 .nextControlFlow("else");
             logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
@@ -121,9 +120,12 @@ public class WriteFallback extends XmlVisitor {
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
-            methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
+            methodBuilder.addStatement("$T.requireNonNull(val.toString(), $S)", OBJECTS, errMsg);
+            methodBuilder.beginControlFlow("if (val.toString().isBlank())")
+                .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
+                .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS);
         }
 
         writeStartElement(methodBuilder, elementName, namespaceName);
@@ -154,9 +156,12 @@ public class WriteFallback extends XmlVisitor {
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
-            methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
+            methodBuilder.addStatement("$T.requireNonNull(val.toString(), $S)", OBJECTS, errMsg);
+            methodBuilder.beginControlFlow("if (val.toString().isBlank())")
+                .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
+                .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS);
         }
 
         namespaceName.ifPresentOrElse(

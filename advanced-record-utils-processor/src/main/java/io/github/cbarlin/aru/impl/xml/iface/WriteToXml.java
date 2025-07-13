@@ -21,6 +21,7 @@ import javax.lang.model.element.Modifier;
 import org.apache.commons.lang3.StringUtils;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -67,10 +68,17 @@ public class WriteToXml extends ToXmlMethod {
             );
             
         } else {
-            methodBuilder.addStatement(
-                "final $T defNs = $T.$L.filter(ignored -> $T.isBlank(requestedNamespace))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, STRINGUTILS
-            )
-            .beginControlFlow("if (defNs.isPresent())")
+            // Small statement, not worth creating a "WriteToXmlWithCommonsLang"
+            if (OptionalClassDetector.doesDependencyExist(STRINGUTILS)) {
+                methodBuilder.addStatement(
+                    "final $T defNs = $T.$L.filter(ignored -> $T.isBlank(requestedNamespace))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, STRINGUTILS
+                );
+            } else {
+                methodBuilder.addStatement(
+                    "final $T defNs = $T.$L.filter(ignored -> $T.nonNull(requestedNamespace) && (!requestedNamespace.isBlank()))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, OBJECTS
+                );
+            }
+            methodBuilder.beginControlFlow("if (defNs.isPresent())")
             .addStatement(
                 "output.setDefaultNamespace(defNs.get())"
             )

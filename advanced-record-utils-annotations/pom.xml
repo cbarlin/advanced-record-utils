@@ -29,6 +29,8 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
         <!-- Optional dependencies -->
         <dependency>

@@ -27,6 +27,7 @@ import javax.lang.model.element.Modifier;
 import org.apache.commons.lang3.StringUtils;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -44,7 +45,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class WriteToXml extends ToXmlMethod {
+public class WriteToXmlWithCommonsLang extends ToXmlMethod {
 
     private static final ParameterSpec CURR_DEF_NS_PARAM = ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
         .addAnnotation(NULLABLE)
@@ -56,18 +57,18 @@ public class WriteToXml extends ToXmlMethod {
         .build();
     private static final ParameterizedTypeName OPTIONAL_STRING = ParameterizedTypeName.get(OPTIONAL, STRING);
 
-    public WriteToXml() {
+    public WriteToXmlWithCommonsLang() {
         super(Claims.XML_STATIC_CLASS_TO_XML);
     }
 
     @Override
     protected int innerSpecificity() {
-        return 0;
+        return 1;
     }
 
     @Override
     protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+        return OptionalClassDetector.doesDependencyExist(STRINGUTILS);
     }
 
     @Override

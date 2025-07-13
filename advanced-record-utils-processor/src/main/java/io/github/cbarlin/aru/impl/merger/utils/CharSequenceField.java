@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.impl.merger.utils;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 
 import javax.lang.model.element.Modifier;
@@ -8,6 +9,7 @@ import javax.lang.model.type.TypeMirror;
 
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -56,8 +58,13 @@ public class CharSequenceField extends MergerVisitor {
                 .addParameter(paramA)
                 .addParameter(paramB)
                 .returns(targetTn)
-                .addJavadoc("Merger for the field {@code $L}", analysedComponent.name())
-                .addStatement("return $T.firstNonBlank(elA, elB)", STRINGUTILS);
+                .addJavadoc("Merger for the field {@code $L}", analysedComponent.name());
+            // Small statement, not worth creating a "CharSequenceFieldWithCommonsLang"
+            if (OptionalClassDetector.doesDependencyExist(STRINGUTILS)) {
+                method.addStatement("return $T.firstNonBlank(elA, elB)", STRINGUTILS);
+            } else {
+                method.addStatement("return ($T.nonNull(elA) && $T.nonNull(elA.toString()) && (!elA.toString().isBlank())) ? elA : elB", OBJECTS, OBJECTS);
+            }
             AnnotationSupplier.addGeneratedAnnotation(method, this);
             return true;
         }
