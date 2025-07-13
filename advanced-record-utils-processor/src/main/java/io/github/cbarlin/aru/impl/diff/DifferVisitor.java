@@ -57,8 +57,7 @@ public abstract class DifferVisitor extends RecordVisitor {
             diffEvaluationMode = DiffEvaluationMode.LAZY.name().equals(diffOptionsPrism.evaluationMode()) ? DiffEvaluationMode.LAZY : DiffEvaluationMode.EAGER;
             differInterface = analysedRecord.utilsClassChildInterface(diffOptionsPrism.differName(), Claims.DIFFER_IFACE);
             differStaticClass = analysedRecord.utilsClassChildClass(DIFFER_UTILS_CLASS, Claims.DIFFER_UTILS);
-            final String resultName = diffOptionsPrism.diffResultPrefix() + analysedRecord.typeSimpleName() + diffOptionsPrism.diffResultSuffix();
-            differResult = analysedRecord.utilsClassChildClass(resultName, Claims.DIFFER_RESULT);
+            differResult = obtainResultClass(analysedRecord);
             differResultRecordConstructor = differResult.createConstructor();
             differResultInterfaceConstructor = differResult.createMethod("<init>", Claims.DIFFER_IFACE);
             return innerIsApplicable(analysedRecord);
@@ -73,6 +72,12 @@ public abstract class DifferVisitor extends RecordVisitor {
 
     protected String changedMethodName(final String variableName) {
         return diffOptionsPrism.changedCheckPrefix() + capitalise(variableName) + diffOptionsPrism.changedCheckSuffix();
+    }
+
+    protected static ToBeBuilt obtainResultClass(final AnalysedRecord analysedRecord) {
+        final DiffOptionsPrism diffOptionsPrism = analysedRecord.settings().prism().diffOptions();
+        final String resultName = diffOptionsPrism.diffResultPrefix() + analysedRecord.typeSimpleName() + diffOptionsPrism.diffResultSuffix();
+        return analysedRecord.utilsClassChildClass(resultName, Claims.DIFFER_RESULT);
     }
 
     protected static String capitalise(final String variableName) {
