@@ -42,8 +42,9 @@ public class StandardEagerHasChangedCheck extends DifferVisitor {
         final StringBuilder assignment = new StringBuilder("this.__overallChanged = ");
         final ArrayList<Object> checks = new ArrayList<>(analysedRecord.components().size());
         for (final AnalysedComponent analysedComponent : analysedRecord.components()) {
-            assignment.append("this.$L || ");
-            checks.add(analysedComponent.name());
+            // Invoke the methods rather than use the variable - the variable version may not be a boolean!
+            assignment.append("this.$L() || ");
+            checks.add(changedMethodName(analysedComponent.name()));
         }
         // If there are no components then it's false
         //   and if there are then we've ended with an "||"
