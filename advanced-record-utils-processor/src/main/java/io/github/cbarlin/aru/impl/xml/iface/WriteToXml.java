@@ -75,7 +75,7 @@ public class WriteToXml extends ToXmlMethod {
                 );
             } else {
                 methodBuilder.addStatement(
-                    "final $T defNs = $T.$L.filter(ignored -> $T.isNull(requestedNamespace) || (!requestedNamespace.isBlank()))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, OBJECTS
+                    "final $T defNs = $T.$L.filter(ignored -> $T.isNull(requestedNamespace) || (requestedNamespace.isBlank()))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, OBJECTS
                 );
             }
             methodBuilder.beginControlFlow("if (defNs.isPresent())")
