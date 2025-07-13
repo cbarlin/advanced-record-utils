@@ -93,7 +93,7 @@ public class ValueHolder extends DifferVisitor {
         );
         AnnotationSupplier.addGeneratedAnnotation(updatedMethod, this);
         updatedMethod.addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .addStatement("return this.$L", originalElementName)
+            .addStatement("return this.$L", updatedElementName)
             .addJavadoc("Return the non-original value for $S", analysedComponent.name())
             .returns(analysedComponent.typeName())
             .addAnnotation(NULLABLE);
