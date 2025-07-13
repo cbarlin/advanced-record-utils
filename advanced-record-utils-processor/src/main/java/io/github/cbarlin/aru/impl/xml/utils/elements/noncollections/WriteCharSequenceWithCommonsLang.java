@@ -2,7 +2,8 @@ package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
-import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
+import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
+import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 
 import java.util.Optional;
 
@@ -17,22 +18,22 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
 @SuppressWarnings({"java:S1192"})
-public class WriteCharSequence extends XmlVisitor {
+public class WriteCharSequenceWithCommonsLang extends XmlVisitor {
 
-    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
+    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
 
-    public WriteCharSequence() {
+    public WriteCharSequenceWithCommonsLang() {
         super(Claims.XML_WRITE_FIELD);
     }
 
     @Override
     protected int innerSpecificity() {
-        return 1;
+        return 2;
     }
 
     @Override
     protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+        return OptionalClassDetector.doesDependencyExist(STRINGUTILS);
     }
 
     @Override
@@ -67,12 +68,9 @@ public class WriteCharSequence extends XmlVisitor {
         if (required) {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
-            methodBuilder.addStatement("$T.requireNonNull(val.toString(), $S)", OBJECTS, errMsg);
-            methodBuilder.beginControlFlow("if (val.toString().isBlank())")
-                .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
-                .endControlFlow();
+            methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
         }
 
         namespaceName.ifPresentOrElse(
@@ -98,7 +96,7 @@ public class WriteCharSequence extends XmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS)
+        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS)
             .addStatement("output.writeCharacters(val.toString())")
             .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));

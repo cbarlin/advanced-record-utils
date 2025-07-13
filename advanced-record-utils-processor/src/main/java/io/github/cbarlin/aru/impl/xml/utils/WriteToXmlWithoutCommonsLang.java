@@ -9,8 +9,8 @@ import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DE
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_PACKAGE_NAMESPACE_VAR_NAME;
 import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.PREDICATE;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
-import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ROOT_ELEMENT;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
@@ -26,6 +26,7 @@ import javax.lang.model.element.Modifier;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -35,8 +36,6 @@ import io.github.cbarlin.aru.impl.xml.ToXmlMethod;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
@@ -44,7 +43,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class WriteToXml extends ToXmlMethod {
+public class WriteToXmlWithoutCommonsLang extends ToXmlMethod {
 
     private static final ParameterSpec CURR_DEF_NS_PARAM = ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
         .addAnnotation(NULLABLE)
@@ -56,7 +55,7 @@ public class WriteToXml extends ToXmlMethod {
         .build();
     private static final ParameterizedTypeName OPTIONAL_STRING = ParameterizedTypeName.get(OPTIONAL, STRING);
 
-    public WriteToXml() {
+    public WriteToXmlWithoutCommonsLang() {
         super(Claims.XML_STATIC_CLASS_TO_XML);
     }
 
@@ -127,7 +126,7 @@ public class WriteToXml extends ToXmlMethod {
         xmlStaticClass.addField(
             FieldSpec.builder(STRING, XML_DEFAULT_TAG_NAME_VAR_NAME, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$S", elementName(analysedRecord))
-                .build()  
+                .build()
         );
     }
 
@@ -140,17 +139,20 @@ public class WriteToXml extends ToXmlMethod {
             .addParameter(
                 ParameterSpec.builder(STRING, "incomingTag", Modifier.FINAL)
                     .addJavadoc("The incoming tag that was requested")
-                    .build()   
+                    .build()
             )
             .addStatement(
                 """
                     return $T.ofNullable(incomingTag)
-                        .filter($T::isNotBlank)
+                        .filter($T::nonNull)
+                        .filter($T.not($T::isBlank))
                         .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                         .orElse($L)
                 """.trim(),
                 OPTIONAL, 
-                STRINGUTILS, 
+                OBJECTS, 
+                PREDICATE,
+                STRING,
                 ARU_GENERATED,
                 XML_DEFAULT_TAG_NAME_VAR_NAME
             );
@@ -181,22 +183,28 @@ public class WriteToXml extends ToXmlMethod {
             .addStatement(
                 """
                 return $T.ofNullable(requestedNamespace)
-                    .filter($T::isNotBlank)
+                    .filter($T::nonNull)
+                    .filter($T.not($T::isBlank))
                     .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                     .or(() -> $L)
                     .or(
                         () -> $T.ofNullable(currentDefaultNamespace)
-                            .filter($T::isNotBlank)
+                            .filter($T::nonNull)
+                            .filter($T.not($T::isBlank))
                             .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                     )
                     .or(() -> $L)
                 """.trim(),
                 OPTIONAL,
-                STRINGUTILS,
+                OBJECTS, 
+                PREDICATE,
+                STRING,
                 ARU_GENERATED,
                 XML_DEFAULT_NAMESPACE_VAR_NAME,
                 OPTIONAL,
-                STRINGUTILS,
+                OBJECTS, 
+                PREDICATE,
+                STRING,
                 ARU_GENERATED,
                 XML_PACKAGE_NAMESPACE_VAR_NAME
             );
@@ -218,21 +226,27 @@ public class WriteToXml extends ToXmlMethod {
             .addStatement(
                 """
                 return $T.ofNullable(requestedNamespace)
-                    .filter($T::isNotBlank)
+                    .filter($T::nonNull)
+                    .filter($T.not($T::isBlank))
                     .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                     .or(() -> $L)
                     .or(
                         () -> $T.ofNullable(currentDefaultNamespace)
-                            .filter($T::isNotBlank)
+                            .filter($T::nonNull)
+                            .filter($T.not($T::isBlank))
                             .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
                     )
                 """.trim(),
                 OPTIONAL,
-                STRINGUTILS,
+                OBJECTS, 
+                PREDICATE,
+                STRING,
                 ARU_GENERATED,
                 XML_DEFAULT_NAMESPACE_VAR_NAME,
                 OPTIONAL,
-                STRINGUTILS,
+                OBJECTS, 
+                PREDICATE,
+                STRING,
                 ARU_GENERATED
             );
     }
@@ -251,7 +265,7 @@ public class WriteToXml extends ToXmlMethod {
             
         } else {
             methodBuilder.addStatement(
-                "final $T defNs = $T.$L.filter(ignored -> $T.isBlank(requestedNamespace))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, STRINGUTILS
+                "final $T defNs = $T.$L.filter(ignored -> $T.nonNull(requestedNamespace) && (!requestedNamespace.isBlank()))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, OBJECTS
             )
             .beginControlFlow("if (defNs.isPresent())")
             .addStatement(

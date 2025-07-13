@@ -111,6 +111,6 @@ class NestedTests {
             .testDefault("NotThis!")
             .build();
         
-        ConvertToXml.convertToXml(out -> assertThrows(NullPointerException.class, () -> someRecord.writeSelfTo(out)));
+        ConvertToXml.convertToXml(out -> assertThrows(IllegalArgumentException.class, () -> someRecord.writeSelfTo(out)));
     }
 }

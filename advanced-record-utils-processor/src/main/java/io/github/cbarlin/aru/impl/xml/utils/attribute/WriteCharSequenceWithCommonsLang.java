@@ -1,8 +1,8 @@
 package io.github.cbarlin.aru.impl.xml.utils.attribute;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
-import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
+import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
+import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 
 import java.util.Optional;
 
@@ -17,15 +17,15 @@ import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteCharSequence extends XmlVisitor {
+public class WriteCharSequenceWithCommonsLang extends XmlVisitor {
 
-    public WriteCharSequence() {
+    public WriteCharSequenceWithCommonsLang() {
         super(Claims.XML_WRITE_FIELD);
     }
 
     @Override
     protected int innerSpecificity() {
-        return 1;
+        return 2;
     }
     
     @Override
@@ -50,24 +50,25 @@ public class WriteCharSequence extends XmlVisitor {
         final String attributeName = attributeName(analysedComponent, prism);
         final Optional<String> namespaceName = namespaceName(prism);
 
-        methodBuilder.beginControlFlow("if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()))", OBJECTS, OBJECTS);
+        if (required) {
+            final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);
+            methodBuilder.addStatement("$T.notBlank(val, $S)", VALIDATE, errMsg);
+        } else {
+            methodBuilder.beginControlFlow("if ($T.isNotBlank(val))", STRINGUTILS);
+        }
+
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, val.toString())", namespace, attributeName),
             () -> methodBuilder.addStatement("output.writeAttribute($S, val.toString())", attributeName)
         );
 
-        if(required) {
-            final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);
-            methodBuilder.nextControlFlow("else")
-                .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
-                .endControlFlow();
-        } else {
+        if (!required) {
             methodBuilder.endControlFlow();
         }
     }
 
     @Override
     protected boolean innerIsApplicable(AnalysedRecord analysedRecord) {
-        return true;
+        return OptionalClassDetector.doesDependencyExist(STRINGUTILS);
     }
 }
