@@ -34,6 +34,7 @@ public enum Constants {
         public static final ClaimableOperation DIFFER_IFACE = new ClaimableOperation("differInterface", CLASS);
         public static final ClaimableOperation DIFFER_OVERALL_HAS_CHANGED = new ClaimableOperation("differGlobalHasChanged", CLASS);
         public static final ClaimableOperation DIFFER_RESULT = new ClaimableOperation("differResult", CLASS);
+        public static final ClaimableOperation DIFFER_STATIC_UTILS_METHOD = new ClaimableOperation("differStaticUtilsMethod", CLASS);
         public static final ClaimableOperation DIFFER_UTILS = new ClaimableOperation("differUtils", CLASS);
         public static final ClaimableOperation DIFFER_UTILS_COMPUTE_CHANGE = new ClaimableOperation("differUtilsComputation", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation DIFFER_VALUE_HOLDING = new ClaimableOperation("differValueHolding", FIELD_AND_ACCESSORS);

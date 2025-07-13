@@ -6,6 +6,7 @@ import java.util.List;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuilderOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.WitherOptions;
 
@@ -15,15 +16,16 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 @AdvancedRecordUtils(
-    wither = true,
-    merger = true,
-    xmlable = true,
-    createAllInterface = true,
-    logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE,
-    witherOptions = @WitherOptions(convertToBuilder = "toBuilder"),
-    builderOptions = @BuilderOptions(builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE),
     addJsonbImportAnnotation = true,
-    diffable = true
+    builderOptions = @BuilderOptions(builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE),
+    createAllInterface = true,
+    diffable = true,
+    diffOptions = @DiffOptions(staticMethodsAddedToUtils = true),
+    logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE,
+    merger = true,
+    wither = true,
+    witherOptions = @WitherOptions(convertToBuilder = "toBuilder"),
+    xmlable = true
 )
 @XmlRootElement(name = "RootItem", namespace = "ns://nxA")
 @XmlType(name = "", propOrder = {"yetAnotherField"})

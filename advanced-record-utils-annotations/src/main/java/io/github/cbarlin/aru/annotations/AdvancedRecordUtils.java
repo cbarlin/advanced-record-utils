@@ -594,6 +594,13 @@ public @interface AdvancedRecordUtils {
          * Should diffs be evaluated immediately or lazily?
          */
         DiffEvaluationMode evaluationMode() default DiffEvaluationMode.EAGER;
+
+        /**
+         * Should static methods (if generated) be added to the root {@code Utils} class?
+         * <p>
+         * e.g. {@code PersonUtils.diff(preferredPerson, secondaryPerson)}
+         */
+        boolean staticMethodsAddedToUtils() default false;
     }
     
     //#endregion
