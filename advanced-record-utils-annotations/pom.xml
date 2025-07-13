@@ -25,14 +25,13 @@
             <artifactId>jspecify</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- Commons lang 3 because it's too useful not to -->
-        <dependency>
+        <!-- Optional dependencies -->
+         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
-        <!-- Optional dependencies -->
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>stax2-api</artifactId>

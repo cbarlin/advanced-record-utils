@@ -126,7 +126,7 @@ public class WriteToXmlWithoutCommonsLang extends ToXmlMethod {
         xmlStaticClass.addField(
             FieldSpec.builder(STRING, XML_DEFAULT_TAG_NAME_VAR_NAME, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$S", elementName(analysedRecord))
-                .build()  
+                .build()
         );
     }
 
@@ -139,7 +139,7 @@ public class WriteToXmlWithoutCommonsLang extends ToXmlMethod {
             .addParameter(
                 ParameterSpec.builder(STRING, "incomingTag", Modifier.FINAL)
                     .addJavadoc("The incoming tag that was requested")
-                    .build()   
+                    .build()
             )
             .addStatement(
                 """
