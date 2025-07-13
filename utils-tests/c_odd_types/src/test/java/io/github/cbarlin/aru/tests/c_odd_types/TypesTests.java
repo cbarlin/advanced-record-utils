@@ -100,6 +100,27 @@ class TypesTests {
         assertEquals(13, objB.someOptionalInt().getAsInt());
         assertEquals(69, merged.someOptionalInt().getAsInt());
     }
+
+    @Test
+    void differ() {
+        final OddTypeBag objA = OddTypeBagUtils.builder()
+            .optionalDouble(15.0)
+            .someOptionalInt(69)
+            .build();
+
+        final OddTypeBag objB = OddTypeBagUtils.builder()
+            .someOptionalLong(420)
+            .someOptionalInt(69)
+            .build();
+
+        final var diff = objA.diff(objB);
+
+        assertTrue(diff.hasChanged());
+        assertFalse(diff.hasListOfItemsChanged());
+        assertFalse(diff.hasMoreOptionalIntsChanged());
+        assertTrue(diff.hasSomeOptionalLongChanged());
+        assertFalse(diff.hasSomeOptionalIntChanged());
+    }
     
     @Test
     void xml() {

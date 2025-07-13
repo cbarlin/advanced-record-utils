@@ -22,7 +22,7 @@ public class StandardEagerHasChangedCheck extends DifferVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(AnalysedRecord analysedRecord) {
+    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
         return true;
     }
 
@@ -32,7 +32,7 @@ public class StandardEagerHasChangedCheck extends DifferVisitor {
     }
 
     @Override
-    protected void visitEndOfClassImpl(AnalysedRecord analysedRecord) {
+    protected void visitEndOfClassImpl(final AnalysedRecord analysedRecord) {
         differResult.addField(
             FieldSpec.builder(TypeName.BOOLEAN, "__overallChanged", Modifier.PRIVATE, Modifier.FINAL)
                 .addJavadoc("Has any field changed in this diff?")
@@ -48,7 +48,12 @@ public class StandardEagerHasChangedCheck extends DifferVisitor {
         // If there are no components then it's false
         //   and if there are then we've ended with an "||"
         assignment.append("false");
-        differResultConstructor.addStatement(
+        // Add the calculations
+        differResultRecordConstructor.addStatement(
+            assignment.toString(),
+            checks.toArray()
+        );
+        differResultInterfaceConstructor.addStatement(
             assignment.toString(),
             checks.toArray()
         );

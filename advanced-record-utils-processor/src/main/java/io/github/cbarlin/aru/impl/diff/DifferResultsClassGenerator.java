@@ -10,12 +10,16 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffEvaluationMode;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 @ServiceProvider
 public class DifferResultsClassGenerator extends DifferVisitor {
+
+    private static final String NON_NULL_CHECK = "$T.requireNonNull($L, $S)";
+    private static final String JAVADOC_LAZY = "Results are lazily computed on an as-needed basis";
+    private static final String JAVADOC_EAGER = "Results are pre-computed and stored in memory";
+    private static final String JAVADOC_NEW_LINE = "\n<p>\n";
 
     public DifferResultsClassGenerator() {
         super(Claims.DIFFER_RESULT);
@@ -34,58 +38,65 @@ public class DifferResultsClassGenerator extends DifferVisitor {
     @Override
     protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
         AnnotationSupplier.addGeneratedAnnotation(differResult, this);
-        AnnotationSupplier.addGeneratedAnnotation(differResultConstructor, this);
-        TypeSpec.Builder classSpec = differResult.builder();
+        AnnotationSupplier.addGeneratedAnnotation(differResultRecordConstructor, this);
+        AnnotationSupplier.addGeneratedAnnotation(differResultInterfaceConstructor, this);
+        final TypeSpec.Builder classSpec = differResult.builder();
         classSpec.addAnnotation(NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
-            .addJavadoc("The result of a diff between two instances of an {@link $T}", analysedRecord.className())
-            .addJavadoc("\n<p>\n")
+            .addJavadoc("The result of a diff between two instances of {@link $T}", analysedRecord.className())
+            .addJavadoc(JAVADOC_NEW_LINE)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
-        differResultConstructor.addJavadoc("Creates a new diff between two instances of an {@link $T}", analysedRecord.className())
-            .addJavadoc("\n<p>\n");
+        differResultRecordConstructor.addJavadoc("Creates a new diff between two instances of {@link $T}", analysedRecord.className())
+            .addJavadoc(JAVADOC_NEW_LINE);
+        differResultInterfaceConstructor.addJavadoc("Creates a new diff between two instances of {@link $T}", differInterface.className())
+            .addJavadoc(JAVADOC_NEW_LINE);
 
         if (DiffEvaluationMode.EAGER.equals(diffEvaluationMode)) {
-            classSpec.addJavadoc("Results are pre-computed and stored in memory");
-            differResultConstructor.addJavadoc("Results are pre-computed and stored in memory");
+            classSpec.addJavadoc(JAVADOC_EAGER);
+            differResultRecordConstructor.addJavadoc(JAVADOC_EAGER);
+            differResultInterfaceConstructor.addJavadoc(JAVADOC_EAGER);
         } else {
-            classSpec.addJavadoc("Results are lazily computed on an as-needed basis");
-            differResultConstructor.addJavadoc("Results are lazily computed on an as-needed basis");
+            classSpec.addJavadoc(JAVADOC_LAZY);
+            differResultRecordConstructor.addJavadoc(JAVADOC_LAZY);
+            differResultInterfaceConstructor.addJavadoc(JAVADOC_LAZY);
         }
 
-        differResult.addField(
-            FieldSpec.builder(differInterface.className(), diffOptionsPrism.originatingElementName(), Modifier.FINAL, Modifier.PRIVATE)
-                .addJavadoc("The originating element of the diff")
-                .build()
-        );
-
-        differResult.addField(
-            FieldSpec.builder(differInterface.className(), diffOptionsPrism.comparedToElementName(), Modifier.FINAL, Modifier.PRIVATE)
-                .addJavadoc("The (potentially) changed element of the diff")
-                .build()
-        );
-
-        differResultConstructor
+        differResultRecordConstructor
             .addStatement(
-                "$T.requireNonNull($L, $S)",
+                NON_NULL_CHECK,
                 OBJECTS,
                 diffOptionsPrism.originatingElementName(),
                 "The originating element cannot be null"
             )
             .addStatement(
-                "$T.requireNonNull($L, $S)",
+                NON_NULL_CHECK,
                 OBJECTS,
                 diffOptionsPrism.comparedToElementName(),
                 "The (potentially) changed element cannot be null"
             )
+            .addParameter(
+                ParameterSpec.builder(analysedRecord.className(), diffOptionsPrism.originatingElementName(), Modifier.FINAL)
+                    .addJavadoc("The originating element of the diff")
+                    .build()
+            )
+            .addParameter(
+                ParameterSpec.builder(analysedRecord.className(), diffOptionsPrism.comparedToElementName(), Modifier.FINAL)
+                    .addJavadoc("The (potentially) changed element of the diff")
+                    .build()
+            );
+
+        differResultInterfaceConstructor
             .addStatement(
-                "this.$L = $L",
+                NON_NULL_CHECK,
+                OBJECTS,
                 diffOptionsPrism.originatingElementName(),
-                diffOptionsPrism.originatingElementName()
+                "The originating element cannot be null"
             )
             .addStatement(
-                "this.$L = $L",
+                NON_NULL_CHECK,
+                OBJECTS,
                 diffOptionsPrism.comparedToElementName(),
-                diffOptionsPrism.comparedToElementName()
+                "The (potentially) changed element cannot be null"
             )
             .addParameter(
                 ParameterSpec.builder(differInterface.className(), diffOptionsPrism.originatingElementName(), Modifier.FINAL)

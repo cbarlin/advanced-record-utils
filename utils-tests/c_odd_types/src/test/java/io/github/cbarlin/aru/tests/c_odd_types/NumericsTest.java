@@ -1,6 +1,8 @@
 package io.github.cbarlin.aru.tests.c_odd_types;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -150,6 +152,28 @@ class NumericsTest {
     @Test
     void xmlWithDefaults() {
         ConvertToXml.compareXml(out -> assertDoesNotThrow(() -> buildWithDefaults().writeSelfTo(out)), "expected_numerics_with_defaults.xml");
+    }
+
+    @Test
+    void diffWhenNoChanges() {
+        final var original = buildWithDefaults();
+        final var updated = buildWithDefaults();
+
+        final var diff = original.diff(updated);
+
+        assertFalse(diff.hasChanged());
+    }
+
+    @Test
+    void diffWhenSomethingChanges() {
+        final var original = buildWithDefaults();
+        final var updated = buildWithDefaults().withBigDecimalElement(new BigDecimal(69));
+
+        final var diff = original.diff(updated);
+
+        assertTrue(diff.hasChanged());
+        assertTrue(diff.hasBigDecimalElementChanged());
+        assertFalse(diff.hasBigDecimalAttributeChanged());
     }
 
 }
