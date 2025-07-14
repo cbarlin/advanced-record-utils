@@ -3,6 +3,7 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARRAY_LIST;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.HASH_SET;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.FUNCTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.LIST;
 import static io.github.cbarlin.aru.impl.Constants.Names.LONG;
@@ -61,20 +62,26 @@ public class ListDiffCreation extends DifferVisitor {
         builder.addComment("Create frequency maps to count occurrences")
             .addStatement(
                 """
-                final $T originalFreq = original.stream()
+                final $T originalFreq = $T.requireNonNullElse(original, $T.<$T>of()).stream()
                     .collect($T.groupingBy($T.identity(), $T.counting()))
                 """.trim(),
                 mapPtn,
+                OBJECTS,
+                LIST,
+                acc.unNestedPrimaryTypeName(),
                 COLLECTORS,
                 FUNCTION,
                 COLLECTORS
             )
             .addStatement(
                 """
-                final $T updatedFreq = updated.stream()
+                final $T updatedFreq = $T.requireNonNullElse(updated, $T.<$T>of()).stream()
                     .collect($T.groupingBy($T.identity(), $T.counting()))
                 """.trim(),
                 mapPtn,
+                OBJECTS,
+                LIST,
+                acc.unNestedPrimaryTypeName(),
                 COLLECTORS,
                 FUNCTION,
                 COLLECTORS

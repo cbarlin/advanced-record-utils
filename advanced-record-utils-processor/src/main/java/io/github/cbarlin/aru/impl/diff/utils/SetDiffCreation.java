@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.impl.diff.utils;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.PREDICATE;
 import static io.github.cbarlin.aru.impl.Constants.Names.SET;
 
@@ -53,10 +54,12 @@ public class SetDiffCreation extends DifferVisitor {
 
         final ParameterizedTypeName setPtn = ParameterizedTypeName.get(SET, acc.unNestedPrimaryTypeName());
         builder.addComment("Filter elements by comparing against the other set")
+            .addStatement("final $T nUpdated = $T.requireNonNullElse(updated, $T.of())", setPtn, OBJECTS, SET)
+            .addStatement("final $T nOriginal = $T.requireNonNullElse(original, $T.of())", setPtn, OBJECTS, SET)
             .addStatement(
                 """
-                    final $T added = updated.stream()
-                        .filter($T.not(original::contains))
+                    final $T added = nUpdated.stream()
+                        .filter($T.not(nOriginal::contains))
                         .collect($T.toUnmodifiableSet())
                 """.trim(),
                 setPtn,
@@ -65,8 +68,8 @@ public class SetDiffCreation extends DifferVisitor {
             )
             .addStatement(
                 """
-                    final $T removed = original.stream()
-                        .filter($T.not(updated::contains))
+                    final $T removed = nOriginal.stream()
+                        .filter($T.not(nUpdated::contains))
                         .collect($T.toUnmodifiableSet())
                 """.trim(),
                 setPtn,
@@ -75,8 +78,8 @@ public class SetDiffCreation extends DifferVisitor {
             )
             .addStatement(
                 """
-                    final $T common = original.stream()
-                        .filter(updated::contains)
+                    final $T common = nOriginal.stream()
+                        .filter(nUpdated::contains)
                         .collect($T.toUnmodifiableSet())
                 """.trim(),
                 setPtn,
