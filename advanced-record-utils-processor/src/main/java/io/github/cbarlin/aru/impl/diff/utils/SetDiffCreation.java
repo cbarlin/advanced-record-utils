@@ -58,7 +58,7 @@ public class SetDiffCreation extends DifferVisitor {
                     final $T added = updated.stream()
                         .filter($T.not(original::contains))
                         .collect($T.toUnmodifiableSet())
-                """,
+                """.trim(),
                 setPtn,
                 PREDICATE,
                 COLLECTORS
@@ -68,7 +68,7 @@ public class SetDiffCreation extends DifferVisitor {
                     final $T removed = original.stream()
                         .filter($T.not(updated::contains))
                         .collect($T.toUnmodifiableSet())
-                """,
+                """.trim(),
                 setPtn,
                 PREDICATE,
                 COLLECTORS
@@ -78,11 +78,12 @@ public class SetDiffCreation extends DifferVisitor {
                     final $T common = original.stream()
                         .filter(updated::contains)
                         .collect($T.toUnmodifiableSet())
-                """,
+                """.trim(),
                 setPtn,
                 COLLECTORS
             );
-        builder.addStatement("return new $T(added, removed, common)", collectionDiffRecord(acc).className());
+        // Constructor is added, common, removed
+        builder.addStatement("return new $T(added, common, removed)", collectionDiffRecord(acc).className());
         return true;
     }
 

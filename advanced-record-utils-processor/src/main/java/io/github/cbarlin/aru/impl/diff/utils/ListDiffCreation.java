@@ -63,7 +63,7 @@ public class ListDiffCreation extends DifferVisitor {
                 """
                 final $T originalFreq = original.stream()
                     .collect($T.groupingBy($T.identity(), $T.counting()))
-                """,
+                """.trim(),
                 mapPtn,
                 COLLECTORS,
                 FUNCTION,
@@ -73,7 +73,7 @@ public class ListDiffCreation extends DifferVisitor {
                 """
                 final $T updatedFreq = updated.stream()
                     .collect($T.groupingBy($T.identity(), $T.counting()))
-                """,
+                """.trim(),
                 mapPtn,
                 COLLECTORS,
                 FUNCTION,
@@ -95,28 +95,29 @@ public class ListDiffCreation extends DifferVisitor {
             .addStatement("final long updatedCount = updatedFreq.getOrDefault(element, 0L)")
             .addStatement("final long commonCount = $T.min(originalCount, updatedCount)", MATH)
             
-            .beginControlFlow("for (int i = 0; i < commonCount; i++)")
+            .beginControlFlow("for (long i = 0; i < commonCount; i++)")
             .addStatement("common.add(element)")
             .endControlFlow()
 
             .beginControlFlow("if (originalCount > updatedCount)")
             .addStatement("final long removedCount = originalCount - updatedCount")
-            .beginControlFlow("for (int i = 0; i < removedCount; i++)")
+            .beginControlFlow("for (long i = 0; i < removedCount; i++)")
             .addStatement("removed.add(element)")
             .endControlFlow()
             .endControlFlow()
 
             .beginControlFlow("if (updatedCount > originalCount)")
             .addStatement("final long addedCount = updatedCount - originalCount")
-            .beginControlFlow("for (int i = 0; i < addedCount; i++)")
+            .beginControlFlow("for (long i = 0; i < addedCount; i++)")
             .addStatement("added.add(element)")
             .endControlFlow()
             .endControlFlow()
 
             .endControlFlow();
         
+        // Constructor is added, common, removed
         builder.addStatement(
-            "return new $T($T.copyOf(added), $T.copyOf(removed), $T.copyOf(common))", 
+            "return new $T($T.copyOf(added), $T.copyOf(common), $T.copyOf(removed))", 
             collectionDiffRecord(acc).className(),
             LIST, LIST, LIST
         );
