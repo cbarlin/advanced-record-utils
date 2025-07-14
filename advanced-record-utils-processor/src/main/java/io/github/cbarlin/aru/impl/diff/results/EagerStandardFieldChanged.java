@@ -15,8 +15,8 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class StandardEagerFieldChanged extends DifferVisitor {
-    public StandardEagerFieldChanged() {
+public class EagerStandardFieldChanged extends DifferVisitor {
+    public EagerStandardFieldChanged() {
         super(Claims.DIFFER_COMPUTE_CHANGE);
     }
 

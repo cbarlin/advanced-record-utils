@@ -40,8 +40,9 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
     // We have our two generated annotations, and sometimes the `NullMarked`/`NullUnmarked`
     private static final int GENERATED_ANNOTATIONS = 3;
     private final ClassName className;
-    private final TypeSpec.Builder classBuilder;
+    protected final TypeSpec.Builder classBuilder;
     private final UtilsProcessingContext utilsProcessingContext;
+    private final List<FieldSpec> fieldSpecs = new ArrayList<>();
     private final Map<String, MethodSpec.Builder> unfinishedMethods = new HashMap<>();
     private final Map<String, ToBeBuilt> childArtifacts = new HashMap<>();
     private boolean loggerAdded = false;
@@ -75,6 +76,10 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
                 .getMessager()
                 .printMessage(Diagnostic.Kind.ERROR, "Internal error - attempted to generate class without generated annotation present - " + className.canonicalName());
         }
+
+        Collections.sort(fieldSpecs, (fsA, fsB) -> fsA.name.compareTo(fsB.name));
+        fieldSpecs.forEach(classBuilder::addField);
+
         // Let's finish the class!
         final List<String> methodNames = new ArrayList<>(unfinishedMethods.keySet());
         Collections.sort(methodNames);
@@ -104,8 +109,10 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         return this.classBuilder;
     }
 
-    public void addField(final FieldSpec fieldSpec) {
-        classBuilder.addField(fieldSpec);
+    public ToBeBuilt addField(final FieldSpec fieldSpec) {
+        // Add the fields to our list so we can ensure we generate them in the same order when they are output
+        fieldSpecs.add(fieldSpec);
+        return this;
     }
 
     /**
@@ -113,8 +120,8 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
      * <p>
      * Note: Callers should check if loggers should be added to this class
      */
-    public void addLogger() {
-        this.addLogger(className());
+    public ToBeBuilt addLogger() {
+        return this.addLogger(className());
     }
 
     /**
@@ -122,7 +129,7 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
      * <p>
      * Note: Callers should check if loggers should be added to this class
      */
-    public void addLogger(final ClassName loggerReferenceClass) {
+    public ToBeBuilt addLogger(final ClassName loggerReferenceClass) {
         if (!loggerAdded) {
             classBuilder.addField(
                 FieldSpec.builder(Names.LOGGER, InternalReferenceNames.LOGGER_NAME, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
@@ -131,9 +138,25 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
             );
             loggerAdded = true;
         }
+        return this;
     }
 
     //#region child artifact
+
+    /**
+     * Create a child record artifact of this one. This will create a nested class structure for us
+     * <p>
+     * If you call this you are required to do things like put any annotations on etc.
+     * 
+     * @param generatedCodeName The name of the nested class that is actually generated. Do not include parent class names - nesting is handled for you
+     * @param claimableOperation The claim that represents creating the method
+     * @return
+     */
+    @NonNull
+    public ToBeBuilt childRecordArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
+        return childArtifacts.computeIfAbsent(generatedCodeName + "#" + claimableOperation.operationName(), ignored -> new ToBeBuiltRecord(className.nestedClass(generatedCodeName), utilsProcessingContext));
+    }
+
     /**
      * Create a child class artifact of this one. This will create a nested class structure for us
      * <p>
