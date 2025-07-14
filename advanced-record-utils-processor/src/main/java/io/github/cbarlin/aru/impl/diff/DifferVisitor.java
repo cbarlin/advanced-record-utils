@@ -11,6 +11,8 @@ import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.BuilderOptionsPrism;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.DiffOptionsPrism;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
+import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
+import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -74,6 +76,11 @@ public abstract class DifferVisitor extends RecordVisitor {
         return diffOptionsPrism.changedCheckPrefix() + capitalise(variableName) + diffOptionsPrism.changedCheckSuffix();
     }
 
+    protected ToBeBuiltRecord collectionDiffRecord(final AnalysedCollectionComponent acc) {
+        final String innerClassName = typeNameToPartialMethodName(acc.typeName());
+        return (ToBeBuiltRecord) differResult.childRecordArtifact(innerClassName, Claims.DIFFER_COLLECTION_RESULT);
+    }
+
     protected static ToBeBuilt obtainResultClass(final AnalysedRecord analysedRecord) {
         final DiffOptionsPrism diffOptionsPrism = analysedRecord.settings().prism().diffOptions();
         final String resultName = diffOptionsPrism.diffResultPrefix() + analysedRecord.typeSimpleName() + diffOptionsPrism.diffResultSuffix();
@@ -90,7 +97,7 @@ public abstract class DifferVisitor extends RecordVisitor {
     }
 
     @SuppressWarnings({"java:S6880"}) // There is a ticket to make us work on Java 17 - let's not make more work for ourselves!
-    private static String typeNameToPartialMethodName(final TypeName originalTypeName) {
+    protected static String typeNameToPartialMethodName(final TypeName originalTypeName) {
         if (originalTypeName.isAnnotated()) {
             return typeNameToPartialMethodName(originalTypeName.withoutAnnotations());
         }

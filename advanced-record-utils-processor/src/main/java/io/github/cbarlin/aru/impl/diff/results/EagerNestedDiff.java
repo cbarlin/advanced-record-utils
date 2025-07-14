@@ -18,14 +18,14 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class NestedEagerDiff extends DifferVisitor {
+public class EagerNestedDiff extends DifferVisitor {
 
-    public NestedEagerDiff() {
+    public EagerNestedDiff() {
         super(Claims.DIFFER_COMPUTE_CHANGE);
     }
 
     @Override
-    protected boolean innerIsApplicable(AnalysedRecord analysedRecord) {
+    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class NestedEagerDiff extends DifferVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final Optional<ProcessingTarget> targetAnalysedType = analysedComponent.targetAnalysedType();
         final String methodName = hasChangedStaticMethodName(analysedComponent.typeName());
         if (targetAnalysedType.isPresent()) {
@@ -48,11 +48,11 @@ public class NestedEagerDiff extends DifferVisitor {
         return false;
     }
 
-    private void processComponent(AnalysedComponent analysedComponent, AnalysedRecord otherRecord, String methodName) {
+    private void processComponent(final AnalysedComponent analysedComponent, final AnalysedRecord otherRecord, final String methodName) {
         final ClassName otherResultClass = obtainResultClass(otherRecord).className();
         differResult.addField(
             FieldSpec.builder(otherResultClass, analysedComponent.name(), Modifier.PRIVATE, Modifier.FINAL)
-                .addJavadoc("Diff of the field named $S changed?", analysedComponent.name())
+                .addJavadoc("Diff of the field named $S", analysedComponent.name())
                 .build()
         );
         for ( final MethodSpec.Builder builder : List.of(differResultRecordConstructor, differResultInterfaceConstructor) ) {
