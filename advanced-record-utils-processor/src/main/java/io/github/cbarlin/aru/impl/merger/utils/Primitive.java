@@ -14,9 +14,9 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class Primative extends MergerVisitor {
+public class Primitive extends MergerVisitor {
 
-    public Primative() {
+    public Primitive() {
         super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
     }
 
@@ -51,6 +51,7 @@ public class Primative extends MergerVisitor {
             .addParameter(paramB)
             .returns(targetTn)
             .addJavadoc("Merger for the field {@code $L}", analysedComponent.name())
+            .addComment("For primitives, we simply return the preferred value")
             .addStatement("return elA");
 
         AnnotationSupplier.addGeneratedAnnotation(method, this);
