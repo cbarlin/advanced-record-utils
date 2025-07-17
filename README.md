@@ -87,6 +87,8 @@ Person personB = PersonUtils.builder()
 
 To use the wither, also implement the `PersonUtils.With` or `PersonUtils.All` interface:
 
+ > Note: Using the `All` interface is preferred as it generates sealed interfaces
+
 ```java
 @AdvancedRecordUtils(wither = true)
 public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.With { }
