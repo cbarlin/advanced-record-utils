@@ -37,7 +37,7 @@ public class MergerStaticGenerator extends RecordVisitor {
         builder.builder()
             .addAnnotation(CommonsConstants.Names.NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
         
         final MethodSpec.Builder methodBuilder = builder.createConstructor();
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);

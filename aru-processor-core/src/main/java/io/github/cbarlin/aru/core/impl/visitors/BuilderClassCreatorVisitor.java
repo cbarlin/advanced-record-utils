@@ -34,7 +34,7 @@ public class BuilderClassCreatorVisitor extends RecordVisitor {
         final var builder = analysedRecord.utilsClassChildClass(generatedName, claimableOperation);
         AnnotationSupplier.addGeneratedAnnotation(builder, this);
         builder.builder().addAnnotation(CommonsConstants.Names.NULL_MARKED)
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addJavadoc("A class used for building {@link $T} objects", analysedRecord.intendedType());
         if (!analysedRecord.intendedType().equals(analysedRecord.className())) {
             builder.builder().addJavadoc(JDOC_PARA)

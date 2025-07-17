@@ -32,6 +32,7 @@ public class DifferStaticClassGenerator extends DifferVisitor {
     protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
         AnnotationSupplier.addGeneratedAnnotation(differStaticClass, this);
         differStaticClass.builder()
+            .addModifiers(Modifier.FINAL, Modifier.STATIC)
             .addAnnotation(CommonsConstants.Names.NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC);

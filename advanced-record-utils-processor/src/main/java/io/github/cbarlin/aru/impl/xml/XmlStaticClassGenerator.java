@@ -33,7 +33,7 @@ public class XmlStaticClassGenerator extends XmlVisitor {
     protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
         xmlStaticClass.builder()
             .addOriginatingElement(analysedRecord.typeElement())
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addAnnotation(NULL_UNMARKED);
         AnnotationSupplier.addGeneratedAnnotation(xmlStaticClass, this);
         final MethodSpec.Builder methodBuilder = xmlStaticClass.createConstructor();
