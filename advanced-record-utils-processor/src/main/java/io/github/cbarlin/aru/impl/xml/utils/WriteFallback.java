@@ -31,7 +31,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class WriteFallback extends XmlVisitor {
+public final class WriteFallback extends XmlVisitor {
 
     private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
     private static final AtomicBoolean HAS_WARNED = new AtomicBoolean(false);

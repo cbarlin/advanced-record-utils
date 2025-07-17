@@ -5,15 +5,14 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPER
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class XmlStaticClassGenerator extends XmlVisitor {
+public final class XmlStaticClassGenerator extends XmlVisitor {
 
     public XmlStaticClassGenerator() {
         super(Claims.XML_STATIC_CLASS);

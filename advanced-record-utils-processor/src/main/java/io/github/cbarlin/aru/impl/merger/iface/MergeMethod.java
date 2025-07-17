@@ -12,17 +12,16 @@ import javax.lang.model.element.VariableElement;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class MergeMethod extends MergerVisitor {
+public final class MergeMethod extends MergerVisitor {
 
     public MergeMethod() {
         super(Claims.MERGE_IFACE_MERGE);

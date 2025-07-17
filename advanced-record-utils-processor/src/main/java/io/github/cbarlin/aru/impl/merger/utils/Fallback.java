@@ -5,18 +5,17 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class Fallback extends MergerVisitor {
+public final class Fallback extends MergerVisitor {
 
     public Fallback() {
         super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);

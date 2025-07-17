@@ -5,7 +5,7 @@ import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 
-public class ToBeBuiltInterface extends ToBeBuilt {
+public final class ToBeBuiltInterface extends ToBeBuilt {
 
     /**
      * Construct a new interface that is being built

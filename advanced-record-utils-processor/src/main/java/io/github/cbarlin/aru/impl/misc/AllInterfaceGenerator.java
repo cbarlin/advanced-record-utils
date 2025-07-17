@@ -1,14 +1,5 @@
 package io.github.cbarlin.aru.impl.misc;
 
-import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.CommonsConstants;
-import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
-import io.github.cbarlin.aru.core.artifacts.ToBeBuiltInterface;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.micronaut.sourcegen.javapoet.TypeSpec;
-
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERNAL_MATCHING_IFACE_NAME;
 
 import java.util.ArrayList;
@@ -18,9 +9,17 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
 import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
+import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
+import io.github.cbarlin.aru.core.artifacts.ToBeBuiltInterface;
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 @ServiceProvider
-public class AllInterfaceGenerator extends RecordVisitor  {
+public final class AllInterfaceGenerator extends RecordVisitor  {
 
     private static final String GENERATED_NAME = "All";
 
@@ -48,9 +47,10 @@ public class AllInterfaceGenerator extends RecordVisitor  {
         allTypeSpecBuilder.addAnnotation(CommonsConstants.Names.NULL_MARKED);
 
         // OK, work out if the record has implemented the All interface. If so, we can seal everything!
+        final String utilsClassName = analysedRecord.utilsClass().className().simpleName();
         final boolean isAllImplemented = analysedRecord.typeElement().getInterfaces().stream()
             .map(TypeMirror::toString)
-            .anyMatch(tm -> tm.contains(GENERATED_NAME) && tm.contains(analysedRecord.utilsClass().className().simpleName()));
+            .anyMatch(tm -> tm.contains(GENERATED_NAME) && tm.contains(utilsClassName));
         
         if (isAllImplemented) {
             allTypeSpecBuilder.addModifiers(Modifier.SEALED)

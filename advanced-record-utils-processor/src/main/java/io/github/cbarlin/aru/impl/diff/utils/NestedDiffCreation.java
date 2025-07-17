@@ -20,7 +20,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class NestedDiffCreation extends DifferVisitor {
+public final class NestedDiffCreation extends DifferVisitor {
 
     private final Set<String> processedSpecs = HashSet.newHashSet(20);
 

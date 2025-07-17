@@ -1,19 +1,19 @@
 package io.github.cbarlin.aru.impl.wither;
 
 import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
+
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class WithMethodOnField extends WitherVisitor {
+public final class WithMethodOnField extends WitherVisitor {
 
     public WithMethodOnField() {
         super(Claims.WITHER_WITH);

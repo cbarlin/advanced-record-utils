@@ -20,7 +20,7 @@ import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class EclipseOptionalCollectionAnalyser implements ComponentAnalyser {
+public final class EclipseOptionalCollectionAnalyser implements ComponentAnalyser {
 
     @Override
     public int specificity() {

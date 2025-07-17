@@ -7,6 +7,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
@@ -14,13 +15,11 @@ import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class CharSequenceField extends MergerVisitor {
+public final class CharSequenceField extends MergerVisitor {
 
     private static final TypeMirror CH_TYPE_MIRROR = APContext.elements().getTypeElement("java.lang.CharSequence").asType();
 

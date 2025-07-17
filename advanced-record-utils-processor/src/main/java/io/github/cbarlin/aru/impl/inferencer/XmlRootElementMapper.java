@@ -13,7 +13,7 @@ import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 @ServiceProvider
-public class XmlRootElementMapper implements ClassNameToPrismAdaptor<XmlRootElementPrism> {
+public final class XmlRootElementMapper implements ClassNameToPrismAdaptor<XmlRootElementPrism> {
 
     @Override
     public ClassName supportedAnnotationClassName() {

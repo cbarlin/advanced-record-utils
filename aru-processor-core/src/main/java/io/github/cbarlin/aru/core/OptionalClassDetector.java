@@ -16,11 +16,9 @@ import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 /**
- * Utility for detecting dependencies and comparing them via TypeNames.
- * <p>
- * Doesn't necessarily need to be optional dependencies either, I suppose.
+ * Utility for detecting if classes (or interfaces etc) exist and comparing them via TypeNames.
  */
-public class OptionalClassDetector {
+public final class OptionalClassDetector {
 
     private static final Map<TypeName, Optional<TypeElement>> DETECTED_MAP = new ConcurrentHashMap<>();
 

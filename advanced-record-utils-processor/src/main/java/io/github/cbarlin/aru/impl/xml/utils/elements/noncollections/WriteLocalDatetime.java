@@ -17,7 +17,7 @@ import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteLocalDatetime extends XmlVisitor {
+public final class WriteLocalDatetime extends XmlVisitor {
 
     private static final String CHK_NON_NULL = "if ($T.nonNull(val))";
 

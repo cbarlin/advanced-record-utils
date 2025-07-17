@@ -14,7 +14,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  * This component stores information about what type it aliases to
  * and overrides type-related behaviors to handle the alias relationship.
  */
-public class TypeAliasComponent extends AnalysedComponent {
+public final class TypeAliasComponent extends AnalysedComponent {
 
     private final TypeName aliasFor;
 

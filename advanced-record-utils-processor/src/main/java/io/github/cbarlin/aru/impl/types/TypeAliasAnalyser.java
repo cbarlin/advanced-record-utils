@@ -25,7 +25,7 @@ import io.github.cbarlin.aru.core.types.ComponentAnalyser;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class TypeAliasAnalyser implements ComponentAnalyser {
+public final class TypeAliasAnalyser implements ComponentAnalyser {
 
     @Override
     public int specificity() {

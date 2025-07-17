@@ -1,6 +1,8 @@
 package io.github.cbarlin.aru.impl.types;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.*;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_DOUBLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_INT;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_LONG;
 
 import java.util.Set;
 
@@ -16,7 +18,7 @@ import io.github.cbarlin.aru.core.types.ComponentAnalyser;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class OptionalPrimitiveAnalyser implements ComponentAnalyser {
+public final class OptionalPrimitiveAnalyser implements ComponentAnalyser {
 
     private static final Set<TypeName> NAMES = Set.of(OPTIONAL_DOUBLE, OPTIONAL_INT, OPTIONAL_LONG);
 

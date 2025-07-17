@@ -16,7 +16,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class DifferInterfaceGenerator extends DifferVisitor {
+public final class DifferInterfaceGenerator extends DifferVisitor {
 
     public DifferInterfaceGenerator() {
         super(Claims.DIFFER_IFACE);

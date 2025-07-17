@@ -22,7 +22,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class SetDiffCreation extends DifferVisitor {
+public final class SetDiffCreation extends DifferVisitor {
     
     public SetDiffCreation() {
         super(Claims.DIFFER_UTILS_COMPUTE_CHANGE);

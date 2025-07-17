@@ -5,6 +5,7 @@ import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERN
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
@@ -12,10 +13,8 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 
-import io.avaje.spi.ServiceProvider;
-
 @ServiceProvider
-public class WitherInterfaceGenerator extends RecordVisitor  {
+public final class WitherInterfaceGenerator extends RecordVisitor  {
 
     public WitherInterfaceGenerator() {
         super(Claims.WITHER_IFACE);

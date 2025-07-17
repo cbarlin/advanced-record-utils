@@ -20,6 +20,7 @@ import javax.lang.model.element.Modifier;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -29,15 +30,13 @@ import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.xml.ToXmlMethod;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class WriteToXml extends ToXmlMethod {
+public final class WriteToXml extends ToXmlMethod {
 
     private static final ParameterizedTypeName OPTIONAL_STRING = ParameterizedTypeName.get(OPTIONAL, STRING);
 

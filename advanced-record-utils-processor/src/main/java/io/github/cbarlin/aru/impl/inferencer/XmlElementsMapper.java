@@ -25,7 +25,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 
 // Unless manually specified like this, the Avaje SPI only picks up the `ClassNameToPrismAdaptor`
 @ServiceProvider({ClassNameToPrismAdaptor.class, AnnotationInferencer.class})
-public class XmlElementsMapper implements ClassNameToPrismAdaptor<XmlElementsPrism>, AnnotationInferencer {
+public final class XmlElementsMapper implements ClassNameToPrismAdaptor<XmlElementsPrism>, AnnotationInferencer {
 
     @Override
     public int specificity() {

@@ -13,7 +13,7 @@ import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 @ServiceProvider
-public class XmlTypeMapper implements ClassNameToPrismAdaptor<XmlTypePrism> {
+public final class XmlTypeMapper implements ClassNameToPrismAdaptor<XmlTypePrism> {
 
     @Override
     public ClassName supportedAnnotationClassName() {

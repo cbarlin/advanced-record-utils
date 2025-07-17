@@ -4,9 +4,9 @@ import static io.github.cbarlin.aru.impl.Constants.Claims.WITHER_IFACE;
 
 import java.util.Locale;
 
-import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.BuilderOptionsPrism;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.WitherOptionsPrism;
+import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;

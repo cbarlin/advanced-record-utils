@@ -16,7 +16,7 @@ import io.github.cbarlin.aru.core.types.ComponentAnalyser;
 import io.avaje.spi.ServiceProvider;
 
 @ServiceProvider
-public class OptionalAnalyser implements ComponentAnalyser {
+public final class OptionalAnalyser implements ComponentAnalyser {
 
     @Override
     public int specificity() {

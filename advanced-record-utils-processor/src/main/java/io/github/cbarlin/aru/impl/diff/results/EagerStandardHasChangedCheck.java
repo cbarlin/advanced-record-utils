@@ -15,7 +15,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class EagerStandardHasChangedCheck extends DifferVisitor {
+public final class EagerStandardHasChangedCheck extends DifferVisitor {
 
     public EagerStandardHasChangedCheck() {
         super(Claims.DIFFER_OVERALL_HAS_CHANGED);

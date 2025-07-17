@@ -1,11 +1,12 @@
 package io.github.cbarlin.aru.impl.misc;
 
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERNAL_MATCHING_IFACE_NAME;
+
 import javax.lang.model.element.Modifier;
 
 import org.jspecify.annotations.Nullable;
 
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.*;
-
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
@@ -14,10 +15,8 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 
-import io.avaje.spi.ServiceProvider;
-
 @ServiceProvider
-public class MatchingInterfaceGenerator extends RecordVisitor {
+public final class MatchingInterfaceGenerator extends RecordVisitor {
 
     @Nullable
     private ToBeBuilt allerBuilder;

@@ -14,7 +14,7 @@ import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 @ServiceProvider
-public class XmlElementWrapper implements ClassNameToPrismAdaptor<XmlElementWrapperPrism> {
+public final class XmlElementWrapper implements ClassNameToPrismAdaptor<XmlElementWrapperPrism> {
 
     @Override
     public ClassName supportedAnnotationClassName() {

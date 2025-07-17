@@ -6,18 +6,17 @@ import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPT
 
 import java.util.Optional;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteCharSequence extends XmlVisitor {
+public final class WriteCharSequence extends XmlVisitor {
 
     public WriteCharSequence() {
         super(Claims.XML_WRITE_FIELD);

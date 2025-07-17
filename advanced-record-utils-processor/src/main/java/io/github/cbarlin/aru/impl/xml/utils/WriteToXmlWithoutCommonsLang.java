@@ -43,7 +43,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class WriteToXmlWithoutCommonsLang extends ToXmlMethod {
+public final class WriteToXmlWithoutCommonsLang extends ToXmlMethod {
 
     private static final ParameterSpec CURR_DEF_NS_PARAM = ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
         .addAnnotation(NULLABLE)

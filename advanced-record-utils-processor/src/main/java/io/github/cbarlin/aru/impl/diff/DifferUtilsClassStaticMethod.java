@@ -9,7 +9,7 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class DifferUtilsClassStaticMethod extends DifferVisitor {
+public final class DifferUtilsClassStaticMethod extends DifferVisitor {
 
     public DifferUtilsClassStaticMethod() {
         super(Claims.DIFFER_STATIC_UTILS_METHOD);

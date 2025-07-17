@@ -12,7 +12,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WriteBigInteger extends WriteXmlAttribute {
+public final class WriteBigInteger extends WriteXmlAttribute {
     public WriteBigInteger() {
         super();
     }

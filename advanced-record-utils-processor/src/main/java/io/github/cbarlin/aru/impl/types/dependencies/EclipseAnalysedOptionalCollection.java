@@ -37,7 +37,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  * <p>
  * Analysis and construction is performed in the EclipseOptionalCollectionAnalyser
  */
-public class EclipseAnalysedOptionalCollection extends AnalysedComponent implements OptionalComponent<EclipseAnalysedOptionalCollection> {
+public final class EclipseAnalysedOptionalCollection extends AnalysedComponent implements OptionalComponent<EclipseAnalysedOptionalCollection> {
 
     private static final String COLLECTION_ELEMENT = "__collectionElement";
     private final DeclaredType collectionTypeMirror;

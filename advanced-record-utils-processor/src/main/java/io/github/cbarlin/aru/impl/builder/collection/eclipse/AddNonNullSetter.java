@@ -5,19 +5,18 @@ import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class AddNonNullSetter extends EclipseComponentVisitor {
+public final class AddNonNullSetter extends EclipseComponentVisitor {
 
     public AddNonNullSetter() {
         super(Claims.CORE_BUILDER_SETTER);

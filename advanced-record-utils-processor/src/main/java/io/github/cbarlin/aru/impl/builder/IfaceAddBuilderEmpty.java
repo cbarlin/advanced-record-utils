@@ -15,7 +15,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class IfaceAddBuilderEmpty extends InterfaceVisitor {
+public final class IfaceAddBuilderEmpty extends InterfaceVisitor {
 
     public IfaceAddBuilderEmpty() {
         super(Claims.CORE_BUILDER_FROM_NOTHING);

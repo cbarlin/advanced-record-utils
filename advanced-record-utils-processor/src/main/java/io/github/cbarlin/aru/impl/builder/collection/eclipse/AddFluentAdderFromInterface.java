@@ -23,7 +23,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class AddFluentAdderFromInterface extends EclipseComponentVisitor {
+public final class AddFluentAdderFromInterface extends EclipseComponentVisitor {
 
     public AddFluentAdderFromInterface() {
         super(Claims.BUILDER_FLUENT_SETTER);

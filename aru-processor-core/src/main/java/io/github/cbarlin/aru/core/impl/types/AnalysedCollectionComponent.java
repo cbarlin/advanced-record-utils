@@ -25,7 +25,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-public class AnalysedCollectionComponent extends AnalysedComponent {
+public final class AnalysedCollectionComponent extends AnalysedComponent {
 
     private static final String UNWRAPPING_VARIABLE_NAME = "__innerValue";
     private final TypeMirror innerType;

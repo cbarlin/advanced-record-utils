@@ -14,7 +14,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WriteZonedDateTime extends WriteXmlAttribute {
+public final class WriteZonedDateTime extends WriteXmlAttribute {
 
     public WriteZonedDateTime() {
         super();

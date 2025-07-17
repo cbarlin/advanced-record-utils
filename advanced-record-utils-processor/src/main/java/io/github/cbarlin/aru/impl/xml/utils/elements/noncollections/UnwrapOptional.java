@@ -21,7 +21,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class UnwrapOptional extends XmlVisitor {
+public final class UnwrapOptional extends XmlVisitor {
 
     public UnwrapOptional() {
         super(Claims.XML_UNWRAP_OPTIONAL);

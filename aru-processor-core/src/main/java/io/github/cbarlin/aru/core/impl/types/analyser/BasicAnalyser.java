@@ -12,7 +12,7 @@ import io.github.cbarlin.aru.core.types.ComponentAnalyser;
 import io.avaje.spi.ServiceProvider;
 
 @ServiceProvider
-public class BasicAnalyser implements ComponentAnalyser {
+public final class BasicAnalyser implements ComponentAnalyser {
 
     @Override
     public int specificity() {

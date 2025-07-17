@@ -1,14 +1,14 @@
 package io.github.cbarlin.aru.impl.misc;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.Constants.Names;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
-import io.avaje.spi.ServiceProvider;
 
 @ServiceProvider
-public class JsonbImportAnnotator extends RecordVisitor {
+public final class JsonbImportAnnotator extends RecordVisitor {
 
     public JsonbImportAnnotator() {
         super(Claims.MISC_AVAJE_JSONB_IMPORT);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -12,13 +13,11 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class UsingTypeConverter extends RecordVisitor {
+public final class UsingTypeConverter extends RecordVisitor {
 
     private ToBeBuilt builder;
 

@@ -24,7 +24,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class ConcreteOptionalCollectionSetter extends OptionalRecordVisitor {
+public final class ConcreteOptionalCollectionSetter extends OptionalRecordVisitor {
 
     public ConcreteOptionalCollectionSetter() {
         super(Claims.BUILDER_CONCRETE_OPTIONAL);

@@ -6,16 +6,15 @@ import javax.lang.model.element.RecordComponentElement;
 
 import org.jspecify.annotations.Nullable;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.ComponentAnalyser;
 
-import io.avaje.spi.ServiceProvider;
-
 @ServiceProvider
-public class EclipseNonMapComponentAnalyser implements ComponentAnalyser {
+public final class EclipseNonMapComponentAnalyser implements ComponentAnalyser {
 
     @Override
     public int specificity() {

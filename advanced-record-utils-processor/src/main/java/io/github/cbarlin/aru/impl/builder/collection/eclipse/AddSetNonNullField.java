@@ -5,17 +5,16 @@ import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class AddSetNonNullField extends EclipseComponentVisitor {
+public final class AddSetNonNullField extends EclipseComponentVisitor {
 
     private static final ClassName SETS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Sets");
 

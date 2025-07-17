@@ -11,7 +11,7 @@ import javax.lang.model.type.DeclaredType;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class MergedMirror implements AnnotationMirror {
+public final class MergedMirror implements AnnotationMirror {
     private final DeclaredType annotationType;
     private final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues;
 

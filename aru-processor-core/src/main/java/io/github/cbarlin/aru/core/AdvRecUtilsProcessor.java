@@ -44,7 +44,7 @@ import io.avaje.prism.GenerateUtils;
 @GenerateAPContext
 @GeneratePrism(value = AdvancedRecordUtils.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtilsGenerated.class, publicAccess = true)
-public class AdvRecUtilsProcessor extends AbstractProcessor {
+public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
     private static final String META_ANNOTATION_RESOURCE_PATH = "META-INF/cbarlin/metaannotations/io.github.cbarlin.aru.annotations.AdvancedRecordUtils";
     private static final Supplier<List<RecordVisitor>> RECORD_VISITORS = () -> {

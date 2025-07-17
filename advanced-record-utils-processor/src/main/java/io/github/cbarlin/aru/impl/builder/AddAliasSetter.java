@@ -18,7 +18,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class AddAliasSetter extends RecordVisitor {
+public final class AddAliasSetter extends RecordVisitor {
 
     public AddAliasSetter() {
         super(Claims.BUILDER_ALIAS_SETTER);

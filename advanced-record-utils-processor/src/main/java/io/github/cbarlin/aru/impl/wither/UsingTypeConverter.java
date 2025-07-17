@@ -9,18 +9,17 @@ import javax.lang.model.element.Modifier;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class UsingTypeConverter extends WitherVisitor {
+public final class UsingTypeConverter extends WitherVisitor {
 
     public UsingTypeConverter() {
         super(Claims.WITHER_USE_TYPE_CONVERTER);

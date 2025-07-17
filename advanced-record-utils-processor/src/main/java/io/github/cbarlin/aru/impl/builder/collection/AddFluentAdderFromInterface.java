@@ -24,7 +24,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class AddFluentAdderFromInterface extends CollectionRecordVisitor {
+public final class AddFluentAdderFromInterface extends CollectionRecordVisitor {
 
     public AddFluentAdderFromInterface() {
         super(Claims.BUILDER_FLUENT_SETTER);

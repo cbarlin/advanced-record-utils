@@ -17,7 +17,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class MergeOptionalPrimitives extends MergerVisitor {
+public final class MergeOptionalPrimitives extends MergerVisitor {
 
     public MergeOptionalPrimitives() {
         super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);

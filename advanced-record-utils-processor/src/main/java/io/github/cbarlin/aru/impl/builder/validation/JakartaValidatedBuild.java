@@ -10,19 +10,18 @@ import static io.github.cbarlin.aru.impl.Constants.Names.JAKARTA_VALIDATOR;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.ValidationApi;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class JakartaValidatedBuild extends RecordVisitor {
+public final class JakartaValidatedBuild extends RecordVisitor {
 
     public JakartaValidatedBuild() {
         super(Claims.BUILDER_ADD_VALIDATED_BUILD_METHOD);

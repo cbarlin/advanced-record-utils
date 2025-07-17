@@ -16,7 +16,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class WithOptional extends WitherVisitor {
+public final class WithOptional extends WitherVisitor {
 
     public WithOptional() {
         super(Claims.WITHER_WITH_OPTIONAL);
