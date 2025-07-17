@@ -15,7 +15,7 @@ import io.github.cbarlin.aru.core.visitors.collection.SetRecordVisitor;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class AddNonNullSetGetter extends SetRecordVisitor {
+public final class AddNonNullSetGetter extends SetRecordVisitor {
 
     public AddNonNullSetGetter() {
         super(Claims.CORE_BUILDER_GETTER);

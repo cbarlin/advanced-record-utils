@@ -5,15 +5,14 @@ import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
 import java.util.Optional;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WriteBoxedLong extends WriteXmlAttribute {
+public final class WriteBoxedLong extends WriteXmlAttribute {
 
     private static final TypeName TN = TypeName.LONG.box();
 

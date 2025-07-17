@@ -16,7 +16,7 @@ import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @NullMarked
-public class AnnotationSupplier {
+public final class AnnotationSupplier {
     private AnnotationSupplier() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }

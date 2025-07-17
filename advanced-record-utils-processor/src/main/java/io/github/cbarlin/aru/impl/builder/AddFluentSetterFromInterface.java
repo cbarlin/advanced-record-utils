@@ -6,6 +6,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.BuilderOptionsPrism;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
@@ -16,15 +17,13 @@ import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class AddFluentSetterFromInterface extends RecordVisitor {
+public final class AddFluentSetterFromInterface extends RecordVisitor {
 
     public AddFluentSetterFromInterface() {
         super(Claims.BUILDER_FLUENT_SETTER);

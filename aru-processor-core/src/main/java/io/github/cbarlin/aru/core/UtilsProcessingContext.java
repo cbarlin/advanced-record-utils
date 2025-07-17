@@ -30,7 +30,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.JavaFile;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 
-public class UtilsProcessingContext {
+public final class UtilsProcessingContext {
     private final ProcessingEnvironment processingEnvironment;
     private final Map<TypeElement, ProcessingTarget> analysedTypes = new HashMap<>();
     private final Set<TypeElement> rootElements = new HashSet<>();

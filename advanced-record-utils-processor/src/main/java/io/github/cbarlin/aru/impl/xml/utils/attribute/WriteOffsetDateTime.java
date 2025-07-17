@@ -7,15 +7,14 @@ import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_OFFSET;
 
 import java.util.Optional;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WriteOffsetDateTime extends WriteXmlAttribute {
+public final class WriteOffsetDateTime extends WriteXmlAttribute {
 
     public WriteOffsetDateTime() {
         super();

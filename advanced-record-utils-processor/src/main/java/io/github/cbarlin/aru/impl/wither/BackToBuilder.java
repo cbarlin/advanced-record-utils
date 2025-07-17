@@ -8,16 +8,15 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class BackToBuilder extends WitherVisitor {
+public final class BackToBuilder extends WitherVisitor {
 
     public BackToBuilder() {
         super(Claims.WITHER_TO_BUILDER);
@@ -54,6 +53,7 @@ public class BackToBuilder extends WitherVisitor {
         }
         
         backBuilder.addStatement(methodFormat.toString().trim(), methodArgs.toArray());
+
         return true;
     }
 

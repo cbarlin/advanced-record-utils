@@ -5,6 +5,7 @@ import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UT
 
 import java.util.Optional;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -12,13 +13,11 @@ import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteOtherProcessed extends XmlVisitor {
+public final class WriteOtherProcessed extends XmlVisitor {
 
     public WriteOtherProcessed() {
         super(Claims.XML_WRITE_FIELD);

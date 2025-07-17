@@ -25,7 +25,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 /**
  * An analysed component for optional primitives like {@link java.util.OptionalInt}
  */
-public class AnalysedOptionalPrimitiveComponent extends AnalysedComponent {
+public final class AnalysedOptionalPrimitiveComponent extends AnalysedComponent {
 
     public static final Map<TypeName, String> TYPE_TO_GETTER = Map.of(
         OPTIONAL_LONG, "getAsLong",

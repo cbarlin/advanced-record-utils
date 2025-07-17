@@ -14,7 +14,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 @ServiceProvider
-public class DifferResultsClassGenerator extends DifferVisitor {
+public final class DifferResultsClassGenerator extends DifferVisitor {
 
     private static final String NON_NULL_CHECK = "$T.requireNonNull($L, $S)";
     private static final String JAVADOC_LAZY = "Results are lazily computed on an as-needed basis";

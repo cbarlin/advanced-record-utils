@@ -5,7 +5,7 @@ import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 
-public class ToBeBuiltClass extends ToBeBuilt {
+public final class ToBeBuiltClass extends ToBeBuilt {
 
     /**
      * Construct a new class that is being built

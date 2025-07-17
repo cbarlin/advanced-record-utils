@@ -14,7 +14,7 @@ import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class ValueHolder extends DifferVisitor {
+public final class ValueHolder extends DifferVisitor {
 
     private static final String ASSIGNMENT = "this.$L = $L.$L()";
 

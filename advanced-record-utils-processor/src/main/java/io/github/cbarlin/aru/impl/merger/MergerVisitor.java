@@ -4,9 +4,9 @@ import static io.github.cbarlin.aru.impl.Constants.Claims.INTERNAL_MATCHING_IFAC
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERNAL_MATCHING_IFACE_NAME;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.MERGER_UTILS_CLASS;
 
-import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.BuilderOptionsPrism;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.MergerOptionsPrism;
+import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;

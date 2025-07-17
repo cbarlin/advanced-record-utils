@@ -64,6 +64,7 @@ public enum CommonsConstants {
         public static final ClassName GENERATED_UTIL = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "GeneratedUtil");
         public static final ClassName GENERATED_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "Generated");
         public static final ClassName ARU_MAIN_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "AdvancedRecordUtils");
+        public static final ClassName ARU_LOGGING_CONSTANTS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "LoggingConstants");
         public static final ClassName ARU_GENERATED = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED);
         public static final ClassName ARU_VERSION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "Version");
         public static final ClassName ARU_INTERNAL_UTILS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "InternalUtil");

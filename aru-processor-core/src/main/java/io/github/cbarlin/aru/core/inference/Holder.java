@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-public class Holder {
+public final class Holder {
 
     private Holder() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

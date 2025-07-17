@@ -2,16 +2,15 @@ package io.github.cbarlin.aru.impl.builder.collection.eclipse;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class AddImmutableNonNullGetter extends EclipseComponentVisitor {
+public final class AddImmutableNonNullGetter extends EclipseComponentVisitor {
 
     public AddImmutableNonNullGetter() {
         super(Claims.CORE_BUILDER_GETTER);

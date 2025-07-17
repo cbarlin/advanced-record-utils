@@ -10,7 +10,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 
-public class ToBeBuiltRecord extends ToBeBuilt {
+public final class ToBeBuiltRecord extends ToBeBuilt {
 
     private final List<ParameterSpec> recordComponents = new ArrayList<>();
 

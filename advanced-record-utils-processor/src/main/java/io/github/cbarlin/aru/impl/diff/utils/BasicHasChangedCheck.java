@@ -19,7 +19,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class BasicHasChangedCheck extends DifferVisitor {
+public final class BasicHasChangedCheck extends DifferVisitor {
 
     public BasicHasChangedCheck() {
         super(Claims.DIFFER_UTILS_COMPUTE_CHANGE);

@@ -15,7 +15,7 @@ import io.github.cbarlin.aru.impl.types.AnalysedOptionalPrimitiveComponent;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class GetterOptionalPrimitive extends RecordVisitor {
+public final class GetterOptionalPrimitive extends RecordVisitor {
 
     public GetterOptionalPrimitive() {
         super(CommonsConstants.Claims.CORE_BUILDER_GETTER);

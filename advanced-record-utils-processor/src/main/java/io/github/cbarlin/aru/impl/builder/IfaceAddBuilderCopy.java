@@ -16,7 +16,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class IfaceAddBuilderCopy extends InterfaceVisitor {
+public final class IfaceAddBuilderCopy extends InterfaceVisitor {
 
     public IfaceAddBuilderCopy() {
         super(Claims.BUILDER_FROM_EXISTING);

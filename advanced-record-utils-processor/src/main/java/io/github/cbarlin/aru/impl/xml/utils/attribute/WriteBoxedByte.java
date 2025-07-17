@@ -12,7 +12,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WriteBoxedByte extends WriteXmlAttribute {
+public final class WriteBoxedByte extends WriteXmlAttribute {
 
     private static final TypeName TN = TypeName.BYTE.box();
 

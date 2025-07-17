@@ -16,7 +16,7 @@ import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class GetterOptional extends RecordVisitor {
+public final class GetterOptional extends RecordVisitor {
 
     public GetterOptional() {
         super(CommonsConstants.Claims.CORE_BUILDER_GETTER);

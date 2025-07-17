@@ -28,7 +28,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  * 
  * @see AnalysedComponent
  */
-public class AnalysedOptionalComponent extends AnalysedComponent implements OptionalComponent<AnalysedOptionalComponent> {
+public final class AnalysedOptionalComponent extends AnalysedComponent implements OptionalComponent<AnalysedOptionalComponent> {
 
     private static final String UNWRAPPING_VARIABLE_NAME = "__innerValue";
     private final TypeMirror innerType;

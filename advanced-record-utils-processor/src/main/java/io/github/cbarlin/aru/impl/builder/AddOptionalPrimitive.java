@@ -4,6 +4,8 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
@@ -12,11 +14,9 @@ import io.github.cbarlin.aru.impl.types.AnalysedOptionalPrimitiveComponent;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.AnnotationSupplier;
 
 @ServiceProvider
-public class AddOptionalPrimitive extends RecordVisitor {
+public final class AddOptionalPrimitive extends RecordVisitor {
 
     public AddOptionalPrimitive() {
         super(Claims.BUILDER_CONCRETE_OPTIONAL);

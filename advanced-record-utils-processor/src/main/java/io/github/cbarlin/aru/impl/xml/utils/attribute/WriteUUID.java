@@ -5,15 +5,14 @@ import static io.github.cbarlin.aru.impl.Constants.Names.UUID;
 
 import java.util.Optional;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WriteUUID extends WriteXmlAttribute {
+public final class WriteUUID extends WriteXmlAttribute {
 
     public WriteUUID() {
         super();

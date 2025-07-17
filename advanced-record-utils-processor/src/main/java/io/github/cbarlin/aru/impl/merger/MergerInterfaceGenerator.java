@@ -5,6 +5,7 @@ import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERN
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
@@ -12,10 +13,8 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 
-import io.avaje.spi.ServiceProvider;
-
 @ServiceProvider
-public class MergerInterfaceGenerator extends RecordVisitor {
+public final class MergerInterfaceGenerator extends RecordVisitor {
 
     private static final String NEW_JAVADOC_LINE = "\n<p>\n";
 

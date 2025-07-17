@@ -16,7 +16,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WritePrimitiveNumerics extends XmlVisitor {
+public final class WritePrimitiveNumerics extends XmlVisitor {
 
     private static final Set<TypeName> NUMERICS = Set.of(
         TypeName.BYTE,

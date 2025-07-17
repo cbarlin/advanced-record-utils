@@ -14,7 +14,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 /**
  * Utility to check if an element came from a previous compilation run
  */
-public class PreviousCompilationChecker {
+public final class PreviousCompilationChecker {
 
     private final Elements elementUtils;
     private final Types typeUtils;

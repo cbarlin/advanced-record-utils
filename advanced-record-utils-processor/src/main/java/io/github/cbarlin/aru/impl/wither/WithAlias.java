@@ -14,7 +14,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class WithAlias extends WitherVisitor {
+public final class WithAlias extends WitherVisitor {
 
     public WithAlias() {
         super(Claims.WITHER_WITH_ALIAS);

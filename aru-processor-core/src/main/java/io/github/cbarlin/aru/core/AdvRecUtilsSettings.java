@@ -26,7 +26,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
  * Holder for the settings being used in the current processing context of an element.
  */
 @NullMarked
-public class AdvRecUtilsSettings {
+public final class AdvRecUtilsSettings {
     private static final String ANNOTATION_TYPE = AdvancedRecordUtilsPrism.PRISM_TYPE;
     private final AdvancedRecordUtilsPrism prism;
     private final Element originalElement;

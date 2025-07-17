@@ -4,18 +4,17 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.collection.SetRecordVisitor;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class AddNullableSetGetter extends SetRecordVisitor {
+public final class AddNullableSetGetter extends SetRecordVisitor {
 
     public AddNullableSetGetter() {
         super(Claims.CORE_BUILDER_GETTER);

@@ -18,7 +18,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
 @SuppressWarnings({"java:S1192"})
-public class WriteCharSequenceWithCommonsLang extends XmlVisitor {
+public final class WriteCharSequenceWithCommonsLang extends XmlVisitor {
 
     private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
 

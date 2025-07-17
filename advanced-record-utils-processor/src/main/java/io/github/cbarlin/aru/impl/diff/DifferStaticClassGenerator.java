@@ -12,7 +12,7 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class DifferStaticClassGenerator extends DifferVisitor {
+public final class DifferStaticClassGenerator extends DifferVisitor {
 
     public DifferStaticClassGenerator() {
         super(Claims.DIFFER_UTILS);
@@ -34,7 +34,7 @@ public class DifferStaticClassGenerator extends DifferVisitor {
         differStaticClass.builder()
             .addAnnotation(CommonsConstants.Names.NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
 
         final MethodSpec.Builder methodBuilder = differStaticClass.createConstructor();
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);

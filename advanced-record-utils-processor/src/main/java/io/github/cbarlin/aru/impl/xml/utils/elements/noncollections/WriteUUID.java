@@ -12,11 +12,10 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteUUID extends XmlVisitor {
+public final class WriteUUID extends XmlVisitor {
 
     public WriteUUID() {
         super(Claims.XML_WRITE_FIELD);

@@ -20,7 +20,7 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class EagerCollectionDiffResultCreator extends DifferVisitor {
+public final class EagerCollectionDiffResultCreator extends DifferVisitor {
 
     private final Set<String> processedSpecs = HashSet.newHashSet(20);
 

@@ -9,7 +9,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
-public record SyntheticAnnotationValue(Object value) implements AnnotationValue {
+public final record SyntheticAnnotationValue(Object value) implements AnnotationValue {
 
     @Override
     public Object getValue() {

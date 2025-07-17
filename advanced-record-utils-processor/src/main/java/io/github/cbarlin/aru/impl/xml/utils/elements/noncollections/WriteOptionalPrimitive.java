@@ -15,7 +15,7 @@ import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteOptionalPrimitive extends XmlVisitor {
+public final class WriteOptionalPrimitive extends XmlVisitor {
 
     public WriteOptionalPrimitive() {
         super(Claims.XML_WRITE_FIELD);

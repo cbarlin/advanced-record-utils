@@ -16,7 +16,7 @@ import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class WriteOffsetDatetime extends XmlVisitor {
+public final class WriteOffsetDatetime extends XmlVisitor {
 
     private static final String CHK_NON_NULL = "if ($T.nonNull(val))";
 

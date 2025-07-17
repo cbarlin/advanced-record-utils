@@ -17,7 +17,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public class WriteBoxedNumerics extends XmlVisitor {
+public final class WriteBoxedNumerics extends XmlVisitor {
 
     private static final Set<TypeName> BOXED_NUMERICS = Set.of(
         TypeName.BYTE.box(),

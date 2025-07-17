@@ -3,18 +3,17 @@ package io.github.cbarlin.aru.impl.builder.collection.javaimmutable;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.collection.ListRecordVisitor;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class AddNullableListGetter extends ListRecordVisitor {
+public final class AddNullableListGetter extends ListRecordVisitor {
 
     public AddNullableListGetter() {
         super(Claims.CORE_BUILDER_GETTER);

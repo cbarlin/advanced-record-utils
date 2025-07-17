@@ -1,5 +1,7 @@
 package io.github.cbarlin.aru.core.visitors;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_LOGGING_CONSTANTS;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +11,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jspecify.annotations.Nullable;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
-import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants.InternalReferenceNames;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -114,7 +115,8 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
             .build();
     }
 
-    private static final String ADD_KEY_VALUE_STRING_STRING = ".addKeyValue($S, $S)";
+    private static final String ADD_KEY_VALUE_TL_STRING = ".addKeyValue($T.$L, $S)";
+    private static final String ADD_KEY_VALUE_TL_TL = ".addKeyValue($T.$L, $T.$L)";
     
     private final void logInternal(
         final MethodSpec.Builder methodBuilder,
@@ -132,28 +134,36 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
             params.add(InternalReferenceNames.LOGGER_NAME);
             params.add(atInstruction);
 
-            sb.append(ADD_KEY_VALUE_STRING_STRING);
-            params.add("advancedRecordUtilsVisitor");
+            sb.append(ADD_KEY_VALUE_TL_STRING);
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add("VISITOR_NAME_KEY");
             params.add(this.getClass().getCanonicalName());
 
-            sb.append(ADD_KEY_VALUE_STRING_STRING);
-            params.add("advancedRecordUtilsProcessor");
-            params.add(AdvRecUtilsProcessor.class.getCanonicalName());
+            sb.append(ADD_KEY_VALUE_TL_TL);
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add("PROCESSOR_NAME_KEY");
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add("PROCESSOR_NAME_VALUE");
 
-            sb.append(ADD_KEY_VALUE_STRING_STRING);
-            params.add("claimedOperationName");
+            sb.append(ADD_KEY_VALUE_TL_STRING);
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add("CLAIM_OP_NAME_KEY");
             params.add(claimableOperation().operationName());
 
-            sb.append(ADD_KEY_VALUE_STRING_STRING);
-            params.add("claimedOperationType");
-            params.add(OperationType.CLASS.equals(claimableOperation().operationType()) ? "Class" : "Component");
+            sb.append(ADD_KEY_VALUE_TL_TL);
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add("CLAIM_OP_TYPE_KEY");
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add(OperationType.CLASS.equals(claimableOperation().operationType()) ? "CLAIM_OP_TYPE_VALUE_CLASS" : "CLAIM_OP_TYPE_VALUE_COMPONENT");
 
-            sb.append(ADD_KEY_VALUE_STRING_STRING);
-            params.add("intendedType");
+            sb.append(ADD_KEY_VALUE_TL_STRING);
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add("INTENDED_TYPE_KEY");
             params.add(targetClassName.canonicalName());
 
-            sb.append(ADD_KEY_VALUE_STRING_STRING);
-            params.add("originalType");
+            sb.append(ADD_KEY_VALUE_TL_STRING);
+            params.add(ARU_LOGGING_CONSTANTS);
+            params.add("ORIGINAL_TYPE_KEY");
             params.add(originalClassName.canonicalName());
 
             sb.append(".log(").append(withinLogCallCode).append(")");

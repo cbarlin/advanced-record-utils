@@ -30,7 +30,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class Branching extends XmlVisitor {
+public final class Branching extends XmlVisitor {
 
     public Branching() {
         super(Claims.XML_WRITE_FIELD);

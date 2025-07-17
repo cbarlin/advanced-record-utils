@@ -12,21 +12,21 @@ import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
-import io.micronaut.sourcegen.javapoet.ClassName;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
-import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
-import io.micronaut.sourcegen.javapoet.TypeName;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.impl.types.OptionalComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 /**
  * Handles e.g. {@code Optional<List<T>>}
  */
-public class AnalysedOptionalCollection extends AnalysedComponent implements OptionalComponent<AnalysedOptionalCollection> {
+public final class AnalysedOptionalCollection extends AnalysedComponent implements OptionalComponent<AnalysedOptionalCollection> {
 
     private static final String COLLECTION_ELEMENT = "__collectionElement";
     private final DeclaredType collectionTypeMirror;

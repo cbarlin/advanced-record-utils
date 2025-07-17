@@ -9,13 +9,12 @@ import javax.lang.model.element.Modifier;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
-public class BuilderFluent extends WitherVisitor {
+public final class BuilderFluent extends WitherVisitor {
 
     public BuilderFluent(){
         super(WITHER_FLUENT_BUILDER);

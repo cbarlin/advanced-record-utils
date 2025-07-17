@@ -18,7 +18,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
-public class ConcreteOptionalSetter extends OptionalRecordVisitor {
+public final class ConcreteOptionalSetter extends OptionalRecordVisitor {
 
     public ConcreteOptionalSetter() {
         super(Claims.BUILDER_CONCRETE_OPTIONAL);

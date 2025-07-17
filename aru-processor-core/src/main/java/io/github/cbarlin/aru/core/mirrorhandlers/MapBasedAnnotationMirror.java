@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import io.github.cbarlin.aru.core.APContext;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-public class MapBasedAnnotationMirror implements AnnotationMirror {
+public final class MapBasedAnnotationMirror implements AnnotationMirror {
 
     private final Map<ExecutableElement, AnnotationValue> elementValues;
     private final DeclaredType declaredType;

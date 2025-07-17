@@ -4,17 +4,16 @@ import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.MERGER
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @ServiceProvider
-public class MergerStaticGenerator extends RecordVisitor {
+public final class MergerStaticGenerator extends RecordVisitor {
 
     public MergerStaticGenerator() {
         super(Claims.MERGER_STATIC_CLASS);
@@ -37,7 +36,7 @@ public class MergerStaticGenerator extends RecordVisitor {
         builder.builder()
             .addAnnotation(CommonsConstants.Names.NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+            .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
         
         final MethodSpec.Builder methodBuilder = builder.createConstructor();
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);

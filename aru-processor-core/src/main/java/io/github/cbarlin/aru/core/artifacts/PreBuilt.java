@@ -13,7 +13,7 @@ import io.github.cbarlin.aru.core.ClaimableOperation;
 
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-public class PreBuilt implements GenerationArtifact<PreBuilt> {
+public final class PreBuilt implements GenerationArtifact<PreBuilt> {
 
     private final ClassName className;
     private final Map<String, PreBuilt> children;

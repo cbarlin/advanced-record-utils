@@ -6,6 +6,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -13,14 +14,12 @@ import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.dependencies.EclipseCollectionComponent;
-
-import io.avaje.spi.ServiceProvider;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 @ServiceProvider
-public class AddFluentAdderNonInterface extends EclipseComponentVisitor {
+public final class AddFluentAdderNonInterface extends EclipseComponentVisitor {
 
     public AddFluentAdderNonInterface() {
         super(Claims.BUILDER_FLUENT_SETTER);
