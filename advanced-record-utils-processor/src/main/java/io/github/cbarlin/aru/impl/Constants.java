@@ -76,9 +76,11 @@ public enum Constants {
     public enum Names {
         ;
         private static final String XML_ANNOTATIONS = "jakarta.xml.bind.annotation";
+        private static final String AVAJE_JSONB = "io.avaje.jsonb";
         public static final ClassName AVAJE_CONSTRAINT_VIOLATION = ClassName.get("io.avaje.validation", "ConstraintViolationException");
-        public static final ClassName AVAJE_JSONB_IMPORT = ClassName.get("io.avaje.jsonb", "Json", "Import");
-        public static final ClassName AVAJE_JSONB_IGNORE = ClassName.get("io.avaje.jsonb", "Json", "Ignore");
+        public static final ClassName AVAJE_JSONB_IMPORT = ClassName.get(AVAJE_JSONB, "Json", "Import");
+        public static final ClassName AVAJE_JSONB_IGNORE = ClassName.get(AVAJE_JSONB, "Json", "Ignore");
+        public static final ClassName AVAJE_JSONB_SUBTYPE = ClassName.get(AVAJE_JSONB, "Json", "SubType");
         public static final ClassName AVAJE_VALIDATOR = ClassName.get("io.avaje.validation", "Validator");
         public static final ClassName BI_CONSUMER = ClassName.get(BiConsumer.class);
         public static final ClassName BIG_DECIMAL = ClassName.get("java.math", "BigDecimal");

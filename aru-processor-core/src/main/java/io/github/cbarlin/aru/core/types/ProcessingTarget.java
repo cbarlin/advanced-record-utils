@@ -7,7 +7,6 @@ import org.jspecify.annotations.Nullable;
 import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.GenerationArtifact;
-
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
@@ -21,7 +20,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
  */
 // Ignore the generics, they aren't relevant in practice
 @SuppressWarnings({"java:S1452"})
-public sealed interface ProcessingTarget permits LibraryLoadedTarget, AnalysedType {
+public sealed interface ProcessingTarget extends Comparable<ProcessingTarget> permits LibraryLoadedTarget, AnalysedType {
     
     public TypeElement typeElement();
 
@@ -39,4 +38,9 @@ public sealed interface ProcessingTarget permits LibraryLoadedTarget, AnalysedTy
     public AdvancedRecordUtilsPrism prism();
 
     public GenerationArtifact<?> builderArtifact();
+
+    @Override
+    default int compareTo(ProcessingTarget o) {
+        return utilsClassName().compareTo(o.utilsClassName());
+    }
 }
