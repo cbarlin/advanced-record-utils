@@ -2,6 +2,9 @@ package io.github.cbarlin.aru.impl.misc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import javax.lang.model.element.TypeElement;
 
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
@@ -32,7 +35,11 @@ public class JsonbImportInterfaceAnnotator extends InterfaceVisitor {
         final List<Object> params = new ArrayList<>();
 
         for(final ProcessingTarget target : analysedInterface.implementingTypes()) {
-            final ClassName othClassName = ClassName.get(target.typeElement());
+            final TypeElement te = target.typeElement();
+            if (Objects.isNull(te)) {
+                continue;
+            }
+            final ClassName othClassName = ClassName.get(te);
             formatBuilder.append("@$T(type = $T.class),");
             params.add(Names.AVAJE_JSONB_SUBTYPE);
             params.add(othClassName);
