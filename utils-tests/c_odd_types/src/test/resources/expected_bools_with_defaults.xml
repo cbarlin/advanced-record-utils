@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<BooleanTest
+    xmlns="nx://Booleans"
+    xmlns:opt="ns://Optionals"
+    boxedBooleanAttribute="true"
+    boxedBooleanAttributeRequired="true"
+    primitiveBooleanAttribute="true"
+>
+    <primitiveBooleanElement>true</primitiveBooleanElement>
+    <boxedBooleanElement>true</boxedBooleanElement>
+    <boxedBooleanElementRequired>true</boxedBooleanElementRequired>
+    <boxedBooleanElementDefault>true</boxedBooleanElementDefault>
+    <boxedBooleanElementRequiredDefault>true</boxedBooleanElementRequiredDefault>
+</BooleanTest>

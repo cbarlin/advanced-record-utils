@@ -58,19 +58,19 @@
         <avaje-spi.version>2.13</avaje-spi.version>
         <avaje-validator.version>2.12</avaje-validator.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
-        <commons-io.version>2.19.0</commons-io.version>
+        <commons-io.version>2.20.0</commons-io.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <guava.version>33.4.8-jre</guava.version>
-        <jackson-annotations.version>2.19.1</jackson-annotations.version>
+        <jackson-annotations.version>2.19.2</jackson-annotations.version>
         <jacoco.version>0.8.13</jacoco.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.2</jakarta-xml-bind-api.version>
         <jspecify.version>1.0.0</jspecify.version>
-        <junit-bom.version>5.13.3</junit-bom.version>
+        <junit-bom.version>5.13.4</junit-bom.version>
         <mockito.version>5.18.0</mockito.version>
         <stax2-api.version>4.2.2</stax2-api.version>
-        <vavr.version>0.10.6</vavr.version>
+        <vavr.version>0.10.7</vavr.version>
         <woodstox.version>7.1.1</woodstox.version>
         <xmlunit.version>2.10.3</xmlunit.version>
 
