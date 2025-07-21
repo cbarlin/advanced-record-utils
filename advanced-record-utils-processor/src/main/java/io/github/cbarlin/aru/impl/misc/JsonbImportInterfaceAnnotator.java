@@ -40,12 +40,12 @@ public class JsonbImportInterfaceAnnotator extends InterfaceVisitor {
                 continue;
             }
             final ClassName othClassName = ClassName.get(te);
-            formatBuilder.append("@$T(type = $T.class),");
+            formatBuilder.append("\n\t@$T(type = $T.class),");
             params.add(Names.AVAJE_JSONB_SUBTYPE);
             params.add(othClassName);
         }
 
-        formatBuilder.append('}');
+        formatBuilder.append('\n').append('}');
         jsonbAnnotation.addMember("subtypes", formatBuilder.toString(), params.toArray());
         
         analysedInterface.utilsClass()
