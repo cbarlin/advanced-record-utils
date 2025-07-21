@@ -2,9 +2,11 @@ package io.github.cbarlin.aru.core.types;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -20,7 +22,7 @@ import io.github.cbarlin.aru.prism.prison.JsonSubTypesPrism.TypePrism;
 import io.github.cbarlin.aru.prism.prison.XmlSeeAlsoPrism;
 
 public final class AnalysedInterface extends AnalysedType {
-    private final Set<ProcessingTarget> implementingTypes = new HashSet<>();
+    private final SortedSet<ProcessingTarget> implementingTypes = new TreeSet<>();
 
     public AnalysedInterface(final TypeElement element, final UtilsProcessingContext context, final AdvRecUtilsSettings parentSettings) {
         super(element, context, parentSettings);
@@ -107,7 +109,7 @@ public final class AnalysedInterface extends AnalysedType {
     }
     
     public Set<ProcessingTarget> implementingTypes() {
-        return Set.copyOf(implementingTypes);
+        return Collections.unmodifiableSortedSet(implementingTypes);
     }
 
     public GenerationArtifact<?> builderArtifact() {
