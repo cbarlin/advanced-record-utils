@@ -31,7 +31,7 @@ public class TypeSpecComparator {
             // 2. Types that don't start with "_"
             .thenComparing(t -> t.name.startsWith("_"))
             // 3. Interfaces before classes
-            .thenComparing(t -> TypeSpec.Kind.ANNOTATION.equals(t.kind))
+            .thenComparing(t -> TypeSpec.Kind.INTERFACE.equals(t.kind))
             // 4. Sort by name
             .thenComparing(t -> t.name);
     }

@@ -30,7 +30,7 @@ public final class FieldSpecComparator {
 
     private static Comparator<FieldSpec> createComparator() {
         return Comparator
-            .comparing((final FieldSpec f) -> "log".equalsIgnoreCase(f.name) || "logger".equalsIgnoreCase(f.name) || "__logger".equalsIgnoreCase(f.name))
+            .comparing((final FieldSpec f) -> !isLoggerField(f))
             // 2. Sort by visibility score
             .thenComparingInt(FieldSpecComparator::getVisibilityScore)
             // 3. Compare static
@@ -51,6 +51,12 @@ public final class FieldSpecComparator {
         } else {
             return 2; // package-private
         }
+    }
+
+    private static boolean isLoggerField(final FieldSpec field) {
+        return "log".equalsIgnoreCase(field.name) 
+            || "logger".equalsIgnoreCase(field.name) 
+            || "__logger".equalsIgnoreCase(field.name);
     }
 
 }
