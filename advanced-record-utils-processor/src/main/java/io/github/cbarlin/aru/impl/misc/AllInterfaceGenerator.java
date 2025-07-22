@@ -41,6 +41,7 @@ public final class AllInterfaceGenerator extends RecordVisitor  {
     @Override
     protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
         final ToBeBuilt builder = analysedRecord.utilsClassChildInterface(GENERATED_NAME, claimableOperation);
+        builder.builder().addModifiers(Modifier.PUBLIC);
         final ToBeBuilt matchingIface = analysedRecord.utilsClassChildInterface(INTERNAL_MATCHING_IFACE_NAME, Claims.INTERNAL_MATCHING_IFACE);
         AnnotationSupplier.addGeneratedAnnotation(builder, this);
         final TypeSpec.Builder allTypeSpecBuilder = builder.builder();

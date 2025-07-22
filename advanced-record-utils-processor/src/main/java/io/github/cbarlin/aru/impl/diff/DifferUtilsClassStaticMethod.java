@@ -27,8 +27,9 @@ public final class DifferUtilsClassStaticMethod extends DifferVisitor {
 
     @Override
     protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
-        final var builder = analysedRecord.utilsClass().createMethod(diffOptionsPrism.differName(), claimableOperation)
+        final var builder = analysedRecord.utilsClass().createMethod(diffOptionsPrism.differMethodName(), claimableOperation)
             .returns(differResult.className())
+            .addModifiers(Modifier.FINAL, Modifier.STATIC)
             .addJavadoc("Perform a diff on two instances of {@link $T}", analysedRecord.className())
             .addParameter(
                 ParameterSpec.builder(analysedRecord.className(), diffOptionsPrism.originatingElementName(), Modifier.FINAL)

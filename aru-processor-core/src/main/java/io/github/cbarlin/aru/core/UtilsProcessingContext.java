@@ -139,7 +139,7 @@ public final class UtilsProcessingContext {
             final ClassName utilsClassName = analysedType.utilsClassName();
             final JavaFile utilsFile = JavaFile.builder(utilsClassName.packageName(), utilsClass)
                 .skipJavaLangImports(true)
-                .indent("    ")
+                .indent("\t")
                 .addFileComment("Auto generated")
                 .build();
             utilsFile.writeTo(filer);
