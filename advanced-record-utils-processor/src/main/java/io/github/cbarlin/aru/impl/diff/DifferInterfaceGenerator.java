@@ -38,7 +38,7 @@ public final class DifferInterfaceGenerator extends DifferVisitor {
         differInterface.builder()
             .addAnnotation(NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+            .addModifiers(Modifier.STATIC)
             .addJavadoc("Interface for a record that can compute differences against another instance of the same type")
             .addSuperinterface(
                   analysedRecord.utilsClassChildInterface(INTERNAL_MATCHING_IFACE_NAME, INTERNAL_MATCHING_IFACE)

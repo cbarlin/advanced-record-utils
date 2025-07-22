@@ -1,9 +1,8 @@
 package io.github.cbarlin.aru.core.artifacts;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,9 +25,12 @@ import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants.InternalReferenceNames;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.core.artifacts.sorting.FieldSpecComparator;
+import io.github.cbarlin.aru.core.artifacts.sorting.MethodSpecComparator;
+import io.github.cbarlin.aru.core.artifacts.sorting.TypeSpecComparator;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedType;
-
+import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
@@ -42,7 +44,6 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
     private final ClassName className;
     protected final TypeSpec.Builder classBuilder;
     private final UtilsProcessingContext utilsProcessingContext;
-    private final List<FieldSpec> fieldSpecs = new ArrayList<>();
     private final Map<String, MethodSpec.Builder> unfinishedMethods = new HashMap<>();
     private final Map<String, ToBeBuilt> childArtifacts = new HashMap<>();
     private boolean loggerAdded = false;
@@ -70,6 +71,15 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         return className;
     }
 
+    /**
+     * Finishes up the class (or interface, or record) that we are building.
+     * <p>
+     * Note: While this method does attempt to force some sort of order on the things
+     *   inside the generated Type, the TypeSpec has it's own ideas as to the order it wants to write things.
+     * <p>
+     * So the ordering we inject fills the gaps of the TypeSpec ones (because the ordering it uses doesn't enforce reproduceability...), 
+     *    but it does override our ordering (e.g. the order of sub-classes :/)
+     */
     public TypeSpec finishClass() {
         if (classBuilder.annotations.isEmpty()) {
             utilsProcessingContext.processingEnv()
@@ -77,31 +87,18 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
                 .printMessage(Diagnostic.Kind.ERROR, "Internal error - attempted to generate class without generated annotation present - " + className.canonicalName());
         }
 
-        Collections.sort(fieldSpecs, (fsA, fsB) -> fsA.name.compareTo(fsB.name));
-        fieldSpecs.forEach(classBuilder::addField);
-
-        // Let's finish the class!
-        final List<String> methodNames = new ArrayList<>(unfinishedMethods.keySet());
-        Collections.sort(methodNames);
-        for(final String methodName : methodNames) {
-            final MethodSpec.Builder methodBuilder = unfinishedMethods.get(methodName);
-            final MethodSpec method = methodBuilder.build();
-            if (methodBuilder.annotations.isEmpty()) {
-                utilsProcessingContext.processingEnv()
-                    .getMessager()
-                    .printMessage(Diagnostic.Kind.ERROR, "Internal error - attempted to generate method without generated annotation present - " + className.canonicalName() + "#" + method.name);
-            }
-            
-            classBuilder.addMethod(method);
+        // Sort the fields (kinda)
+        Collections.sort(classBuilder.fieldSpecs, FieldSpecComparator.INSTANCE);
+        // Add all the methods (and then sort them)
+        for (final MethodSpec.Builder methodSpec : unfinishedMethods.values()) {
+            Collections.sort(methodSpec.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
         }
+        unfinishedMethods.values().stream().map(MethodSpec.Builder::build).forEach(classBuilder::addMethod);
+        Collections.sort(classBuilder.methodSpecs, MethodSpecComparator.INSTANCE);
         // And of course, the nested classes
-        final List<String> typeNames = new ArrayList<>(childArtifacts.keySet());
-        Collections.sort(typeNames);
-        for (final String typeName : typeNames) {
-            final ToBeBuilt child = childArtifacts.get(typeName);
-            final TypeSpec nested = child.finishClass();
-            classBuilder.addType(nested);
-        }
+        childArtifacts.values().stream().map(ToBeBuilt::finishClass).forEach(classBuilder::addType);
+        Collections.sort(classBuilder.typeSpecs, TypeSpecComparator.INSTANCE);
+        Collections.sort(classBuilder.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
         return classBuilder.build();
     }
 
@@ -110,8 +107,9 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
     }
 
     public ToBeBuilt addField(final FieldSpec fieldSpec) {
-        // Add the fields to our list so we can ensure we generate them in the same order when they are output
-        fieldSpecs.add(fieldSpec);
+        final FieldSpec.Builder b = fieldSpec.toBuilder();
+        Collections.sort(b.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
+        classBuilder.addField(b.build());
         return this;
     }
 

@@ -41,7 +41,7 @@ public final class MatchingInterfaceGenerator extends RecordVisitor {
         AnnotationSupplier.addGeneratedAnnotation(allerBuilder, this);
         allerBuilder.builder()
             .addAnnotation(CommonsConstants.Names.NULL_UNMARKED)
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+            .addModifiers(Modifier.STATIC);
         return true;
     }
 

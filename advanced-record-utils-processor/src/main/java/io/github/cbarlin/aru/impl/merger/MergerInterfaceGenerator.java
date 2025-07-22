@@ -43,7 +43,7 @@ public final class MergerInterfaceGenerator extends RecordVisitor {
         builder.builder()
             .addAnnotation(CommonsConstants.Names.NULL_MARKED)
             .addOriginatingElement(analysedRecord.typeElement())
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+            .addModifiers(Modifier.STATIC)
             .addJavadoc("Interface for a record that can be merged with itself.")
             .addJavadoc(NEW_JAVADOC_LINE)
             .addJavadoc("Intended merge process is that, for each field:")

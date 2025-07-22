@@ -41,7 +41,8 @@ public final class WitherInterfaceGenerator extends RecordVisitor  {
         AnnotationSupplier.addGeneratedAnnotation(builder, this);
         builder.builder()
             .addAnnotation(CommonsConstants.Names.NULL_MARKED)
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+            .addModifiers(Modifier.STATIC)
+            .addJavadoc("An interface that provides the ability to create new instances of a record with modifications")
             .addSuperinterface(
                 analysedRecord.utilsClassChildInterface(INTERNAL_MATCHING_IFACE_NAME, INTERNAL_MATCHING_IFACE)
                     .className()
