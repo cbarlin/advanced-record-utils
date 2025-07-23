@@ -96,6 +96,19 @@ class NestedTests {
     }
 
     @Test
+    void javaImmutableCollectionByDefault() {
+        final RootItem someRecord = RootItemUtils.builder()
+            .addFirstLevels(lvl -> {})
+            .build();
+
+        final FirstLevel toAdd = FirstLevelUtils.builder()
+            .build();
+        final var list = someRecord.firstLevels();
+        
+        assertThrows(UnsupportedOperationException.class, () -> list.add(toAdd));
+    }
+
+    @Test
     void defValueSet() {
         final RootItem someRecord = RootItemUtils.builder()
             .testDefault("NotThis!")
