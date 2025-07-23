@@ -14,6 +14,7 @@
         <module>xml_util</module>
         <module>a_core_dependency</module>
         <module>a_core_dependent</module>
+        <module>c_deeply_nested_commons_lang</module>
         <module>c_deeply_nested_structure</module>
         <module>d_eclipse_collections</module>
         <module>b_type_alias</module>

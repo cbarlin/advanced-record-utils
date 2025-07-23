@@ -69,7 +69,9 @@ public final class XmlElementMapper implements ClassNameToPrismAdaptor<XmlElemen
             final AdvancedRecordUtilsPrism prism
     ) {
         if (element instanceof RecordComponentElement rce) {
-            if (Boolean.TRUE.equals(prism.addJsonbImportAnnotation()) || JsonBPrism.isPresent(rce.getEnclosingElement())) {
+            if (XmlAttributePrism.isPresent(rce) || XmlTransientPrism.isPresent(rce) || XmlAttributePrism.isPresent(rce.getAccessor()) || XmlTransientPrism.isPresent(rce.getAccessor())) {
+                return Optional.empty();
+            } else if (Boolean.TRUE.equals(prism.addJsonbImportAnnotation()) || JsonBPrism.isPresent(rce.getEnclosingElement())) {
                 // Nice!
                 return JsonBPropertyPrism.getOptionalOn(rce)
                     .or(() -> JsonBPropertyPrism.getOptionalOn(rce.getAccessor()))
