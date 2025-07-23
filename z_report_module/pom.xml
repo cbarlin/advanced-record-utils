@@ -82,6 +82,12 @@
                                     </includes>
                                 </fileSet>
                                 <fileSet>
+                                    <directory>${project.basedir}/../utils-tests/c_deeply_nested_commons_lang/target</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet>
                                     <directory>${project.basedir}/../utils-tests/c_odd_types/target</directory>
                                     <includes>
                                         <include>*.exec</include>

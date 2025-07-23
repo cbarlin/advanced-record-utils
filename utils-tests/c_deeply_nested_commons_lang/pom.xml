@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.cbarlin.aru.tests</groupId>
+        <artifactId>utils-tests</artifactId>
+        <version>0.4.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>io.github.cbarlin.aru.tests</groupId>
+    <artifactId>c_deeply_nested_commons_lang</artifactId>
+    <name>Advanced Record Utils - Tests - Nested Structure with commons lang 3</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>xml_util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>a_core_dependency</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-jsonb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <proc>full</proc>
+                    <fork>true</fork>
+                    <compilerArgs>
+                        <arg>-J${jacoco.agent.argLine}</arg>
+                        <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>io.github.cbarlin</groupId>
+                            <artifactId>advanced-record-utils-processor</artifactId>
+                            <version>${project.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.avaje</groupId>
+                            <artifactId>avaje-jsonb-generator</artifactId>
+                            <version>${avaje-jsonb.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
