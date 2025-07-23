@@ -395,7 +395,7 @@ public @interface AdvancedRecordUtils {
         /**
          * What type of collection should be built?
          */
-        BuiltCollectionType builtCollectionType() default BuiltCollectionType.AUTO;
+        BuiltCollectionType builtCollectionType() default BuiltCollectionType.JAVA_IMMUTABLE;
 
         /**
          * When a collection is being set to null, instead make it an empty collection

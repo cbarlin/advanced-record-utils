@@ -4,12 +4,9 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuilderOptions;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.WitherOptions;
-
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -17,7 +14,6 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @AdvancedRecordUtils(
     addJsonbImportAnnotation = true,
-    builderOptions = @BuilderOptions(builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE),
     createAllInterface = true,
     diffable = true,
     diffOptions = @DiffOptions(staticMethodsAddedToUtils = true),
