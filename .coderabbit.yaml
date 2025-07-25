@@ -29,9 +29,10 @@ reviews:
         All the code for the annotation processor should be checked, please.
 
         Please do these:
-        * Review code using Java 21 standards, taking into account the vague rules and samples defined in `CONTRIBUTING.md`
+        * Review code using Java 17 standards, taking into account the vague rules and samples defined in `CONTRIBUTING.md`
         * Validate that code indentation uses spaces, not tabs, with an indent of multiple of 4
-        * Propose changes that only use the Java 21 API, not the API of Guava
+        * Propose changes that only use the Java 17 API, not the API of Guava 
+            * Note that we have not fully transitioned to 17 support, so some Java 21 code is still present. We should prefer 17 code though.
 
         Please keep in mind:
         * The pattern matching `instanceof` expression safely handles `null`, returning `false`
@@ -51,7 +52,7 @@ reviews:
         For the code:
         * When providing defaults for the annotation values, we have some rules that should be enforced:
            * Principle of Least Astonishment
-           * Dependencies are not required (minus commons-lang3)
+           * Dependencies are not required
         * Non-default values may add dependency requirements - these should be documented (and added as optional to the pom)
     - path: 'aru-prism-prison/**'
       instructions: |

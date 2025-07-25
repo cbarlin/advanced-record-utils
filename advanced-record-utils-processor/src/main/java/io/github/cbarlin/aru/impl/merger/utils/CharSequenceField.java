@@ -4,6 +4,9 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
@@ -23,6 +26,8 @@ public final class CharSequenceField extends MergerVisitor {
 
     private static final TypeMirror CH_TYPE_MIRROR = APContext.elements().getTypeElement("java.lang.CharSequence").asType();
 
+    private final Set<String> processedSpecs = HashSet.newHashSet(2);
+
     public CharSequenceField() {
         super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
     }
@@ -41,30 +46,33 @@ public final class CharSequenceField extends MergerVisitor {
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {        
         if (APContext.types().isSubtype(analysedComponent.componentType(), CH_TYPE_MIRROR)) {
             final var targetTn = analysedComponent.typeName();
-            final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
+            final String methodName = mergeStaticMethodName(targetTn);
+            if (processedSpecs.add(methodName)) {
+                final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
                 .addAnnotation(NULLABLE)
                 .addJavadoc("The preferred input")
                 .build();
-            final ParameterSpec paramB = ParameterSpec.builder(targetTn, "elB", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
-                .addJavadoc("The non-preferred input")
-                .build();
-            
-            final MethodSpec.Builder method = mergerStaticClass.createMethod(analysedComponent.name(), claimableOperation);
-            method.modifiers.clear();
-            method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                .addAnnotation(NULLABLE)
-                .addParameter(paramA)
-                .addParameter(paramB)
-                .returns(targetTn)
-                .addJavadoc("Merger for the field {@code $L}", analysedComponent.name());
-            // Small statement, not worth creating a "CharSequenceFieldWithCommonsLang"
-            if (OptionalClassDetector.doesDependencyExist(STRINGUTILS)) {
-                method.addStatement("return $T.firstNonBlank(elA, elB)", STRINGUTILS);
-            } else {
-                method.addStatement("return ($T.nonNull(elA) && $T.nonNull(elA.toString()) && (!elA.toString().isBlank())) ? elA : elB", OBJECTS, OBJECTS);
+                final ParameterSpec paramB = ParameterSpec.builder(targetTn, "elB", Modifier.FINAL)
+                    .addAnnotation(NULLABLE)
+                    .addJavadoc("The non-preferred input")
+                    .build();
+                
+                final MethodSpec.Builder method = mergerStaticClass.createMethod(methodName, claimableOperation);
+                method.modifiers.clear();
+                method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                    .addAnnotation(NULLABLE)
+                    .addParameter(paramA)
+                    .addParameter(paramB)
+                    .returns(targetTn)
+                    .addJavadoc("Merger for fields of class {@link $T}", targetTn);
+                // Small statement, not worth creating a "CharSequenceFieldWithCommonsLang"
+                if (OptionalClassDetector.doesDependencyExist(STRINGUTILS)) {
+                    method.addStatement("return $T.firstNonBlank(elA, elB)", STRINGUTILS);
+                } else {
+                    method.addStatement("return ($T.nonNull(elA) && $T.nonNull(elA.toString()) && (!elA.toString().isBlank())) ? elA : elB", OBJECTS, OBJECTS);
+                }
+                AnnotationSupplier.addGeneratedAnnotation(method, this);
             }
-            AnnotationSupplier.addGeneratedAnnotation(method, this);
             return true;
         }
         return false;
