@@ -118,6 +118,14 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
             .build();
     }
 
+    /**
+     * Converts a TypeName to a partial method name suitable for generating consistent
+     * method names across different visitors. Handles nested generics, arrays, and 
+     * strips annotations.
+     * 
+     * @param originalTypeName the TypeName to convert
+     * @return a string suitable for use in method names
+     */
     @SuppressWarnings({"java:S6880"}) // There is a ticket to make us work on Java 17 - let's not make more work for ourselves!
     protected static String typeNameToPartialMethodName(final TypeName originalTypeName) {
         if (originalTypeName.isAnnotated()) {
@@ -133,7 +141,7 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
         } else if (originalTypeName instanceof final ArrayTypeName atn) {
             return typeNameToPartialMethodName(atn.componentType) + "Arr";
         } else {
-            return originalTypeName.withoutAnnotations().toString();
+            return originalTypeName.toString();
         }
     }
 

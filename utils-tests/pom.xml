@@ -27,8 +27,6 @@
 
     <properties>
         <junit-bom.version>5.13.4</junit-bom.version>
-        <rainbowgum.version>0.8.2</rainbowgum.version>
-        <tinylog.version>2.7.0</tinylog.version>
         <assertj.version>3.27.3</assertj.version>
         <maven.deploy.skip>true</maven.deploy.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
@@ -79,10 +77,11 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
     <!-- Start laying ground work for Java 17 support (issue #80) -->
     <profiles>
         <profile>
-            <id>jdk-17</id>
+            <id>jdk-17-to-20-inclusive</id>
             <activation>
                 <jdk>[17,21)</jdk>
             </activation>
@@ -90,12 +89,10 @@
                 <dependency>
                     <groupId>org.tinylog</groupId>
                     <artifactId>slf4j-tinylog</artifactId>
-                    <version>${tinylog.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>org.tinylog</groupId>
                     <artifactId>tinylog-impl</artifactId>
-                    <version>${tinylog.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -108,7 +105,6 @@
                 <dependency>
                     <groupId>io.jstach.rainbowgum</groupId>
                     <artifactId>rainbowgum</artifactId>
-                    <version>${rainbowgum.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -130,8 +126,7 @@
                     <fork>true</fork>
                     <compilerArgs>
                         <arg>-J${jacoco.agent.argLine}</arg>
-                        <!--
-                        <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
+                        <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
                     </compilerArgs>
                 </configuration>
             </plugin>

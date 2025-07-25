@@ -11,7 +11,6 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -80,15 +79,9 @@ public final class ListMerge extends MergerVisitor {
                     .endControlFlow()
                     .addStatement("final $T combined = new $T(elA.size() + elB.size())", mutableTypeName, mutableTypeName)
                     .addStatement("combined.addAll(elA)")
-                    .addStatement("combined.addAll(elB)");
-
-                if (BuiltCollectionType.JAVA_IMMUTABLE.name().equals(builderOptionsPrism.builtCollectionType())) {
-                    logTrace(method, "Returning merged collection - making immutable");
-                    method.addStatement("return combined.stream().filter($T::nonNull).toList()", OBJECTS);
-                } else {
-                    logTrace(method, "Returning merged collection - not making immutable");
-                    method.addStatement("return combined");
-                }
+                    .addStatement("combined.addAll(elB)")
+                    // Since this goes via the builder, that will handle things like immutability
+                    .addStatement("return combined");
         
                 AnnotationSupplier.addGeneratedAnnotation(method, this);
             }
