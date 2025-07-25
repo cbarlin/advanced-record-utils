@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.impl.types.collection.set;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
+import static io.github.cbarlin.aru.impl.Constants.Names.COLLECTIONS;
 import static io.github.cbarlin.aru.impl.Constants.Names.ENUM_SET;
 
 import javax.lang.model.element.ElementKind;
@@ -11,7 +12,6 @@ import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
-import io.micronaut.sourcegen.javapoet.MethodSpec.Builder;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
@@ -24,7 +24,7 @@ public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
 
     @Override
     public boolean canHandle(final AnalysedComponent component) {
-        if (component.typeName() instanceof final ParameterizedTypeName ptn && ptn.rawType.equals(SET)) {
+        if (component.typeName() instanceof final ParameterizedTypeName ptn && ptn.rawType.equals(SET) && !ptn.typeArguments.isEmpty()) {
             final TypeName innerTypeName = ptn.typeArguments.get(0);
             return innerTypeName instanceof final ClassName innerClassName && 
                 APContext.elements().getTypeElement(innerClassName.toString()).getKind().equals(ElementKind.ENUM);
@@ -36,11 +36,6 @@ public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
     @Override
     public void addNonNullAutoField(final AnalysedComponent component, final ToBeBuilt addFieldTo, final TypeName innerType) {
         EnumSetCollectionHandler.nonNullAutoField(component, addFieldTo, innerType);
-    }
-
-    @Override
-    public void writeNonNullAutoGetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName innerType) {
-        EnumSetCollectionHandler.nonNullAutoGetter(component, methodBuilder, innerType);
     }
 
     @Override
@@ -56,5 +51,18 @@ public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
     @Override
     public void writeMergerMethod(final TypeName innerType, final MethodSpec.Builder methodBuilder) {
         EnumSetCollectionHandler.mergerMethod(innerType, methodBuilder, classNameOnComponent);
+    }
+
+    @Override
+    public void writeNonNullAutoGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        methodBuilder.returns(component.typeName())
+            .addComment("Usually you use Set.copyOf, but that internally uses a slower HashSet. This keeps the speed of an EnumSet, and maintains deep immutability by using a collection that can't be used elsewhere")
+            .addStatement("final $T<$T> ___copy = $T.copyOf(this.$L)", ENUM_SET, innerType, ENUM_SET, component.name())
+            .addStatement("return $T.unmodifiableSet(___copy)", COLLECTIONS);
+    }
+
+    @Override
+    public void writeNonNullImmutableGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        writeNonNullAutoGetter(component, methodBuilder, innerType);
     }
 }

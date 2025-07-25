@@ -13,6 +13,6 @@ public abstract class EclipseCollectionHandler extends StandardCollectionHandler
 
     @Override
     protected void convertToImmutable(MethodSpec.Builder methodBuilder, String fieldName, String assignmentName, final TypeName innerTypeName) {
-        methodBuilder.addStatement("final $T<$T> $L = this.$L.toImmutable()", immutableClassName, innerTypeName, assignmentName, fieldName);
+        methodBuilder.addStatement("final $T<$T> $L = $L.toImmutable()", immutableClassName, innerTypeName, assignmentName, fieldName);
     }
 }

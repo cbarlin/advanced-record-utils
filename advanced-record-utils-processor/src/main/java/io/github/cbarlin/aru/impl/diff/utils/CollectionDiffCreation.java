@@ -20,9 +20,9 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
-public final class CollectonDiffCreation extends DifferVisitor {
+public final class CollectionDiffCreation extends DifferVisitor {
 
-    public CollectonDiffCreation() {
+    public CollectionDiffCreation() {
         super(Claims.DIFFER_UTILS_COMPUTE_CHANGE);
     }
 

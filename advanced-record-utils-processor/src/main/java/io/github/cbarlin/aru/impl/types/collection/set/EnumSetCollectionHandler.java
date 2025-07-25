@@ -111,10 +111,7 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
 
     @Override
     public void writeNonNullImmutableGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
-            .addStatement("return $T.noneOf($T.class)", ENUM_SET, innerType)
-            .endControlFlow()
-            .addStatement("return this.$L", component.name())
+        methodBuilder.addStatement("return this.$L", component.name())
             .returns(component.typeName());
     }
 }

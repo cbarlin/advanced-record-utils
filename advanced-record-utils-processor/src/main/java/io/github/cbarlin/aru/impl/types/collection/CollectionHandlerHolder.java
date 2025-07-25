@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
-public class CollectionHandlerHolder {
+public final class CollectionHandlerHolder {
 
     public static final List<CollectionHandler> COLLECTION_HANDLERS;
 

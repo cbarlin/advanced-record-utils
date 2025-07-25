@@ -32,7 +32,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     /**
      * Add the code to the builder that converts the current item to an immutable form
      */
-    protected abstract void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName);
+    protected abstract void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String targetVariableName, final TypeName innerTypeName);
 
     @Override
     public boolean canHandle(final AnalysedComponent component) {
@@ -112,14 +112,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void writeNonNullAutoGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name());
-        if (classNameOnComponent.equals(immutableClassName)) {
-            methodBuilder.addStatement("return $T.of()", immutableClassName);
-        } else {
-            methodBuilder.addStatement("return new $T<>()", classNameOnComponent);
-        }
-        methodBuilder.endControlFlow()
-            .addStatement("return this.$L", component.name())
+        // The field in the builder is also NonNull in this case, so no need for null check
+        methodBuilder.addStatement("return this.$L", component.name())
             .returns(component.typeName());
     }
 
@@ -142,20 +136,12 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNonNullAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         final String name = component.name();
-        methodBuilder.beginControlFlow("if ($T.nonNull($L))", OBJECTS, name)
-            .addStatement("this.$L.add($L)", name, name)
-            .endControlFlow();
+        methodBuilder.addStatement("this.$L.add($L)", name, name);
     }
 
     @Override
     public void writeNonNullImmutableGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name());
-        if (classNameOnComponent.equals(immutableClassName)) {
-            methodBuilder.addStatement("return $T.of()", immutableClassName);
-        } else {
-            methodBuilder.addStatement("return new $T<>()", classNameOnComponent);
-        }
-        methodBuilder.endControlFlow();
+        // The field in the builder is also NonNull in this case, so no need for null check
         convertToImmutable(methodBuilder, "this." + component.name(), "___immutable", innerType);
         methodBuilder.addStatement("return ___immutable")
             .returns(component.typeName());

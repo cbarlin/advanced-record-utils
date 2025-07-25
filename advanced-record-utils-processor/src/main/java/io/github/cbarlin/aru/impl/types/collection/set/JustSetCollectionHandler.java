@@ -21,7 +21,7 @@ public final class JustSetCollectionHandler extends SetCollectionHandler {
 
     @Override
     public boolean canHandle(final AnalysedComponent component) {
-        if (component.typeName() instanceof final ParameterizedTypeName ptn && ptn.rawType.equals(SET)) {
+        if (component.typeName() instanceof final ParameterizedTypeName ptn && ptn.rawType.equals(SET) && !ptn.typeArguments.isEmpty()) {
             final TypeName innerTypeName = ptn.typeArguments.get(0);
             return !(
                 innerTypeName instanceof final ClassName innerClassName && 

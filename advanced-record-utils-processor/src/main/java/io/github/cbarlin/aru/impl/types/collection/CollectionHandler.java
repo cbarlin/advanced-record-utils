@@ -1,5 +1,6 @@
 package io.github.cbarlin.aru.impl.types.collection;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTION;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
@@ -24,8 +25,10 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 /**
  * A class that knows how best to handle a collection
  * <p>
- * While there is a large number of methods here, the intent is that it
- *   ensures that all variations are written (auto vs immutable, null vs non-null)
+ * This class provides a comprehensive API for handling collections with different
+ *   characteristics: nullable vs non-nullable, and auto (mutable) vs immutable variants.
+ * <p>
+ * Each combination has dedicated methods to ensure type safety and proper handling.
  */
 @Service
 @SuppressWarnings({"java:S1192"}) // The constants will not make the code clearer
@@ -237,7 +240,7 @@ public abstract class CollectionHandler {
 
     //#region Internal defaults that defer to the single adder
 
-    protected static final void writeBasicAdders(
+    protected static void writeBasicAdders(
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
         final TypeName innerType, 
@@ -245,12 +248,40 @@ public abstract class CollectionHandler {
         final String addAllMethodName,
         final AruVisitor<?> visitor
     ) {
+        writeBasicCollectionAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
         writeBasicIterableAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
         writeBasicIteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
         writeBasicSpliteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
     }
 
-    protected static final void writeBasicIterableAdder(
+    protected static void writeBasicCollectionAdder(
+        final AnalysedComponent component, 
+        final ToBeBuilt builder, 
+        final TypeName innerType, 
+        final String singleAddMethodName, 
+        final String addAllMethodName,
+        final AruVisitor<?> visitor
+    ) {
+        final String fieldName = component.name();
+        final ParameterizedTypeName paramTn = ParameterizedTypeName.get(COLLECTION, innerType);
+        final ParameterSpec param = ParameterSpec.builder(paramTn, fieldName, Modifier.FINAL)
+            .addJavadoc("A collection to be merged into the collection")
+            .addAnnotation(NOT_NULL)
+            .build();
+        final MethodSpec.Builder method = builder
+                .createMethod(addAllMethodName, visitor.claimableOperation(), COLLECTION)
+                .addJavadoc("Adds all elements of the provided collection to {@code $L}", fieldName)
+                .addParameter(param)
+                .returns(builder.className())
+                .addAnnotation(NOT_NULL)
+                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+                .addStatement("this.$L.addAll($L)", fieldName, fieldName)
+                .endControlFlow()
+                .addStatement("return this");
+        AnnotationSupplier.addGeneratedAnnotation(method, visitor);
+    }
+
+    protected static void writeBasicIterableAdder(
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
         final TypeName innerType, 
@@ -279,7 +310,7 @@ public abstract class CollectionHandler {
         AnnotationSupplier.addGeneratedAnnotation(method, visitor);
     }
 
-    protected static final void writeBasicIteratorAdder(
+    protected static void writeBasicIteratorAdder(
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
         final TypeName innerType, 
@@ -308,7 +339,7 @@ public abstract class CollectionHandler {
         AnnotationSupplier.addGeneratedAnnotation(method, visitor);
     }
 
-    protected static final void writeBasicSpliteratorAdder(
+    protected static void writeBasicSpliteratorAdder(
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
         final TypeName innerType, 

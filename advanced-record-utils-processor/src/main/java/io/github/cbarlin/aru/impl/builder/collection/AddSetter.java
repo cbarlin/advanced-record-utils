@@ -54,24 +54,7 @@ public final class AddSetter extends CollectionRecordVisitor {
                 
                 final String name = ac.name();
 
-                final ParameterSpec param = ParameterSpec.builder(ac.typeName(), name, Modifier.FINAL)
-                    .addJavadoc("The replacement value")
-                    .addAnnotation(NULLABLE)
-                    .build();
-
-                method.addJavadoc("Updates the value of {@code $L}", name)
-                    .returns(ac.builderArtifact().className())
-                    .addParameter(param)
-                    .addAnnotation(CommonsConstants.Names.NON_NULL)
-                    .addModifiers(Modifier.PUBLIC);
-                
-                if (nullReplacesNonNull) {
-                    method.addJavadoc("\n<p>\n")
-                        .addJavadoc("Supplying a null value will set the current value to null");
-                } else {
-                    method.addJavadoc("\n<p>\n")
-                        .addJavadoc("Supplying a null value won't replace a set value");
-                }
+                populateStartOfMethod(ac, method, nullReplacesNonNull, name);
 
                 if (nonNull && immutable) {
                     handler.writeNonNullImmutableSetter(ac, method, innerType, nullReplacesNonNull);
@@ -90,5 +73,27 @@ public final class AddSetter extends CollectionRecordVisitor {
             }
         }
         return false;
+    }
+
+    private void populateStartOfMethod(final AnalysedCollectionComponent ac, final MethodSpec.Builder method,
+            final boolean nullReplacesNonNull, final String name) {
+        final ParameterSpec param = ParameterSpec.builder(ac.typeName(), name, Modifier.FINAL)
+            .addJavadoc("The replacement value")
+            .addAnnotation(NULLABLE)
+            .build();
+
+        method.addJavadoc("Updates the value of {@code $L}", name)
+            .returns(ac.builderArtifact().className())
+            .addParameter(param)
+            .addAnnotation(CommonsConstants.Names.NON_NULL)
+            .addModifiers(Modifier.PUBLIC);
+        
+        if (nullReplacesNonNull) {
+            method.addJavadoc("\n<p>\n")
+                .addJavadoc("Supplying a null value will set the current value to null");
+        } else {
+            method.addJavadoc("\n<p>\n")
+                .addJavadoc("Supplying a null value won't replace a set value");
+        }
     }
 }

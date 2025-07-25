@@ -5,7 +5,6 @@ import static io.github.cbarlin.aru.impl.Constants.Names.STACK;
 
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec.Builder;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
@@ -13,11 +12,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 public final class StackCollectionHandler extends ListCollectionHandler {
     public StackCollectionHandler() {
         super(STACK, STACK);
-    }
-
-    @Override
-    protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
-        methodBuilder.addStatement("final $T<$T> $L = $L", classNameOnComponent, innerTypeName, assignmentName, fieldName);
     }
 
     @Override
