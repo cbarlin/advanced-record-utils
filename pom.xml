@@ -56,7 +56,7 @@
         <avaje-jsonb.version>3.6</avaje-jsonb.version>
         <avaje-prism.version>1.42</avaje-prism.version>
         <avaje-spi.version>2.13</avaje-spi.version>
-        <avaje-validator.version>2.12</avaje-validator.version>
+        <avaje-validator.version>2.13</avaje-validator.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-io.version>2.20.0</commons-io.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
