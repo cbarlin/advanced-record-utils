@@ -18,11 +18,13 @@
             <groupId>io.github.cbarlin</groupId>
             <artifactId>aru-processor-core</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-processor</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -110,14 +112,9 @@
                         </goals>
                         <configuration>
                             <title>Advanced Record Utils - Aggregated JaCoCo Report</title>
-                            <includes>
-                                <include>${project.basedir}/../aru-processor-core/target/classes/io/github/cbarlin/aru/**/*</include>
-                                <include>${project.basedir}/../advanced-record-utils-processor/target/classes/io/github/cbarlin/aru/**/*</include>
-                                <include>io/github/cbarlin/aru/**/*</include>
-                            </includes>
-                            <dataFileIncludes>
+                            <!-- <dataFileIncludes>
                                 <dataFile>${project.basedir}/target/jacoco.exec</dataFile>
-                            </dataFileIncludes>
+                            </dataFileIncludes> -->
                         </configuration>
                     </execution>
                 </executions>

@@ -1,6 +1,10 @@
 name: Build
 
-on: [pull_request, workflow_dispatch]
+on:
+  pull_request: {}
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -37,3 +41,8 @@ jobs:
       if: matrix.java_version == 21
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload test results
+      uses: codecov/test-results-action@v1
+      if: matrix.java_version == 21
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
