@@ -1,8 +1,6 @@
 package io.github.cbarlin.aru.impl.diff.results;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
@@ -16,13 +14,10 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
-import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
 public final class EagerCollectionDiffResultCreator extends DifferVisitor {
-
-    private final Set<String> processedSpecs = HashSet.newHashSet(20);
 
     public EagerCollectionDiffResultCreator() {
         super(Claims.DIFFER_COMPUTE_CHANGE);
@@ -42,9 +37,6 @@ public final class EagerCollectionDiffResultCreator extends DifferVisitor {
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         if (analysedComponent instanceof final AnalysedCollectionComponent acc) {
             final ToBeBuiltRecord innerRecord = collectionDiffRecord(acc);
-            if (processedSpecs.add(innerRecord.className().simpleName())) {
-                createRecord(acc, innerRecord);
-            }
             differResult.addField(
                 FieldSpec.builder(innerRecord.className(), acc.name(), Modifier.PRIVATE, Modifier.FINAL)
                     .addJavadoc("Diff of the field named $S", acc.name())
@@ -85,34 +77,6 @@ public final class EagerCollectionDiffResultCreator extends DifferVisitor {
             return true;
         }
         return false;
-    }
-
-
-    private void createRecord(
-            final AnalysedCollectionComponent acc,
-            final ToBeBuiltRecord builder
-    ) {
-        // Excellent, now create a record
-        AnnotationSupplier.addGeneratedAnnotation(builder, this);
-        builder.builder()
-            .addOriginatingElement(acc.parentRecord().typeElement())
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .addJavadoc("A record containing the difference between two collections");
-        builder.addParameterSpec(
-                ParameterSpec.builder(acc.typeName(), "addedElements")
-                    .addJavadoc("The elements added to the collection")
-                    .build()  
-            )
-            .addParameterSpec(
-                ParameterSpec.builder(acc.typeName(), "removedElements")
-                    .addJavadoc("The elements removed from the collection")
-                    .build()  
-            )
-            .addParameterSpec(
-                ParameterSpec.builder(acc.typeName(), "elementsInCommon")
-                    .addJavadoc("The elements in common between the two instances")
-                    .build()  
-            );
     }
     
 }

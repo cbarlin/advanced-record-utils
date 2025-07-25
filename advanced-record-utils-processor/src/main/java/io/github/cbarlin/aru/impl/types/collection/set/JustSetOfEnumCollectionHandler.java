@@ -1,0 +1,60 @@
+package io.github.cbarlin.aru.impl.types.collection.set;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
+import static io.github.cbarlin.aru.impl.Constants.Names.ENUM_SET;
+
+import javax.lang.model.element.ElementKind;
+
+import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.APContext;
+import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.MethodSpec.Builder;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+import io.micronaut.sourcegen.javapoet.TypeName;
+
+@ServiceProvider
+public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
+
+    public JustSetOfEnumCollectionHandler() {
+        super(SET, ENUM_SET);
+    }
+
+    @Override
+    public boolean canHandle(final AnalysedComponent component) {
+        if (component.typeName() instanceof final ParameterizedTypeName ptn && ptn.rawType.equals(SET)) {
+            final TypeName innerTypeName = ptn.typeArguments.get(0);
+            return innerTypeName instanceof final ClassName innerClassName && 
+                APContext.elements().getTypeElement(innerClassName.toString()).getKind().equals(ElementKind.ENUM);
+        }
+        
+        return false;
+    }
+
+    @Override
+    public void addNonNullAutoField(final AnalysedComponent component, final ToBeBuilt addFieldTo, final TypeName innerType) {
+        EnumSetCollectionHandler.nonNullAutoField(component, addFieldTo, innerType);
+    }
+
+    @Override
+    public void writeNonNullAutoGetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nonNullAutoGetter(component, methodBuilder, innerType);
+    }
+
+    @Override
+    protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
+        EnumSetCollectionHandler.convertImmutable(methodBuilder, fieldName, assignmentName, innerTypeName);
+    }
+
+    @Override
+    public void writeNullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nullableAutoAddSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeMergerMethod(final TypeName innerType, final MethodSpec.Builder methodBuilder) {
+        EnumSetCollectionHandler.mergerMethod(innerType, methodBuilder, classNameOnComponent);
+    }
+}

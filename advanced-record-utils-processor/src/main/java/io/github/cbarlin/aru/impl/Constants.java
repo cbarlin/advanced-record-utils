@@ -3,19 +3,6 @@ package io.github.cbarlin.aru.impl;
 import static io.github.cbarlin.aru.core.types.OperationType.CLASS;
 import static io.github.cbarlin.aru.core.types.OperationType.FIELD_AND_ACCESSORS;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
-
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.micronaut.sourcegen.javapoet.ClassName;
@@ -75,40 +62,55 @@ public enum Constants {
     
     public enum Names {
         ;
-        private static final String XML_ANNOTATIONS = "jakarta.xml.bind.annotation";
+        // ClassNames load faster when using the string constructor vs the .class one
         private static final String AVAJE_JSONB = "io.avaje.jsonb";
+        private static final String JAVA_LANG = "java.lang";
+        private static final String JAVA_TIME = "java.time";
+        private static final String JAVA_UTIL = "java.util";
+        private static final String JAVA_UTIL_FUNCTION = JAVA_UTIL + ".function";
+        private static final String XML_ANNOTATIONS = "jakarta.xml.bind.annotation";
         public static final ClassName AVAJE_CONSTRAINT_VIOLATION = ClassName.get("io.avaje.validation", "ConstraintViolationException");
-        public static final ClassName AVAJE_JSONB_IMPORT = ClassName.get(AVAJE_JSONB, "Json", "Import");
         public static final ClassName AVAJE_JSONB_IGNORE = ClassName.get(AVAJE_JSONB, "Json", "Ignore");
+        public static final ClassName AVAJE_JSONB_IMPORT = ClassName.get(AVAJE_JSONB, "Json", "Import");
         public static final ClassName AVAJE_JSONB_SUBTYPE = ClassName.get(AVAJE_JSONB, "Json", "SubType");
         public static final ClassName AVAJE_VALIDATOR = ClassName.get("io.avaje.validation", "Validator");
-        public static final ClassName BI_CONSUMER = ClassName.get(BiConsumer.class);
+        public static final ClassName BI_CONSUMER = ClassName.get(JAVA_UTIL_FUNCTION, "BiConsumer");
         public static final ClassName BIG_DECIMAL = ClassName.get("java.math", "BigDecimal");
         public static final ClassName BIG_INTEGER = ClassName.get("java.math", "BigInteger");
-        public static final ClassName CHAR_SEQUENCE = ClassName.get(CharSequence.class);
+        public static final ClassName CHAR_SEQUENCE = ClassName.get(JAVA_LANG, "CharSequence");
+        public static final ClassName COLLECTIONS = ClassName.get(JAVA_UTIL, "Collections");
         public static final ClassName CONSTRAINT_VIOLATION = ClassName.get("jakarta.validation", "ConstraintViolation");
-        public static final ClassName CONSUMER = ClassName.get(Consumer.class);
-        public static final ClassName DATE_TIME_FORMATTER = ClassName.get(DateTimeFormatter.class);
-        public static final ClassName FUNCTION = ClassName.get(Function.class);
-        public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(IllegalArgumentException.class);
-        public static final ClassName ITERABLE = ClassName.get(Iterable.class);
+        public static final ClassName CONSUMER = ClassName.get(JAVA_UTIL_FUNCTION, "Consumer");
+        public static final ClassName DATE_TIME_FORMATTER = ClassName.get(JAVA_TIME + ".format","DateTimeFormatter");
+        public static final ClassName ENUM_SET = ClassName.get(JAVA_UTIL, "EnumSet");
+        public static final ClassName FUNCTION = ClassName.get(JAVA_UTIL_FUNCTION, "Function");
+        public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(JAVA_LANG, "IllegalArgumentException");
+        public static final ClassName ITERABLE = ClassName.get(JAVA_LANG, "Iterable");
+        public static final ClassName ITERATOR = ClassName.get(JAVA_UTIL, "Iterator");
         public static final ClassName JAKARTA_VALIDATOR = ClassName.get("jakarta.validator", "Validator");
+        public static final ClassName LINKED_LIST = ClassName.get(JAVA_UTIL, "LinkedList");
         public static final ClassName LIST = CommonsConstants.Names.LIST;
-        public static final ClassName LONG = ClassName.get(Long.class);
-        public static final ClassName LOCAL_DATE_TIME = ClassName.get(LocalDateTime.class);
-        public static final ClassName MAP = ClassName.get(Map.class);
-        public static final ClassName MATH = ClassName.get(Math.class);
+        public static final ClassName LOCAL_DATE_TIME = ClassName.get(JAVA_TIME, "LocalDateTime");
+        public static final ClassName LONG = ClassName.get(JAVA_LANG, "Long");
+        public static final ClassName MAP = ClassName.get(JAVA_UTIL, "Map");
+        public static final ClassName MATH = ClassName.get(JAVA_LANG, "Math");
         public static final ClassName NON_NULL = CommonsConstants.Names.NON_NULL;
         public static final ClassName NOT_NULL = CommonsConstants.Names.NOT_NULL;
         public static final ClassName OBJECTS = CommonsConstants.Names.OBJECTS;
-        public static final ClassName OFFSET_DATE_TIME = ClassName.get(OffsetDateTime.class);
-        public static final ClassName PREDICATE = ClassName.get(Predicate.class);
+        public static final ClassName OFFSET_DATE_TIME = ClassName.get(JAVA_TIME, "OffsetDateTime");
+        public static final ClassName PREDICATE = ClassName.get(JAVA_UTIL_FUNCTION, "Predicate");
         public static final ClassName SET = CommonsConstants.Names.SET;
-        public static final ClassName STRING = ClassName.get(String.class);
+        public static final ClassName SORTED_SET = ClassName.get(JAVA_UTIL, "SortedSet");
+        public static final ClassName SPLITERATOR = ClassName.get(JAVA_UTIL, "Spliterator");
+        public static final ClassName STACK = ClassName.get(JAVA_UTIL, "Stack");
+        public static final ClassName STRING = ClassName.get(JAVA_LANG, "String");
         public static final ClassName STRINGUTILS = ClassName.get("org.apache.commons.lang3", "StringUtils");
+        public static final ClassName TREE_SET = ClassName.get(JAVA_UTIL, "TreeSet");
         public static final ClassName TYPE_ALIAS = ClassName.get("io.github.cbarlin.aru.annotations", "TypeAlias");
-        public static final ClassName UNARY_OPERATOR = ClassName.get(UnaryOperator.class);
+        public static final ClassName UNARY_OPERATOR = ClassName.get(JAVA_UTIL_FUNCTION, "UnaryOperator");
+        public static final ClassName UUID = ClassName.get(JAVA_UTIL, "UUID");
         public static final ClassName VALIDATE = ClassName.get("org.apache.commons.lang3", "Validate");
+        public static final ClassName VECTOR = ClassName.get(JAVA_UTIL, "Vector");
         public static final ClassName XML_ATTRIBUTE = ClassName.get(XML_ANNOTATIONS, "XmlAttribute");
         public static final ClassName XML_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlElement");
         public static final ClassName XML_ELEMENT_DEFAULT = XML_ELEMENT.nestedClass("DEFAULT");
@@ -120,12 +122,9 @@ public enum Constants {
         public static final ClassName XML_STREAM_WRITER = ClassName.get("javax.xml.stream", "XMLStreamWriter");
         public static final ClassName XML_TRANSIENT = ClassName.get(XML_ANNOTATIONS, "XmlTransient");
         public static final ClassName XML_TYPE = ClassName.get(XML_ANNOTATIONS, "XmlType");
-        public static final ClassName ZONE_ID = ClassName.get(ZoneId.class);
-        public static final ClassName ZONE_OFFSET = ClassName.get(ZoneOffset.class);
-        public static final ClassName ZONED_DATE_TIME = ClassName.get(ZonedDateTime.class);
-
-        // Use string based lookup since we can't import the "UUID" class when the constant name is "UUID"
-        public static final ClassName UUID = ClassName.get("java.util", "UUID");
+        public static final ClassName ZONE_ID = ClassName.get(JAVA_TIME, "ZoneId");
+        public static final ClassName ZONE_OFFSET = ClassName.get(JAVA_TIME, "ZoneOffset");
+        public static final ClassName ZONED_DATE_TIME = ClassName.get(JAVA_TIME, "ZonedDateTime");
     }
 
     public enum InternalReferenceNames {
