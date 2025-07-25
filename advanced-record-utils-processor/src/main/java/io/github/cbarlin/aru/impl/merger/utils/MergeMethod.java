@@ -18,6 +18,7 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 @ServiceProvider
 public final class MergeMethod extends MergerVisitor {
@@ -103,7 +104,7 @@ public final class MergeMethod extends MergerVisitor {
             format.add(".$L($T.$L(preferred.$L(), other.$L()))");
             args.add(parameter.getSimpleName().toString());
             args.add(mergerStaticClass.className());
-            args.add(parameter.getSimpleName().toString());
+            args.add(mergeStaticMethodName(TypeName.get(parameter.asType())));
             args.add(parameter.getSimpleName().toString());
             args.add(parameter.getSimpleName().toString());
         }

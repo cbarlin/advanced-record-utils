@@ -16,8 +16,11 @@ import io.github.cbarlin.aru.core.CommonsConstants.InternalReferenceNames;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedType;
 import io.github.cbarlin.aru.core.types.OperationType;
+import io.micronaut.sourcegen.javapoet.ArrayTypeName;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 public abstract class AruVisitor<T extends AnalysedType> implements Comparable<AruVisitor<T>> {
     protected final ClaimableOperation claimableOperation;
@@ -113,6 +116,25 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
         return new HashCodeBuilder(17, 37)
             .append(getClass().getCanonicalName())
             .build();
+    }
+
+    @SuppressWarnings({"java:S6880"}) // There is a ticket to make us work on Java 17 - let's not make more work for ourselves!
+    protected static String typeNameToPartialMethodName(final TypeName originalTypeName) {
+        if (originalTypeName.isAnnotated()) {
+            return typeNameToPartialMethodName(originalTypeName.withoutAnnotations());
+        }
+        if (originalTypeName instanceof final ClassName cn) {
+            return cn.simpleName();
+        } else if (originalTypeName instanceof final ParameterizedTypeName ptn) {
+            final String simple = ptn.rawType.simpleName();
+            final StringBuilder kinds = new StringBuilder();
+            ptn.typeArguments.forEach(t -> kinds.append(typeNameToPartialMethodName(t)));
+            return simple + kinds;
+        } else if (originalTypeName instanceof final ArrayTypeName atn) {
+            return typeNameToPartialMethodName(atn.componentType) + "Arr";
+        } else {
+            return originalTypeName.withoutAnnotations().toString();
+        }
     }
 
     private static final String ADD_KEY_VALUE_TL_STRING = ".addKeyValue($T.$L, $S)";

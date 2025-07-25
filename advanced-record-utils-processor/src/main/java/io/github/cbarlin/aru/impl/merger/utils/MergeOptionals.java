@@ -5,6 +5,9 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.lang.model.element.Modifier;
 
 import io.avaje.spi.ServiceProvider;
@@ -19,6 +22,8 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 @ServiceProvider
 public final class MergeOptionals extends MergerVisitor {
+
+    private final Set<String> processedSpecs = HashSet.newHashSet(5);
 
     public MergeOptionals() {
         super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
@@ -36,35 +41,42 @@ public final class MergeOptionals extends MergerVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        if (analysedComponent instanceof AnalysedOptionalComponent) {
+        if (analysedComponent instanceof AnalysedOptionalComponent aoc) {
             final var targetTn = analysedComponent.typeName();
-            final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
-                .addJavadoc("The preferred input")
-                .build();
-            final ParameterSpec paramB = ParameterSpec.builder(targetTn, "elB", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
-                .addJavadoc("The non-preferred input")
-                .build();
-            
-            final MethodSpec.Builder method = mergerStaticClass.createMethod(analysedComponent.name(), claimableOperation);
-            method.modifiers.clear();
-            method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                .addAnnotation(NOT_NULL)
-                .addParameter(paramA)
-                .addParameter(paramB)
-                .returns(targetTn)
-                .addJavadoc("Merger for the field {@code $L}", analysedComponent.name())
-                .beginControlFlow("if ($T.isNull(elA) && $T.isNull(elB))", OBJECTS, OBJECTS)
-                .addStatement("return $T.empty()", OPTIONAL)
-                .nextControlFlow("else if($T.isNull(elA))", OBJECTS)
-                .addStatement("return elB")
-                .nextControlFlow("else if($T.isNull(elB))", OBJECTS)
-                .addStatement("return elA")
-                .endControlFlow()
-                .addStatement("return elA.or(() -> elB)");
+            final String methodName = mergeStaticMethodName(targetTn);
+            if (processedSpecs.add(methodName)) {
+                final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
+                    .addAnnotation(NULLABLE)
+                    .addJavadoc("The preferred input")
+                    .build();
+                final ParameterSpec paramB = ParameterSpec.builder(targetTn, "elB", Modifier.FINAL)
+                    .addAnnotation(NULLABLE)
+                    .addJavadoc("The non-preferred input")
+                    .build();
+                final var innerTn = aoc.unNestedPrimaryTypeName();
+                final MethodSpec.Builder method = mergerStaticClass.createMethod(methodName, claimableOperation);
+                method.modifiers.clear();
+                method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                    .addAnnotation(NOT_NULL)
+                    .addParameter(paramA)
+                    .addParameter(paramB)
+                    .returns(targetTn)
+                    .addJavadoc("Merger for fields of class {@link $T}", targetTn)
+                    .addStatement(
+                        """
+                    return $T.requireNonNullElse(elA, $T.<$T>empty())
+    .or(() -> $T.requireNonNullElse(elB, $T.<$T>empty()))""",
+                        OBJECTS,
+                        OPTIONAL,
+                        innerTn,
+                        OBJECTS,
+                        OPTIONAL,
+                        innerTn
+                    );
 
-            AnnotationSupplier.addGeneratedAnnotation(method, this);
+                AnnotationSupplier.addGeneratedAnnotation(method, this);
+            }
+            
             return true;
         }
         return false;

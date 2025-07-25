@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.cbarlin</groupId>
@@ -26,6 +28,7 @@
     <properties>
         <junit-bom.version>5.13.4</junit-bom.version>
         <rainbowgum.version>0.8.2</rainbowgum.version>
+        <tinylog.version>2.7.0</tinylog.version>
         <assertj.version>3.27.3</assertj.version>
         <maven.deploy.skip>true</maven.deploy.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
@@ -61,17 +64,6 @@
             <!-- Scope isn't needed here since this module and its children are not published -->
         </dependency>
         <dependency>
-            <groupId>io.jstach.rainbowgum</groupId>
-            <artifactId>rainbowgum-slf4j</artifactId>
-            <version>${rainbowgum.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>io.jstach.rainbowgum</groupId>
-            <artifactId>rainbowgum-pattern</artifactId>
-            <version>${rainbowgum.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
@@ -80,24 +72,47 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.jstach.rainbowgum</groupId>
-            <artifactId>rainbowgum</artifactId>
-            <version>${rainbowgum.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jstach.rainbowgum</groupId>
-            <artifactId>rainbowgum-core</artifactId>
-            <version>${rainbowgum.version}</version>
-            <scope>compile</scope>
-        </dependency>
+
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-annotations</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+    <!-- Start laying ground work for Java 17 support (issue #80) -->
+    <profiles>
+        <profile>
+            <id>jdk-17</id>
+            <activation>
+                <jdk>[17,21)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.tinylog</groupId>
+                    <artifactId>slf4j-tinylog</artifactId>
+                    <version>${tinylog.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.tinylog</groupId>
+                    <artifactId>tinylog-impl</artifactId>
+                    <version>${tinylog.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>jdk-21-plus</id>
+            <activation>
+                <jdk>[21,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.jstach.rainbowgum</groupId>
+                    <artifactId>rainbowgum</artifactId>
+                    <version>${rainbowgum.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -115,7 +130,8 @@
                     <fork>true</fork>
                     <compilerArgs>
                         <arg>-J${jacoco.agent.argLine}</arg>
-                        <!-- <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
+                        <!--
+                        <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg> -->
                     </compilerArgs>
                 </configuration>
             </plugin>
