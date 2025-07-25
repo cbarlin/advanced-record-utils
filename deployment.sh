@@ -55,6 +55,18 @@ echo "Setting version to $RELEASE_VERSION..."
 mvn clean
 mvn versions:set -DnewVersion="$RELEASE_VERSION" -DprocessAllModules=true -DgenerateBackupPoms=true
 
+# --- Parse Version ---
+MAJOR_VERSION=$(echo "$RELEASE_VERSION" | cut -d. -f1)
+MINOR_VERSION=$(echo "$RELEASE_VERSION" | cut -d. -f2)
+PATCH_VERSION=$(echo "$RELEASE_VERSION" | cut -d. -f3)
+
+# --- Update Version Constants ---
+echo "Updating version constants in AdvancedRecordUtilsGenerated.java..."
+sed -i "s/MAJOR_VERSION = [0-9]\{1,\};/MAJOR_VERSION = $MAJOR_VERSION;/" advanced-record-utils-annotations/src/main/java/io/github/cbarlin/aru/annotations/AdvancedRecordUtilsGenerated.java
+sed -i "s/MINOR_VERSION = [0-9]\{1,\};/MINOR_VERSION = $MINOR_VERSION;/" advanced-record-utils-annotations/src/main/java/io/github/cbarlin/aru/annotations/AdvancedRecordUtilsGenerated.java
+sed -i "s/PATCH_VERSION = [0-9]\{1,\};/PATCH_VERSION = $PATCH_VERSION;/" advanced-record-utils-annotations/src/main/java/io/github/cbarlin/aru/annotations/AdvancedRecordUtilsGenerated.java
+
+
 echo "Building and validating reproducibility for $RELEASE_VERSION..."
 BUILD_VALIDATE_SUCCESS=0
 (mvn clean && mvn install && mvn clean verify artifact:compare) || BUILD_VALIDATE_SUCCESS=$?
