@@ -3,6 +3,7 @@ package io.github.cbarlin.aru.core.impl.types.analyser;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTION;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -28,12 +29,12 @@ public final class JavaNonMapCollectionAnalyser {
     @Bean
     @ResetPerComponent
     @BeanTypes(AnalysedCollectionComponent.class)
-    AnalysedCollectionComponent collectionComponent(final BasicAnalysedComponent component) {
+    Optional<AnalysedCollectionComponent> collectionComponent(final BasicAnalysedComponent component) {
         if (OptionalClassDetector.checkSameOrSubType(component.element(), COLLECTION)) {
             final DeclaredType decl = (DeclaredType) component.componentType();
             final List<? extends TypeMirror> typeArguments = decl.getTypeArguments();
             if (typeArguments.size() != 1) {
-                return null;
+                return Optional.empty();
             }
             final TypeMirror innerType = typeArguments.get(0);
             final TypeName innerTypeName = TypeName.get(innerType);
@@ -42,9 +43,11 @@ public final class JavaNonMapCollectionAnalyser {
             final TypeElement te = (TypeElement) ((DeclaredType) wrapper).asElement();
             final ClassName erasedWrapperClassName = ClassName.get(te);
             
-            return new AnalysedCollectionComponent(component, innerType, innerTypeName, erasedWrapperClassName);
+            return Optional.of(
+                new AnalysedCollectionComponent(component, innerType, innerTypeName, erasedWrapperClassName)
+            );
         }
-        return null;
+        return Optional.empty();
     }
 
 }
