@@ -9,6 +9,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
 import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 import io.avaje.inject.Bean;
 import io.avaje.inject.BeanTypes;
@@ -26,6 +27,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 public final class JavaNonMapCollectionAnalyser {
 
     @Bean
+    @Nullable
     @ResetPerComponent
     @BeanTypes(AnalysedCollectionComponent.class)
     AnalysedCollectionComponent collectionComponent(final BasicAnalysedComponent component) {
