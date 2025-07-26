@@ -3,34 +3,31 @@ package io.github.cbarlin.aru.impl.merger.utils;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
+import io.github.cbarlin.aru.impl.wiring.MergerPerRecordScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@MergerPerRecordScope
 public final class Fallback extends MergerVisitor {
 
-    private final Set<String> processedSpecs = HashSet.newHashSet(20);
+    private final Set<String> processedSpecs;
 
-    public Fallback() {
-        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
+    public Fallback(final MergerHolder mergerHolder) {
+        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD, mergerHolder);
+        this.processedSpecs = mergerHolder.processedMethods();
     }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
+    
     @Override
     protected int innerSpecificity() {
         return 0;

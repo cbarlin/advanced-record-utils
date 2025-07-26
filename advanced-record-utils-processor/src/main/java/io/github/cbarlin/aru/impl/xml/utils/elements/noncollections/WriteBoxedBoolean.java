@@ -1,24 +1,31 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
-
-import java.util.Optional;
-
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.github.cbarlin.aru.impl.xml.XmlVisitor;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
-public final class WriteBoxedBoolean extends XmlVisitor {
+import java.util.Optional;
 
-    public WriteBoxedBoolean() {
-        super(Claims.XML_WRITE_FIELD);
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
+
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlElementPrism.class})
+public final class WriteBoxedBoolean extends NonCollectionXmlVisitor {
+
+    private final XmlElementPrism prism;;
+
+    public WriteBoxedBoolean(final XmlRecordHolder xmlRecordHolder, final XmlElementPrism prism, final Optional<AnalysedOptionalComponent> analysedOptionalComponent) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent);
+        this.prism = prism;
     }
 
     @Override
@@ -27,29 +34,22 @@ public final class WriteBoxedBoolean extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && (!analysedComponent.isLoopable()) && TypeName.BOOLEAN.box().equals(analysedComponent.unNestedPrimaryTypeName())) {
-            final XmlElementPrism prism = optPrism.get();
-            final String elementName = elementName(analysedComponent, prism);
-            final boolean required = Boolean.TRUE.equals(prism.required());
-            final Optional<String> defaultValue = defaultValue(prism);
-            final Optional<String> namespaceName = namespaceName(prism);
-            final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.unNestedPrimaryTypeName());
-            if (defaultValue.isPresent()) {
-                writeWithDefaultDefined(analysedComponent, elementName, defaultValue.get(), namespaceName, methodBuilder);
-            } else {
-                writeWithoutDefaultDefined(analysedComponent, elementName, required, namespaceName, methodBuilder);
-            }
-
-            return true;
+    protected boolean writeElementMethod(final AnalysedComponent analysedComponent) {
+        if(!TypeName.BOOLEAN.box().equals(analysedComponent.serialisedTypeName())) {
+            return false;
         }
-        return false;
+        final String elementName = findElementName(analysedComponent, prism);
+        final boolean required = Boolean.TRUE.equals(prism.required());
+        final Optional<String> defaultValue = defaultValue(prism);
+        final Optional<String> namespaceName = namespaceName(prism);
+        final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.serialisedTypeName());
+        if (defaultValue.isPresent()) {
+            writeWithDefaultDefined(analysedComponent, elementName, defaultValue.get(), namespaceName, methodBuilder);
+        } else {
+            writeWithoutDefaultDefined(analysedComponent, elementName, required, namespaceName, methodBuilder);
+        }
+
+        return true;
     }
 
     private void writeWithoutDefaultDefined(

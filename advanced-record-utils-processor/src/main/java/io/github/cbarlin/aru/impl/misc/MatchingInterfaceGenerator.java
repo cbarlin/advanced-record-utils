@@ -1,28 +1,23 @@
 package io.github.cbarlin.aru.impl.misc;
 
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERNAL_MATCHING_IFACE_NAME;
-
 import javax.lang.model.element.Modifier;
 
-import org.jspecify.annotations.Nullable;
-
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.CommonsConstants;
-import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.BasePerRecordScope;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@BasePerRecordScope
 public final class MatchingInterfaceGenerator extends RecordVisitor {
 
-    @Nullable
-    private ToBeBuilt allerBuilder;
+    private final MatchingInterface matchingInterface;
 
-    public MatchingInterfaceGenerator() {
-        super(Claims.INTERNAL_MATCHING_IFACE);
+    public MatchingInterfaceGenerator(final MatchingInterface matchingInterface) {
+        super(matchingInterface.claimableOperation(), matchingInterface.analysedRecord());
+        this.matchingInterface = matchingInterface;
     }
 
     @Override
@@ -31,23 +26,8 @@ public final class MatchingInterfaceGenerator extends RecordVisitor {
     }
 
     @Override
-    public boolean isApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
-        allerBuilder = analysedRecord.utilsClassChildInterface(INTERNAL_MATCHING_IFACE_NAME, claimableOperation);
-        AnnotationSupplier.addGeneratedAnnotation(allerBuilder, this);
-        allerBuilder.builder()
-            .addAnnotation(CommonsConstants.Names.NULL_UNMARKED)
-            .addModifiers(Modifier.STATIC);
-        return true;
-    }
-
-    @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final var methodBuilder = allerBuilder.createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
+        final MethodSpec.Builder methodBuilder = matchingInterface.createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
             .returns(analysedComponent.typeName())
             .addModifiers(Modifier.ABSTRACT);
 

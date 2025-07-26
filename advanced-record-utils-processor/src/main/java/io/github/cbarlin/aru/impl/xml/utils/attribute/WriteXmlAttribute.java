@@ -1,18 +1,25 @@
 package io.github.cbarlin.aru.impl.xml.utils.attribute;
 
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
+import java.util.Optional;
+
 public abstract class WriteXmlAttribute extends XmlVisitor {
 
-    protected WriteXmlAttribute() {
-        super(Claims.XML_WRITE_FIELD);
+    protected final XmlAttributePrism xmlAttributePrism;
+    protected final Optional<TypeAliasComponent> typeAliasComponent;
+
+    protected WriteXmlAttribute(final XmlRecordHolder xmlRecordHolder, final XmlAttributePrism xmlAttributePrism, final Optional<TypeAliasComponent> typeAliasComponent) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
+        this.xmlAttributePrism = xmlAttributePrism;
+        this.typeAliasComponent = typeAliasComponent;
     }
 
     abstract TypeName supportedTypeName();
@@ -25,23 +32,14 @@ public abstract class WriteXmlAttribute extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
     protected final boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        return Boolean.TRUE.equals(
-            xmlAttributePrism(analysedComponent)
-                .map(prism -> {
-                    if (supportedTypeName().equals(analysedComponent.serialisedTypeName())) {
-                        visitAttributeComponent(analysedComponent, prism);
-                        return Boolean.TRUE;
-                    }
-                    return Boolean.FALSE;
-                })
-                .orElse(Boolean.FALSE)
-        );
+        final TypeName serialTypeName = typeAliasComponent.map(AnalysedComponent::serialisedTypeName)
+                .orElse(analysedComponent.serialisedTypeName());
+        if (supportedTypeName().equals(serialTypeName)) {
+            visitAttributeComponent(analysedComponent, xmlAttributePrism);
+            return true;
+        }
+        return false;
     }
 
     protected final MethodSpec.Builder createMethod(final AnalysedComponent analysedComponent) {

@@ -1,21 +1,21 @@
 package io.github.cbarlin.aru.annotations;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.PACKAGE;
-import static java.lang.annotation.ElementType.TYPE;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.PACKAGE;
+import static java.lang.annotation.ElementType.TYPE;
+
 /**
  * Indicates that the target type should have elements created for it.
  * <p>
  * If applied to a record, it will (optionally) automatically create an interface for it, and use the various settings to inform what it populates into the "Utils" class.
  * <p>
- * So a record named {@code MyRecord} will create {@code IMyRecord} and {@code MyRecordUtils} (which contains {@code MyRecordUtils.Builder}, {@code MyRecordUtils.Wither}, etc)
+ * So a record named {@code MyRecord} will create {@code MyRecordUtils} (which contains {@code MyRecordUtils.Builder}, {@code MyRecordUtils.With}, etc)
  * <p>
  * If applied to a package, then only {@link #importTargets()} is considered (unless {@link #applyToAllInPackage()} is true)
  */
@@ -26,7 +26,7 @@ public @interface AdvancedRecordUtils {
     //#region Records in scope
 
     /**
-     * Classes exlcuded by recursive iteration
+     * Classes excluded by recursive iteration
      */
     Class<?>[] recursiveExcluded() default {};
 
@@ -41,6 +41,13 @@ public @interface AdvancedRecordUtils {
      * When the annotation is applied to a package, should this annotation process all records and interfaces in this package?
      */
     boolean applyToAllInPackage() default false;
+
+    /**
+     * Do we attempt to find a pre-made instance of a *Utils class?
+     * <p>
+     * Note: enabling this may take some time to find possible classes
+     */
+    boolean attemptToFindExistingUtils() default false;
     //#endregion
     
     //#region Generation Scope
@@ -136,13 +143,6 @@ public @interface AdvancedRecordUtils {
      * Only relevant if diffable is enabled
      */
     DiffOptions diffOptions() default @DiffOptions();
-
-    /**
-     * Any settings that should be applied to the Wither
-     * <p>
-     * Only relevant if recursion is enabled
-     */
-    ImportRecursiveOptions importRecursiveOptions() default @ImportRecursiveOptions();
 
     /**
      * Should an Avaje Jsonb import annotation be created for you
@@ -288,30 +288,6 @@ public @interface AdvancedRecordUtils {
     //#endregion
 
     //#region Sub options
-    /**
-     * Options for the imported and/or recursively targets that we are generating utils for
-     */
-    @Retention(RetentionPolicy.SOURCE)
-    @Target({})
-    public @interface ImportRecursiveOptions {
-        /**
-         * Should recursive/imported items generate mergeable interface
-         * <p>
-         * The interface isn't required for the "merger" option
-         * <p>
-         * Useful if you don't want to implement the interface and then the "self" method on every item
-         */
-        boolean generateMergeable() default false;
-
-        /**
-         * Should recursive/imported items generate XML interface
-         * <p>
-         * The interface isn't required for the "xmlSerialisation" option
-         * <p>
-         * Useful if you don't want to implement the interface and then the "self" method on every item
-         */
-        boolean generateXmlable() default false;
-    }
 
     /**
      * Options for the types being created (utils class, interface)
@@ -464,20 +440,6 @@ public @interface AdvancedRecordUtils {
          * Name of the method that converts the current object into a builder
          */
         String convertToBuilder() default "with";
-
-        /**
-         * Should statically accessible versions of {@code With} methods be generated?
-         * <p>
-         * e.g. {@code PersonUtils.With.age(personInstance, 42)} to obtain a new instance with age of 42.
-         */
-        boolean generateStaticVersions() default false;
-
-        /**
-         * Should static methods (if generated) be added to the root {@code Utils} class?
-         * <p>
-         * e.g. {@code PersonUtils.withAge(personInstance, 42)}
-         */
-        boolean staticMethodsAddedToUtils() default false;
     }
 
     /**

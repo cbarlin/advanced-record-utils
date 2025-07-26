@@ -3,35 +3,39 @@ package io.github.cbarlin.aru.impl.merger.utils;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.MERGER_UTILS_CLASS;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
+import io.github.cbarlin.aru.impl.types.ComponentTargetingRecord;
+import io.github.cbarlin.aru.impl.wiring.MergerPerComponentScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@MergerPerComponentScope
+@RequiresBean({ComponentTargetingRecord.class})
 public final class OtherProcessed extends MergerVisitor {
 
-    private final Set<String> processedSpecs = HashSet.newHashSet(10);
+    private final Set<String> processedSpecs;
+    private final AnalysedRecord other;
 
-    public OtherProcessed() {
-        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
+    public OtherProcessed(final MergerHolder mergerHolder, final ComponentTargetingRecord ctr) {
+        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD, mergerHolder);
+        this.processedSpecs = mergerHolder.processedMethods();
+        this.other = ctr.target();
     }
-
-    @Override
-    protected boolean innerIsApplicable(AnalysedRecord analysedRecord) {
-        return true;
-    }
-
+    
     @Override
     protected int innerSpecificity() {
         return 3;
@@ -39,15 +43,11 @@ public final class OtherProcessed extends MergerVisitor {
 
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        if (supportedComponent(analysedComponent)) {
+        final TypeName targetTn = analysedComponent.typeName();
+        final String methodName = mergeStaticMethodName(targetTn);
+        if (Boolean.TRUE.equals(other.settings().prism().merger())) {
             // OK, the other side has a merger utils I can hook into!
-            final var targetTn = analysedComponent.typeName();
-            final String methodName = mergeStaticMethodName(targetTn);
             if (processedSpecs.add(methodName)) {
-                // The if statement handled these for us
-                @SuppressWarnings({"java:S1854", "java:S3655"})
-                final AnalysedRecord other = (AnalysedRecord) analysedComponent.targetAnalysedType().get();
-
                 final ClassName otherMergerClassName = other.utilsClassChildClass(MERGER_UTILS_CLASS, Claims.MERGER_STATIC_CLASS).className();
                 final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
                     .addAnnotation(NULLABLE)
@@ -75,15 +75,5 @@ public final class OtherProcessed extends MergerVisitor {
             return true;
         }
         return false;
-    }
-
-    // Somehow we cannot see the "isPresent" check on the previous line...
-    @SuppressWarnings({"java:S3655"})
-    private boolean supportedComponent(final AnalysedComponent analysedComponent) {
-        return 
-            (!analysedComponent.requiresUnwrapping()) &&
-            analysedComponent.targetAnalysedType().isPresent() && 
-            (analysedComponent.targetAnalysedType().get() instanceof AnalysedRecord ar) &&
-            Boolean.TRUE.equals(ar.settings().prism().merger());
     }
 }

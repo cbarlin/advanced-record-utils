@@ -1,12 +1,8 @@
 package io.github.cbarlin.aru.core.mirrorhandlers;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import io.github.cbarlin.aru.core.APContext;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -14,14 +10,19 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
-
-import org.apache.commons.lang3.StringUtils;
-
-import io.github.cbarlin.aru.core.APContext;
-import io.micronaut.sourcegen.javapoet.ClassName;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 public final class MapBasedAnnotationMirror implements AnnotationMirror {
 
+    private static final Map<ClassName, Optional<TypeElement>> LOADED_ANNOTATIONS = new ConcurrentHashMap<>();
     private final Map<ExecutableElement, AnnotationValue> elementValues;
     private final DeclaredType declaredType;
 
@@ -33,9 +34,15 @@ public final class MapBasedAnnotationMirror implements AnnotationMirror {
         this(annotationClassName, values.orElse(Map.of()));
     }
 
+    private static synchronized Optional<TypeElement> annotationLoader(final ClassName className) {
+        return Optional.of(className.canonicalName())
+                .filter(Predicate.not(String::isBlank))
+                .map(APContext.elements()::getTypeElement)
+                .filter((TypeElement te) -> ElementKind.ANNOTATION_TYPE.equals(te.getKind()));
+    }
+
     public MapBasedAnnotationMirror(final ClassName annotationClassName, final Map<String, Object> values) {
-        final Optional<TypeElement> optAte = Optional.ofNullable(APContext.typeElement(annotationClassName.canonicalName()))
-            .filter((TypeElement te) -> ElementKind.ANNOTATION_TYPE.equals(te.getKind()));
+        final Optional<TypeElement> optAte = LOADED_ANNOTATIONS.computeIfAbsent(annotationClassName, MapBasedAnnotationMirror::annotationLoader);
         
         this.declaredType = optAte
             .map(TypeElement::asType)

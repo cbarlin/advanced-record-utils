@@ -59,6 +59,7 @@ public enum CommonsConstants {
         public static final ClassName OPTIONAL_LONG = ClassName.get(JAVA_UTIL, "OptionalLong");
         public static final ClassName QUEUE = ClassName.get(JAVA_UTIL, "Queue");
         public static final ClassName SET = ClassName.get(JAVA_UTIL, "Set");
+        public static final ClassName TYPE_ALIAS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "TypeAlias");
         public static final ClassName UNSUPPORTED_OPERATION_EXCEPTION = ClassName.get("java.lang", "UnsupportedOperationException");
         public static final ClassName XML_ELEMENTS = ClassName.get(JAKARTA_XML_BIND, "XmlElements");
         public static final ClassName XML_SEE_ALSO = ClassName.get(JAKARTA_XML_BIND, "XmlSeeAlso");

@@ -1,11 +1,11 @@
 package io.github.cbarlin.aru.core.types;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
+import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_INTERNAL_UTILS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_MAIN_ANNOTATION;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
-import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,20 +26,19 @@ import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jspecify.annotations.NonNull;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltClass;
-import io.github.cbarlin.aru.core.inference.Holder;
 import io.github.cbarlin.aru.core.visitors.AruVisitor;
-
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
@@ -64,11 +63,11 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     protected final Map<ClassName, List<AnnotationMirror>> projectedRelevantAnnotations = new HashMap<>();
     
     //#region Construction
-    protected AnalysedType(final TypeElement element, final UtilsProcessingContext context, final AdvRecUtilsSettings parentSettings) {
+    protected AnalysedType(final TypeElement element, final UtilsProcessingContext context, final AdvRecUtilsSettings settings) {
         this.typeElement = element;
         this.typeMirror = element.asType();
         this.utilsProcessingContext = context;
-        this.settings = finaliseSettings(parentSettings, element, context);
+        this.settings = settings;
         this.utilsClass = new ToBeBuiltClass(createUtilsClassName(settings, element), context);
         utilsClass.builder()
             .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
@@ -94,16 +93,15 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         final String originalClassName = element.getSimpleName().toString();
         final String targetPackage = AdvancedRecordUtilsPrism.getOptionalOn(element)
             .map(ignored -> ClassName.get(element).packageName())
+            .or(
+                () -> Optional.of(ClassName.get(element).packageName())
+                    .filter(str -> Strings.CS.startsWith(str, settings.packageName()))
+            )
             .orElseGet(() -> settings.packageName());
         final String utilsCn = settings.prism().typeNameOptions().utilsImplementationPrefix() + originalClassName + settings.prism().typeNameOptions().utilsImplementationSuffix();
         return ClassName.get(targetPackage, utilsCn);
     }
 
-    private static AdvRecUtilsSettings finaliseSettings(final AdvRecUtilsSettings pAdvRecUtilsSettings, final TypeElement element, final UtilsProcessingContext utilsProcessingContext) {
-        return AdvRecUtilsSettings.wrapOptional(element, utilsProcessingContext.processingEnv())
-            .map(pref -> AdvRecUtilsSettings.merge(pref, pAdvRecUtilsSettings))
-            .orElse(pAdvRecUtilsSettings);
-    }
     //#endregion
 
     //#region Artifact management
@@ -164,7 +162,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
             return true;
         }
         claimedOperations.putIfAbsent(visitor.claimableOperation(), visitor);
-        return claimedOperations.get(visitor.claimableOperation()) == visitor;
+        return claimedOperations.get(visitor.claimableOperation()).equals(visitor);
     }
 
     /**
@@ -259,50 +257,6 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         return className().canonicalName();
     }
     //#endregion
-
-    /**
-     * Determine if a prism is present or inferrable on the type
-     * 
-     * @param annotationClassName The ClassName of the annotation (e.g. XML_ATTRIBUTE)
-     * @param prismClass The class of the prism (e.g. XmlAttribute.class)
-     * @return if the prism is present or inferrable
-     */
-    public boolean isPrismPresent(final ClassName annotationClassName, final Class<?> prismClass) {
-        return findPrism(annotationClassName, prismClass).isPresent();
-    }
-
-    private final Map<ClassName, Optional<?>> annotations = new HashMap<>();
-
-    // Fine, because the only population is the known-correct impl method
-    @SuppressWarnings("unchecked")
-    public <T> Optional<T> findPrism(final ClassName annotationClassName, final Class<T> prismClass) {
-        return (Optional<T>) annotations.computeIfAbsent(annotationClassName, c -> findPrismImpl(c, prismClass));
-    }
-
-    private <T> Optional<T> findPrismImpl(final ClassName annotationClassName, final Class<T> prismClass) {
-        return Holder.adaptors(annotationClassName).stream()
-            .map(cn -> cn.optionalInstanceOn(typeElement))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .filter(prismClass::isInstance)
-            .map(prismClass::cast)
-            .findFirst()
-            .or(
-                () -> Holder.inferencers(annotationClassName).stream()
-                        .map(inf -> inf.inferAnnotationMirror(typeElement, utilsProcessingContext, prism()))
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .flatMap(
-                            (final AnnotationMirror tm) -> Holder.adaptors(annotationClassName).stream()
-                                    .map(cn -> cn.optionalInstanceOf(tm))
-                                    .filter(Optional::isPresent)
-                                    .map(Optional::get)
-                                    .filter(prismClass::isInstance)
-                                    .map(prismClass::cast)
-                        )
-                        .findFirst()
-            );
-    }
 
     public void addFullGeneratedAnnotation() {
         final TypeSpec.Builder utilsBuilder = utilsClassBuilder();

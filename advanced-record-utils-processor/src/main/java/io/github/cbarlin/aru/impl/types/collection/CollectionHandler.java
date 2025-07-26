@@ -10,7 +10,6 @@ import static io.github.cbarlin.aru.impl.Constants.Names.SPLITERATOR;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.Service;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
@@ -30,8 +29,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
  * <p>
  * Each combination has dedicated methods to ensure type safety and proper handling.
  */
-@Service
-@SuppressWarnings({"java:S1192"}) // The constants will not make the code clearer
 public abstract class CollectionHandler {
 
     /**

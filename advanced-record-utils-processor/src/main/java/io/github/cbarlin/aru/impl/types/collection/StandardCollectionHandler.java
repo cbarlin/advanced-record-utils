@@ -69,7 +69,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void addNonNullAutoField(final AnalysedComponent component, final ToBeBuilt addFieldTo, final TypeName innerType) {
-        final FieldSpec fSpec = FieldSpec.builder(component.typeName(), component.name(), Modifier.PRIVATE)
+        final ParameterizedTypeName ptn = ParameterizedTypeName.get(mutableClassName, innerType);
+        final FieldSpec fSpec = FieldSpec.builder(ptn, component.name(), Modifier.PRIVATE)
             .addAnnotation(NON_NULL)
             .initializer("new $T<$T>()", mutableClassName, innerType)
             .build();

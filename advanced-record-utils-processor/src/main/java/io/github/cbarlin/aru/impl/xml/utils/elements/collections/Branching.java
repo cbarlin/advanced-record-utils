@@ -1,9 +1,29 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.collections;
 
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT_DEFAULT;
+import io.avaje.inject.RequiresBean;
+import io.github.cbarlin.aru.core.APContext;
+import io.github.cbarlin.aru.core.artifacts.PreBuilt;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.core.types.AnalysedInterface;
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
+import io.github.cbarlin.aru.core.types.ProcessingTarget;
+import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
+import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
+import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.ComponentTargetingInterface;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
+import io.github.cbarlin.aru.impl.xml.XmlVisitor;
+import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
+import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
+import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,87 +32,80 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.apache.commons.lang3.StringUtils;
-import org.jspecify.annotations.Nullable;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT_DEFAULT;
 
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.APContext;
-import io.github.cbarlin.aru.core.artifacts.PreBuilt;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedInterface;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
-import io.github.cbarlin.aru.core.types.ProcessingTarget;
-import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.github.cbarlin.aru.impl.xml.XmlVisitor;
-import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
-import io.micronaut.sourcegen.javapoet.ClassName;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
-import io.micronaut.sourcegen.javapoet.TypeName;
-
-@ServiceProvider
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlElementsPrism.class, ComponentTargetingInterface.class, AnalysedCollectionComponent.class})
 public final class Branching extends XmlVisitor {
 
-    public Branching() {
-        super(Claims.XML_WRITE_FIELD);
+    private final XmlElementsPrism outerPrism;
+    private final Optional<XmlElementWrapperPrism> wrapper;
+    private final AnalysedCollectionComponent component;
+    private final AnalysedInterface other;
+    private final Optional<AnalysedOptionalComponent> optComponent;
+
+    public Branching (
+        final XmlRecordHolder xmlRecordHolder,
+        final XmlElementsPrism prism,
+        final Optional<XmlElementWrapperPrism> wrapper,
+        final AnalysedCollectionComponent component,
+        final ComponentTargetingInterface targetingRecord,
+        final Optional<AnalysedOptionalComponent> optComponent
+    ) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
+        this.outerPrism = prism;
+        this.wrapper = wrapper;
+        this.component = component;
+        this.other = targetingRecord.target();
+        this.optComponent = optComponent;
     }
 
     @Override
     protected int innerSpecificity() {
-        return 1;
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+        return 4;
     }
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<AnalysedInterface> optionalSupported = extractSupported(analysedComponent);
-        if (optionalSupported.isPresent()) {
-            final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.typeName());
-            
-            final AnalysedInterface other = optionalSupported.get();
-            final List<ProcessingTarget> targets = other.implementingTypes()
-                .stream()
-                .filter(this::concreteImplementingType)
-                .toList();
-            final Map<ClassName, NameAndNamespace> extractedName = extractNamedVersions(analysedComponent, other);
+        final MethodSpec.Builder methodBuilder = createMethod(component, component.typeName());
+        final List<ProcessingTarget> targets = other.implementingTypes()
+            .stream()
+            .filter(this::concreteImplementingType)
+            .toList();
+        final Map<ClassName, NameAndNamespace> extractedName = extractNamedVersions(component, other);
 
-            methodBuilder.beginControlFlow("if ($T.isNull(val))", OBJECTS)
-                .addStatement("return")
-                .endControlFlow();
-            final Optional<XmlElementWrapperPrism> wrapper = xmlElementWrapperPrism(analysedComponent);
-            if (wrapper.isPresent()) {
-                writeWrapperElement(methodBuilder, wrapper.get());
-            }
+        methodBuilder.beginControlFlow("if ($T.isNull(val))", OBJECTS)
+            .addStatement("return")
+            .endControlFlow();
 
-            analysedComponent.withinUnwrapped(
-                variableName -> {
-                    methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
-                        .addStatement("continue");
-                    for (final ProcessingTarget target : targets) {
-                        writeTargetIfStatement(methodBuilder, extractedName, target, variableName);
-                    }
-                    methodBuilder.endControlFlow();
-                },
-                methodBuilder,
-                "val",
-                TypeName.get(other.typeMirror())
-            );
+        wrapper.ifPresent(xmlElementWrapperPrism -> writeWrapperElement(methodBuilder, xmlElementWrapperPrism));
 
-            if (wrapper.isPresent()) {
-                methodBuilder.addStatement("output.writeEndElement()");
-                if (!Boolean.TRUE.equals(xmlOptionsPrism.writeEmptyCollectionsWithWrapperAsEmptyElement())) {
-                    methodBuilder.endControlFlow();
+        component.withinUnwrapped(
+            variableName -> {
+                methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                    .addStatement("continue");
+                for (final ProcessingTarget target : targets) {
+                    writeTargetIfStatement(methodBuilder, extractedName, target, variableName);
                 }
-            }
+                methodBuilder.endControlFlow();
+            },
+            methodBuilder,
+            "val",
+            TypeName.get(other.typeMirror())
+        );
 
-            return true;
+        if (wrapper.isPresent()) {
+            methodBuilder.addStatement("output.writeEndElement()");
+            if (!Boolean.TRUE.equals(xmlOptionsPrism.writeEmptyCollectionsWithWrapperAsEmptyElement())) {
+                methodBuilder.endControlFlow();
+            }
         }
-        return false;
+
+        return true;
     }
 
     private void writeWrapperElement(final MethodSpec.Builder methodBuilder, final XmlElementWrapperPrism wrapperPrism) {
@@ -139,8 +152,6 @@ public final class Branching extends XmlVisitor {
         );
     }
 
-    // False positive from SonaQube - Optional.ofNullable doesn't return null...
-    @SuppressWarnings({"java:S2259"})
     @Nullable
     final ClassName getOtherXmlUtils(final ProcessingTarget target) {
         if (target instanceof final AnalysedRecord analysedRecord) {
@@ -155,37 +166,26 @@ public final class Branching extends XmlVisitor {
 
     private Map<ClassName, NameAndNamespace> extractNamedVersions(final AnalysedComponent analysedComponent, final AnalysedInterface other) {
         final Map<ClassName, NameAndNamespace> extracted = HashMap.newHashMap(other.implementingTypes().size());
-        xmlElementsPrism(analysedComponent)
-            .ifPresent(outerPrism -> {
-                for (final XmlElementPrism prism : outerPrism.value()) {
-                    final ClassName className = ClassName.get(APContext.asTypeElement(prism.type()));
-                    if (className.equals(XML_ELEMENT_DEFAULT)) {
-                        APContext.messager().printError("XmlElement inside XmlElements must have a target type", analysedComponent.element());
-                    } else {
-                        final Optional<String> name = Optional.ofNullable(prism.name())
-                            .filter(StringUtils::isNotBlank)
-                            .filter(Predicate.not(XML_DEFAULT_STRING::equals));
-                        final Optional<String> namespace = Optional.ofNullable(prism.namespace())
-                            .filter(StringUtils::isNotBlank)
-                            .filter(Predicate.not(XML_DEFAULT_STRING::equals));
-                        extracted.put(className, new NameAndNamespace(name, namespace));
-                    }
-                }
-            });
+        for (final XmlElementPrism prism : outerPrism.value()) {
+            final ClassName className = ClassName.get(APContext.asTypeElement(prism.type()));
+            if (className.equals(XML_ELEMENT_DEFAULT)) {
+                APContext.messager().printError("XmlElement inside XmlElements must have a target type", analysedComponent.element());
+            } else {
+                final Optional<String> name = Optional.ofNullable(prism.name())
+                    .filter(StringUtils::isNotBlank)
+                    .filter(Predicate.not(XML_DEFAULT_STRING::equals));
+                final Optional<String> namespace = Optional.ofNullable(prism.namespace())
+                    .filter(StringUtils::isNotBlank)
+                    .filter(Predicate.not(XML_DEFAULT_STRING::equals));
+                extracted.put(className, new NameAndNamespace(name, namespace));
+            }
+        }
         return Map.copyOf(extracted);
     }
 
     private boolean concreteImplementingType (final ProcessingTarget processingTarget) {
         return (processingTarget instanceof AnalysedRecord) || 
             (processingTarget instanceof LibraryLoadedTarget);
-    }
-
-    private Optional<AnalysedInterface> extractSupported(final AnalysedComponent analysedComponent) {
-        return analysedComponent.targetAnalysedType()
-            .filter(x -> (analysedComponent.isLoopable() && analysedComponent.requiresUnwrapping()))
-            .filter(x -> xmlElementsPrism(analysedComponent).isPresent())
-            .filter(AnalysedInterface.class::isInstance)
-            .map(AnalysedInterface.class::cast);
     }
 
     private record NameAndNamespace(Optional<String> name, Optional<String> namespace) {}

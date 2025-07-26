@@ -1,25 +1,5 @@
 package io.github.cbarlin.aru.core.artifacts;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.ModuleElement;
-import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.tools.Diagnostic;
-
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
-
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants.InternalReferenceNames;
@@ -30,14 +10,33 @@ import io.github.cbarlin.aru.core.artifacts.sorting.MethodSpecComparator;
 import io.github.cbarlin.aru.core.artifacts.sorting.TypeSpecComparator;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedType;
+import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.tools.Diagnostic;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt>, IToBeBuilt<ToBeBuilt> {
     private static final String LOGGER_INITIALISER = "$T.getLogger($T.class)";
     // We have our two generated annotations, and sometimes the `NullMarked`/`NullUnmarked`
     private static final int GENERATED_ANNOTATIONS = 3;
@@ -60,26 +59,22 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         this.utilsProcessingContext = utilsProcessingContext;
     }
 
-    /**
-     * Determine if this artifact actually has any content
-     */
+    @Override
+    public ToBeBuilt delegate() {
+        return this;
+    }
+
+    @Override
     public boolean hasContent() {
         return (!unfinishedMethods.isEmpty()) || (!childArtifacts.isEmpty()) || (!classBuilder.methodSpecs.isEmpty()) || (!classBuilder.typeSpecs.isEmpty()) || (classBuilder.annotations.size() > GENERATED_ANNOTATIONS);
     }
 
+    @Override
     public ClassName className() {
         return className;
     }
 
-    /**
-     * Finishes up the class (or interface, or record) that we are building.
-     * <p>
-     * Note: While this method does attempt to force some sort of order on the things
-     *   inside the generated Type, the TypeSpec has it's own ideas as to the order it wants to write things.
-     * <p>
-     * So the ordering we inject fills the gaps of the TypeSpec ones (because the ordering it uses doesn't enforce reproduceability...), 
-     *    but it does override our ordering (e.g. the order of sub-classes :/)
-     */
+    @Override
     public TypeSpec finishClass() {
         if (classBuilder.annotations.isEmpty()) {
             utilsProcessingContext.processingEnv()
@@ -99,13 +94,20 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         childArtifacts.values().stream().map(ToBeBuilt::finishClass).forEach(classBuilder::addType);
         Collections.sort(classBuilder.typeSpecs, TypeSpecComparator.INSTANCE);
         Collections.sort(classBuilder.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
-        return classBuilder.build();
+        try {
+            return classBuilder.build();
+        } catch (Exception e) {
+            APContext.messager().printError("Oops!");
+            throw new RuntimeException(e);
+        }
     }
 
+    @Override
     public TypeSpec.Builder builder() {
         return this.classBuilder;
     }
 
+    @Override
     public ToBeBuilt addField(final FieldSpec fieldSpec) {
         final FieldSpec.Builder b = fieldSpec.toBuilder();
         Collections.sort(b.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
@@ -113,20 +115,12 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         return this;
     }
 
-    /**
-     * Add a logger to the class using own class name. Calling multiple times will have no effect beyond the first.
-     * <p>
-     * Note: Callers should check if loggers should be added to this class
-     */
+    @Override
     public ToBeBuilt addLogger() {
         return this.addLogger(className());
     }
 
-    /**
-     * Add a logger to the class, using the provided class name. Calling multiple times will have no effect beyond the first.
-     * <p>
-     * Note: Callers should check if loggers should be added to this class
-     */
+    @Override
     public ToBeBuilt addLogger(final ClassName loggerReferenceClass) {
         if (!loggerAdded) {
             classBuilder.addField(
@@ -141,58 +135,30 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
 
     //#region child artifact
 
-    /**
-     * Create a child record artifact of this one. This will create a nested class structure for us
-     * <p>
-     * If you call this you are required to do things like put any annotations on etc.
-     * 
-     * @param generatedCodeName The name of the nested class that is actually generated. Do not include parent class names - nesting is handled for you
-     * @param claimableOperation The claim that represents creating the method
-     * @return
-     */
+    @Override
     @NonNull
     public ToBeBuilt childRecordArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return childArtifacts.computeIfAbsent(generatedCodeName + "#" + claimableOperation.operationName(), ignored -> new ToBeBuiltRecord(className.nestedClass(generatedCodeName), utilsProcessingContext));
     }
 
-    /**
-     * Create a child class artifact of this one. This will create a nested class structure for us
-     * <p>
-     * If you call this you are required to do things like put any annotations on etc.
-     * 
-     * @param generatedCodeName The name of the nested class that is actually generated. Do not include parent class names - nesting is handled for you
-     * @param claimableOperation The claim that represents creating the method
-     * @return
-     */
+    @Override
     @NonNull
     public ToBeBuilt childClassArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return childArtifacts.computeIfAbsent(generatedCodeName + "#" + claimableOperation.operationName(), ignored -> new ToBeBuiltClass(className.nestedClass(generatedCodeName), utilsProcessingContext));
     }
 
-    /**
-     * Create a child interface artifact of this one. This will create a nested class structure for us
-     * <p>
-     * If you call this you are required to do things like put any annotations on etc.
-     * 
-     * @param generatedCodeName The name of the nested class that is actually generated. Do not include parent class names - nesting is handled for you
-     * @param claimableOperation The claim that represents creating the method
-     * @return
-     */
+    @Override
     @NonNull
     public ToBeBuilt childInterfaceArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return childArtifacts.computeIfAbsent(generatedCodeName + "#" + claimableOperation.operationName(), ignored -> new ToBeBuiltInterface(className.nestedClass(generatedCodeName), utilsProcessingContext));
     }
 
-    /**
-     * Obtain a child artifact of any kind
-     */
     @Override
     public @Nullable ToBeBuilt childArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return childArtifacts.get(claimableOperation.operationName());
     }
-    /**
-     * Visit all the child artifacts
-     */
+    
+    @Override
     public void visitChildArtifacts(final Consumer<ToBeBuilt> consumer) {
         this.childArtifacts.values().forEach(consumer);
     }
@@ -204,51 +170,27 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         return unfinishedMethods.computeIfAbsent(generatedCodeName + "#" + internallyReferencedName, ignored -> MethodSpec.methodBuilder(generatedCodeName).addModifiers(Modifier.PUBLIC));
     }
 
-    /**
-     * Creates a public method on the generated class
-     * <p>
-     * This method only generates the stub and associates it, if it didn't already exist. Anything that calls this method is required to 
-     *   do things like put any annotations on etc.
-     * 
-     * @param generatedCodeName The name of the method that is actually generated
-     * @param claimableOperation The claim that is creating the method
-     * @return A builder for the method
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return createMethod(generatedCodeName, claimableOperation.operationName());
     }
 
-    /**
-     * Creates a public method on the generated class for an intended modifier
-     * <p>
-     * This method only generates the stub and associates it, if it didn't already exist. Anything that calls this method is required to 
-     *   do things like put any annotations on etc.
-     * 
-     * @param generatedCodeName The name of the method that is actually generated
-     * @param claimableOperation The claim that is creating the method
-     * @return A builder for the method
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final Modifier modifier) {
         return createMethod(generatedCodeName, claimableOperation.operationName() + "^" + modifier.name()).addModifiers(modifier);
     }
 
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link AnalysedType}
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderFluent", bookAnalysedType)</code>
-     * 
-     * @see #createMethod(String, String)
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final AnalysedType targetAnalysedType) {
         return createMethod(generatedCodeName, claimableOperation.operationName() + "$$" + targetAnalysedType.className().canonicalName());
     }
 
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link Element}
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderSingle", bookElement)</code>
-     * @see #createMethod(String, String)
-     */
+    @Override
+    public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final AnalysedTypeConverter element) {
+        return delegate().createMethod(generatedCodeName, claimableOperation, element);
+    }
+
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final Element element) {
         return createMethod(
             generatedCodeName, 
@@ -258,12 +200,7 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         );
     }
 
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link Element} and ClassName
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderSingle", bookElement)</code>
-     * @see #createMethod(String, String)
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final Element element, final ClassName className) {
         return createMethod(
             generatedCodeName, 
@@ -274,13 +211,7 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         );
     }
 
-
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link Element} and ClassName
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderSingle", bookElement)</code>
-     * @see #createMethod(String, String)
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final Element element, final ParameterizedTypeName ptn) {
         return createMethod(
             generatedCodeName, 
@@ -291,50 +222,27 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt> {
         );
     }
 
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link ClassName}
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderAllIterable", bookClassName)</code>
-     * @see #createMethod(String, String)
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final ClassName className) {
         return createMethod(generatedCodeName, claimableOperation.operationName() + "$$$" + className.simpleName());
     }
 
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link ClassName}
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderAllIterable", bookClassName)</code>
-     * @see #createMethod(String, String)
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final ParameterizedTypeName paramTn) {
         return createMethod(generatedCodeName, claimableOperation.operationName() + "$#$" + paramTn.toString());
     }
 
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link AnalysedComponent}
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderAllIterable", analysedComponent)</code>
-     * @see #createMethod(String, String)
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String name, final ClaimableOperation claimableOperation, final AnalysedComponent analysedComponent) {
         return createMethod(name, claimableOperation, analysedComponent.element());
     }
 
-    /**
-     * Creates a public method on the generated class that's made for a specific {@link AnalysedComponent} and {@link ClassName}
-     * <p>
-     * E.g. <code>createMethod("addBook", "adderAllIterable", analysedComponent)</code>
-     * @see #createMethod(String, String)
-     */
+    @Override
     public MethodSpec.Builder createMethod(final String name, final ClaimableOperation claimableOperation, final AnalysedComponent analysedComponent, final ClassName className) {
         return createMethod(name, claimableOperation, analysedComponent.element(), className);
     }
 
-    /**
-     * Creates or returns the builder for the constructor. There will only be one constructor for each generated class
-     * @return The constructor builder.
-     */
+    @Override
     public MethodSpec.Builder createConstructor() {
         return unfinishedMethods.computeIfAbsent("<init>", ignored -> MethodSpec.constructorBuilder());
     }

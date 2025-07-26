@@ -1,38 +1,28 @@
 package io.github.cbarlin.aru.core;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_UTIL;
-
-import java.util.Optional;
+import io.avaje.inject.Component;
+import io.avaje.inject.External;
+import io.github.cbarlin.aru.core.wiring.CoreGlobalScope;
+import io.micronaut.sourcegen.javapoet.ClassName;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
+import java.util.Optional;
 
-import io.micronaut.sourcegen.javapoet.ClassName;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_UTIL;
 
 /**
  * Utility to check if an element came from a previous compilation run
  */
+@Component
+@CoreGlobalScope
 public final class PreviousCompilationChecker {
 
-    private final Elements elementUtils;
-    private final Types typeUtils;
-    private final TypeElement generatedUtilElement;
-
-    public PreviousCompilationChecker(final ProcessingEnvironment env) {
-        elementUtils = env.getElementUtils();
-        typeUtils = env.getTypeUtils();
-        generatedUtilElement = elementUtils.getTypeElement(GENERATED_UTIL.canonicalName());
+    public PreviousCompilationChecker(final @External ProcessingEnvironment env) {
     }
 
     public Optional<TypeElement> findTypeElement(final ClassName className) {
-        return Optional.ofNullable(elementUtils.getTypeElement(className.canonicalName()))
-            .filter(te -> typeUtils.isSubtype(te.asType(), generatedUtilElement.asType()));
-    }
-
-    public Optional<TypeElement> loadGeneratedArtifact(final ClassName className) {
-        return findTypeElement(className)
-            .filter(AdvancedRecordUtilsGeneratedPrism::isPresent);
+        return OptionalClassDetector.optionalDependencyTypeElement(className)
+                .filter(ign -> OptionalClassDetector.checkSameOrSubType(className, GENERATED_UTIL));
     }
 }

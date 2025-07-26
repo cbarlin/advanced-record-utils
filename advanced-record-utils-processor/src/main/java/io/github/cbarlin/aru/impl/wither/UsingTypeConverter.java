@@ -1,28 +1,34 @@
 package io.github.cbarlin.aru.impl.wither;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-
-import org.apache.commons.lang3.StringUtils;
-
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
+import io.github.cbarlin.aru.core.types.components.TypeConverterComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.WitherPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
 
-@ServiceProvider
+import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
+
+@Singleton
+@WitherPerComponentScope
+@RequiresBean({TypeConverterComponent.class})
 public final class UsingTypeConverter extends WitherVisitor {
 
-    public UsingTypeConverter() {
-        super(Claims.WITHER_USE_TYPE_CONVERTER);
+    private final TypeConverterComponent component;
+
+    public UsingTypeConverter(final WitherInterface witherInterface, final AnalysedRecord analysedRecord, final TypeConverterComponent component) {
+        super(Claims.WITHER_USE_TYPE_CONVERTER, witherInterface, analysedRecord);
+        this.component = component;
     }
 
     @Override
@@ -31,15 +37,10 @@ public final class UsingTypeConverter extends WitherVisitor {
     }
 
     @Override
-    protected boolean isWitherApplicable(AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
         final String withMethodName = witherOptionsPrism.withMethodPrefix() + capitalise(analysedComponent.name()) + witherOptionsPrism.withMethodSuffix();
         
-        for (final AnalysedTypeConverter converter : analysedComponent.converters()) {
+        for (final AnalysedTypeConverter converter : component.analysedTypeConverters()) {
             final MethodSpec.Builder methodBuilder = witherInterface.createMethod(withMethodName, claimableOperation, converter.executableElement())
                 .addAnnotation(NON_NULL)
                 .returns(analysedComponent.parentRecord().intendedType())
@@ -50,9 +51,9 @@ public final class UsingTypeConverter extends WitherVisitor {
             final List<String> format = new ArrayList<>();
             final List<Object> args = new ArrayList<>();
             args.add(withMethodName);
-            args.add(converter.referenceClassName());
+            args.add(converter.enclosedClass());
             args.add(converter.methodName());
-            for (final ParameterSpec parameter : converter.parameters()) {
+            for (final ParameterSpec parameter : converter.parameterSpecs()) {
                 methodBuilder.addParameter(parameter);
                 args.add(parameter.name);
                 format.add("$L");

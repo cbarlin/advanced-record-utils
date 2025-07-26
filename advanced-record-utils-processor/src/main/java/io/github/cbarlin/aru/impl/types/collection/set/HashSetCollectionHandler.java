@@ -2,11 +2,13 @@ package io.github.cbarlin.aru.impl.types.collection.set;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.HASH_SET;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.Component;
+import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-@ServiceProvider
+@Component
+@GlobalScope
 public final class HashSetCollectionHandler extends SetCollectionHandler {
 
     public HashSetCollectionHandler() {

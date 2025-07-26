@@ -1,24 +1,31 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.UUID;
+import io.avaje.inject.RequiresBean;
+import io.github.cbarlin.aru.core.APContext;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
+import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
+import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
 
 import java.util.Optional;
 
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.APContext;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.github.cbarlin.aru.impl.xml.XmlVisitor;
-import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.UUID;
 
-@ServiceProvider
-public final class WriteUUID extends XmlVisitor {
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlElementPrism.class})
+public final class WriteUUID extends NonCollectionXmlVisitor {
 
-    public WriteUUID() {
-        super(Claims.XML_WRITE_FIELD);
+    private final XmlElementPrism prism;
+
+    public WriteUUID(final XmlRecordHolder xmlRecordHolder, final XmlElementPrism prism, final Optional<AnalysedOptionalComponent> analysedOptionalComponent) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent);
+        this.prism = prism;
     }
 
     @Override
@@ -27,16 +34,9 @@ public final class WriteUUID extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (UUID.equals(analysedComponent.typeName()) && optPrism.isPresent()) {
-            final XmlElementPrism prism = optPrism.get();
-            final String elementName = elementName(analysedComponent, prism);
+    protected boolean writeElementMethod(AnalysedComponent analysedComponent) {
+        if (UUID.equals(analysedComponent.serialisedTypeName())) {
+            final String elementName = findElementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
             final Optional<String> namespaceName = namespaceName(prism);

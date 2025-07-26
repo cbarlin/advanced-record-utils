@@ -1,40 +1,33 @@
 package io.github.cbarlin.aru.impl.merger.utils;
 
+import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.impl.Constants;
+import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.merger.MergerHolder;
+import io.github.cbarlin.aru.impl.merger.MergerVisitor;
+import io.github.cbarlin.aru.impl.wiring.MergerPerRecordScope;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+import java.util.Set;
+
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.lang.model.element.Modifier;
-import javax.lang.model.type.TypeMirror;
-
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.APContext;
-import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.OptionalClassDetector;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.github.cbarlin.aru.impl.merger.MergerVisitor;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
-import io.micronaut.sourcegen.javapoet.ParameterSpec;
-
-@ServiceProvider
+@Singleton
+@MergerPerRecordScope
 public final class CharSequenceField extends MergerVisitor {
 
-    private static final TypeMirror CH_TYPE_MIRROR = APContext.elements().getTypeElement("java.lang.CharSequence").asType();
+    private final Set<String> processedSpecs;
 
-    private final Set<String> processedSpecs = HashSet.newHashSet(2);
-
-    public CharSequenceField() {
-        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public CharSequenceField(final MergerHolder mergerHolder) {
+        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD, mergerHolder);
+        this.processedSpecs = mergerHolder.processedMethods();
     }
 
     @Override
@@ -44,7 +37,7 @@ public final class CharSequenceField extends MergerVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {        
-        if (APContext.types().isSubtype(analysedComponent.componentType(), CH_TYPE_MIRROR)) {
+        if (OptionalClassDetector.checkSameOrSubType(analysedComponent.typeName(), Constants.Names.CHAR_SEQUENCE)) {
             final var targetTn = analysedComponent.typeName();
             final String methodName = mergeStaticMethodName(targetTn);
             if (processedSpecs.add(methodName)) {

@@ -4,17 +4,23 @@ import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
 import java.util.Optional;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerComponentScope
+@RequiresBean(XmlAttributePrism.class)
 public final class WritePrimitiveShort extends WriteXmlAttribute {
 
-    public WritePrimitiveShort() {
-        super();
+    public WritePrimitiveShort(final XmlRecordHolder xmlRecordHolder, final XmlAttributePrism xmlAttributePrism, final Optional<TypeAliasComponent> typeAliasComponent) {
+        super(xmlRecordHolder, xmlAttributePrism, typeAliasComponent);
     }
 
     @Override

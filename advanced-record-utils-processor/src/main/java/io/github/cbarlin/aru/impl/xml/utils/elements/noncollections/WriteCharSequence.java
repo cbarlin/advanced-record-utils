@@ -1,28 +1,34 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
+import io.avaje.inject.RequiresBean;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
+import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
+import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
+
+import java.util.Optional;
+
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
 import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
 
-import java.util.Optional;
-
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.OptionalClassDetector;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.github.cbarlin.aru.impl.xml.XmlVisitor;
-import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
-
-@ServiceProvider
-@SuppressWarnings({"java:S1192"})
-public final class WriteCharSequence extends XmlVisitor {
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlElementPrism.class})
+public final class WriteCharSequence extends NonCollectionXmlVisitor {
 
     private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
 
-    public WriteCharSequence() {
-        super(Claims.XML_WRITE_FIELD);
+    private final XmlElementPrism prism;
+
+    public WriteCharSequence(final XmlRecordHolder xmlRecordHolder, final XmlElementPrism prism, final Optional<AnalysedOptionalComponent> analysedOptionalComponent) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent);
+        this.prism = prism;
     }
 
     @Override
@@ -31,17 +37,9 @@ public final class WriteCharSequence extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && OptionalClassDetector.checkSameOrSubType(analysedComponent.unNestedPrimaryTypeName(), CHAR_SEQUENCE)) {
-            // Nice!
-            final XmlElementPrism prism = optPrism.get();
-            final String elementName = elementName(analysedComponent, prism);
+    protected boolean writeElementMethod(final AnalysedComponent analysedComponent) {
+        if (OptionalClassDetector.checkSameOrSubType(analysedComponent.serialisedTypeName(), CHAR_SEQUENCE)) {
+            final String elementName = findElementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
             final Optional<String> namespaceName = namespaceName(prism);

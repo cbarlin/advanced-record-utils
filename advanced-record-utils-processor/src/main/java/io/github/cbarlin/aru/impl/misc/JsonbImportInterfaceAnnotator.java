@@ -6,19 +6,25 @@ import java.util.Objects;
 
 import javax.lang.model.element.TypeElement;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.Constants.Names;
+import io.github.cbarlin.aru.impl.wiring.BasePerInterfaceScope;
+import io.github.cbarlin.aru.prism.prison.JsonBPrism;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
-public class JsonbImportInterfaceAnnotator extends InterfaceVisitor {
-    public JsonbImportInterfaceAnnotator() {
-        super(Claims.MISC_AVAJE_JSONB_IMPORT);
+@Singleton
+@BasePerInterfaceScope
+@RequiresProperty(value = "addJsonbImportAnnotation", equalTo = "true")
+public final class JsonbImportInterfaceAnnotator extends InterfaceVisitor {
+
+    public JsonbImportInterfaceAnnotator(final AnalysedInterface analysedInterface) {
+        super(Claims.MISC_AVAJE_JSONB_IMPORT, analysedInterface);
     }
 
     @Override
@@ -27,7 +33,11 @@ public class JsonbImportInterfaceAnnotator extends InterfaceVisitor {
     }
 
     @Override
-    protected boolean visitInterfaceImpl(final AnalysedInterface analysedInterface) {
+    protected boolean visitInterfaceImpl() {
+        if (JsonBPrism.isPresent(analysedInterface.typeElement())) {
+            // Already done
+            return true;
+        }
         final AnnotationSpec.Builder jsonbAnnotation = AnnotationSpec.builder(Names.AVAJE_JSONB_IMPORT)
             .addMember("value", "{$T.class}", analysedInterface.className());
 
@@ -53,11 +63,5 @@ public class JsonbImportInterfaceAnnotator extends InterfaceVisitor {
             .addAnnotation(jsonbAnnotation.build());
         return true;
     }
-
-    @Override
-    public boolean isApplicable(final AnalysedInterface target) {
-        return Boolean.TRUE.equals(target.settings().prism().addJsonbImportAnnotation());
-    }
-
     
 }

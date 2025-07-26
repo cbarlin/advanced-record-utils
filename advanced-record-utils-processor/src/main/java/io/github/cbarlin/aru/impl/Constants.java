@@ -1,11 +1,11 @@
 package io.github.cbarlin.aru.impl;
 
-import static io.github.cbarlin.aru.core.types.OperationType.CLASS;
-import static io.github.cbarlin.aru.core.types.OperationType.FIELD_AND_ACCESSORS;
-
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.micronaut.sourcegen.javapoet.ClassName;
+
+import static io.github.cbarlin.aru.core.types.OperationType.CLASS;
+import static io.github.cbarlin.aru.core.types.OperationType.FIELD_AND_ACCESSORS;
 
 public enum Constants {
     ;
@@ -29,7 +29,7 @@ public enum Constants {
         public static final ClaimableOperation DIFFER_UTILS = new ClaimableOperation("differUtils", CLASS);
         public static final ClaimableOperation DIFFER_UTILS_COMPUTE_CHANGE = new ClaimableOperation("differUtilsComputation", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation DIFFER_VALUE_HOLDING = new ClaimableOperation("differValueHolding", FIELD_AND_ACCESSORS);
-        public static final ClaimableOperation INTERNAL_MATCHING_IFACE = new ClaimableOperation("internalMatchingIface", CLASS);
+        public static final ClaimableOperation INTERNAL_MATCHING_IFACE = new ClaimableOperation("internalMatchingIface", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation MERGE_IFACE_MERGE = new ClaimableOperation("mergeInterfaceMergeMethod", CLASS);
         public static final ClaimableOperation MERGE_IFACE_MERGE_OPTIONAL = new ClaimableOperation("mergeInterfaceMergeOptionalMethod", CLASS);
         public static final ClaimableOperation MERGE_STATIC_MERGE = new ClaimableOperation("mergeStaticMergeMethod", CLASS);
@@ -57,6 +57,7 @@ public enum Constants {
         public static final ClaimableOperation XML_STATIC_CLASS_TO_XML_NO_NAMESPACE = new ClaimableOperation("xmlStaticClassToXmlNoNS", CLASS);
         public static final ClaimableOperation XML_STATIC_CLASS_TO_XML_NO_TAG = new ClaimableOperation("xmlStaticClassToXmlNoTag", CLASS);
         public static final ClaimableOperation XML_UNWRAP_OPTIONAL = new ClaimableOperation("xmlUnwrapOptional", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation XML_UNWRAP_TYPE_COMPONENT = new ClaimableOperation("xmlUnwrapTypeComponent", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation XML_WRITE_FIELD = new ClaimableOperation("xmlWriteField", FIELD_AND_ACCESSORS);
     }
     
@@ -118,6 +119,7 @@ public enum Constants {
         public static final ClassName XML_ELEMENTS = ClassName.get(XML_ANNOTATIONS, "XmlElements");
         public static final ClassName XML_NAMESPACE_CONTEXT = ClassName.get("javax.xml.namespace", "NamespaceContext");
         public static final ClassName XML_ROOT_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlRootElement");
+        public static final ClassName XML_SCHEMA = ClassName.get(XML_ANNOTATIONS, "XmlSchema");
         public static final ClassName XML_STREAM_EXCEPTION = ClassName.get("javax.xml.stream", "XMLStreamException");
         public static final ClassName XML_STREAM_WRITER = ClassName.get("javax.xml.stream", "XMLStreamWriter");
         public static final ClassName XML_TRANSIENT = ClassName.get(XML_ANNOTATIONS, "XmlTransient");

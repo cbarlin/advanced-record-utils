@@ -73,7 +73,7 @@ reviews:
       instructions: |
         This is the "worker" part of the codebase.
 
-        Ideally, everything in here follows a similar pattern (minus the Constants file):
+        Ideally, everything in here follows a similar pattern (minus the Constants file) to the `aru-processor-core`:
          * How "specific" the worker is at doing work
          * Testing if it should attempt the work in a general sense (e.g. dependencies, settings)
          * Then, when doing the work:
@@ -84,6 +84,8 @@ reviews:
           * The design of the project may mean that the "negative" case isn't explicit, but is tested elsewhere. The positive case should definitely be tested though!
 
         The documentation here is a little more sparse, which isn't great but the aim is that each item should mostly be self-contained or should have a relationship with a
-          small parent that helps out with the context of the work. If parent classes do exist or the class is something used in multiple places, it should be documented.
+          small parent that helps out with the context of the work. If parent classes do exist or the class is something used in multiple places, those must be documented.
 
-        Every package must be `NullMarked`, and if code is added that can put `null` somewhere that isn't explicitly annotated as `Nullable` it should be called out.
+        The `module-info` specifies that the code is `@NullMarked`, therefore if code is added that can put `null` somewhere that isn't explicitly annotated as `Nullable` 
+           it should be called out. The `module-info` file is new, so there may be some `package-info` files with `NullMarked` - those are no longer required thanks to
+           the new `module-info` file.

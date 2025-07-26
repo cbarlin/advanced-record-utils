@@ -2,20 +2,21 @@ package io.github.cbarlin.aru.core.impl.visitors.builder;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-
-import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
-@ServiceProvider
-public class AddEmptyConstruction extends RecordVisitor {
+@Component
+@CorePerRecordScope
+public final class AddEmptyConstruction extends RecordVisitor {
 
-    public AddEmptyConstruction() {
-        super(Claims.CORE_BUILDER_FROM_NOTHING);
+    public AddEmptyConstruction(final AnalysedRecord analysedRecord) {
+        super(Claims.CORE_BUILDER_FROM_NOTHING, analysedRecord);
     }
 
     @Override
@@ -24,12 +25,7 @@ public class AddEmptyConstruction extends RecordVisitor {
     }
 
     @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final String methodName = analysedRecord.settings().prism().builderOptions().emptyCreationName();
         final ClassName builderClassName = analysedRecord.builderArtifact().className();
         createOnBuilder(analysedRecord, methodName, builderClassName);

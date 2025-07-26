@@ -1,32 +1,34 @@
 package io.github.cbarlin.aru.impl.diff.results;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
+import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
+import io.github.cbarlin.aru.impl.types.ComponentTargetingRecord;
+import io.github.cbarlin.aru.impl.wiring.DiffPerComponentScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@DiffPerComponentScope
+@RequiresBean({ComponentTargetingRecord.class})
 public final class EagerNestedDiff extends DifferVisitor {
 
-    public EagerNestedDiff() {
-        super(Claims.DIFFER_COMPUTE_CHANGE);
-    }
+    private final AnalysedRecord otherRecord;
 
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public EagerNestedDiff(final DiffHolder diffHolder, final ComponentTargetingRecord ctr) {
+        super(Claims.DIFFER_COMPUTE_CHANGE, diffHolder);
+        this.otherRecord = ctr.target();
     }
 
     @Override
@@ -36,19 +38,7 @@ public final class EagerNestedDiff extends DifferVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<ProcessingTarget> targetAnalysedType = analysedComponent.targetAnalysedType();
         final String methodName = hasChangedStaticMethodName(analysedComponent.typeName());
-        if (targetAnalysedType.isPresent()) {
-            final ProcessingTarget target = targetAnalysedType.get();
-            if (target instanceof final AnalysedRecord otherRecord && Boolean.TRUE.equals(otherRecord.settings().prism().diffable()) && (!analysedComponent.requiresUnwrapping())) {
-                processComponent(analysedComponent, otherRecord, methodName);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void processComponent(final AnalysedComponent analysedComponent, final AnalysedRecord otherRecord, final String methodName) {
         final ClassName otherResultClass = obtainResultClass(otherRecord).className();
         differResult.addField(
             FieldSpec.builder(otherResultClass, analysedComponent.name(), Modifier.PRIVATE, Modifier.FINAL)
@@ -66,7 +56,7 @@ public final class EagerNestedDiff extends DifferVisitor {
                 analysedComponent.name()
             );
         }
-
+        
         final MethodSpec.Builder changedMethod = differResult.createMethod(
             changedMethodName(analysedComponent.name()),
             claimableOperation
@@ -75,7 +65,7 @@ public final class EagerNestedDiff extends DifferVisitor {
         changedMethod.returns(TypeName.BOOLEAN)
             .addStatement("return this.$L.$L()", analysedComponent.name(), otherRecord.settings().prism().diffOptions().changedAnyMethodName())
             .addJavadoc("Has the $S field changed between the two versions?", analysedComponent.name());
-
+        
         final MethodSpec.Builder diffMethod = differResult.createMethod(
             diffOptionsPrism.differMethodName() + analysedComponent.nameFirstLetterCaps(),
             claimableOperation
@@ -84,6 +74,7 @@ public final class EagerNestedDiff extends DifferVisitor {
         diffMethod.returns(otherResultClass)
             .addStatement("return this.$L", analysedComponent.name())
             .addJavadoc("Obtains the diff of the $S field", analysedComponent.name());
+        return true;
     }
 
 }

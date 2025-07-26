@@ -8,9 +8,10 @@ import static io.github.cbarlin.aru.impl.Constants.Names.ENUM_SET;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
@@ -18,7 +19,8 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-@ServiceProvider
+@Component
+@GlobalScope
 @SuppressWarnings({"java:S1192"}) // Constant strings will not make this class clearer
 public final class EnumSetCollectionHandler extends SetCollectionHandler {
 
@@ -69,7 +71,8 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
     }
 
     public static void nonNullAutoField(final AnalysedComponent component, final ToBeBuilt addFieldTo, final TypeName innerType) {
-        final FieldSpec fSpec = FieldSpec.builder(component.typeName(), component.name(), Modifier.PRIVATE)
+        final ParameterizedTypeName ptn = ParameterizedTypeName.get(ENUM_SET, innerType);
+        final FieldSpec fSpec = FieldSpec.builder(ptn, component.name(), Modifier.PRIVATE)
             .addAnnotation(NON_NULL)
             .initializer("$T.noneOf($T.class)", ENUM_SET, innerType)
             .build();

@@ -1,21 +1,22 @@
 package io.github.cbarlin.aru.impl.diff;
 
-import static io.github.cbarlin.aru.impl.Constants.Claims.INTERNAL_MATCHING_IFACE;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.DIFFER_UTILS_CLASS;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERNAL_MATCHING_IFACE_NAME;
-
 import java.util.Locale;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffEvaluationMode;
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.BuilderOptionsPrism;
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism.DiffOptionsPrism;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
-import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
+import io.github.cbarlin.aru.impl.diff.holders.DiffInterfaceClass;
+import io.github.cbarlin.aru.impl.diff.holders.DiffResultsClass;
+import io.github.cbarlin.aru.impl.diff.holders.DiffStaticClass;
+import io.github.cbarlin.aru.impl.misc.MatchingInterface;
+import io.github.cbarlin.aru.prism.prison.BuilderOptionsPrism;
+import io.github.cbarlin.aru.prism.prison.DiffOptionsPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
@@ -23,46 +24,37 @@ public abstract class DifferVisitor extends RecordVisitor {
 
     private static final String HAS_CHANGED_STATIC_METHOD_FMT = "has%sChanged";
 
+    protected final DiffOptionsPrism diffOptionsPrism;
+    protected final DiffInterfaceClass diffInterfaceClass;
+    protected final DiffResultsClass differResult;
+    protected final DiffStaticClass differStaticClass;
+    protected final MethodSpec.Builder differResultRecordConstructor;
+    protected final MethodSpec.Builder differResultInterfaceConstructor;
+    protected final BuilderOptionsPrism builderOptionsPrism;
+    protected final MatchingInterface matchingInterface;
+    protected final DiffEvaluationMode diffEvaluationMode;
+
     /*
      * These fields *are* nullable, but functionally when any child class
      *   goes to access them, they will have values.
      * Therefore we will not mark them as `Nullable` (because functionally they aren't) 
      */
-    protected ToBeBuilt differInterface;
-    protected ToBeBuilt differResult;
-    protected ToBeBuilt differStaticClass;
-    protected BuilderOptionsPrism builderOptionsPrism;
-    protected DiffOptionsPrism diffOptionsPrism;
-    protected ToBeBuilt matchingInterface;
-    protected DiffEvaluationMode diffEvaluationMode;
-    protected MethodSpec.Builder differResultRecordConstructor;
-    protected MethodSpec.Builder differResultInterfaceConstructor; 
     
-    @SuppressWarnings({"java:S2637"}) // As mentioned above, they are functionally not null
-    protected DifferVisitor(final ClaimableOperation claimableOperation) {
-        super(claimableOperation);
+    @SuppressWarnings({"java:S2637"})
+    protected DifferVisitor(final ClaimableOperation claimableOperation, final DiffHolder diffHolder) {
+        super(claimableOperation, diffHolder.analysedRecord());
+        this.diffOptionsPrism = diffHolder.diffOptionsPrism();
+        this.diffInterfaceClass = diffHolder.interfaceClass();
+        this.differResult = diffHolder.resultsClass();
+        this.differStaticClass = diffHolder.staticClass();
+        this.differResultRecordConstructor = diffHolder.resultsClass().recordConstructor();
+        this.differResultInterfaceConstructor = diffHolder.resultsClass().interfaceConstructor();
+        this.matchingInterface = diffHolder.matchingInterface();
+        this.builderOptionsPrism = diffHolder.builderOptionsPrism();
+        this.diffEvaluationMode = DiffEvaluationMode.LAZY.name().equals(diffOptionsPrism.evaluationMode()) ? DiffEvaluationMode.LAZY : DiffEvaluationMode.EAGER;
     }
-
-    protected abstract boolean innerIsApplicable(final AnalysedRecord analysedRecord);
 
     protected abstract int innerSpecificity();
-
-    @Override
-    public final boolean isApplicable(final AnalysedRecord analysedRecord) {
-        if (Boolean.TRUE.equals(analysedRecord.settings().prism().diffable())) {
-            matchingInterface = analysedRecord.utilsClassChildInterface(INTERNAL_MATCHING_IFACE_NAME, INTERNAL_MATCHING_IFACE);
-            diffOptionsPrism = analysedRecord.settings().prism().diffOptions();
-            builderOptionsPrism = analysedRecord.settings().prism().builderOptions();
-            diffEvaluationMode = DiffEvaluationMode.LAZY.name().equals(diffOptionsPrism.evaluationMode()) ? DiffEvaluationMode.LAZY : DiffEvaluationMode.EAGER;
-            differInterface = analysedRecord.utilsClassChildInterface(diffOptionsPrism.differName(), Claims.DIFFER_IFACE);
-            differStaticClass = analysedRecord.utilsClassChildClass(DIFFER_UTILS_CLASS, Claims.DIFFER_UTILS);
-            differResult = obtainResultClass(analysedRecord);
-            differResultRecordConstructor = differResult.createConstructor();
-            differResultInterfaceConstructor = differResult.createMethod("<init>", Claims.DIFFER_IFACE);
-            return innerIsApplicable(analysedRecord);
-        }
-        return false;
-    }
 
     @Override
     public final int specificity() {
@@ -73,7 +65,7 @@ public abstract class DifferVisitor extends RecordVisitor {
         return diffOptionsPrism.changedCheckPrefix() + capitalise(variableName) + diffOptionsPrism.changedCheckSuffix();
     }
 
-    protected ToBeBuiltRecord collectionDiffRecord(final AnalysedCollectionComponent acc) {
+    protected ToBeBuiltRecord collectionDiffRecord(final AnalysedComponent acc) {
         final String innerClassName = typeNameToPartialMethodName(acc.typeName());
         return (ToBeBuiltRecord) differResult.childRecordArtifact(innerClassName, Claims.DIFFER_COLLECTION_RESULT);
     }

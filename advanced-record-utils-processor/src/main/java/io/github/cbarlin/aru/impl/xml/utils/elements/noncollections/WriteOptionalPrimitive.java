@@ -5,20 +5,33 @@ import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
 import java.util.Optional;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.AnalysedOptionalPrimitiveComponent;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlElementPrism.class, AnalysedOptionalPrimitiveComponent.class})
 public final class WriteOptionalPrimitive extends XmlVisitor {
 
-    public WriteOptionalPrimitive() {
-        super(Claims.XML_WRITE_FIELD);
+    private final XmlElementPrism prism;
+    private final AnalysedOptionalPrimitiveComponent component;
+
+    public WriteOptionalPrimitive(
+        final XmlRecordHolder xmlRecordHolder,
+        final XmlElementPrism prism,
+        final AnalysedOptionalPrimitiveComponent component
+    ) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
+        this.prism = prism;
+        this.component = component;
     }
 
     @Override
@@ -27,33 +40,23 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && analysedComponent instanceof final AnalysedOptionalPrimitiveComponent component) {
-            final XmlElementPrism prism = optPrism.get();
-            final String elementName = elementName(component, prism);
-            final boolean required = Boolean.TRUE.equals(prism.required());
-            final Optional<String> defaultValue = defaultValue(prism);
-            final Optional<String> namespaceName = namespaceName(prism);
-            final MethodSpec.Builder methodBuilder = createMethod(component, component.typeName());
+        final String elementName = findElementName(component, prism);
+        final boolean required = Boolean.TRUE.equals(prism.required());
+        final Optional<String> defaultValue = defaultValue(prism);
+        final Optional<String> namespaceName = namespaceName(prism);
+        final MethodSpec.Builder methodBuilder = createMethod(component, component.typeName());
 
-            final String methodName = component.getterMethod();
+        final String methodName = component.getterMethod();
 
-            if (defaultValue.isPresent()) {
-                final String writeAsDefaultValue = defaultValue.get();
-                writeValueWithDefault(component, elementName, namespaceName, methodBuilder, methodName, writeAsDefaultValue);
-            } else {
-                writeValueWithoutDefault(component, elementName, required, namespaceName, methodBuilder, methodName);
-            }
-
-            return true;
+        if (defaultValue.isPresent()) {
+            final String writeAsDefaultValue = defaultValue.get();
+            writeValueWithDefault(component, elementName, namespaceName, methodBuilder, methodName, writeAsDefaultValue);
+        } else {
+            writeValueWithoutDefault(component, elementName, required, namespaceName, methodBuilder, methodName);
         }
-        return false;
+
+        return true;
     }
 
     private void writeValueWithoutDefault(final AnalysedOptionalPrimitiveComponent component, 

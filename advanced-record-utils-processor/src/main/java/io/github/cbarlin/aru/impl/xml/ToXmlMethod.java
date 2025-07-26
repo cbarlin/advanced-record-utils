@@ -1,31 +1,59 @@
 package io.github.cbarlin.aru.impl.xml;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_ATTRIBUTE;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENTS;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.lang.model.element.TypeElement;
-
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
+import io.github.cbarlin.aru.impl.xml.iface.WriteIfaceToXml;
+import io.github.cbarlin.aru.impl.xml.utils.WriteStaticToXml;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
-
+import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
-public abstract class ToXmlMethod extends XmlVisitor {
+import javax.lang.model.element.TypeElement;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-    protected ToXmlMethod(final ClaimableOperation claimableOperation) {
-        super(claimableOperation);
+public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceToXml, WriteStaticToXml {
+
+    protected final Optional<XmlRootElementPrism> xmlRootElementPrism;
+    protected final Optional<XmlTypePrism> xmlTypePrism;
+    protected final MethodSpec.Builder interfaceMethod;
+    protected final MethodSpec.Builder staticMethod;
+    protected final List<AnalysedComponent> components = new ArrayList<>();
+    protected final Set<AnalysedComponent> elCompontents = new HashSet<>();
+    protected final Set<AnalysedComponent> attrComponents = new HashSet<>();
+
+    protected ToXmlMethod(
+        final ClaimableOperation claimableOperation,
+        final XmlRecordHolder xmlRecordHolder,
+        final Optional<XmlTypePrism> xmlTypePrism,
+        final Optional<XmlRootElementPrism> xmlRootElementPrism
+    ) {
+        super(claimableOperation, xmlRecordHolder);
+        this.xmlTypePrism = xmlTypePrism;
+        this.xmlRootElementPrism = xmlRootElementPrism;
+        this.interfaceMethod = xmlRecordHolder.interfaceToXml();
+        this.staticMethod = xmlRecordHolder.staticToXml();
+    }
+
+    @Override
+    protected final boolean visitStartOfClassImpl() {
+        return true;
+    }
+
+    @Override
+    protected final boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
+        components.add(analysedComponent);
+        if (holder.xmlAttributeMapper().optionalInstanceOn(analysedComponent.element()).isPresent()) {
+            attrComponents.add(analysedComponent);
+        } else if (holder.xmlTransientMapper().optionalInstanceOn(analysedComponent.element()).isEmpty()) {
+            elCompontents.add(analysedComponent);
+        }
+        return false;
     }
 
     protected final void configureNamespaceContext(final AnalysedRecord analysedRecord, final MethodSpec.Builder methodBuilder) {
@@ -52,41 +80,36 @@ public abstract class ToXmlMethod extends XmlVisitor {
     }
 
     protected final void remainingElements(
-        final AnalysedRecord analysedRecord, 
-        final String accessOrder,
+        final List<AnalysedComponent> components,
         final List<AnalysedComponent> writeOrder
     ) {
-        if ("ALPHABETICAL".equals(accessOrder)) {
+        if (isAlphabeticalAccessOrder) {
             final List<AnalysedComponent> toBeOrdered = new ArrayList<>();
-            for(final AnalysedComponent component : analysedRecord.components()) {
-                if (component.isPrismPresent(XML_ELEMENT, XmlElementPrism.class) || component.isPrismPresent(XML_ELEMENTS, XmlElementsPrism.class)) {
-                    if (!(writeOrder.contains(component) || toBeOrdered.contains(component))) {
-                        toBeOrdered.add(component);
-                    }
+            for(final AnalysedComponent component : components) {
+                if (elCompontents.contains(component) && (!(writeOrder.contains(component) || toBeOrdered.contains(component)))) {
+                    toBeOrdered.add(component);
                 }
             }
             toBeOrdered.sort((a, b) -> a.name().compareTo(b.name()));
             writeOrder.addAll(toBeOrdered);
         } else {
             // This will be declaration order then
-            for(final AnalysedComponent component : analysedRecord.components()) {
-                if (component.isPrismPresent(XML_ELEMENT, XmlElementPrism.class) || component.isPrismPresent(XML_ELEMENTS, XmlElementsPrism.class)) {
-                    if (!writeOrder.contains(component)) {
-                        writeOrder.add(component);
-                    }
+            for(final AnalysedComponent component : components) {
+                if (elCompontents.contains(component) && (!writeOrder.contains(component))) {
+                    writeOrder.add(component);
                 }
             }
         }
     }
 
     protected final void manuallyOrderedElements(
-        final AnalysedRecord analysedRecord, 
+        final List<AnalysedComponent> components, 
         final List<String> propOrder,
         final List<AnalysedComponent> writeOrder
     ) {
         for (final String prop : propOrder) {
-            for(final AnalysedComponent component : analysedRecord.components()) {
-                if (prop.equals(component.name()) && (!writeOrder.contains(component)) && (component.isPrismPresent(XML_ELEMENT, XmlElementPrism.class) || component.isPrismPresent(XML_ELEMENTS, XmlElementsPrism.class))) {
+            for(final AnalysedComponent component : components) {
+                if (prop.equals(component.name()) && (!writeOrder.contains(component)) && elCompontents.contains(component)) {
                     writeOrder.add(component);
                 }
             }
@@ -94,14 +117,13 @@ public abstract class ToXmlMethod extends XmlVisitor {
     }
 
     protected final void remainingAttributes(
-        final AnalysedRecord analysedRecord, 
-        final String accessOrder,
+        final List<AnalysedComponent> components,
         final List<AnalysedComponent> writeOrder
     ) {
-        if ("ALPHABETICAL".equals(accessOrder)) {
+        if (isAlphabeticalAccessOrder) {
             final List<AnalysedComponent> toBeOrdered = new ArrayList<>();
-            for(final AnalysedComponent component : analysedRecord.components()) {
-                if (component.isPrismPresent(XML_ATTRIBUTE, XmlAttributePrism.class) && !(writeOrder.contains(component) || toBeOrdered.contains(component))) {
+            for(final AnalysedComponent component : components) {
+                if (attrComponents.contains(component) && !(writeOrder.contains(component) || toBeOrdered.contains(component))) {
                     toBeOrdered.add(component);
                 }
                 
@@ -110,8 +132,8 @@ public abstract class ToXmlMethod extends XmlVisitor {
             writeOrder.addAll(toBeOrdered);
         } else {
             // This will be declaration order then
-            for(final AnalysedComponent component : analysedRecord.components()) {
-                if (component.isPrismPresent(XML_ATTRIBUTE, XmlAttributePrism.class) && (!writeOrder.contains(component))) {
+            for(final AnalysedComponent component : components) {
+                if (attrComponents.contains(component) && (!writeOrder.contains(component))) {
                     writeOrder.add(component);
                 }
             }
@@ -119,21 +141,21 @@ public abstract class ToXmlMethod extends XmlVisitor {
     }
 
     protected final void manuallyOrderedAttributes(
-        final AnalysedRecord analysedRecord, 
+        final List<AnalysedComponent> components, 
         final List<String> propOrder,
         final List<AnalysedComponent> writeOrder
     ) {
         for (final String prop : propOrder) {
-            for(final AnalysedComponent component : analysedRecord.components()) {
-                if (prop.equals(component.name()) && (!writeOrder.contains(component)) && component.isPrismPresent(XML_ATTRIBUTE, XmlAttributePrism.class)) {
+            for(final AnalysedComponent component : components) {
+                if (prop.equals(component.name()) && (!writeOrder.contains(component)) && attrComponents.contains(component)) {
                     writeOrder.add(component);
                 }
             }
         }
     }
 
-    protected final void addWriteOrderComment(final MethodSpec.Builder methodBuilder, final String accessOrder) {
-        if ("ALPHABETICAL".equals(accessOrder)) {
+    protected final void addWriteOrderComment(final MethodSpec.Builder methodBuilder) {
+        if (isAlphabeticalAccessOrder) {
             methodBuilder.addComment("The write order is as follows:")
                 .addComment(" 1. Attributes in the propOrder if present")
                 .addComment(" 2. Remaining attributes in alphabetical order")

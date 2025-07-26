@@ -1,5 +1,14 @@
 package io.github.cbarlin.aru.impl.types.collection.list;
 
+import io.github.cbarlin.aru.impl.types.collection.StandardCollectionHandler;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+import io.micronaut.sourcegen.javapoet.TypeName;
+
+import javax.lang.model.element.Modifier;
+
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARRAY_LIST;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.HASH_SET;
@@ -11,15 +20,6 @@ import static io.github.cbarlin.aru.impl.Constants.Names.FUNCTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.LONG;
 import static io.github.cbarlin.aru.impl.Constants.Names.MAP;
 import static io.github.cbarlin.aru.impl.Constants.Names.MATH;
-
-import javax.lang.model.element.Modifier;
-
-import io.github.cbarlin.aru.impl.types.collection.StandardCollectionHandler;
-import io.micronaut.sourcegen.javapoet.ClassName;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
-import io.micronaut.sourcegen.javapoet.ParameterSpec;
-import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
-import io.micronaut.sourcegen.javapoet.TypeName;
 
 public abstract class ListCollectionHandler extends StandardCollectionHandler {
 

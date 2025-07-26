@@ -2,32 +2,30 @@ package io.github.cbarlin.aru.impl.merger.utils;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
+import io.github.cbarlin.aru.impl.wiring.MergerPerRecordScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@MergerPerRecordScope
 public final class Primitive extends MergerVisitor {
 
-    private final Set<String> processedSpecs = HashSet.newHashSet(5);
+    private final Set<String> processedSpecs;
 
-    public Primitive() {
-        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public Primitive(final MergerHolder mergerHolder) {
+        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD, mergerHolder);
+        this.processedSpecs = mergerHolder.processedMethods();
     }
 
     @Override
@@ -40,7 +38,7 @@ public final class Primitive extends MergerVisitor {
         if (!analysedComponent.typeName().isPrimitive()) {
             return false;
         }
-        final var targetTn = analysedComponent.typeName();
+        final TypeName targetTn = analysedComponent.typeName();
         final String methodName = mergeStaticMethodName(targetTn);
 
         if (processedSpecs.add(methodName)) {
