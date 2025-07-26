@@ -11,5 +11,6 @@ module io.github.cbarlin.aru.prism.prison {
     requires static io.avaje.jsonb;
     requires static com.fasterxml.jackson.annotation;
     requires static jakarta.xml.bind;
+    requires static io.github.cbarlin.aru.annotations;
     requires java.compiler;
 }

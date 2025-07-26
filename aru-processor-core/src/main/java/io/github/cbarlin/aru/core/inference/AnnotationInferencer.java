@@ -6,8 +6,8 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 
 import io.avaje.spi.Service;
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**

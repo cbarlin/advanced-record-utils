@@ -20,6 +20,7 @@ import javax.tools.Diagnostic;
 import org.jspecify.annotations.NullMarked;
 
 import io.github.cbarlin.aru.core.mirrorhandlers.MergedMirror;
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**

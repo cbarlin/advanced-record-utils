@@ -14,12 +14,12 @@ import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 
 import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.inference.AnnotationInferencer;
 import io.github.cbarlin.aru.core.inference.ClassNameToPrismAdaptor;
 import io.github.cbarlin.aru.core.mirrorhandlers.MapBasedAnnotationMirror;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 

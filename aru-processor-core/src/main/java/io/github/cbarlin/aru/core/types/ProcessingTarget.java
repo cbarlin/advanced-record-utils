@@ -4,9 +4,9 @@ import javax.lang.model.element.TypeElement;
 
 import org.jspecify.annotations.Nullable;
 
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.GenerationArtifact;
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**

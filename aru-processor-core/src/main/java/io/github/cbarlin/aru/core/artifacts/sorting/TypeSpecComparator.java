@@ -16,7 +16,7 @@ import io.micronaut.sourcegen.javapoet.TypeSpec;
  * <li>Order by name</li>
  * </ol>
  */
-public class TypeSpecComparator {
+public final class TypeSpecComparator {
 
     public static final Comparator<TypeSpec> INSTANCE = createComparator();
 

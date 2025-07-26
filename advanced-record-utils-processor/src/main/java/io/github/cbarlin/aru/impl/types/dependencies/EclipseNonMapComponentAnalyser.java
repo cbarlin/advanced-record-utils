@@ -9,9 +9,9 @@ import org.jspecify.annotations.Nullable;
 import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.core.analysers.ComponentAnalyser;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.types.ComponentAnalyser;
 
 @ServiceProvider
 public final class EclipseNonMapComponentAnalyser implements ComponentAnalyser {

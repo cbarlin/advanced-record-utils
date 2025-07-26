@@ -8,9 +8,8 @@ import javax.lang.model.type.DeclaredType;
 
 import org.jspecify.annotations.Nullable;
 
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsGeneratedPrism;
 import io.github.cbarlin.aru.core.ClaimableOperation;
-
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsGeneratedPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 public final class PreBuilt implements GenerationArtifact<PreBuilt> {

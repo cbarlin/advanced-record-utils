@@ -1,119 +1,193 @@
 package io.github.cbarlin.aru.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 
 import org.jspecify.annotations.Nullable;
 
-import io.github.cbarlin.aru.core.artifacts.PreBuilt;
+import io.avaje.inject.BeanScope;
+import io.avaje.inject.Component;
+import io.github.cbarlin.aru.core.analysers.TargetAnalyser;
+import io.github.cbarlin.aru.core.analysers.TargetAnalysisResult;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedType;
-import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.github.cbarlin.aru.core.wiring.AruGlobal;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.JavaFile;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 
+@Component
+@AruGlobal
 public final class UtilsProcessingContext {
-    private final ProcessingEnvironment processingEnvironment;
+
     private final Map<TypeElement, ProcessingTarget> analysedTypes = new HashMap<>();
     private final Set<TypeElement> rootElements = new HashSet<>();
     private final Set<TypeElement> processedElements = new HashSet<>();
-    private final PreviousCompilationChecker previousCompilationChecker;
-
-    public UtilsProcessingContext(final ProcessingEnvironment processingEnvironment) {
-        this.processingEnvironment = processingEnvironment;
-        this.previousCompilationChecker = new PreviousCompilationChecker(processingEnvironment);
-    }
 
     public ProcessingEnvironment processingEnv() {
-        return processingEnvironment;
+        return APContext.processingEnv();
     }
 
     public @Nullable ProcessingTarget analysedType(final TypeElement typeElement) {
         return analysedTypes.get(typeElement);
     }
 
-    public void processElements(final Supplier<List<RecordVisitor>> recordVisitorSupplier, final Supplier<List<InterfaceVisitor>> ifaceVisitorSupplier) {
-        messageCounts();
-        for (final Entry<TypeElement,ProcessingTarget> entry : analysedTypes.entrySet()) {
-            if(!processedElements.contains(entry.getKey())) {
-                if (entry.getValue() instanceof final AnalysedRecord analysedRecord) {
-                    processAnalysedRecord(recordVisitorSupplier, entry.getKey(), analysedRecord);
-                } else if (entry.getValue() instanceof final AnalysedInterface analysedInterface) {
-                    // OK, need to load up IfaceVisitors I guess...
-                    processAnalysedIface(ifaceVisitorSupplier, entry.getKey(), analysedInterface);
+    public Collection<ProcessingTarget> processingTargets() {
+        return analysedTypes.values();
+    }
+
+    /**
+     * Begin a chain of analysis from a (potential) root element
+     */
+    protected void analyseRootElement(final Element element, final List<TargetAnalyser> analysers) {
+        // Don't re-process a generation root
+        if (rootElements.contains(element) || processedElements.contains(element)) {
+            return;
+        }
+        if (analysedTypes.containsKey(element)) {
+            // Add this as a "root" but don't bother continuing
+            rootElements.add(analysedTypes.get(element).typeElement());
+        } else {
+            analyseElement(element, Optional.empty(), analysers)
+                .map(ProcessingTarget::typeElement)
+                .ifPresent(rootElements::add);
+        }
+    }
+
+    private Optional<ProcessingTarget> analyseElement(final Element element, final Optional<AdvRecUtilsSettings> settings, final List<TargetAnalyser> analysers) {
+        if (analysedTypes.containsKey(element)) {
+            return Optional.empty();
+        }
+        for (final TargetAnalyser analyser : analysers) {
+            final TargetAnalysisResult analysisResult = analyser.analyse(element, settings);
+            if (analysisResult.target().isEmpty() && analysisResult.foundElements().isEmpty()) {
+                continue;
+            }
+            // Add to analysed types
+            analysisResult.target().ifPresent(tar -> analysedTypes.put(tar.typeElement(), tar));
+            final Optional<AdvRecUtilsSettings> passDown = analysisResult.target()
+                .filter(AnalysedType.class::isInstance)
+                .map(AnalysedType.class::cast)
+                .map(AnalysedType::settings)
+                .or(() -> settings);
+
+            for (final TypeElement typeElement : analysisResult.foundElements()) {
+                analyseElement(typeElement, passDown, analysers);
+            }
+
+            return analysisResult.target();
+        }
+        return Optional.empty();
+    }
+
+    protected void matchInterfaces() {
+        for (final Entry<TypeElement,ProcessingTarget> entrySet : analysedTypes.entrySet()) {
+            if ((entrySet.getValue() instanceof final AnalysedInterface ai) && !processedElements.contains(entrySet.getKey())) {
+                for (final TypeElement unprocessed : ai.unprocessedImplementations()) {
+                    final ProcessingTarget target = analysedTypes.get(unprocessed);
+                    if (Objects.nonNull(target)) {
+                        ai.addImplementingType(target);
+                    }
                 }
             }
         }
     }
 
-    private void processAnalysedIface(
-        final Supplier<List<InterfaceVisitor>> visitorSupplier,
-        final TypeElement element,
-        final AnalysedInterface analysedInterface
-    ) {
-        final List<InterfaceVisitor> visitors = visitorSupplier.get()
-            .stream()
-            .filter(vis -> vis.isApplicable(analysedInterface))
-            .toList();
-        if (visitors.isEmpty()) {
-            // We don't mind if there are no visitors here so no logging
-            processedElements.add(element);
-            return;
+    protected void processElements(final BeanScope globalBeanScope) {
+        messageCounts();
+        for (final Entry<TypeElement,ProcessingTarget> entry : analysedTypes.entrySet()) {
+            if (processedElements.add(entry.getKey())) {
+                final ProcessingTarget target = entry.getValue();
+                if (target instanceof final AnalysedRecord ar) {
+                    processRecord(ar, globalBeanScope);
+                } else if (target instanceof final AnalysedInterface ai) {
+                    processInterface(ai, globalBeanScope);
+                }
+            }
         }
-        // The interface configures its own logger because it only has one visit method
-        visitors.forEach(visitor -> visitor.visitInterface(analysedInterface));
-        try {
-            writeOutUtilsClass(analysedInterface);
-        } catch (final Exception e) {
-            APContext.messager().printError("Obtained error when writing out utils class: " + e.getMessage(), analysedInterface.typeElement());
-        }
-        processedElements.add(element);
     }
-    
 
-    private void processAnalysedRecord(
-        final Supplier<List<RecordVisitor>> visitorSupplier,
-        final TypeElement element,
-        final AnalysedRecord analysedRecord
-    ) {
-        final List<RecordVisitor> visitors = visitorSupplier.get()
-            .stream()
-            .filter(vis -> vis.isApplicable(analysedRecord))
-            .toList();
-        if (visitors.isEmpty()) {
-            APContext.messager().printError("There are no available visitors", analysedRecord.typeElement());
-            processedElements.add(element);
-            return;
+    private void processInterface(final AnalysedInterface analysedInterface, final BeanScope globalBeanScope) {
+        try (
+            final BeanScope perTargetBeanScope = BeanScope.builder()
+                .parent(globalBeanScope, false)
+                .bean(ProcessingTarget.class, analysedInterface)
+                .build();
+        ) {
+            perTargetBeanScope.list(InterfaceVisitor.class)
+                .forEach(visitor -> visitor.visitInterface(analysedInterface));
+
+            try {
+                writeOutUtilsClass(analysedInterface);
+            } catch (final Exception e) {
+                APContext.messager().printError("Obtained error when writing out utils class: " + e.getMessage(), analysedInterface.typeElement());
+            }
         }
-        // Configure the logging here because we may not be doing anything at a class level
-        visitors.forEach(visitor -> visitor.configureLogging(analysedRecord));
-        visitors.forEach(visitor -> visitor.visitStartOfClass(analysedRecord));
-        analysedRecord.components().forEach(component -> visitors.forEach(visitor -> visitor.visitComponent(component)));
-        visitors.forEach(visitor -> visitor.visitEndOfClass(analysedRecord));
-        try {
-            writeOutUtilsClass(analysedRecord);
-        } catch (final Exception e) {
-            APContext.messager().printError("Obtained error when writing out utils class: " + e.getMessage(), analysedRecord.typeElement());
+    }
+
+    private void processRecord(final AnalysedRecord analysedRecord, final BeanScope globalBeanScope) {
+        try (
+            final BeanScope perTargetBeanScope = BeanScope.builder()
+                .parent(globalBeanScope, false)
+                .bean(ProcessingTarget.class, analysedRecord)
+                .profiles("aru-reset-per-record")
+                .build();
+        ) {
+            final List<RecordVisitor> perRecordVisitors = new ArrayList<>(perTargetBeanScope.list(RecordVisitor.class));
+            if (perRecordVisitors.isEmpty()) {
+                APContext.messager().printError("There are no available visitors", analysedRecord.typeElement());
+                return;
+            }
+            Collections.sort(perRecordVisitors);
+            perRecordVisitors.forEach(visitor -> visitor.visitStartOfClass());
+            for (final RecordComponentElement recordComponent : analysedRecord.typeElement().getRecordComponents() ) {
+                processRecordElement(perTargetBeanScope, recordComponent);
+            }
+            perRecordVisitors.forEach(visitor -> visitor.visitEndOfClass());
+            try {
+                writeOutUtilsClass(analysedRecord);
+            } catch (final Exception e) {
+                APContext.messager().printError("Obtained error when writing out utils class: " + e.getMessage(), analysedRecord.typeElement());
+            }
         }
-        processedElements.add(element);
+    }
+
+    private void processRecordElement(final BeanScope perTargetBeanScope, final RecordComponentElement recordComponent) {
+        try (
+            final BeanScope perElement = BeanScope.builder()
+                .parent(perTargetBeanScope, false)
+                .bean(RecordComponentElement.class, recordComponent)
+                .build()
+        ) {
+            final Optional<AnalysedComponent> aco = perElement.getOptional(AnalysedComponent.class);
+            if (aco.isPresent()) {
+                final AnalysedComponent analysedComponent = aco.get();
+                final List<RecordVisitor> perElementVisitor = new ArrayList<>(perElement.list(RecordVisitor.class));
+                Collections.sort(perElementVisitor);
+                perElementVisitor.forEach(visitor -> visitor.visitComponent(analysedComponent));
+            }
+        }
     }
 
     private void messageCounts() {
@@ -148,65 +222,4 @@ public final class UtilsProcessingContext {
         }
     }
 
-    /**
-     * Begin a chain of analysis from a (potential) root element
-     */
-    public void analyseRootElement(final Element element) {
-        // Don't re-process a generation root
-        if (rootElements.contains(element) || processedElements.contains(element)) {
-            return;
-        }
-        if (analysedTypes.containsKey(element)) {
-            // Add this as a "root" but don't bother continuing
-            rootElements.add(analysedTypes.get(element).typeElement());
-            return;
-        }
-
-        if(ElementKind.RECORD.equals(element.getKind()) || ElementKind.INTERFACE.equals(element.getKind())) {
-            final TypeElement typeElement = (TypeElement) element;
-            if (AdvRecUtilsSettings.isAnnotatated(element, processingEnvironment)) {
-                rootElements.add(typeElement);
-                final AdvRecUtilsSettings settings = AdvRecUtilsSettings.wrap(typeElement, processingEnvironment);
-                if (ElementKind.RECORD.equals(element.getKind())) {
-                    AnalysedRecord.analyse(analysedTypes, typeElement, this, settings);
-                } else {
-                    AnalysedInterface.analyse(analysedTypes, typeElement, this, settings);
-                }
-            }
-        } else if (ElementKind.PACKAGE.equals(element.getKind())) {
-            final PackageElement packageElement = (PackageElement) element;
-            final AdvRecUtilsSettings settings = AdvRecUtilsSettings.wrap(packageElement, processingEnvironment);
-            if (Boolean.TRUE.equals(settings.prism().applyToAllInPackage())) {
-                packageElement.getEnclosedElements().forEach(this::analyseRootElement);
-            }
-        }
-    }
-
-    /**
-     * Check to see if there is an existing utils class of the target item. If there is, add it to the known context (so it doesn't get re-processed)
-     */
-    public void checkForAndAddExistingUtils(final TypeElement referencedItem) {
-        AdvRecUtilsSettings.wrapOptional(referencedItem, processingEnvironment)
-            .map(this::cnToCheckExisting)
-            .flatMap(previousCompilationChecker::loadGeneratedArtifact)
-            .ifPresent(utilsTypeElement -> loadGeneratedPrism(utilsTypeElement, referencedItem));
-    }
-
-    private void loadGeneratedPrism(final TypeElement utilsTypeElement, final TypeElement referencedTypeElement) {
-        processedElements.add(referencedTypeElement);
-        final LibraryLoadedTarget libraryLoadedTarget = new LibraryLoadedTarget(new PreBuilt(utilsTypeElement), referencedTypeElement);
-        analysedTypes.put(referencedTypeElement, libraryLoadedTarget);
-
-    }
-
-    private ClassName cnToCheckExisting(final AdvRecUtilsSettings settings) {
-        final Element originaElement = settings.originalElement();
-        final String utilsClassName = settings.prism().typeNameOptions().utilsImplementationPrefix() + originaElement.getSimpleName().toString() + settings.prism().typeNameOptions().utilsImplementationSuffix();
-        Element packageEl = originaElement;
-        while(!(packageEl instanceof PackageElement)) {
-            packageEl = packageEl.getEnclosingElement();
-        }
-        final String packageName = ((PackageElement) packageEl).getQualifiedName().toString();
-        return ClassName.get(packageName, utilsClassName);
-    }
 }

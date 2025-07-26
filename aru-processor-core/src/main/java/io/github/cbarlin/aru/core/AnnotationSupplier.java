@@ -8,10 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NullMarked;
 
 import io.github.cbarlin.aru.annotations.Generated;
+import io.github.cbarlin.aru.core.artifacts.IToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.OperationType;
 import io.github.cbarlin.aru.core.visitors.AruVisitor;
-
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
@@ -46,6 +46,11 @@ public final class AnnotationSupplier {
 
     public static void addGeneratedAnnotation(final ToBeBuilt generationArtifact, final AruVisitor<?> visitor, final String comment) {
         final AnnotationSpec spec = javaxAnnotation(visitor, comment);
+        generationArtifact.builder().addAnnotation(spec);
+    }
+
+    public static void addGeneratedAnnotation(final IToBeBuilt<?> generationArtifact, final AruVisitor<?> visitor) {
+        final AnnotationSpec spec = javaxAnnotation(visitor, defaultComment(visitor));
         generationArtifact.builder().addAnnotation(spec);
     }
 

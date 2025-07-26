@@ -12,16 +12,13 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
-import io.github.cbarlin.aru.annotations.TypeConverter;
 import io.github.cbarlin.aru.core.APContext;
-
-import io.avaje.prism.GeneratePrism;
+import io.github.cbarlin.aru.prism.prison.TypeConverterPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-@GeneratePrism(value = TypeConverter.class, publicAccess = true)
-public class AnalysedTypeConverter {
+public final class AnalysedTypeConverter {
     private static final Map<TypeElement, List<AnalysedTypeConverter>> CACHE = new HashMap<>();
 
     private final ClassName referenceClassName;

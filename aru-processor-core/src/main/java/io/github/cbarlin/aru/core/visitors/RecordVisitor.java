@@ -1,6 +1,5 @@
 package io.github.cbarlin.aru.core.visitors;
 
-import io.avaje.spi.Service;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -23,11 +22,13 @@ import io.github.cbarlin.aru.core.types.OperationType;
  *       If the visitor would make the same claim, it is skipped</li>
  * </ol>
  */
-@Service
 public abstract class RecordVisitor extends AruVisitor<AnalysedRecord> {
 
-    protected RecordVisitor(final ClaimableOperation claimableOperation) {
-        super(claimableOperation);
+    protected final AnalysedRecord analysedRecord;
+
+    protected RecordVisitor(final ClaimableOperation claimableOperation, final AnalysedRecord analysedRecord) {
+        super(claimableOperation, analysedRecord);
+        this.analysedRecord = analysedRecord;
     }
 
     /**
@@ -40,10 +41,9 @@ public abstract class RecordVisitor extends AruVisitor<AnalysedRecord> {
      * <p>
      * Implementers should be aware that if this item was claimed by a more specific visitor with the same {@link ClaimableOperation} then this call will be skipped
      * 
-     * @param analysedRecord The record we are currently processing
      * @return true if the visitor is claiming the item
      */
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         return false;
     }
 
@@ -69,10 +69,8 @@ public abstract class RecordVisitor extends AruVisitor<AnalysedRecord> {
      *  <li>The visitor doesn't make a class-wide claim</li>
      *  <li>The visitor does make a class-wide claim, and it is the claimant</li>
      * </ul>
-     * 
-     * @param analysedRecord The 
      */
-    protected void visitEndOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected void visitEndOfClassImpl() {
         // No-op
     }
 
@@ -85,14 +83,13 @@ public abstract class RecordVisitor extends AruVisitor<AnalysedRecord> {
      * <p>
      * If no class-level claims are made by the visitor, or if it hasn't been claimed yet, the visitor's start class method is invoked (and, by default, does nothing)
      * 
-     * @param analysedRecord The record being processed currently
      * @see #visitStartOfClassImpl(AnalysedRecord)
      */
-    public final void visitStartOfClass(final AnalysedRecord analysedRecord) {
-        if (analysedRecord.attemptToClaim(this)) {
-            final boolean claiming = visitStartOfClassImpl(analysedRecord);
+    public final void visitStartOfClass() {
+        if (target.attemptToClaim(this)) {
+            final boolean claiming = visitStartOfClassImpl();
             if (!claiming) {
-                analysedRecord.retractClaim(this);
+                target.retractClaim(this);
             }
         }
     }
@@ -126,11 +123,10 @@ public abstract class RecordVisitor extends AruVisitor<AnalysedRecord> {
      *  the visitor checks to ensure it either doesn't claim anything class-wide, or that it is the claimant first.
      * 
      * @see #visitEndOfClassImpl(AnalysedRecord)
-     * @param analysedRecord The record being processed
      */
-    public final void visitEndOfClass(final AnalysedRecord analysedRecord) {
-        if (analysedRecord.attemptToClaim(this)) {
-            visitEndOfClassImpl(analysedRecord);
+    public final void visitEndOfClass() {
+        if (target.attemptToClaim(this)) {
+            visitEndOfClassImpl();
         }
     }    
 }

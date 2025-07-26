@@ -3,14 +3,18 @@ package io.github.cbarlin.aru.core.visitors;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.impl.types.OptionalComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
 
 /**
  * An extension to a {@link RecordVisitor} that visits optional components
  */
 public abstract class OptionalRecordVisitor extends RecordVisitor {
 
-    protected OptionalRecordVisitor(ClaimableOperation claimableOperation) {
-        super(claimableOperation);
+    protected final OptionalComponent optionalComponent;
+
+    protected OptionalRecordVisitor(final ClaimableOperation claimableOperation, final AnalysedRecord analysedRecord, final OptionalComponent optionalComponent) {
+        super(claimableOperation, analysedRecord);
+        this.optionalComponent = optionalComponent;
     }
 
     @Override
@@ -24,10 +28,10 @@ public abstract class OptionalRecordVisitor extends RecordVisitor {
     protected abstract int optionalSpecificity();
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        return analysedComponent instanceof OptionalComponent apc && visitOptionalComponent(apc);
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
+        return analysedComponent instanceof OptionalComponent && visitOptionalComponent();
     }
 
-    protected abstract boolean visitOptionalComponent(OptionalComponent<?> analysedOptionalComponent);
+    protected abstract boolean visitOptionalComponent();
 
 }

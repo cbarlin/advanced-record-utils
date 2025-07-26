@@ -2,33 +2,34 @@ package io.github.cbarlin.aru.core.impl.types.analyser;
 
 import javax.lang.model.element.RecordComponentElement;
 
-import org.jspecify.annotations.Nullable;
-
+import io.avaje.inject.Bean;
+import io.avaje.inject.BeanTypes;
+import io.avaje.inject.External;
+import io.avaje.inject.Factory;
+import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.types.ComponentAnalyser;
+import io.github.cbarlin.aru.core.types.components.BasicAnalysedComponent;
+import io.github.cbarlin.aru.core.wiring.ResetPerComponent;
 
-import io.avaje.spi.ServiceProvider;
+@Factory
+public final class BasicAnalyser {
 
-@ServiceProvider
-public final class BasicAnalyser implements ComponentAnalyser {
-
-    @Override
-    public int specificity() {
-        // This should be the "last resort", although it'll probably
-        //   be chosen fairly often!
-        return Integer.MIN_VALUE;
-    }
-
-    @Override
-    public @Nullable AnalysedComponent analyseComponent(
-        final RecordComponentElement element, 
-        final AnalysedRecord parentRecord,
-        final boolean isIntendedConstructorParam, 
+    @Bean
+    @ResetPerComponent
+    @BeanTypes(BasicAnalysedComponent.class)
+    BasicAnalysedComponent analysedComponent(
+        final @External RecordComponentElement recordComponentElement, 
+        final AnalysedRecord analysedRecord, 
         final UtilsProcessingContext utilsProcessingContext
     ) {
-        return new AnalysedComponent(element, parentRecord, isIntendedConstructorParam, utilsProcessingContext);
+        final boolean isIntendedConstructorParam = analysedRecord.intendedConstructor().getParameters()
+            .stream()
+            .filter(param -> param.getSimpleName().toString().equals(recordComponentElement.getSimpleName().toString()))
+            .filter(param -> APContext.types().isSameType(param.asType(), recordComponentElement.asType()))
+            .findFirst()
+            .isPresent();
+        return new BasicAnalysedComponent(recordComponentElement, analysedRecord, isIntendedConstructorParam, utilsProcessingContext);
     }
 
 }
