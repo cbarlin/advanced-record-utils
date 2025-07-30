@@ -1,5 +1,11 @@
 # Advanced Record Utils
 
+[![codecov](https://codecov.io/github/cbarlin/advanced-record-utils/graph/badge.svg?token=KAGP71F0JH)](https://codecov.io/github/cbarlin/advanced-record-utils)
+[![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md)
+[![Build](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml/badge.svg)](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml)
+![Maven Central Version](https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils)
+![GitHub License](https://img.shields.io/github/license/cbarlin/advanced-record-utils)
+
 ## What is Advanced Record Utils?
 
 Advanced Record Utils is an annotation-processor based code generator that creates a companion `*Utils` class (e.g., `PersonUtils` for a `Person` record) that contains a builder, and then optionally:
@@ -24,7 +30,7 @@ Goals include:
  * JPMS support
  * Opt-in dependencies based on the settings chosen
  * Readble generated source code
- * Reproduceable builds - [![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md)
+ * Reproduceable builds
     * The tests that get run by GitHub validate that not only our published JARs are reproduceable, but that the code we generate is also reproduceable too!
 
 Kinda-goals:
@@ -47,6 +53,13 @@ Add the following maven or gradle dependency for the annotations:
     <artifactId>advanced-record-utils-annotations</artifactId>
     <version>${aru.version}</version>
 </dependency>
+<!-- The processor generates JSpecify nullness annotations -->
+<dependency>
+    <groupId>org.jspecify</groupId>
+    <artifactId>jspecify</artifactId>
+    <scope>provided</scope>
+    <version>1.0.0</version>
+</dependency>
 ```
 
 And the following to your annotation processor paths (note: if using integrations with e.g. `avaje-json`, make sure this processor is first):
@@ -61,7 +74,12 @@ And the following to your annotation processor paths (note: if using integration
 
 (Alternatively, you can add it to your dependency list)
 
-If you use java modules, you will need to add `requires io.github.cbarlin.aru.annotations;`
+If you use java modules, you will need to add: 
+
+```java
+requires io.github.cbarlin.aru.annotations;
+requires static org.jspecify;
+```
 
 Annotate your record like so:
 

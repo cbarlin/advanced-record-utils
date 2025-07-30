@@ -54,7 +54,7 @@
 
         <!-- Dependencies -->
         <avaje-jsonb.version>3.6</avaje-jsonb.version>
-        <avaje-prism.version>1.42</avaje-prism.version>
+        <avaje-prism.version>1.43</avaje-prism.version>
         <avaje-spi.version>2.13</avaje-spi.version>
         <avaje-validator.version>2.13</avaje-validator.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
