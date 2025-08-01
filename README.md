@@ -3,8 +3,8 @@
 [![codecov](https://codecov.io/github/cbarlin/advanced-record-utils/graph/badge.svg?token=KAGP71F0JH)](https://codecov.io/github/cbarlin/advanced-record-utils)
 [![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md)
 [![Build](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml/badge.svg)](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml)
-![Maven Central Version](https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils)
-![GitHub License](https://img.shields.io/github/license/cbarlin/advanced-record-utils)
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils)](https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations)
+[![GitHub License](https://img.shields.io/github/license/cbarlin/advanced-record-utils)](https://github.com/cbarlin/advanced-record-utils?tab=MIT-1-ov-file#readme)
 
 ## What is Advanced Record Utils?
 
@@ -72,7 +72,51 @@ And the following to your annotation processor paths (note: if using integration
 </path>
 ```
 
-(Alternatively, you can add it to your dependency list)
+<details>
+<summary>Full POM location of Annotation Processor path</summary>
+
+If you don't have a `build` section of your pom, you can use the below.
+  
+```xml
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>io.github.cbarlin</groupId>
+                        <artifactId>advanced-record-utils-processor</artifactId>
+                        <version>${aru.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+<hr />
+</details>
+
+<details>
+<summary>Alternative method - adding to dependencies (not recommended)</summary>
+
+You can add the processor to your dependencies using the below steps. However, the use of processor paths is recommended because the JDK team have changed the default behaviour after Java 23 (for good reason - see [Quality Outreach Heads-up - JDK 23: Changes Default Annotation Processing Policy](https://inside.java/2024/06/18/quality-heads-up/) for some of them)
+
+1. Add the following maven property (required for Java 23+) - `<maven.compiler.proc>full</maven.compiler.proc>`
+2. Add the dependency:
+```xml
+<dependency>
+  <groupId>io.avaje</groupId>
+  <artifactId>avaje-validator-generator</artifactId>
+  <version>${avaje.validator.version}</version>
+  <scope>provided</scope>
+  <optional>true</optional>
+</dependency>
+```
+<hr />
+</details>
 
 If you use java modules, you will need to add: 
 
