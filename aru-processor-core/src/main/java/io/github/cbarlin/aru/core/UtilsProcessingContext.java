@@ -47,8 +47,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
 
 @Component
@@ -64,7 +62,6 @@ public final class UtilsProcessingContext {
     private final ConcurrentSkipListSet<TypeElement> processedElements = new ConcurrentSkipListSet<>(Comparator.comparing(ClassName::get));
     private final ConcurrentLinkedQueue<WrittenJavaFile> pendingFiles = new ConcurrentLinkedQueue<>();
     private final ExecutorService executorService;
-    private final Lock lock = new ReentrantLock();
 
     public UtilsProcessingContext(ExecutorService executorService) {
         this.executorService = executorService;
@@ -84,7 +81,7 @@ public final class UtilsProcessingContext {
 
     public Optional<List<AnalysedTypeConverter>> obtainConverter(final TypeName typeName) {
         return Optional.of(typeName)
-                .filter(analysedConverters::contains)
+                .filter(analysedConverters::containsKey)
                 .map(analysedConverters::get)
                 .map(List::copyOf)
                 .filter(Predicate.not(List::isEmpty));
@@ -94,15 +91,21 @@ public final class UtilsProcessingContext {
      * Begin a chain of analysis from a (potential) root element
      */
     void analyseRootElement(final Element element, final List<TargetAnalyser> analysers) {
-        // Don't re-process a generation root
-        if (processedElements.contains(element)) {
-            return;
-        }
         analyseRootElement(element, Optional.empty(), analysers);
     }
 
+    private boolean hasBeenAnalysed(final Element element) {
+        if (element instanceof TypeElement te) {
+            return analysedTypes.containsKey(te);
+        } else if (element instanceof ExecutableElement exe) {
+            return processedConverters.contains(exe);
+        }
+        // I guess?
+        return false;
+    }
+
     private void analyseRootElement(final Element rootElement, final Optional<AdvRecUtilsSettings> rootSettings, final List<TargetAnalyser> analysers) {
-        if (analysedTypes.containsKey(rootElement) || processedConverters.contains(rootElement)) {
+        if (hasBeenAnalysed(rootElement)) {
             return;
         }
         final LinkedHashSet<EleInQueue> queue = new LinkedHashSet<>();
@@ -110,7 +113,7 @@ public final class UtilsProcessingContext {
         do {
             final EleInQueue pt = queue.removeFirst();
             final Element element = pt.element();
-            if (analysedTypes.containsKey(element) || processedConverters.contains(element)) {
+            if (hasBeenAnalysed(element)) {
                 continue;
             }
             final Optional<AdvRecUtilsSettings> settings = pt.settings();

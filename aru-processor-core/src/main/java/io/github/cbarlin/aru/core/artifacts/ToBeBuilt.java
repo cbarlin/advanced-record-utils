@@ -31,20 +31,20 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt>, IToBeBuilt<ToBeBuilt> {
+public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>, IToBeBuilt<ToBeBuilt> permits ToBeBuiltClass, ToBeBuiltInterface, ToBeBuiltRecord {
     private static final String LOGGER_INITIALISER = "$T.getLogger($T.class)";
     // We have our two generated annotations, and sometimes the `NullMarked`/`NullUnmarked`
     private static final int GENERATED_ANNOTATIONS = 3;
     private final ClassName className;
     protected final TypeSpec.Builder classBuilder;
     private final UtilsProcessingContext utilsProcessingContext;
-    private final Map<String, MethodSpec.Builder> unfinishedMethods = new HashMap<>();
-    private final Map<String, ToBeBuilt> childArtifacts = new HashMap<>();
+    private final Map<String, MethodSpec.Builder> unfinishedMethods = new ConcurrentHashMap<>();
+    private final Map<String, ToBeBuilt> childArtifacts = new ConcurrentHashMap<>();
     private boolean loggerAdded = false;
 
     protected ToBeBuilt(final ClassName className, final TypeSpec.Builder typeBuilder, final UtilsProcessingContext utilsProcessingContext) {
@@ -186,8 +186,8 @@ public abstract class ToBeBuilt implements GenerationArtifact<ToBeBuilt>, IToBeB
     }
 
     @Override
-    public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final AnalysedTypeConverter element) {
-        return delegate().createMethod(generatedCodeName, claimableOperation, element);
+    public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final AnalysedTypeConverter analysedTypeConverter) {
+        return createMethod(generatedCodeName, claimableOperation.operationName() + "$$" + analysedTypeConverter);
     }
 
     @Override

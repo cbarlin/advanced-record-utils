@@ -1,13 +1,15 @@
 package io.github.cbarlin.aru.core.analysers;
 
+import io.avaje.inject.Component;
+import io.avaje.inject.Priority;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
+import io.github.cbarlin.aru.core.wiring.CoreGlobalScope;
 import io.github.cbarlin.aru.prism.prison.TypeConverterPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
@@ -24,6 +26,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+@Component
+@CoreGlobalScope
+@Priority(5)
 public final class TypeConverterAnalyser implements TargetAnalyser {
 
     private static final Set<Modifier> REQUIRED_MODIFIERS_ON_METHOD = Set.of(Modifier.PUBLIC, Modifier.STATIC);
@@ -55,7 +60,10 @@ public final class TypeConverterAnalyser implements TargetAnalyser {
         final TypeName resultingType = TypeName.get(executableElement.getReturnType());
         final ClassName className = ClassName.get((TypeElement) executableElement.getEnclosingElement());
         final String methodName = executableElement.getSimpleName().toString();
-        final List<ParameterSpec> specs = MethodSpec.overriding(executableElement).parameters;
+        final List<ParameterSpec> specs = executableElement.getParameters()
+                .stream()
+                .map(ParameterSpec::get)
+                .toList();
         return new AnalysedTypeConverter(resultingType, className, methodName, specs, executableElement);
     }
 
@@ -90,7 +98,7 @@ public final class TypeConverterAnalyser implements TargetAnalyser {
     }
 
     private static boolean validateExecutableElement(final ExecutableElement executableElement) {
-        if (executableElement.getModifiers().containsAll(REQUIRED_MODIFIERS_ON_METHOD)) {
+        if (!executableElement.getModifiers().containsAll(REQUIRED_MODIFIERS_ON_METHOD)) {
             APContext.messager().printMessage(Diagnostic.Kind.ERROR, "TypeConverter annotation needs to be on a 'public static' method", executableElement);
             return false;
         }
