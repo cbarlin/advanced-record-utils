@@ -51,6 +51,6 @@ public final class PackageTargetAnalyser implements TargetAnalyser {
                 .map(TypeElement.class::cast)
                 .forEach(typeElements::add);
 
-        return new TargetAnalysisResult(Optional.empty(), typeElements, true, Optional.empty());
+        return new TargetAnalysisResult(Optional.empty(), typeElements, true, Set.of());
     }
 }

@@ -25,7 +25,7 @@ public @interface AdvancedRecordUtilsGenerated {
 
     InternalUtil[] internalUtils();
 
-    UsedTypeConverter[] usedTypeConverters() default {};
+    Class<?>[] usedTypeConverters() default {};
 
     Class<? extends GeneratedUtil>[] references();
 
@@ -33,12 +33,6 @@ public @interface AdvancedRecordUtilsGenerated {
         String type();
 
         Class<?> implementation();
-    }
-
-    public @interface UsedTypeConverter {
-        String methodName();
-
-        Class<?> targetClass();
     }
 
     public @interface Version {

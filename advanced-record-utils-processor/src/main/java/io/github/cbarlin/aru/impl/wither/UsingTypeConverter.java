@@ -59,6 +59,7 @@ public final class UsingTypeConverter extends WitherVisitor {
                 format.add("$L");
             }
             methodBuilder.addStatement("return this.$L($T.$L(" + StringUtils.join(format, ", ") + "))", args.toArray());
+            analysedRecord.addTypeConverter(converter);
         }        
 
         return true;

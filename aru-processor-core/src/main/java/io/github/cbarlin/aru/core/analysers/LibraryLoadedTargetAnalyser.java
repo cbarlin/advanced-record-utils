@@ -7,13 +7,18 @@ import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.artifacts.PreBuilt;
+import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.wiring.CoreGlobalScope;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsGeneratedPrism;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +28,12 @@ import java.util.stream.Collectors;
 @Priority(1)
 @CoreGlobalScope
 public final class LibraryLoadedTargetAnalyser implements TargetAnalyser {
+
+    private final TypeConverterAnalyser typeConverterAnalyser;
+
+    public LibraryLoadedTargetAnalyser(TypeConverterAnalyser typeConverterAnalyser) {
+        this.typeConverterAnalyser = typeConverterAnalyser;
+    }
 
     @Override
     public TargetAnalysisResult analyse(final Element element, final Optional<AdvRecUtilsSettings> parentSettings) {
@@ -48,9 +59,26 @@ public final class LibraryLoadedTargetAnalyser implements TargetAnalyser {
                 .map(TypeElement.class::cast)
                 .collect(Collectors.toUnmodifiableSet());
             final LibraryLoadedTarget libraryLoadedTarget = new LibraryLoadedTarget(preBuilt, target);
-            return new TargetAnalysisResult(Optional.of(libraryLoadedTarget), references, true, Optional.empty());
+            // Oof!
+            final Set<AnalysedTypeConverter> foundConverter = findConverters(prism);
+
+            return new TargetAnalysisResult(Optional.of(libraryLoadedTarget), references, true, foundConverter);
         }
 
         return TargetAnalysisResult.EMPTY_RESULT;
+    }
+
+    private Set<AnalysedTypeConverter> findConverters(final AdvancedRecordUtilsGeneratedPrism prism) {
+        final Set<AnalysedTypeConverter> converters = HashSet.newHashSet(1);
+        for (final TypeMirror usedTypeConverter : prism.usedTypeConverters()) {
+            final var te = OptionalClassDetector.optionalDependencyTypeElement(usedTypeConverter);
+            if (te.isPresent()) {
+                final TypeElement typeElement = te.get();
+                for (final ExecutableElement enclosedElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
+                    converters.addAll(typeConverterAnalyser.analyse(enclosedElement).foundConverter());
+                }
+            }
+        }
+        return Set.copyOf(converters);
     }
 }

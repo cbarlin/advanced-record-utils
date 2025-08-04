@@ -11,7 +11,7 @@ public record TargetAnalysisResult (
         Optional<ProcessingTarget> target,
         Set<TypeElement> foundElements,
         boolean isRootElement,
-        Optional<AnalysedTypeConverter> foundConverter
+        Set<AnalysedTypeConverter> foundConverter
 ) {
-    public static final TargetAnalysisResult EMPTY_RESULT = new TargetAnalysisResult(Optional.empty(), Set.of(), false, Optional.empty());
+    public static final TargetAnalysisResult EMPTY_RESULT = new TargetAnalysisResult(Optional.empty(), Set.of(), false, Set.of());
 }

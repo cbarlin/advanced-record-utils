@@ -1,8 +1,10 @@
 package io.github.cbarlin.aru.tests.b_types_alias;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.tests.a_core_dependency.AnEnumInDep;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 @AdvancedRecordUtils(merger = true, wither = true, xmlable = true)
@@ -17,7 +19,9 @@ public record SomeRecord(
     @XmlAttribute(name = "B")
     RandomIntB randomIntB,
     @XmlAttribute(name = "C")
-    RandomIntC randomIntC
+    RandomIntC randomIntC,
+    @XmlTransient
+    AnEnumInDep anEnumInDep
 ) implements SomeRecordUtils.All {
 
 }

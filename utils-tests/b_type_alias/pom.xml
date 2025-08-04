@@ -19,6 +19,10 @@
             <artifactId>xml_util</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>a_core_dependency</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>

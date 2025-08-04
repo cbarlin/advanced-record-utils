@@ -57,6 +57,7 @@ public final class UsingTypeConverter extends RecordVisitor {
                 format.add("$L");
             }
             methodBuilder.addStatement("return this.$L($T.$L(" + StringUtils.join(format, ", ") + "))", args.toArray());
+            analysedRecord.addTypeConverter(converter);
         }
         return true;
     }

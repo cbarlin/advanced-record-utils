@@ -7,6 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.MODULE;
 import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.ElementType.TYPE;
 
@@ -600,4 +601,17 @@ public @interface AdvancedRecordUtils {
     // A default class type to be used internally (for when nothing has been set for a class field)
     @SuppressWarnings("java:S2094")
     public static class DEFAULT {}
+
+    /**
+     * An interface that requests the processor import "*Utils" classes from
+     *   and existing library.
+     * <p>
+     * While this has the same functionality as the {@link AdvancedRecordUtils#importTargets()}
+     *   the semantic naming
+     */
+    @Target({MODULE, PACKAGE, TYPE, ANNOTATION_TYPE})
+    @Retention(RetentionPolicy.CLASS)
+    public @interface ImportLibraryUtils {
+        Class<? extends GeneratedUtil>[] value();
+    }
 }

@@ -1,9 +1,9 @@
 package io.github.cbarlin.aru.tests.a_core_dependency;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
-import org.junit.jupiter.api.Test;
 
 class BasicBuildTest {
 
@@ -38,5 +38,17 @@ class BasicBuildTest {
             .otherItem(oth -> oth.someIntField(420))
             .build();
         assertEquals(420, secondRound.otherItem().someIntField());
+    }
+
+    @Test
+    void typeConverterTest() {
+        final MyRecordB myB = MyRecordBUtils.builder()
+            .andImAnEnum("Monday")
+            .build();
+        final MyRecordB myOther = MyRecordBUtils.builder()
+            .andImAnEnum("Nope, not it")
+            .build();
+        assertEquals(AnEnumInDep.MONDAY, myB.andImAnEnum());
+        assertEquals(AnEnumInDep.TUESDAY, myOther.andImAnEnum());
     }
 }
