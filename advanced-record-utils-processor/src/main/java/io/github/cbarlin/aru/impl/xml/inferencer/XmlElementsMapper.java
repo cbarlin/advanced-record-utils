@@ -1,11 +1,11 @@
 package io.github.cbarlin.aru.impl.xml.inferencer;
 
+import io.github.cbarlin.aru.core.ExecutableElementUtils;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.mirrorhandlers.MapBasedAnnotationMirror;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
-import io.github.cbarlin.aru.impl.types.OverridingElementsFinder;
 import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSeeAlsoPrism;
@@ -54,9 +54,10 @@ public final class XmlElementsMapper {
     }
 
     private Optional<XmlElementsPrism> upCallingTree(final ExecutableElement executableElement) {
+
         return XmlElementsPrism.getOptionalOn(executableElement)
             .or(
-                () -> OverridingElementsFinder.findOverrides(executableElement)
+                () -> ExecutableElementUtils.obtainOverrideTree(executableElement)
                     .stream()
                     .map(XmlElementsPrism::getOptionalOn)
                     .filter(Optional::isPresent)
