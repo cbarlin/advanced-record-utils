@@ -83,6 +83,7 @@ public enum Constants {
         public static final ClassName CONSTRAINT_VIOLATION = ClassName.get("jakarta.validation", "ConstraintViolation");
         public static final ClassName CONSUMER = ClassName.get(JAVA_UTIL_FUNCTION, "Consumer");
         public static final ClassName DATE_TIME_FORMATTER = ClassName.get(JAVA_TIME + ".format","DateTimeFormatter");
+        public static final ClassName ENUM = ClassName.get(JAVA_LANG, "Enum");
         public static final ClassName ENUM_SET = ClassName.get(JAVA_UTIL, "EnumSet");
         public static final ClassName FUNCTION = ClassName.get(JAVA_UTIL_FUNCTION, "Function");
         public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(JAVA_LANG, "IllegalArgumentException");
@@ -120,6 +121,7 @@ public enum Constants {
         public static final ClassName XML_NAMESPACE_CONTEXT = ClassName.get("javax.xml.namespace", "NamespaceContext");
         public static final ClassName XML_ROOT_ELEMENT = ClassName.get(XML_ANNOTATIONS, "XmlRootElement");
         public static final ClassName XML_SCHEMA = ClassName.get(XML_ANNOTATIONS, "XmlSchema");
+        public static final ClassName XML_SEE_ALSO = CommonsConstants.Names.XML_SEE_ALSO;
         public static final ClassName XML_STREAM_EXCEPTION = ClassName.get("javax.xml.stream", "XMLStreamException");
         public static final ClassName XML_STREAM_WRITER = ClassName.get("javax.xml.stream", "XMLStreamWriter");
         public static final ClassName XML_TRANSIENT = ClassName.get(XML_ANNOTATIONS, "XmlTransient");

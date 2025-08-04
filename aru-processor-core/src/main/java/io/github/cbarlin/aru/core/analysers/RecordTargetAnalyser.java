@@ -24,6 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
@@ -86,6 +87,13 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
             processRecordElement(recordComponentElement, packageName, references, Boolean.TRUE.equals(settings.prism().attemptToFindExistingUtils()));
         }
 
+        for (final TypeMirror anInterface : typeElement.getInterfaces()) {
+            if (!TypeKind.ERROR.equals(anInterface.getKind())) {
+                OptionalClassDetector.optionalDependencyTypeElement(TypeName.get(anInterface))
+                    .ifPresent(references::add);
+            }
+        }
+
         AdvancedRecordUtilsPrism.getOptionalOn(typeElement)
                 .map(AdvancedRecordUtilsPrism::importTargets)
                 .orElse(List.of())
@@ -101,6 +109,7 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
     }
 
     private void processRecordElement(final RecordComponentElement recordComponentElement, final String packageName, final Set<TypeElement> references, final boolean attemptToFindLibrary) {
+        OptionalClassDetector.optionalDependencyTypeElement(recordComponentElement.asType());
         final TypeMirror target = recordComponentElement.asType();
         final TypeName name = TypeName.get(target);
         checkAndAddToPotentialTargets(name, packageName, references, attemptToFindLibrary);

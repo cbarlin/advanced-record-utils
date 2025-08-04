@@ -8,6 +8,7 @@ import io.github.cbarlin.aru.core.CorePerComponentModule;
 import io.github.cbarlin.aru.core.CorePerInterfaceModule;
 import io.github.cbarlin.aru.core.CorePerRecordModule;
 import io.github.cbarlin.aru.core.impl.ScopeHolder;
+import io.github.cbarlin.aru.core.impl.logging.NoOpHandler;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.wiring.InjectModuleFinder;
@@ -36,6 +37,7 @@ public final class BeanScopeFactory {
     }
 
     public static BeanScope loadGlobalScope(final ProcessingEnvironment processingEnvironment) {
+        NoOpHandler.install();
         final PropertyConfigLoader propertyConfigLoader = new PropertyConfigLoader(Optional.empty());
         final BeanScopeBuilder coreScopeBuilder = BeanScope.builder();
         coreScopeBuilder.configPlugin(propertyConfigLoader);

@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.builder;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Component;
 import io.avaje.inject.RequiresBean;
 import io.avaje.inject.RequiresProperty;
@@ -25,6 +19,12 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
+import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 @Component
 @BuilderPerComponentScope
@@ -52,12 +52,13 @@ public final class AddFluentSetterFromInterface extends RecordVisitor {
         final AnalysedInterface other = cti.target();
         final String multiTypeSetterBridge = settings.prism().builderOptions().multiTypeSetterBridge();
         final String name = analysedComponent.name();
+        analysedRecord.addCrossReference(other);
 
         for (final ProcessingTarget asTarget : other.implementingTypes()) {
             if (!concreteImplementingType(asTarget)) {
                 continue;
             }
-            
+            analysedRecord.addCrossReference(asTarget);
             final String emptyMethodName = asTarget.prism().builderOptions().emptyCreationName();
             final String copyMethodName = asTarget.prism().builderOptions().copyCreationName();
             final String buildMethodName = asTarget.prism().builderOptions().buildMethodName();

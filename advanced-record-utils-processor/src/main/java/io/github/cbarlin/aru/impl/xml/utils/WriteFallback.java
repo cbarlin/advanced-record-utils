@@ -18,7 +18,6 @@ import jakarta.inject.Singleton;
 
 import javax.lang.model.element.Modifier;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
@@ -34,7 +33,6 @@ import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 public final class WriteFallback extends XmlVisitor {
 
     private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
-    private static final AtomicBoolean HAS_WARNED = new AtomicBoolean(false);
 
     private final Optional<XmlAttributePrism> xmlAttributePrism;
     private final Optional<XmlElementPrism> xmlElementPrism;
@@ -64,9 +62,7 @@ public final class WriteFallback extends XmlVisitor {
     @SuppressWarnings({"java:S2696"})
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        if (HAS_WARNED.compareAndSet(false, true)) {
-            APContext.messager().printWarning("XML writer fallback has been used - one or more types are not understood. Warning will not be repeated");
-        }
+        APContext.messager().printWarning("XML writer fallback has been used - one or more types are not understood.", analysedComponent.element());
         final TypeName accepterTypeName = analysedOptionalComponent.map(AnalysedOptionalComponent::serialisedTypeName)
                 .orElse(analysedComponent.serialisedTypeName());
         final MethodSpec.Builder methodBuilder = xmlStaticClass.createMethod(analysedComponent.name(), claimableOperation);

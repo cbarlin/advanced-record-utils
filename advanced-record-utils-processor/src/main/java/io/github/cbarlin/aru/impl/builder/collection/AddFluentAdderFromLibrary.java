@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.builder.collection;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Component;
 import io.avaje.inject.RequiresBean;
 import io.avaje.inject.RequiresProperty;
@@ -22,6 +16,12 @@ import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
+import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 @Component
 @BuilderPerComponentScope
@@ -52,6 +52,7 @@ public final class AddFluentAdderFromLibrary extends CollectionRecordVisitor {
     @Override
     protected boolean visitCollectionComponent() {
         final String name = analysedCollectionComponent.name();
+        analysedRecord.addCrossReference(target);
 
         final String emptyMethodName = target.prism().builderOptions().emptyCreationName();
         final String buildMethodName = target.prism().builderOptions().buildMethodName();

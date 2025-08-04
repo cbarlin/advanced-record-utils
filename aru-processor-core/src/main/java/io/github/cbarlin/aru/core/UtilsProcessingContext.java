@@ -150,6 +150,10 @@ public final class UtilsProcessingContext {
                     final ProcessingTarget target = analysedTypes.get(unprocessed);
                     if (Objects.nonNull(target)) {
                         ai.addImplementingType(target);
+                        ai.addCrossReference(target);
+                        if (target instanceof AnalysedType at) {
+                            at.addCrossReference(ai);
+                        }
                     }
                 }
             }
@@ -243,26 +247,24 @@ public final class UtilsProcessingContext {
 
     private void prepareFile(final AnalysedType analysedType) {
         analysedType.addFullGeneratedAnnotation();
-        if (analysedType.utilsClass().hasContent()) {
-            final TypeSpec utilsClass = analysedType.utilsClass().finishClass();
-            final ClassName utilsClassName = analysedType.utilsClassName();
-            final JavaFile utilsFile = JavaFile.builder(utilsClassName.packageName(), utilsClass)
-                    .skipJavaLangImports(true)
-                    .indent("    ")
-                    .addFileComment("Auto generated")
-                    .build();
-            final String fileName = utilsClassName.canonicalName();
-            final Element[] origination = utilsClass.originatingElements.toArray(new Element[0]);
-            final StringBuilder str = new StringBuilder(129_000);
-            try {
-                utilsFile.writeTo(str);
-            } catch (IOException e) {
-                // How?!
-                throw new RuntimeException(e);
-            }
-            final String content = str.toString();
-            pendingFiles.add(new WrittenJavaFile(fileName, origination, content));
+        final TypeSpec utilsClass = analysedType.utilsClass().finishClass();
+        final ClassName utilsClassName = analysedType.utilsClassName();
+        final JavaFile utilsFile = JavaFile.builder(utilsClassName.packageName(), utilsClass)
+            .skipJavaLangImports(true)
+            .indent("    ")
+            .addFileComment("Auto generated")
+            .build();
+        final String fileName = utilsClassName.canonicalName();
+        final Element[] origination = utilsClass.originatingElements.toArray(new Element[0]);
+        final StringBuilder str = new StringBuilder(129_000);
+        try {
+            utilsFile.writeTo(str);
+        } catch (IOException e) {
+            // How?!
+            throw new RuntimeException(e);
         }
+        final String content = str.toString();
+        pendingFiles.add(new WrittenJavaFile(fileName, origination, content));
     }
 
     private void writeUtilsClasses() throws IOException {

@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.builder;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Component;
 import io.avaje.inject.RequiresBean;
 import io.avaje.inject.RequiresProperty;
@@ -21,6 +15,12 @@ import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
+import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 @Component
 @BuilderPerComponentScope
@@ -47,6 +47,7 @@ public final class AddFluentSetterFromLibrary extends RecordVisitor {
 
         final LibraryLoadedTarget other = cti.target();
         final String name = analysedComponent.name();
+        analysedRecord.addCrossReference(other);
 
         final String emptyMethodName = other.prism().builderOptions().emptyCreationName();
         final String copyMethodName = other.prism().builderOptions().copyCreationName();

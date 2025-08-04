@@ -12,6 +12,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,7 @@ public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceTo
                     toBeOrdered.add(component);
                 }
             }
-            toBeOrdered.sort((a, b) -> a.name().compareTo(b.name()));
+            toBeOrdered.sort(Comparator.comparing(AnalysedComponent::name));
             writeOrder.addAll(toBeOrdered);
         } else {
             // This will be declaration order then
@@ -128,7 +129,7 @@ public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceTo
                 }
                 
             }
-            toBeOrdered.sort((a, b) -> a.name().compareTo(b.name()));
+            toBeOrdered.sort(Comparator.comparing(AnalysedComponent::name));
             writeOrder.addAll(toBeOrdered);
         } else {
             // This will be declaration order then

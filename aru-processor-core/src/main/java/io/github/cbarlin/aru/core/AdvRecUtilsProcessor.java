@@ -16,6 +16,7 @@ import io.github.cbarlin.aru.core.analysers.TargetAnalyser;
 import io.github.cbarlin.aru.core.factories.BeanScopeFactory;
 import io.github.cbarlin.aru.core.factories.SupportedAnnotations;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import org.jspecify.annotations.Nullable;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -27,6 +28,7 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.StandardLocation;
 import java.io.Writer;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
     private static final String META_ANNOTATION_RESOURCE_PATH = "META-INF/cbarlin/metaannotations/io.github.cbarlin.aru.annotations.AdvancedRecordUtils";
+    @Nullable
     private BeanScope globalBeanScope;
 
     @Override
@@ -47,6 +50,7 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
+        Objects.requireNonNull(globalBeanScope, "Init was not called first!");
         final SupportedAnnotations supportedAnnotations = globalBeanScope.get(SupportedAnnotations.class);
 
         // First, find any meta-annotations
@@ -62,6 +66,7 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
     }
 
     private void findAndProcessTargets(final RoundEnvironment roundEnv, final Set<TypeElement> supportedAnnotations) {
+        Objects.requireNonNull(globalBeanScope, "Init was not called first!");
         final UtilsProcessingContext context = globalBeanScope.get(UtilsProcessingContext.class);
         final List<TargetAnalyser> analysers = globalBeanScope.list(TargetAnalyser.class);
         final ExecutorService executorService = globalBeanScope.get(ExecutorService.class);
@@ -121,6 +126,7 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
+        Objects.requireNonNull(globalBeanScope, "Init was not called first!");
         return globalBeanScope.get(SupportedAnnotations.class).annotations()
                 .stream()
                 .map(ClassName::get)
@@ -129,29 +135,32 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
     }
 
     private static void loadAruAnnotations() {
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DEFAULT.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.LoggingGeneration.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.BuiltCollectionType.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.LibraryIntegration.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.ValidationApi.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.NameGeneration.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DiffEvaluationMode.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.TypeNameOptions.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.BuilderOptions.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.WitherOptions.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.MergerOptions.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.XmlOptions.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DiffOptions.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.BuiltCollectionType.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.LibraryIntegration.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.ValidationApi.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.NameGeneration.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DiffEvaluationMode.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.TargetConstructor.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DEFAULT.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.class));
+
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsFull.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.Version.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.InternalUtil.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(TypeConverter.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(Generated.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(GeneratedUtil.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(LoggingConstants.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(TypeAlias.class));
-        OptionalClassDetector.loadAnnotation(ClassName.get(TypeConverter.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(Integer.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(Boolean.class));
     }
 }

@@ -8,6 +8,8 @@
 
 @org.jspecify.annotations.NullMarked
 module io.github.cbarlin.aru.core {
+    provides io.avaje.applog.AppLog.Provider with
+        io.github.cbarlin.aru.core.impl.logging.NoOpAppLog;
     exports io.github.cbarlin.aru.core;
     exports io.github.cbarlin.aru.core.artifacts;
     exports io.github.cbarlin.aru.core.mirrorhandlers;
@@ -25,6 +27,8 @@ module io.github.cbarlin.aru.core {
     requires static io.avaje.prism;
     requires static io.avaje.spi;
     requires static org.jspecify;
+    requires java.logging;
+    requires com.github.benmanes.caffeine;
 
     uses io.github.cbarlin.aru.core.wiring.InjectModuleFinder;
 

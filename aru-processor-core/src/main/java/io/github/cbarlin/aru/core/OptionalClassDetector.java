@@ -4,10 +4,12 @@ import io.micronaut.sourcegen.javapoet.ArrayTypeName;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import org.jspecify.annotations.Nullable;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
@@ -50,6 +52,18 @@ public final class OptionalClassDetector {
         // No-op, but the side effect is that the item is loaded
         ret.ifPresent(typeElement -> ElementFilter.methodsIn(typeElement.getEnclosedElements()));
         return ret.filter(te -> ElementKind.ANNOTATION_TYPE.equals(te.getKind()));
+    }
+
+    /**
+     * Obtain a type element based on the provided mirror
+     * @param typeMirror The mirror to attempt to convert into a TypeElement
+     * @return The TypeElement, if found
+     */
+    public static Optional<TypeElement> optionalDependencyTypeElement(final @Nullable TypeMirror typeMirror) {
+        return Optional.ofNullable(typeMirror)
+            .filter(tm -> TypeKind.DECLARED.equals(tm.getKind()))
+            .map(TypeName::get)
+            .flatMap(OptionalClassDetector::optionalDependencyTypeElement);
     }
 
     /**

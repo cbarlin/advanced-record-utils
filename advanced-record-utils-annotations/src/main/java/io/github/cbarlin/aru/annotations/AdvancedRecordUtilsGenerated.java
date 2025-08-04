@@ -1,10 +1,10 @@
 package io.github.cbarlin.aru.annotations;
 
-import static java.lang.annotation.ElementType.TYPE;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
 
 /**
  * Annotation used to aid in loading references from e.g. a library, as well as to convey that the code was generated.
@@ -25,12 +25,20 @@ public @interface AdvancedRecordUtilsGenerated {
 
     InternalUtil[] internalUtils();
 
+    UsedTypeConverter[] usedTypeConverters() default {};
+
     Class<? extends GeneratedUtil>[] references();
 
     public @interface InternalUtil {
         String type();
 
         Class<?> implementation();
+    }
+
+    public @interface UsedTypeConverter {
+        String methodName();
+
+        Class<?> targetClass();
     }
 
     public @interface Version {

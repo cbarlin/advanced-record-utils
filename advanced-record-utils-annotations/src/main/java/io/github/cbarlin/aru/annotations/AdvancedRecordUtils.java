@@ -349,7 +349,7 @@ public @interface AdvancedRecordUtils {
         ValidationApi validatedBuilder() default ValidationApi.NONE;
 
         /**
-         * For elements that are collections, do we create "add" methods to accept a single collection entry and add it?
+         * For elements that are collections, do we create "add" methods?
          */
         boolean createAdderMethods() default true;
 
@@ -362,6 +362,36 @@ public @interface AdvancedRecordUtils {
          * If creating adder methods, what is the suffix of the method name?
          */
         String adderMethodSuffix() default "";
+
+        /**
+         * For elements that are collections, do we create "remove" methods?
+         */
+        boolean createRemoveMethods() default true;
+
+        /**
+         * If creating remover methods, what is the prefix of the method name?
+         */
+        String removeMethodPrefix() default "remove";
+
+        /**
+         * If creating remover methods, what is the suffix of the method name?
+         */
+        String removeMethodSuffix() default "";
+
+        /**
+         * For elements that are collections, do we create "retainAll" methods?
+         */
+        boolean createRetainAllMethod() default true;
+
+        /**
+         * If creating retain methods, what is the prefix of the method name?
+         */
+        String retainMethodPrefix() default "retainAll";
+
+        /**
+         * If creating retain methods, what is the suffix of the method name?
+         */
+        String retainMethodSuffix() default "";
 
         /**
          * If the builder is supplied a "null" value and the existing value isn't null, should we replace the non-null value with null?

@@ -1,15 +1,5 @@
 package io.github.cbarlin.aru.impl.types.collection;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTION;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
-import static io.github.cbarlin.aru.impl.Constants.Names.ITERATOR;
-import static io.github.cbarlin.aru.impl.Constants.Names.SPLITERATOR;
-
-import javax.lang.model.element.Modifier;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
@@ -20,6 +10,16 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
+import static io.github.cbarlin.aru.impl.Constants.Names.ITERATOR;
+import static io.github.cbarlin.aru.impl.Constants.Names.SPLITERATOR;
 
 /**
  * A class that knows how best to handle a collection
@@ -165,6 +165,7 @@ public abstract class CollectionHandler {
         final String addAllMethodName,
         final AruVisitor<?> visitor
     ) {
+        writeNonNullCollectionAdder(component, builder, innerType, addAllMethodName, visitor);
         writeBasicAdders(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
     }
 
@@ -208,6 +209,7 @@ public abstract class CollectionHandler {
         final String addAllMethodName,
         final AruVisitor<?> visitor
     ) {
+        writeNonNullCollectionAdder(component, builder, innerType, addAllMethodName, visitor);
         writeBasicAdders(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
     }
 
@@ -238,24 +240,22 @@ public abstract class CollectionHandler {
     //#region Internal defaults that defer to the single adder
 
     protected static void writeBasicAdders(
-        final AnalysedComponent component, 
-        final ToBeBuilt builder, 
-        final TypeName innerType, 
-        final String singleAddMethodName, 
+        final AnalysedComponent component,
+        final ToBeBuilt builder,
+        final TypeName innerType,
+        final String singleAddMethodName,
         final String addAllMethodName,
         final AruVisitor<?> visitor
     ) {
-        writeBasicCollectionAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
         writeBasicIterableAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
         writeBasicIteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
         writeBasicSpliteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
     }
 
-    protected static void writeBasicCollectionAdder(
+    protected static void writeNonNullCollectionAdder (
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
-        final TypeName innerType, 
-        final String singleAddMethodName, 
+        final TypeName innerType,
         final String addAllMethodName,
         final AruVisitor<?> visitor
     ) {
