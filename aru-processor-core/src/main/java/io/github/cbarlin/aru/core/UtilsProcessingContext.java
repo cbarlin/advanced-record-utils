@@ -21,7 +21,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 import org.jspecify.annotations.Nullable;
 
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,8 @@ public final class UtilsProcessingContext {
     );
     private final ConcurrentHashMap<TypeName, Queue<AnalysedTypeConverter>> analysedConverters = new ConcurrentHashMap<>();
     private final ConcurrentSkipListSet<TypeElement> processedElements = new ConcurrentSkipListSet<>(Comparator.comparing(ClassName::get));
-    private final ConcurrentLinkedQueue<WrittenJavaFile> pendingFiles = new ConcurrentLinkedQueue<>();
+    private final Map<ClassName, JavaFileObject> fileObjects = new HashMap<>();
+    // private final ConcurrentLinkedQueue<WrittenJavaFile> pendingFiles = new ConcurrentLinkedQueue<>();
     private final ExecutorService executorService;
 
     public UtilsProcessingContext(ExecutorService executorService) {
@@ -143,7 +144,7 @@ public final class UtilsProcessingContext {
         }
     }
 
-    void matchInterfaces() {
+    void matchInterfaces() throws IOException {
         for (final Entry<TypeElement,ProcessingTarget> entrySet : analysedTypes.entrySet()) {
             if ((entrySet.getValue() instanceof final AnalysedInterface ai) && !processedElements.contains(entrySet.getKey())) {
                 for (final TypeElement unprocessed : ai.unprocessedImplementations()) {
@@ -156,6 +157,11 @@ public final class UtilsProcessingContext {
                         }
                     }
                 }
+            }
+            if ((entrySet.getValue() instanceof final AnalysedType analysedType) && !processedElements.contains(entrySet.getKey())) {
+                final ClassName className = analysedType.utilsClassName();
+                final JavaFileObject javaFileObject = APContext.filer().createSourceFile(className.canonicalName(), analysedType.utilsClass().builder().originatingElements.toArray(new Element[0]));
+                fileObjects.put(className, javaFileObject);
             }
         }
     }
@@ -254,29 +260,23 @@ public final class UtilsProcessingContext {
             .indent("    ")
             .addFileComment("Auto generated")
             .build();
-        final String fileName = utilsClassName.canonicalName();
-        final Element[] origination = utilsClass.originatingElements.toArray(new Element[0]);
-        final StringBuilder str = new StringBuilder(129_000);
-        try {
-            utilsFile.writeTo(str);
-        } catch (IOException e) {
-            // How?!
-            throw new RuntimeException(e);
+        final var outFile = fileObjects.get(utilsClassName);
+        if (Objects.isNull(outFile)) {
+            APContext.messager().printError("Unable to find file to write to", analysedType.typeElement());
+        } else {
+            try (
+                Writer w = outFile.openWriter()
+            ) {
+                utilsFile.writeTo(w);
+                APContext.messager().printMessage(Diagnostic.Kind.NOTE, "Wrote out utils file " + utilsClassName.simpleName());
+            } catch (IOException e) {
+                APContext.messager().printError("Issue writing to file", analysedType.typeElement());
+            }
         }
-        final String content = str.toString();
-        pendingFiles.add(new WrittenJavaFile(fileName, origination, content));
     }
 
     private void writeUtilsClasses() throws IOException {
-        final Filer filer = APContext.filer();
-        for (final WrittenJavaFile pendingFile : pendingFiles) {
-            final JavaFileObject destination = filer.createSourceFile(pendingFile.fileName(), pendingFile.origination());
-            try (Writer writer = destination.openWriter()) {
-                writer.write(pendingFile.content());
-            }
-            APContext.messager().printMessage(Diagnostic.Kind.NOTE, "Wrote out " + pendingFile.fileName());
-        }
-        pendingFiles.clear();
+        fileObjects.clear();
     }
 
     private record EleInQueue(

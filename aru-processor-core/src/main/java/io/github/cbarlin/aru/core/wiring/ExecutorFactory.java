@@ -14,6 +14,8 @@ public final class ExecutorFactory {
 
     @Bean
     ExecutorService executorService () {
-        return Executors.newWorkStealingPool(THREAD_COUNT);
+        // For now... eventually we will move to parallel!
+        // return Executors.newWorkStealingPool(THREAD_COUNT);
+        return Executors.newSingleThreadExecutor();
     }
 }

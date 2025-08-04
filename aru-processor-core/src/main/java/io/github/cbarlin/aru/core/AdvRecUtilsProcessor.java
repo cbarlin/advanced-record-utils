@@ -86,7 +86,11 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
                 )
                 .toArray(CompletableFuture[]::new);
         CompletableFuture.allOf(futures).join();
-        context.matchInterfaces();
+        try {
+            context.matchInterfaces();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         context.processElements(globalBeanScope);
     }
 
