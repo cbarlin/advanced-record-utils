@@ -4,20 +4,15 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.LIST;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
-import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
-import io.github.cbarlin.aru.core.UtilsProcessingContext;
-import io.github.cbarlin.aru.core.impl.types.OptionalComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.types.components.DelegatingComponent;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
@@ -26,39 +21,15 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 /**
  * Handles e.g. {@code Optional<List<T>>}
  */
-public final class AnalysedOptionalCollection extends AnalysedComponent implements OptionalComponent<AnalysedOptionalCollection> {
-
+public record AnalysedOptionalCollection(
+    AnalysedComponent delegate,
+    DeclaredType collectionTypeMirror,
+    TypeName collectionTypeName,
+    ClassName erasedCollectionTypeName,
+    TypeMirror innerType,
+    TypeName innerTypeName
+) implements DelegatingComponent {
     private static final String COLLECTION_ELEMENT = "__collectionElement";
-    private final DeclaredType collectionTypeMirror;
-    private final TypeName collectionTypeName;
-    private final ClassName erasedCollectionTypeName;
-    private final TypeMirror innerType;
-    private final TypeName innerTypeName;
-
-    /**
-     * Note: The constructor will *not* validate the arguments passed to it.
-     * <p>
-     * It is expected that the validation, including the ability to read type arguments, is
-     *   done externally
-     */
-    public AnalysedOptionalCollection(
-        final RecordComponentElement element, 
-        final AnalysedRecord parentRecord,
-        final boolean isIntendedConstructorParam, 
-        final UtilsProcessingContext utilsProcessingContext
-    ) {
-        super(element, parentRecord, isIntendedConstructorParam, utilsProcessingContext);
-        final DeclaredType declOuter = (DeclaredType) componentType;
-        final List<? extends TypeMirror> typeArguments = declOuter.getTypeArguments();
-        collectionTypeMirror = (DeclaredType) typeArguments.get(0);
-        collectionTypeName = TypeName.get(collectionTypeMirror);
-        erasedCollectionTypeName = (ClassName) TypeName.get(APContext.types().erasure(collectionTypeMirror));
-
-        // OK, let's extract the type inside that!
-        final List<? extends TypeMirror> collTypeArgs = collectionTypeMirror.getTypeArguments();
-        innerType = collTypeArgs.get(0);
-        innerTypeName = TypeName.get(innerType);
-    }
 
     public boolean isList() {
         return OptionalClassDetector.checkSameOrSubType(collectionTypeName, LIST);
@@ -66,11 +37,6 @@ public final class AnalysedOptionalCollection extends AnalysedComponent implemen
 
     public boolean isSet() {
         return OptionalClassDetector.checkSameOrSubType(collectionTypeName, SET);
-    }
-
-    @Override
-    public TypeName typeName() {
-        return ParameterizedTypeName.get(OPTIONAL, collectionTypeName);
     }
 
     @Override
@@ -120,8 +86,4 @@ public final class AnalysedOptionalCollection extends AnalysedComponent implemen
             .endControlFlow();
     }
 
-    @Override
-    public AnalysedOptionalCollection component() {
-        return this;
-    }
 }

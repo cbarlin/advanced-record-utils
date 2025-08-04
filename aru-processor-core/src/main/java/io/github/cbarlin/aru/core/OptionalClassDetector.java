@@ -1,19 +1,22 @@
 package io.github.cbarlin.aru.core;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
-
-import javax.lang.model.element.RecordComponentElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
-
 import io.micronaut.sourcegen.javapoet.ArrayTypeName;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import org.jspecify.annotations.Nullable;
+
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.RecordComponentElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 /**
  * Utility for detecting if classes (or interfaces etc) exist and comparing them via TypeNames.
@@ -21,12 +24,13 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 public final class OptionalClassDetector {
 
     private static final Map<TypeName, Optional<TypeElement>> DETECTED_MAP = new ConcurrentHashMap<>();
+    private static final Map<TypeName, Optional<TypeElement>> LOADED_ANNOTATIONS = new ConcurrentHashMap<>();
 
     private OptionalClassDetector() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    private static Optional<TypeElement> detectClassName(final ClassName toDetect) {
+    private static synchronized Optional<TypeElement> detectClassName(final ClassName toDetect) {
         try {
             return Optional.ofNullable(APContext.elements().getTypeElement(toDetect.canonicalName()));
         } catch (Exception e) {
@@ -39,8 +43,27 @@ public final class OptionalClassDetector {
             case ClassName cn -> detectClassName(cn);
             case ParameterizedTypeName ptn -> detectClassName(ptn.rawType);
             case ArrayTypeName atn when (!atn.isPrimitive()) && atn.componentType instanceof ClassName cn -> detectClassName(cn);
-            case null, default -> Optional.empty();
+            default -> Optional.empty();
         };
+    }
+
+    private static Optional<TypeElement> loadAnnotation(final TypeName typeName) {
+        final Optional<TypeElement> ret = optionalDependencyTypeElement(typeName);
+        // No-op, but the side effect is that the item is loaded
+        ret.ifPresent(typeElement -> ElementFilter.methodsIn(typeElement.getEnclosedElements()));
+        return ret.filter(te -> ElementKind.ANNOTATION_TYPE.equals(te.getKind()));
+    }
+
+    /**
+     * Obtain a type element based on the provided mirror
+     * @param typeMirror The mirror to attempt to convert into a TypeElement
+     * @return The TypeElement, if found
+     */
+    public static Optional<TypeElement> optionalDependencyTypeElement(final @Nullable TypeMirror typeMirror) {
+        return Optional.ofNullable(typeMirror)
+            .filter(tm -> TypeKind.DECLARED.equals(tm.getKind()))
+            .map(TypeName::get)
+            .flatMap(OptionalClassDetector::optionalDependencyTypeElement);
     }
 
     /**
@@ -59,6 +82,24 @@ public final class OptionalClassDetector {
      */
     public static boolean doesDependencyExist(final TypeName typeName) {
         return optionalDependencyTypeElement(typeName).isPresent();
+    }
+
+    /**
+     * Detect if the given annotation exists, loading it if it does
+     * @param className The class name to check
+     * @return If it is known
+     */
+    public static boolean isAnnotationLoaded(final ClassName className) {
+        return loadAnnotation(className).isPresent();
+    }
+
+    /**
+     * Detect if the given annotation exists, loading it if it does
+     * @param className The class name to check
+     * @return If it is known
+     */
+    public static Optional<TypeElement> loadAnnotation(final ClassName className) {
+        return LOADED_ANNOTATIONS.computeIfAbsent(className, OptionalClassDetector::loadAnnotation);
     }
 
     /**
@@ -110,7 +151,7 @@ public final class OptionalClassDetector {
             .orElse(false);
     }
 
-    private static boolean eraseAndCompare(TypeMirror compFrom, TypeMirror compTo) {
+    private static synchronized boolean eraseAndCompare(TypeMirror compFrom, TypeMirror compTo) {
         final Types types = APContext.types();
         final TypeMirror erasedFrom = types.erasure(compFrom);
         final TypeMirror erasedTo = types.erasure(compTo);

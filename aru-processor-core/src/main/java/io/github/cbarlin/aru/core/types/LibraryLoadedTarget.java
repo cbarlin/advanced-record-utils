@@ -8,10 +8,9 @@ import javax.lang.model.type.TypeMirror;
 import org.jspecify.annotations.NonNull;
 
 import io.github.cbarlin.aru.core.APContext;
-import io.github.cbarlin.aru.core.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.core.artifacts.GenerationArtifact;
 import io.github.cbarlin.aru.core.artifacts.PreBuilt;
-
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
@@ -31,7 +30,7 @@ public final class LibraryLoadedTarget implements ProcessingTarget {
             Objects.nonNull(preBuilt.prism().settings().useInterface()) &&
             (!APContext.types().isSameType(defaultClassUseInterface(), preBuilt.prism().settings().useInterface()))
         ) {
-            intendedTypeElement = APContext.asTypeElement(preBuilt.prism().settings().useInterface());
+            intendedTypeElement = Objects.requireNonNullElse(APContext.asTypeElement(preBuilt.prism().settings().useInterface()), typeElement);
         } else {
             intendedTypeElement = typeElement;
         }

@@ -37,4 +37,30 @@
             <artifactId>commons-io</artifactId>
         </dependency>
     </dependencies>
+
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>io.github.cbarlin</groupId>-->
+<!--                            <artifactId>advanced-record-utils-processor</artifactId>-->
+<!--                            <version>${project.version}</version>-->
+<!--                        </path>-->
+<!--                        <path>-->
+<!--                            <groupId>io.avaje</groupId>-->
+<!--                            <artifactId>avaje-jsonb-generator</artifactId>-->
+<!--                            <version>${avaje-jsonb.version}</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
+<!--                    <fork>true</fork>-->
+<!--                    <compilerArgs>-->
+<!--                        <arg>-J-agentpath:/home/conrad/bin/async-profiler-4.1-linux-x64/lib/libasyncProfiler.so=start,interval=100000,inverted,file=${project.basedir}/target/profile.html</arg>-->
+<!--                    </compilerArgs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 </project>

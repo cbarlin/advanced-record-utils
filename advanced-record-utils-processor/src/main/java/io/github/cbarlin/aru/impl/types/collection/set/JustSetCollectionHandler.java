@@ -5,14 +5,16 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
 
 import javax.lang.model.element.ElementKind;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-@ServiceProvider
+@Component
+@GlobalScope
 public final class JustSetCollectionHandler extends SetCollectionHandler {
 
     public JustSetCollectionHandler() {

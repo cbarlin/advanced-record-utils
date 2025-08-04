@@ -1,7 +1,6 @@
 package io.github.cbarlin.aru.core.artifacts;
 
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
-
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 

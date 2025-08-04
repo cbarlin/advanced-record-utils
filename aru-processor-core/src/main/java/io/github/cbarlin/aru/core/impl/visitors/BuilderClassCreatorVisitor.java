@@ -1,20 +1,28 @@
 package io.github.cbarlin.aru.core.impl.visitors;
 
-import javax.lang.model.element.Modifier;
-
-import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.CommonsConstants;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
 
-import io.avaje.spi.ServiceProvider;
+import javax.lang.model.element.Modifier;
 
-@ServiceProvider
-public class BuilderClassCreatorVisitor extends RecordVisitor {
+import io.avaje.inject.Component;
+import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
+import io.github.cbarlin.aru.core.artifacts.BuilderClass;
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
 
-    public BuilderClassCreatorVisitor() {
-        super(CommonsConstants.Claims.CORE_BUILDER_CLASS);
+@Component
+@CorePerRecordScope
+public final class BuilderClassCreatorVisitor extends RecordVisitor {
+    private final BuilderClass builder;
+
+    public BuilderClassCreatorVisitor(
+        final AnalysedRecord analysedRecord, 
+        final BuilderClass builderClass
+    ) {
+        super(CommonsConstants.Claims.CORE_BUILDER_CLASS, analysedRecord);
+        this.builder = builderClass;
     }
 
     // Since this creates the builder, it needs to be first
@@ -24,14 +32,7 @@ public class BuilderClassCreatorVisitor extends RecordVisitor {
     }
 
     @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
-        final String generatedName = analysedRecord.settings().prism().builderOptions().builderName();
-        final var builder = analysedRecord.utilsClassChildClass(generatedName, claimableOperation);
+    protected boolean visitStartOfClassImpl() {
         AnnotationSupplier.addGeneratedAnnotation(builder, this);
         builder.builder().addAnnotation(CommonsConstants.Names.NULL_MARKED)
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)

@@ -1,15 +1,17 @@
 package io.github.cbarlin.aru.impl.xml.utils;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_TRANSIENT;
-
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlTransientPrism.class})
 public final class SkipTransient extends XmlVisitor {
 
     // This visitor should go first of the Xml Visitors as we want to skip over everything
@@ -17,13 +19,8 @@ public final class SkipTransient extends XmlVisitor {
     //   this gets added to and we don't want an integer overflow
     private static final int HIGH_SPECIFICITY = 25565;
 
-    public SkipTransient() {
-        super(Claims.XML_WRITE_FIELD);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public SkipTransient(final XmlRecordHolder xmlRecordHolder) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
     }
 
     @Override
@@ -33,6 +30,6 @@ public final class SkipTransient extends XmlVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        return analysedComponent.isPrismPresent(XML_TRANSIENT, XmlTransientPrism.class);
+        return true;
     }
 }

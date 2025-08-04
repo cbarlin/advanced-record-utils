@@ -1,212 +1,292 @@
 package io.github.cbarlin.aru.core;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Supplier;
-
-import javax.annotation.processing.Filer;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
-
-import org.jspecify.annotations.Nullable;
-
-import io.github.cbarlin.aru.core.artifacts.PreBuilt;
+import io.avaje.inject.BeanScope;
+import io.avaje.inject.Component;
+import io.github.cbarlin.aru.core.analysers.TargetAnalyser;
+import io.github.cbarlin.aru.core.analysers.TargetAnalysisResult;
+import io.github.cbarlin.aru.core.factories.BeanScopeFactory;
+import io.github.cbarlin.aru.core.impl.ScopeHolder;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedType;
-import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
+import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
+import io.github.cbarlin.aru.core.types.components.BasicAnalysedComponent;
 import io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.github.cbarlin.aru.core.wiring.CoreGlobalScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.JavaFile;
+import io.micronaut.sourcegen.javapoet.TypeName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
+import org.jspecify.annotations.Nullable;
 
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.RecordComponentElement;
+import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ExecutorService;
+import java.util.function.Predicate;
+
+@Component
+@CoreGlobalScope
 public final class UtilsProcessingContext {
-    private final ProcessingEnvironment processingEnvironment;
-    private final Map<TypeElement, ProcessingTarget> analysedTypes = new HashMap<>();
-    private final Set<TypeElement> rootElements = new HashSet<>();
-    private final Set<TypeElement> processedElements = new HashSet<>();
-    private final PreviousCompilationChecker previousCompilationChecker;
 
-    public UtilsProcessingContext(final ProcessingEnvironment processingEnvironment) {
-        this.processingEnvironment = processingEnvironment;
-        this.previousCompilationChecker = new PreviousCompilationChecker(processingEnvironment);
+    private final ConcurrentHashMap<TypeElement, ProcessingTarget> analysedTypes = new ConcurrentHashMap<>();
+    private final ConcurrentSkipListSet<ExecutableElement> processedConverters = new ConcurrentSkipListSet<>(
+            Comparator.comparing((ExecutableElement ex) -> ex.getSimpleName().toString())
+                    .thenComparing(ex -> ClassName.get((TypeElement) ex.getEnclosingElement()))
+    );
+    private final ConcurrentHashMap<TypeName, Queue<AnalysedTypeConverter>> analysedConverters = new ConcurrentHashMap<>();
+    private final ConcurrentSkipListSet<TypeElement> processedElements = new ConcurrentSkipListSet<>(Comparator.comparing(ClassName::get));
+    private final Map<ClassName, JavaFileObject> fileObjects = new HashMap<>();
+    // private final ConcurrentLinkedQueue<WrittenJavaFile> pendingFiles = new ConcurrentLinkedQueue<>();
+    private final ExecutorService executorService;
+
+    public UtilsProcessingContext(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
     public ProcessingEnvironment processingEnv() {
-        return processingEnvironment;
+        return APContext.processingEnv();
     }
 
     public @Nullable ProcessingTarget analysedType(final TypeElement typeElement) {
         return analysedTypes.get(typeElement);
     }
 
-    public void processElements(final Supplier<List<RecordVisitor>> recordVisitorSupplier, final Supplier<List<InterfaceVisitor>> ifaceVisitorSupplier) {
-        messageCounts();
-        for (final Entry<TypeElement,ProcessingTarget> entry : analysedTypes.entrySet()) {
-            if(!processedElements.contains(entry.getKey())) {
-                if (entry.getValue() instanceof final AnalysedRecord analysedRecord) {
-                    processAnalysedRecord(recordVisitorSupplier, entry.getKey(), analysedRecord);
-                } else if (entry.getValue() instanceof final AnalysedInterface analysedInterface) {
-                    // OK, need to load up IfaceVisitors I guess...
-                    processAnalysedIface(ifaceVisitorSupplier, entry.getKey(), analysedInterface);
-                }
-            }
-        }
+    public Collection<ProcessingTarget> processingTargets() {
+        return analysedTypes.values();
     }
 
-    private void processAnalysedIface(
-        final Supplier<List<InterfaceVisitor>> visitorSupplier,
-        final TypeElement element,
-        final AnalysedInterface analysedInterface
-    ) {
-        final List<InterfaceVisitor> visitors = visitorSupplier.get()
-            .stream()
-            .filter(vis -> vis.isApplicable(analysedInterface))
-            .toList();
-        if (visitors.isEmpty()) {
-            // We don't mind if there are no visitors here so no logging
-            processedElements.add(element);
-            return;
-        }
-        // The interface configures its own logger because it only has one visit method
-        visitors.forEach(visitor -> visitor.visitInterface(analysedInterface));
-        try {
-            writeOutUtilsClass(analysedInterface);
-        } catch (final Exception e) {
-            APContext.messager().printError("Obtained error when writing out utils class: " + e.getMessage(), analysedInterface.typeElement());
-        }
-        processedElements.add(element);
-    }
-    
-
-    private void processAnalysedRecord(
-        final Supplier<List<RecordVisitor>> visitorSupplier,
-        final TypeElement element,
-        final AnalysedRecord analysedRecord
-    ) {
-        final List<RecordVisitor> visitors = visitorSupplier.get()
-            .stream()
-            .filter(vis -> vis.isApplicable(analysedRecord))
-            .toList();
-        if (visitors.isEmpty()) {
-            APContext.messager().printError("There are no available visitors", analysedRecord.typeElement());
-            processedElements.add(element);
-            return;
-        }
-        // Configure the logging here because we may not be doing anything at a class level
-        visitors.forEach(visitor -> visitor.configureLogging(analysedRecord));
-        visitors.forEach(visitor -> visitor.visitStartOfClass(analysedRecord));
-        analysedRecord.components().forEach(component -> visitors.forEach(visitor -> visitor.visitComponent(component)));
-        visitors.forEach(visitor -> visitor.visitEndOfClass(analysedRecord));
-        try {
-            writeOutUtilsClass(analysedRecord);
-        } catch (final Exception e) {
-            APContext.messager().printError("Obtained error when writing out utils class: " + e.getMessage(), analysedRecord.typeElement());
-        }
-        processedElements.add(element);
-    }
-
-    private void messageCounts() {
-        int records = 0;
-        int ifaces = 0;
-        for (final Entry<TypeElement,ProcessingTarget> entry : analysedTypes.entrySet()) {
-            if (!processedElements.contains(entry.getKey())) {
-                if (entry.getValue() instanceof AnalysedRecord) {
-                    records ++;
-                } else if (entry.getValue() instanceof AnalysedInterface) {
-                    ifaces ++;
-                }
-            }
-        }
-        APContext.messager().printNote("Advanced Record Utils: Processing round found %d records and %d interfaces to process".formatted(records, ifaces));
-    }
-
-    private void writeOutUtilsClass(final AnalysedType analysedType) throws IOException {
-        analysedType.addFullGeneratedAnnotation();
-        if (analysedType.utilsClass().hasContent()) {
-            final Filer filer = APContext.filer();
-            final TypeSpec utilsClass = analysedType.utilsClass().finishClass();
-            final ClassName utilsClassName = analysedType.utilsClassName();
-            final JavaFile utilsFile = JavaFile.builder(utilsClassName.packageName(), utilsClass)
-                .skipJavaLangImports(true)
-                .indent("    ")
-                .addFileComment("Auto generated")
-                .build();
-            utilsFile.writeTo(filer);
-            // Don't link this to the element since it looks really bad in maven output
-            APContext.messager().printNote("Wrote out utils class: " + utilsClassName.canonicalName());
-        }
+    public Optional<List<AnalysedTypeConverter>> obtainConverter(final TypeName typeName) {
+        return Optional.of(typeName)
+                .filter(analysedConverters::containsKey)
+                .map(analysedConverters::get)
+                .map(List::copyOf)
+                .filter(Predicate.not(List::isEmpty));
     }
 
     /**
      * Begin a chain of analysis from a (potential) root element
      */
-    public void analyseRootElement(final Element element) {
-        // Don't re-process a generation root
-        if (rootElements.contains(element) || processedElements.contains(element)) {
-            return;
-        }
-        if (analysedTypes.containsKey(element)) {
-            // Add this as a "root" but don't bother continuing
-            rootElements.add(analysedTypes.get(element).typeElement());
-            return;
-        }
+    void analyseRootElement(final Element element, final List<TargetAnalyser> analysers) {
+        analyseRootElement(element, Optional.empty(), analysers);
+    }
 
-        if(ElementKind.RECORD.equals(element.getKind()) || ElementKind.INTERFACE.equals(element.getKind())) {
-            final TypeElement typeElement = (TypeElement) element;
-            if (AdvRecUtilsSettings.isAnnotatated(element, processingEnvironment)) {
-                rootElements.add(typeElement);
-                final AdvRecUtilsSettings settings = AdvRecUtilsSettings.wrap(typeElement, processingEnvironment);
-                if (ElementKind.RECORD.equals(element.getKind())) {
-                    AnalysedRecord.analyse(analysedTypes, typeElement, this, settings);
-                } else {
-                    AnalysedInterface.analyse(analysedTypes, typeElement, this, settings);
+    private boolean hasBeenAnalysed(final Element element) {
+        if (element instanceof TypeElement te) {
+            return analysedTypes.containsKey(te);
+        } else if (element instanceof ExecutableElement exe) {
+            return processedConverters.contains(exe);
+        }
+        // I guess?
+        return false;
+    }
+
+    private void analyseRootElement(final Element rootElement, final Optional<AdvRecUtilsSettings> rootSettings, final List<TargetAnalyser> analysers) {
+        if (hasBeenAnalysed(rootElement)) {
+            return;
+        }
+        final LinkedHashSet<EleInQueue> queue = new LinkedHashSet<>();
+        queue.addFirst(new EleInQueue(rootElement, rootSettings));
+        do {
+            final EleInQueue pt = queue.removeFirst();
+            final Element element = pt.element();
+            if (hasBeenAnalysed(element)) {
+                continue;
+            }
+            final Optional<AdvRecUtilsSettings> settings = pt.settings();
+            for (final TargetAnalyser analyser : analysers) {
+                final TargetAnalysisResult analysisResult = analyser.analyse(element, settings);
+                if (!(analysisResult.target().isEmpty() && analysisResult.foundElements().isEmpty() && analysisResult.foundConverter().isEmpty())) {
+                    withAnalysisResult(rootSettings, analysisResult, queue);
                 }
             }
-        } else if (ElementKind.PACKAGE.equals(element.getKind())) {
-            final PackageElement packageElement = (PackageElement) element;
-            final AdvRecUtilsSettings settings = AdvRecUtilsSettings.wrap(packageElement, processingEnvironment);
-            if (Boolean.TRUE.equals(settings.prism().applyToAllInPackage())) {
-                packageElement.getEnclosedElements().forEach(this::analyseRootElement);
+        } while (!queue.isEmpty());
+    }
+
+    private void withAnalysisResult(Optional<AdvRecUtilsSettings> rootSettings, TargetAnalysisResult analysisResult, LinkedHashSet<EleInQueue> queue) {
+        analysisResult.target().ifPresent(tar -> analysedTypes.putIfAbsent(tar.typeElement(), tar));
+        analysisResult.foundConverter().ifPresent(converter -> {
+            final Queue<AnalysedTypeConverter> converterQueue = analysedConverters.computeIfAbsent(converter.resultingType(), ign -> new ConcurrentLinkedQueue<>());
+            converterQueue.add(converter);
+            processedConverters.add(converter.executableElement());
+        });
+        final Optional<AdvRecUtilsSettings> passDown = analysisResult.target()
+                .filter(AnalysedType.class::isInstance)
+                .map(AnalysedType.class::cast)
+                .map(AnalysedType::settings)
+                .or(() -> rootSettings);
+        for (final TypeElement typeElement : analysisResult.foundElements()) {
+            queue.add(new EleInQueue(typeElement, passDown));
+        }
+    }
+
+    void matchInterfaces() throws IOException {
+        for (final Entry<TypeElement,ProcessingTarget> entrySet : analysedTypes.entrySet()) {
+            if ((entrySet.getValue() instanceof final AnalysedInterface ai) && !processedElements.contains(entrySet.getKey())) {
+                for (final TypeElement unprocessed : ai.unprocessedImplementations()) {
+                    final ProcessingTarget target = analysedTypes.get(unprocessed);
+                    if (Objects.nonNull(target)) {
+                        ai.addImplementingType(target);
+                        ai.addCrossReference(target);
+                        if (target instanceof AnalysedType at) {
+                            at.addCrossReference(ai);
+                        }
+                    }
+                }
+            }
+            if ((entrySet.getValue() instanceof final AnalysedType analysedType) && !processedElements.contains(entrySet.getKey())) {
+                final ClassName className = analysedType.utilsClassName();
+                final JavaFileObject javaFileObject = APContext.filer().createSourceFile(className.canonicalName(), analysedType.utilsClass().builder().originatingElements.toArray(new Element[0]));
+                fileObjects.put(className, javaFileObject);
             }
         }
     }
 
-    /**
-     * Check to see if there is an existing utils class of the target item. If there is, add it to the known context (so it doesn't get re-processed)
-     */
-    public void checkForAndAddExistingUtils(final TypeElement referencedItem) {
-        AdvRecUtilsSettings.wrapOptional(referencedItem, processingEnvironment)
-            .map(this::cnToCheckExisting)
-            .flatMap(previousCompilationChecker::loadGeneratedArtifact)
-            .ifPresent(utilsTypeElement -> loadGeneratedPrism(utilsTypeElement, referencedItem));
-    }
+    void processElements(final BeanScope globalBeanScope) {
+        final ProcessingEnvironment processingEnvironment = processingEnv();
+        final CompletableFuture<?>[] futures = analysedTypes.entrySet().stream()
+                .filter(en -> processedElements.add(en.getKey()))
+                .map(Map.Entry::getValue)
+                .map(target -> {
+                    if (target instanceof final AnalysedRecord ar) {
+                        return CompletableFuture.runAsync(() -> processRecord(ar, globalBeanScope, processingEnvironment), executorService);
+                    } else if (target instanceof final AnalysedInterface ai) {
+                        return CompletableFuture.runAsync(() -> processInterface(ai, globalBeanScope, processingEnvironment), executorService);
+                    } else {
+                        // Perform a no-op
+                        return CompletableFuture.allOf();
+                    }
+                })
+                .toArray(CompletableFuture<?>[]::new);
 
-    private void loadGeneratedPrism(final TypeElement utilsTypeElement, final TypeElement referencedTypeElement) {
-        processedElements.add(referencedTypeElement);
-        final LibraryLoadedTarget libraryLoadedTarget = new LibraryLoadedTarget(new PreBuilt(utilsTypeElement), referencedTypeElement);
-        analysedTypes.put(referencedTypeElement, libraryLoadedTarget);
-
-    }
-
-    private ClassName cnToCheckExisting(final AdvRecUtilsSettings settings) {
-        final Element originaElement = settings.originalElement();
-        final String utilsClassName = settings.prism().typeNameOptions().utilsImplementationPrefix() + originaElement.getSimpleName().toString() + settings.prism().typeNameOptions().utilsImplementationSuffix();
-        Element packageEl = originaElement;
-        while(!(packageEl instanceof PackageElement)) {
-            packageEl = packageEl.getEnclosingElement();
+        CompletableFuture.allOf(futures).join();
+        boolean wasErr = false;
+        try {
+            writeUtilsClasses();
+        } catch (Exception e) {
+            APContext.messager().printMessage(Diagnostic.Kind.ERROR, "Error while writing out utils class: " + e.getMessage());
+            wasErr = true;
         }
-        final String packageName = ((PackageElement) packageEl).getQualifiedName().toString();
-        return ClassName.get(packageName, utilsClassName);
+        if (!wasErr) {
+            APContext.messager().printMessage(Diagnostic.Kind.NOTE, "Finished processing elements");
+        }
     }
+
+    private void processInterface(final AnalysedInterface analysedInterface, final BeanScope globalBeanScope, final ProcessingEnvironment processingEnvironment) {
+        APContext.init(processingEnvironment);
+        try (
+            final ScopeHolder scopeHolder = BeanScopeFactory.loadInterfaceScope(analysedInterface, globalBeanScope);
+        ) {
+            // Scope holder handles `close` on the BeanScope
+            final BeanScope perTargetBeanScope = scopeHolder.scope();
+            perTargetBeanScope.list(InterfaceVisitor.class)
+                .forEach(InterfaceVisitor::visitInterface);
+
+            prepareFile(analysedInterface);
+        }
+        APContext.clear();
+    }
+
+    private void processRecord(final AnalysedRecord analysedRecord, final BeanScope globalBeanScope, final ProcessingEnvironment processingEnvironment) {
+        APContext.init(processingEnvironment);
+        try (
+            final ScopeHolder scopeHolder = BeanScopeFactory.loadRecordScope(analysedRecord, globalBeanScope);
+        ) {
+            // Scope holder handles `close` on the BeanScope
+            final BeanScope perTargetBeanScope = scopeHolder.scope(); 
+            final List<RecordVisitor> perRecordVisitors = new ArrayList<>(perTargetBeanScope.list(RecordVisitor.class));
+            if (perRecordVisitors.isEmpty()) {
+                APContext.messager().printError("There are no available visitors", analysedRecord.typeElement());
+                return;
+            }
+            Collections.sort(perRecordVisitors);
+            perRecordVisitors.forEach(RecordVisitor::visitStartOfClass);
+            for (final RecordComponentElement recordComponent : analysedRecord.typeElement().getRecordComponents() ) {
+                processRecordElement(perTargetBeanScope, recordComponent, analysedRecord);
+            }
+            perRecordVisitors.forEach(RecordVisitor::visitEndOfClass);
+            prepareFile(analysedRecord);
+        }
+        APContext.clear();
+    }
+
+    private void processRecordElement(final BeanScope perTargetBeanScope, final RecordComponentElement recordComponent, final AnalysedRecord analysedRecord) {
+        try (
+            final ScopeHolder scopeHolder = BeanScopeFactory.loadComponentScope(recordComponent, perTargetBeanScope, analysedRecord);
+        ) {
+            // Scope holder handles `close` on the BeanScope
+            final BeanScope perElement = scopeHolder.scope();
+            final Optional<BasicAnalysedComponent> aco = perElement.getOptional(BasicAnalysedComponent.class);
+            if (aco.isPresent()) {
+                final BasicAnalysedComponent analysedComponent = aco.get();
+                final List<RecordVisitor> perElementVisitor = new ArrayList<>(perElement.list(RecordVisitor.class));
+                Collections.sort(perElementVisitor);
+                perElementVisitor.forEach(visitor -> visitor.visitComponent(analysedComponent));
+            }
+        }
+    }
+
+
+    private void prepareFile(final AnalysedType analysedType) {
+        analysedType.addFullGeneratedAnnotation();
+        final TypeSpec utilsClass = analysedType.utilsClass().finishClass();
+        final ClassName utilsClassName = analysedType.utilsClassName();
+        final JavaFile utilsFile = JavaFile.builder(utilsClassName.packageName(), utilsClass)
+            .skipJavaLangImports(true)
+            .indent("    ")
+            .addFileComment("Auto generated")
+            .build();
+        final var outFile = fileObjects.get(utilsClassName);
+        if (Objects.isNull(outFile)) {
+            APContext.messager().printError("Unable to find file to write to", analysedType.typeElement());
+        } else {
+            try (
+                Writer w = outFile.openWriter()
+            ) {
+                utilsFile.writeTo(w);
+                APContext.messager().printMessage(Diagnostic.Kind.NOTE, "Wrote out utils file " + utilsClassName.simpleName());
+            } catch (IOException e) {
+                APContext.messager().printError("Issue writing to file", analysedType.typeElement());
+            }
+        }
+    }
+
+    private void writeUtilsClasses() throws IOException {
+        fileObjects.clear();
+    }
+
+    private record EleInQueue(
+            Element element,
+            Optional<AdvRecUtilsSettings> settings
+    ) {}
+
+    private record WrittenJavaFile(
+            String fileName,
+            Element[] origination,
+            String content
+    ) {}
 }

@@ -5,17 +5,21 @@ import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import java.util.Optional;
 import java.util.Set;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlElementPrism.class})
 public final class WritePrimitiveNumerics extends XmlVisitor {
 
     private static final Set<TypeName> NUMERICS = Set.of(
@@ -28,8 +32,11 @@ public final class WritePrimitiveNumerics extends XmlVisitor {
         TypeName.SHORT
     );
 
-    public WritePrimitiveNumerics() {
-        super(Claims.XML_WRITE_FIELD);
+    private final XmlElementPrism prism;
+
+    public WritePrimitiveNumerics(final XmlRecordHolder xmlRecordHolder, final XmlElementPrism prism) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
+        this.prism = prism;
     }
 
     @Override
@@ -38,16 +45,9 @@ public final class WritePrimitiveNumerics extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && (!analysedComponent.isLoopable()) && NUMERICS.contains(analysedComponent.unNestedPrimaryTypeName())) {
-            final XmlElementPrism prism = optPrism.get();
-            final String elementName = elementName(analysedComponent, prism);
+        if (NUMERICS.contains(analysedComponent.unNestedPrimaryTypeName())) {
+            final String elementName = findElementName(analysedComponent, prism);
             final Optional<String> namespaceName = namespaceName(prism);
             final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.unNestedPrimaryTypeName());
 

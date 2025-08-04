@@ -1,50 +1,49 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
+import io.avaje.inject.RequiresBean;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
+import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
+import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
+
+import java.util.Optional;
+
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.DATE_TIME_FORMATTER;
 import static io.github.cbarlin.aru.impl.Constants.Names.ZONED_DATE_TIME;
 import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_OFFSET;
 
-import java.util.Optional;
-
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.github.cbarlin.aru.impl.xml.XmlVisitor;
-import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
-
-@ServiceProvider
-public final class WriteZonedDatetime extends XmlVisitor {
+@Singleton
+@XmlPerComponentScope
+@RequiresBean({XmlElementPrism.class})
+public final class WriteZonedDatetime extends NonCollectionXmlVisitor {
 
     private static final String CHK_NON_NULL = "if ($T.nonNull(val))";
 
-    public WriteZonedDatetime() {
-        super(Claims.XML_WRITE_FIELD);
-    }
+    private final XmlElementPrism prism;
 
+    public WriteZonedDatetime(final XmlRecordHolder xmlRecordHolder, final XmlElementPrism prism, final Optional<AnalysedOptionalComponent> analysedOptionalComponent) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent);
+        this.prism = prism;
+    }
     @Override
     protected int innerSpecificity() {
         return 1;
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<XmlElementPrism> optPrism = xmlElementPrism(analysedComponent);
-        if (optPrism.isPresent() && ZONED_DATE_TIME.equals(analysedComponent.typeName())) {
+    protected boolean writeElementMethod(final AnalysedComponent analysedComponent) {
+        if (ZONED_DATE_TIME.equals(analysedComponent.serialisedTypeName())) {
             // Nice!
-            final XmlElementPrism prism = optPrism.get();
-            final String elementName = elementName(analysedComponent, prism);
+            final String elementName = findElementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
             final Optional<String> defaultValue = defaultValue(prism);
             final Optional<String> namespaceName = namespaceName(prism);
-            final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.typeName());
+            final MethodSpec.Builder methodBuilder = createMethod(analysedComponent, analysedComponent.serialisedTypeName());
             
             if (defaultValue.isPresent()) {
                 writeWithDefaultDefined(analysedComponent, elementName, defaultValue.get(), namespaceName, methodBuilder);

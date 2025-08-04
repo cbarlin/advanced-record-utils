@@ -5,17 +5,18 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPER
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerRecordScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerRecordScope
 public final class XmlStaticClassGenerator extends XmlVisitor {
 
-    public XmlStaticClassGenerator() {
-        super(Claims.XML_STATIC_CLASS);
+    public XmlStaticClassGenerator(final XmlRecordHolder holder) {
+        super(Claims.XML_STATIC_CLASS, holder);
     }
 
     @Override
@@ -24,12 +25,7 @@ public final class XmlStaticClassGenerator extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         xmlStaticClass.builder()
             .addOriginatingElement(analysedRecord.typeElement())
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)

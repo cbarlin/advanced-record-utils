@@ -4,20 +4,28 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
+import io.github.cbarlin.aru.impl.wiring.WitherPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@WitherPerComponentScope
+@RequiresBean({TypeAliasComponent.class, ConstructorComponent.class})
 public final class WithAlias extends WitherVisitor {
 
-    public WithAlias() {
-        super(Claims.WITHER_WITH_ALIAS);
+    private final TypeAliasComponent typeAliasComponent;
+
+    public WithAlias(final WitherInterface witherInterface, final AnalysedRecord analysedRecord, final TypeAliasComponent typeAliasComponent) {
+        super(Claims.WITHER_WITH_ALIAS, witherInterface, analysedRecord);
+        this.typeAliasComponent = typeAliasComponent;
     }
 
     @Override
@@ -26,34 +34,23 @@ public final class WithAlias extends WitherVisitor {
     }
 
     @Override
-    protected boolean isWitherApplicable(AnalysedRecord analysedRecord) {
-        // Only bother if the record has at least one TypeAlias component
-        return analysedRecord.components()
-            .stream()
-            .anyMatch(TypeAliasComponent.class::isInstance);
-    }
-
-    @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        if (analysedComponent.isIntendedConstructorParam() && analysedComponent instanceof TypeAliasComponent typeAliasComponent) {
-            final String name = typeAliasComponent.name();
-            final String withMethodName = witherOptionsPrism.withMethodPrefix() + capitalise(name) + witherOptionsPrism.withMethodSuffix();
-            final MethodSpec.Builder methodBuilder = witherInterface.createMethod(withMethodName, claimableOperation, analysedComponent)
-                .addAnnotation(NON_NULL)
-                .returns(analysedComponent.parentRecord().intendedType())
-                .addModifiers(Modifier.DEFAULT)
-                .addJavadoc("Return a new instance with a different {@code $L} field", name)
-                .addParameter(
-                    ParameterSpec.builder(typeAliasComponent.serialisedTypeName(), name, Modifier.FINAL)
-                        .addJavadoc("Replacement value")
-                        .build()
-                )
-                // No need to handle null as this will eventually make its way down to the builder which will do that for us
-                .addStatement("return this.$L(new $T($L))", withMethodName, typeAliasComponent.typeName(), name);
-            AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
-            return true;
-        }
-        return false;
+        final String name = typeAliasComponent.name();
+        final String withMethodName = witherOptionsPrism.withMethodPrefix() + capitalise(name) + witherOptionsPrism.withMethodSuffix();
+        final MethodSpec.Builder methodBuilder = witherInterface.createMethod(withMethodName, claimableOperation, analysedComponent)
+            .addAnnotation(NON_NULL)
+            .returns(analysedComponent.parentRecord().intendedType())
+            .addModifiers(Modifier.DEFAULT)
+            .addJavadoc("Return a new instance with a different {@code $L} field", name)
+            .addParameter(
+                ParameterSpec.builder(typeAliasComponent.serialisedTypeName(), name, Modifier.FINAL)
+                    .addJavadoc("Replacement value")
+                    .build()
+            )
+            // No need to handle null as this will eventually make its way down to the builder which will do that for us
+            .addStatement("return this.$L(new $T($L))", withMethodName, typeAliasComponent.typeName(), name);
+        AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
+        return true;
     }
     
 }

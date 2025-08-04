@@ -2,22 +2,21 @@ package io.github.cbarlin.aru.impl.diff;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
+import io.github.cbarlin.aru.impl.wiring.DiffPerRecordScope;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@DiffPerRecordScope
+@RequiresProperty(value = "diffOptions.staticMethodsAddedToUtils", equalTo = "true")
 public final class DifferUtilsClassStaticMethod extends DifferVisitor {
 
-    public DifferUtilsClassStaticMethod() {
-        super(Claims.DIFFER_STATIC_UTILS_METHOD);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(AnalysedRecord analysedRecord) {
-        return Boolean.TRUE.equals(diffOptionsPrism.staticMethodsAddedToUtils());
+    public DifferUtilsClassStaticMethod(final DiffHolder diffHolder) {
+        super(Claims.DIFFER_STATIC_UTILS_METHOD, diffHolder);
     }
 
     @Override
@@ -26,7 +25,7 @@ public final class DifferUtilsClassStaticMethod extends DifferVisitor {
     }
 
     @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final var builder = analysedRecord.utilsClass().createMethod(diffOptionsPrism.differMethodName(), claimableOperation)
             .returns(differResult.className())
             .addModifiers(Modifier.FINAL, Modifier.STATIC)

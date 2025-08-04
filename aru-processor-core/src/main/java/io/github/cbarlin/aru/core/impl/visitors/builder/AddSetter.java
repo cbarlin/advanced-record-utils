@@ -4,34 +4,33 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 
 import javax.lang.model.element.Modifier;
 
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
+import io.github.cbarlin.aru.core.artifacts.BuilderClass;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-
-import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
-@ServiceProvider
-public class AddSetter extends RecordVisitor {
+@Component
+@CorePerRecordScope
+public final class AddSetter extends RecordVisitor {
 
-    private ClassName builderClassName;
+    private final BuilderClass builderClass;
+    private final ClassName builderClassName;
 
-    public AddSetter() {
-        super(CommonsConstants.Claims.CORE_BUILDER_SETTER);
+    public AddSetter(final AnalysedRecord analysedRecord, final BuilderClass builderClass) {
+        super(CommonsConstants.Claims.CORE_BUILDER_SETTER, analysedRecord);
+        this.builderClass = builderClass;
+        this.builderClassName = builderClass.className();
     }
 
     @Override
     public int specificity() {
         return 0;
-    }
-
-    @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
-        builderClassName = analysedRecord.builderArtifact().className();
-        return true;
     }
 
     @Override
@@ -43,14 +42,14 @@ public class AddSetter extends RecordVisitor {
                 .addAnnotation(NULLABLE)
                 .build();
             
-            final var method = analysedComponent.builderArtifact().createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
+            final var method = builderClass.createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
                 .addJavadoc("Updates the value of {@code $L}", name)
                 .returns(builderClassName)
                 .addParameter(param)
                 .addAnnotation(CommonsConstants.Names.NON_NULL)
                 .addModifiers(Modifier.PUBLIC);
 
-            if (!Boolean.FALSE.equals(analysedComponent.settings().prism().builderOptions().nullReplacesNotNull())) {
+            if (!Boolean.FALSE.equals(settings.prism().builderOptions().nullReplacesNotNull())) {
                 method.addStatement("this.$L = $L", name, name)
                     .addJavadoc("\n<p>\n")
                     .addJavadoc("Supplying a null value will set the current value to null");

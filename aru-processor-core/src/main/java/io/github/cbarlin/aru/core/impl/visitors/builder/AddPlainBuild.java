@@ -8,21 +8,22 @@ import javax.lang.model.element.VariableElement;
 
 import org.apache.commons.lang3.StringUtils;
 
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
 
-import io.avaje.spi.ServiceProvider;
-
-@ServiceProvider
-public class AddPlainBuild extends RecordVisitor {
+@Component
+@CorePerRecordScope
+public final class AddPlainBuild extends RecordVisitor {
     private static final String CONSTRUCT = "return new $T(\n%s\n)";
     private static final String CALL_GETTER = "this.$L()";
 
-    public AddPlainBuild() {
-        super(Claims.BUILDER_BUILD);
+    public AddPlainBuild(final AnalysedRecord analysedRecord) {
+        super(Claims.BUILDER_BUILD, analysedRecord);
     }
 
     @Override
@@ -31,12 +32,7 @@ public class AddPlainBuild extends RecordVisitor {
     }
 
     @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected void visitEndOfClassImpl(AnalysedRecord analysedRecord) {
+    protected void visitEndOfClassImpl() {
         final String methodName = analysedRecord.settings().prism().builderOptions().buildMethodName();
         final var methodBuilder = analysedRecord.builderArtifact()
             .createMethod(methodName, claimableOperation)

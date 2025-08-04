@@ -6,25 +6,22 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
+import io.github.cbarlin.aru.impl.wiring.MergerPerRecordScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@MergerPerRecordScope
 public final class MergeOptionalMethod extends MergerVisitor {
 
-    public MergeOptionalMethod() {
-        super(Claims.MERGE_IFACE_MERGE_OPTIONAL);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public MergeOptionalMethod(final MergerHolder mergerHolder) {
+        super(Claims.MERGE_IFACE_MERGE_OPTIONAL, mergerHolder);
     }
 
     @Override
@@ -33,7 +30,7 @@ public final class MergeOptionalMethod extends MergerVisitor {
     }
 
     @Override
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final ParameterizedTypeName paramTypeName = ParameterizedTypeName.get(OPTIONAL, analysedRecord.intendedType());
         final ParameterSpec paramA = ParameterSpec.builder(paramTypeName, "other", Modifier.FINAL)
             .addAnnotation(NON_NULL)

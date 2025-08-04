@@ -11,25 +11,22 @@ import javax.lang.model.element.VariableElement;
 
 import org.apache.commons.lang3.StringUtils;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
+import io.github.cbarlin.aru.impl.wiring.MergerPerRecordScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@MergerPerRecordScope
 public final class MergeMethod extends MergerVisitor {
 
-    public MergeMethod() {
-        super(Claims.MERGE_STATIC_MERGE);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public MergeMethod(final MergerHolder mergerHolder) {
+        super(Claims.MERGE_STATIC_MERGE, mergerHolder);
     }
 
     @Override
@@ -38,8 +35,8 @@ public final class MergeMethod extends MergerVisitor {
     }
 
     @Override
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
-        createStaticMethod(analysedRecord);
+    protected boolean visitStartOfClassImpl() {
+        createStaticMethod();
         if (Boolean.TRUE.equals(mergerOptionsPrism.staticMethodsAddedToUtils())) {
             final ParameterSpec paramA = ParameterSpec.builder(analysedRecord.intendedType(), "preferred", Modifier.FINAL)
                 .addAnnotation(NULLABLE)
@@ -68,7 +65,7 @@ public final class MergeMethod extends MergerVisitor {
             
     }
 
-    private void createStaticMethod(final AnalysedRecord analysedRecord) {
+    private void createStaticMethod() {
         final ParameterSpec paramA = ParameterSpec.builder(analysedRecord.intendedType(), "preferred", Modifier.FINAL)
             .addAnnotation(NULLABLE)
             .addJavadoc("The preferred element")

@@ -1,29 +1,29 @@
 package io.github.cbarlin.aru.impl.diff.results;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
+import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
+import io.github.cbarlin.aru.impl.wiring.DiffPerRecordScope;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@DiffPerRecordScope
 public final class EagerStandardHasChangedCheck extends DifferVisitor {
 
-    public EagerStandardHasChangedCheck() {
-        super(Claims.DIFFER_OVERALL_HAS_CHANGED);
-    }
+    final List<AnalysedComponent> analysedComponents = new ArrayList<>();
 
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public EagerStandardHasChangedCheck(final DiffHolder diffHolder) {
+        super(Claims.DIFFER_OVERALL_HAS_CHANGED, diffHolder);
     }
 
     @Override
@@ -32,7 +32,13 @@ public final class EagerStandardHasChangedCheck extends DifferVisitor {
     }
 
     @Override
-    protected void visitEndOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+        analysedComponents.add(analysedComponent);
+        return false;
+    }
+
+    @Override
+    protected void visitEndOfClassImpl() {
         differResult.addField(
             FieldSpec.builder(TypeName.BOOLEAN, "__overallChanged", Modifier.PRIVATE, Modifier.FINAL)
                 .addJavadoc("Has any field changed in this diff?")
@@ -40,8 +46,8 @@ public final class EagerStandardHasChangedCheck extends DifferVisitor {
         );
         // This should just OR all the existing ones!
         final StringBuilder assignment = new StringBuilder("this.__overallChanged = ");
-        final ArrayList<Object> checks = new ArrayList<>(analysedRecord.components().size());
-        for (final AnalysedComponent analysedComponent : analysedRecord.components()) {
+        final ArrayList<Object> checks = new ArrayList<>(analysedComponents.size());
+        for (final AnalysedComponent analysedComponent : analysedComponents) {
             // Invoke the methods rather than use the variable - the variable version may not be a boolean!
             assignment.append("this.$L() || ");
             checks.add(changedMethodName(analysedComponent.name()));

@@ -4,25 +4,22 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
+import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
+import io.github.cbarlin.aru.impl.wiring.DiffPerRecordScope;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@DiffPerRecordScope
 public final class EagerStandardFieldChanged extends DifferVisitor {
-    public EagerStandardFieldChanged() {
-        super(Claims.DIFFER_COMPUTE_CHANGE);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public EagerStandardFieldChanged(final DiffHolder diffHolder) {
+        super(Claims.DIFFER_COMPUTE_CHANGE, diffHolder);
     }
 
     @Override

@@ -8,19 +8,21 @@ import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerRecordScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerRecordScope
 public final class ToXmlMethodNoDefNamespace extends XmlVisitor {
 
-    public ToXmlMethodNoDefNamespace() {
-        super(Claims.XML_IFACE_TO_XML_NO_NAMESPACE);
+    public ToXmlMethodNoDefNamespace(final XmlRecordHolder xmlRecordHolder) {
+        super(Claims.XML_IFACE_TO_XML_NO_DEF_NAMESPACE, xmlRecordHolder);
     }
 
     @Override
@@ -29,12 +31,7 @@ public final class ToXmlMethodNoDefNamespace extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final MethodSpec.Builder methodBuilder = xmlInterface.createMethod(xmlOptionsPrism.continueAddingToXmlMethodName(), claimableOperation)
             .addModifiers(Modifier.DEFAULT);
         methodBuilder.addJavadoc("Write out the class to the requested {@link $T}, referring to itself with the reqested tag name", XML_STREAM_WRITER)

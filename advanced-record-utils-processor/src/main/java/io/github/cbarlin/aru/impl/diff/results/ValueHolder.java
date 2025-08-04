@@ -4,27 +4,24 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
+import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
+import io.github.cbarlin.aru.impl.wiring.DiffPerRecordScope;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@DiffPerRecordScope
 public final class ValueHolder extends DifferVisitor {
 
     private static final String ASSIGNMENT = "this.$L = $L.$L()";
 
-    public ValueHolder() {
-        super(Claims.DIFFER_VALUE_HOLDING);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public ValueHolder(final DiffHolder diffHolder) {
+        super(Claims.DIFFER_VALUE_HOLDING, diffHolder);
     }
 
     @Override

@@ -6,21 +6,22 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.CommonsConstants.Claims;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-
-import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
-@ServiceProvider
-public class AddCopyConstruction extends RecordVisitor {
+@Component
+@CorePerRecordScope
+public final class AddCopyConstruction extends RecordVisitor {
 
-    public AddCopyConstruction() {
-        super(Claims.BUILDER_FROM_EXISTING);
+    public AddCopyConstruction(final AnalysedRecord analysedRecord) {
+        super(CommonsConstants.Claims.BUILDER_FROM_EXISTING, analysedRecord);
     }
 
     @Override
@@ -28,13 +29,9 @@ public class AddCopyConstruction extends RecordVisitor {
         return 0;
     }
 
-    @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
-        return true;
-    }
 
     @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final String methodName = analysedRecord.settings().prism().builderOptions().copyCreationName();
         final ClassName builderClassName = analysedRecord.builderArtifact().className();
         final ParameterSpec parameterSpec = ParameterSpec.builder(analysedRecord.intendedType(), "original", Modifier.FINAL)

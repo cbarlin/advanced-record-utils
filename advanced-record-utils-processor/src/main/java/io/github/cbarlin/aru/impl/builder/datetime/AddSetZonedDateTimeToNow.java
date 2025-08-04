@@ -1,11 +1,20 @@
 package io.github.cbarlin.aru.impl.builder.datetime;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.Component;
+import io.avaje.inject.RequiresBean;
+import io.avaje.inject.RequiresProperty;
+import io.github.cbarlin.aru.core.artifacts.BuilderClass;
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
 import io.github.cbarlin.aru.impl.Constants.Names;
+import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
 
-@ServiceProvider
+@Component
+@BuilderPerComponentScope
+@RequiresBean({ConstructorComponent.class})
+@RequiresProperty(value = "setTimeNowMethods", equalTo = "true")
 public final class AddSetZonedDateTimeToNow extends SetToNow {
-    public AddSetZonedDateTimeToNow() {
-        super(Names.ZONED_DATE_TIME);
+    public AddSetZonedDateTimeToNow(final AnalysedRecord analysedRecord, final BuilderClass builderClass) {
+        super(analysedRecord, Names.ZONED_DATE_TIME, builderClass);
     }
 }

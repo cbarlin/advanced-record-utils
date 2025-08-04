@@ -44,6 +44,20 @@
 @GeneratePrism(publicAccess = true, value = JsonTypeInfo.class)
 @GeneratePrism(publicAccess = true, value = JsonTypeName.class)
 @GeneratePrism(publicAccess = true, value = JsonUnwrapped.class)
+// Our own prisms!
+@GeneratePrism(value = AdvancedRecordUtils.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.BuilderOptions.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.WitherOptions.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.MergerOptions.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.XmlOptions.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.DiffOptions.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.TargetConstructor.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtilsGenerated.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtilsGenerated.InternalUtil.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtilsGenerated.Version.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtilsGenerated.UsedTypeConverter.class, publicAccess = true)
+@GeneratePrism(value = io.github.cbarlin.aru.annotations.TypeConverter.class, publicAccess = true)
+@GeneratePrism(value = io.github.cbarlin.aru.annotations.Generated.class, publicAccess = true)
 package io.github.cbarlin.aru.prism.prison;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
@@ -64,6 +78,8 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import io.avaje.jsonb.CustomAdapter;
 import io.avaje.jsonb.Json;
 import io.avaje.prism.GeneratePrism;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
 import jakarta.xml.bind.annotation.XmlAccessorOrder;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;

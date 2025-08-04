@@ -52,6 +52,11 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin</groupId>
+            <artifactId>advanced-record-utils-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -61,11 +66,12 @@
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <proc>full</proc>
+                    <debug>false</debug>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>io.avaje</groupId>
                             <artifactId>avaje-prisms</artifactId>
-                            <version>${avaje.prism.version}</version>
+                            <version>${avaje-prism.version}</version>
                         </path>
                         <path>
                             <groupId>io.avaje</groupId>
@@ -94,4 +100,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${maven-compiler-plugin.version}</version>
+                        <configuration>
+                            <debug>false</debug>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

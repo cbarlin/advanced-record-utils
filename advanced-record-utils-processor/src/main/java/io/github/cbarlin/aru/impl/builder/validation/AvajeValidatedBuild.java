@@ -6,20 +6,23 @@ import static io.github.cbarlin.aru.impl.Constants.Names.AVAJE_VALIDATOR;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.ValidationApi;
+import io.avaje.inject.Component;
+import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.BuilderPerRecordScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
-@ServiceProvider
+@Component
+@BuilderPerRecordScope
+@RequiresProperty(value = "validatedBuilder", equalTo = "AVAJE")
 public final class AvajeValidatedBuild extends RecordVisitor {
 
-    public AvajeValidatedBuild() {
-        super(Claims.BUILDER_ADD_VALIDATED_BUILD_METHOD);
+    public AvajeValidatedBuild(final AnalysedRecord analysedRecord) {
+        super(Claims.BUILDER_ADD_VALIDATED_BUILD_METHOD, analysedRecord);
     }
 
     @Override
@@ -28,12 +31,7 @@ public final class AvajeValidatedBuild extends RecordVisitor {
     }
 
     @Override
-    public boolean isApplicable(AnalysedRecord analysedRecord) {
-        return ValidationApi.AVAJE.name().equals(analysedRecord.settings().prism().builderOptions().validatedBuilder());
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final String methodName = analysedRecord.settings().prism().builderOptions().buildMethodName();
 
         // Start with the one that accepts the argument

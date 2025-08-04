@@ -14,8 +14,6 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.MergerOptions;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.WitherOptions;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.XmlOptions;
 
 /**
  * A version of the utils generation that enables most options
@@ -40,13 +38,6 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.XmlOptions;
     ),
     mergerOptions = @MergerOptions(
         staticMethodsAddedToUtils = true
-    ),
-    xmlOptions = @XmlOptions(
-
-    ),
-    witherOptions = @WitherOptions(
-        staticMethodsAddedToUtils = true,
-        generateStaticVersions = true
     )
 )
 public @interface AdvancedRecordUtilsFull {

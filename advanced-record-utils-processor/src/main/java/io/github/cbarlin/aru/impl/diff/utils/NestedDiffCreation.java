@@ -2,35 +2,36 @@ package io.github.cbarlin.aru.impl.diff.utils;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
+import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
+import io.github.cbarlin.aru.impl.types.ComponentTargetingRecord;
+import io.github.cbarlin.aru.impl.wiring.DiffPerComponentScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@DiffPerComponentScope
+@RequiresBean({ComponentTargetingRecord.class})
 public final class NestedDiffCreation extends DifferVisitor {
 
-    private final Set<String> processedSpecs = HashSet.newHashSet(20);
+    private final Set<String> processedSpecs;
+    private final AnalysedRecord target;
 
-    public NestedDiffCreation() {
-        super(Claims.DIFFER_UTILS_COMPUTE_CHANGE);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public NestedDiffCreation(final DiffHolder diffHolder, final ComponentTargetingRecord componentTargetingRecord) {
+        super(Claims.DIFFER_UTILS_COMPUTE_CHANGE, diffHolder);
+        this.processedSpecs = diffHolder.staticClass().createdMethods();
+        this.target = componentTargetingRecord.target();
     }
 
     @Override
@@ -40,18 +41,14 @@ public final class NestedDiffCreation extends DifferVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final Optional<ProcessingTarget> targetAnalysedType = analysedComponent.targetAnalysedType();
-        final String methodName = hasChangedStaticMethodName(analysedComponent.typeName());
-        if (targetAnalysedType.isPresent()) {
-            final ProcessingTarget target = targetAnalysedType.get();
-            if (target instanceof final AnalysedRecord otherRecord && Boolean.TRUE.equals(otherRecord.settings().prism().diffable()) && (!analysedComponent.requiresUnwrapping()) ) {
-                if (processedSpecs.add(methodName)) {
-                    createMethod(analysedComponent, methodName, otherRecord);
-                }
-                return true;
-            }
+        if (!Boolean.TRUE.equals(target.settings().prism().diffable())) {
+            return false;
         }
-        return false;
+        final String methodName = hasChangedStaticMethodName(analysedComponent.typeName());
+        if (processedSpecs.add(methodName)) {
+            createMethod(analysedComponent, methodName, target);
+        }
+        return true;
     }
 
     private void createMethod(final AnalysedComponent analysedComponent, final String methodName, final AnalysedRecord otherRecord) {

@@ -1,35 +1,32 @@
 package io.github.cbarlin.aru.impl.merger.utils;
 
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
-import io.github.cbarlin.aru.impl.types.collection.CollectionHandler;
-import io.github.cbarlin.aru.impl.types.collection.CollectionHandlerHolder;
+import io.github.cbarlin.aru.impl.types.collection.CollectionHandlerHelper;
+import io.github.cbarlin.aru.impl.wiring.MergerPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
-import io.micronaut.sourcegen.javapoet.TypeName;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@MergerPerComponentScope
+@RequiresBean({CollectionHandlerHelper.class})
 public final class CollectionMerge extends MergerVisitor {
 
-    private final Set<String> processedSpecs = HashSet.newHashSet(5);
+    private final Set<String> processedSpecs;
+    private final CollectionHandlerHelper handler;
 
-    public CollectionMerge() {
-        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD);
-    }
-
-    @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
+    public CollectionMerge(final MergerHolder mergerHolder, final CollectionHandlerHelper handler) {
+        super(Claims.MERGER_ADD_FIELD_MERGER_METHOD, mergerHolder);
+        this.processedSpecs = mergerHolder.processedMethods();
+        this.handler = handler;
     }
 
     @Override
@@ -38,28 +35,16 @@ public final class CollectionMerge extends MergerVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        if (analysedComponent instanceof final AnalysedCollectionComponent acc) {
-            final Optional<CollectionHandler> handlerOptional = CollectionHandlerHolder.COLLECTION_HANDLERS
-                .stream()
-                .filter(c -> c.canHandle(analysedComponent))
-                .findFirst();
-            if (handlerOptional.isPresent()) {
-                final CollectionHandler handler = handlerOptional.get();
-                final TypeName innerTypeName = acc.unNestedPrimaryTypeName();
-                final var targetTn = analysedComponent.typeName();
-                final String methodName = mergeStaticMethodName(targetTn);
-                if (processedSpecs.add(methodName)) {
-                    final MethodSpec.Builder method = mergerStaticClass.createMethod(methodName, claimableOperation);
-                    method.modifiers.clear();
-                    method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
-                    handler.writeMergerMethod(innerTypeName, method);
-                    AnnotationSupplier.addGeneratedAnnotation(method, this);
-                }
-                return true;
-            }
+    protected boolean visitComponentImpl(final AnalysedComponent acc) {
+        final String methodName = mergeStaticMethodName(acc.typeName());
+        if (processedSpecs.add(methodName)) {
+            final MethodSpec.Builder method = mergerStaticClass.createMethod(methodName, claimableOperation);
+            method.modifiers.clear();
+            method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
+            handler.writeMergerMethod(method);
+            AnnotationSupplier.addGeneratedAnnotation(method, this);
         }
-        return false;
+        return true;
     }
 
 }

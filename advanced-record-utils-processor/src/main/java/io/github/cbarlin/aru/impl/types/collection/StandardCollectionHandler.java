@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.types.collection;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
-import javax.lang.model.element.Modifier;
-
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -15,6 +9,12 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @SuppressWarnings({"java:S1192"}) // Adding a constant will not make the code clearer
 public abstract class StandardCollectionHandler extends CollectionHandler {
@@ -69,7 +69,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void addNonNullAutoField(final AnalysedComponent component, final ToBeBuilt addFieldTo, final TypeName innerType) {
-        final FieldSpec fSpec = FieldSpec.builder(component.typeName(), component.name(), Modifier.PRIVATE)
+        final ParameterizedTypeName ptn = ParameterizedTypeName.get(mutableClassName, innerType);
+        final FieldSpec fSpec = FieldSpec.builder(ptn, component.name(), Modifier.PRIVATE)
             .addAnnotation(NON_NULL)
             .initializer("new $T<$T>()", mutableClassName, innerType)
             .build();
@@ -99,7 +100,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
                 .endControlFlow();
             convertToImmutable(methodBuilder, "this." + component.name(), "___immutable", innerType);
             methodBuilder.addStatement("return ___immutable")
-                .returns(component.typeName());
+                .returns(component.typeName())
+                .addJavadoc("Returns the current value of {@code $L}", component.name());
         } else {
             writeNullableAutoGetter(component, methodBuilder, innerType);
         }
@@ -144,7 +146,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
         // The field in the builder is also NonNull in this case, so no need for null check
         convertToImmutable(methodBuilder, "this." + component.name(), "___immutable", innerType);
         methodBuilder.addStatement("return ___immutable")
-            .returns(component.typeName());
+            .returns(component.typeName())
+            .addJavadoc("Returns the current value of {@code $L}", component.name());;
     }
 
     @Override

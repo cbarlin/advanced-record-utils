@@ -1,6 +1,6 @@
 package io.github.cbarlin.aru.core.mirrorhandlers;
 
-import java.util.List;
+import io.github.cbarlin.aru.annotations.Generated;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -8,8 +8,9 @@ import javax.lang.model.element.AnnotationValueVisitor;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.util.List;
 
-public final record SyntheticAnnotationValue(Object value) implements AnnotationValue {
+public record SyntheticAnnotationValue(Object value) implements AnnotationValue {
 
     @Override
     public Object getValue() {
@@ -18,6 +19,7 @@ public final record SyntheticAnnotationValue(Object value) implements Annotation
 
     @SuppressWarnings("unchecked")
     @Override
+    @Generated("Ignored for the purposes of code coverage - we don't visit it!")
     public <R, P> R accept(final AnnotationValueVisitor<R, P> v, final P p) {
         return switch (value) {
             case final Boolean b -> v.visitBoolean(b, p);

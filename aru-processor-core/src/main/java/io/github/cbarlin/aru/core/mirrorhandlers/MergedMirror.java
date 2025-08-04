@@ -1,16 +1,12 @@
 package io.github.cbarlin.aru.core.mirrorhandlers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.jspecify.annotations.NullMarked;
-
-@NullMarked
 public final class MergedMirror implements AnnotationMirror {
     private final DeclaredType annotationType;
     private final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues;
@@ -38,7 +34,7 @@ public final class MergedMirror implements AnnotationMirror {
             merged.putIfAbsent(e.getKey(), e.getValue());
         }
         for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> e : sec.entrySet()) {
-            if (e.getValue().getValue() instanceof Boolean bool && Boolean.TRUE.equals(bool)) {
+            if (e.getValue().getValue() instanceof Boolean bool && bool) {
                 merged.put(e.getKey(), e.getValue());
             } else {
                 merged.putIfAbsent(e.getKey(), e.getValue());

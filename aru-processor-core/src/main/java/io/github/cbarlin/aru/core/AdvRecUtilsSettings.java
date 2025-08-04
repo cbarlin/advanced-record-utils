@@ -1,13 +1,9 @@
 package io.github.cbarlin.aru.core;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
+import io.github.cbarlin.aru.core.mirrorhandlers.MergedMirror;
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import org.jspecify.annotations.NullMarked;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -16,11 +12,14 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-
-import org.jspecify.annotations.NullMarked;
-
-import io.github.cbarlin.aru.core.mirrorhandlers.MergedMirror;
-import io.micronaut.sourcegen.javapoet.ClassName;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 /**
  * Holder for the settings being used in the current processing context of an element.
@@ -68,7 +67,7 @@ public final class AdvRecUtilsSettings {
         throw new IllegalStateException("Internal element is not a TypeElement or PackageElement");
     }
 
-    private static final Map<PackageElement, Optional<AnnotationMirror>> PACKAGE_MIRRORS = new HashMap<>();
+    private static final Map<PackageElement, Optional<AnnotationMirror>> PACKAGE_MIRRORS = new ConcurrentHashMap<>();
 
     private static Optional<AnnotationMirror> obtainMirrorOnPackageElement(PackageElement pkgEl, ProcessingEnvironment env) {
         return PACKAGE_MIRRORS.computeIfAbsent(pkgEl, ignored -> obtainMirrorOnElement(pkgEl, env));

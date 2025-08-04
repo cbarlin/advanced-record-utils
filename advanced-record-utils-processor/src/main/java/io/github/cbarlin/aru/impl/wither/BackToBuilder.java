@@ -8,23 +8,20 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.WitherPerRecordScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@WitherPerRecordScope
 public final class BackToBuilder extends WitherVisitor {
 
-    public BackToBuilder() {
-        super(Claims.WITHER_TO_BUILDER);
-    }
-
-    @Override
-    protected boolean isWitherApplicable(AnalysedRecord analysedRecord) {
-        return true;
+    public BackToBuilder(final WitherInterface witherInterface, final AnalysedRecord analysedRecord) {
+        super(Claims.WITHER_TO_BUILDER, witherInterface, analysedRecord);
     }
 
     @Override
@@ -33,7 +30,7 @@ public final class BackToBuilder extends WitherVisitor {
     }
 
     @Override
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final ClassName builderClassName = analysedRecord.builderArtifact().className();
         final String backToBuilderMethodName = witherOptionsPrism.convertToBuilder();
         final MethodSpec.Builder backBuilder = witherInterface.createMethod(backToBuilderMethodName, claimableOperation)

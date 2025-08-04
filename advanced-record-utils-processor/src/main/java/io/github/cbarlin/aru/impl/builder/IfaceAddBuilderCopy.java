@@ -3,29 +3,31 @@ package io.github.cbarlin.aru.impl.builder;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
+import io.github.cbarlin.aru.impl.wiring.BuilderPerInterfaceScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-@ServiceProvider
+@Component
+@BuilderPerInterfaceScope
 public final class IfaceAddBuilderCopy extends InterfaceVisitor {
 
-    public IfaceAddBuilderCopy() {
-        super(Claims.BUILDER_FROM_EXISTING);
+    public IfaceAddBuilderCopy(final AnalysedInterface analysedInterface) {
+        super(Claims.BUILDER_FROM_EXISTING, analysedInterface);
     }
 
     @Override
-    protected boolean visitInterfaceImpl(final AnalysedInterface analysedInterface) {
-        final String bridge = analysedInterface.prism().builderOptions().multiTypeSetterBridge();
-        final String builderName = analysedInterface.prism().builderOptions().copyCreationName();
+    protected boolean visitInterfaceImpl() {
+        final String bridge = utilsPrism.builderOptions().multiTypeSetterBridge();
+        final String builderName = utilsPrism.builderOptions().copyCreationName();
         for(final ProcessingTarget target : analysedInterface.implementingTypes()) {
             if (target instanceof AnalysedInterface) {
                 continue;
@@ -58,11 +60,6 @@ public final class IfaceAddBuilderCopy extends InterfaceVisitor {
     @Override
     public int specificity() {
         return 0;
-    }
-
-    @Override
-    public boolean isApplicable(final AnalysedInterface target) {
-        return true;
     }
 
 }

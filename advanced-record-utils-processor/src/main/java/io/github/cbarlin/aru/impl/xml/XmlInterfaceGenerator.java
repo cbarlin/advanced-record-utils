@@ -3,16 +3,17 @@ package io.github.cbarlin.aru.impl.xml;
 import static io.github.cbarlin.aru.impl.Constants.Claims.INTERNAL_MATCHING_IFACE;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.INTERNAL_MATCHING_IFACE_NAME;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerRecordScope;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerRecordScope
 public final class XmlInterfaceGenerator extends XmlVisitor {
 
-    public XmlInterfaceGenerator() {
-        super(Claims.XML_IFACE);
+    public XmlInterfaceGenerator(final XmlRecordHolder xmlRecordHolder) {
+        super(Claims.XML_IFACE, xmlRecordHolder);
     }
 
     @Override
@@ -21,12 +22,7 @@ public final class XmlInterfaceGenerator extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         xmlInterface.builder()
             .addOriginatingElement(analysedRecord.typeElement())
             .addSuperinterface(

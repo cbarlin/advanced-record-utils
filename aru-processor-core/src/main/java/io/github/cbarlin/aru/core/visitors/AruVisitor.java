@@ -4,18 +4,20 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_LOGGING_CONS
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.jspecify.annotations.Nullable;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
+import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants.InternalReferenceNames;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedType;
 import io.github.cbarlin.aru.core.types.OperationType;
+import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.ArrayTypeName;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
@@ -24,44 +26,22 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 
 public abstract class AruVisitor<T extends AnalysedType> implements Comparable<AruVisitor<T>> {
     protected final ClaimableOperation claimableOperation;
-    private LoggingGeneration loggingGeneration;
-    // While in practice these should never be null (because they are set either on first visit or by the processor externally)
-    //   they can technically be null
-    @Nullable
-    private ClassName targetClassName;
-    @Nullable
-    private ClassName originalClassName;
+    protected final T visitingTarget;
+    protected final AdvRecUtilsSettings settings;
+    protected final AdvancedRecordUtilsPrism utilsPrism;
+    private final LoggingGeneration loggingGeneration;
+    private final ClassName targetClassName;
+    private final ClassName originalClassName;
 
-    protected AruVisitor(final ClaimableOperation claimableOperation) {
+    protected AruVisitor(
+        final ClaimableOperation claimableOperation, 
+        final T target
+    ) {
         this.claimableOperation = claimableOperation;
-    }
-
-    /**
-     * The specificity of the Visitor. More specific visitors are more picky about which classes/fields they 
-     *   interact with and thus get first pick of claims, leaving the "catch-all" versions for the end.
-     * <p>
-     * A reasonable way to determine this value would be (number of evaluations made in {@link #isApplicable(T)}) * (number of evaluations made when checking class/element)
-     * <p>
-     * This allows options that do "fancy" things to be done before more basic ones (e.g. an "only allow setting builder field once" is more specific than "allow setting always")
-     * 
-     * @return How picky the visitors are. They'll be applied from most to least picky
-     */
-    public abstract int specificity();
-
-    /**
-     * Determine if this visitor can visit this class. implementers should:
-     * <ol>
-     *  <li>Make any evaluations regarding if the settings/annotations/etc include or exclude this visitor</li>
-     *  <li>Perform any initialisation (e.g. making a local field a builder) they need to do</li>
-     * </ol>
-     * 
-     * @param target The record we are about to "walk" down
-     * @return True if we should walk it, otherwise false
-     */
-    public abstract boolean isApplicable(final T target);
-
-    public final void configureLogging(final T target) {
-        final String generation = target.settings().prism().logGeneration();
+        this.visitingTarget = target;
+        this.settings = target.settings();
+        this.utilsPrism = target.prism();
+        final String generation = utilsPrism.logGeneration();
         this.loggingGeneration = LoggingGeneration.valueOf(StringUtils.isBlank(generation) ? "NONE" : generation);
         this.originalClassName = target.className();
         if (target instanceof final AnalysedRecord analysedRecord) {
@@ -70,6 +50,18 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
             this.targetClassName = originalClassName;
         }
     }
+
+    /**
+     * The specificity of the Visitor. More specific visitors are more picky about which classes/fields they 
+     *   interact with and thus get first pick of claims, leaving the "catch-all" versions for the end.
+     * <p>
+     * A reasonable way to determine this value would be the number of evaluations made when checking class/element
+     * <p>
+     * This allows options that do "fancy" things to be done before more basic ones (e.g. an "only allow setting builder field once" is more specific than "allow setting always")
+     * 
+     * @return How picky the visitors are. They'll be applied from most to least picky
+     */
+    public abstract int specificity();
 
     /**
      * The operation claimed by this record visitor
@@ -99,7 +91,7 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
 
         if(specificity() == that.specificity()) {
             // Canonical names are compared instead
-            return Integer.compare(hashCode(), that.hashCode());
+            return this.getClass().getCanonicalName().compareTo(that.getClass().getCanonicalName());
         }
         return Integer.compare(that.specificity(), specificity());
     }
@@ -114,7 +106,7 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
     public final int hashCode() {
         // Only include canonicalName since the claimableOperation and specificity are constant for a given implementation
         return new HashCodeBuilder(17, 37)
-            .append(getClass().getCanonicalName())
+            .append(this.getClass().getCanonicalName())
             .build();
     }
 
@@ -143,6 +135,11 @@ public abstract class AruVisitor<T extends AnalysedType> implements Comparable<A
         } else {
             return originalTypeName.toString();
         }
+    }
+
+    protected static String capitalise(final String variableName) {
+        return (variableName.length() < 2) ? variableName.toUpperCase(Locale.ROOT)
+                : (Character.toUpperCase(variableName.charAt(0)) + variableName.substring(1));
     }
 
     private static final String ADD_KEY_VALUE_TL_STRING = ".addKeyValue($T.$L, $S)";

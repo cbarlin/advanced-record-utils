@@ -1,33 +1,17 @@
 package io.github.cbarlin.aru.impl.types;
 
-import javax.lang.model.element.RecordComponentElement;
-
-import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.types.ProcessingTarget;
+import io.github.cbarlin.aru.core.types.components.DelegatingComponent;
+import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-/**
- * Represents a record component that serves as a type alias.
- * <p>
- * This component stores information about what type it aliases to
- * and overrides type-related behaviors to handle the alias relationship.
- */
-public final class TypeAliasComponent extends AnalysedComponent {
+import java.util.Optional;
 
-    private final TypeName aliasFor;
-
-    public TypeAliasComponent(
-        final RecordComponentElement element, 
-        final AnalysedRecord parentRecord,
-        final boolean isIntendedConstructorParam,
-        final UtilsProcessingContext utilsProcessingContext,
-        final TypeName aliasFor
-    ) {
-        super(element, parentRecord, isIntendedConstructorParam, utilsProcessingContext);
-        this.aliasFor = aliasFor;
-    }
+public record TypeAliasComponent(
+    AnalysedComponent delegate,
+    TypeName aliasFor,
+    ClassName aliasClassName
+) implements DelegatingComponent {
 
     @Override
     public TypeName serialisedTypeName() {
@@ -35,14 +19,7 @@ public final class TypeAliasComponent extends AnalysedComponent {
     }
 
     @Override
-    public boolean proceedDownTree() {
-        return false;
-    }
-
-    @Override
-    public void setAnalysedType(final ProcessingTarget type) {
-        throw new UnsupportedOperationException(
-            "TypeAliasComponent represents an alias type and doesn't support setting an analysed type"
-        );
+    public Optional<ClassName> className() {
+        return Optional.of(aliasClassName);
     }
 }

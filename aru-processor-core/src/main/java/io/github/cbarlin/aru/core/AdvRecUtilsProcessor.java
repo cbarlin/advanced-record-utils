@@ -1,79 +1,47 @@
 package io.github.cbarlin.aru.core;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.net.JarURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Stream;
+import io.avaje.inject.BeanScope;
+import io.avaje.prism.GenerateAPContext;
+import io.avaje.prism.GenerateUtils;
+import io.avaje.spi.ServiceProvider;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsFull;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.annotations.Generated;
+import io.github.cbarlin.aru.annotations.GeneratedUtil;
+import io.github.cbarlin.aru.annotations.LoggingConstants;
+import io.github.cbarlin.aru.annotations.TypeAlias;
+import io.github.cbarlin.aru.annotations.TypeConverter;
+import io.github.cbarlin.aru.core.analysers.TargetAnalyser;
+import io.github.cbarlin.aru.core.factories.BeanScopeFactory;
+import io.github.cbarlin.aru.core.factories.SupportedAnnotations;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import org.jspecify.annotations.Nullable;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
 import javax.tools.StandardLocation;
+import java.io.Writer;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
-import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
-import io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
-import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-
-import io.avaje.prism.GenerateAPContext;
-import io.avaje.prism.GeneratePrism;
-import io.avaje.prism.GenerateUtils;
-
+@ServiceProvider
 @GenerateUtils
 @GenerateAPContext
-@GeneratePrism(value = AdvancedRecordUtils.class, publicAccess = true)
-@GeneratePrism(value = AdvancedRecordUtilsGenerated.class, publicAccess = true)
 public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
     private static final String META_ANNOTATION_RESOURCE_PATH = "META-INF/cbarlin/metaannotations/io.github.cbarlin.aru.annotations.AdvancedRecordUtils";
-    private static final Supplier<List<RecordVisitor>> RECORD_VISITORS = () -> {
-        final List<RecordVisitor> sortable = new ArrayList<>();
-        ServiceLoader.load(RecordVisitor.class, RecordVisitor.class.getClassLoader())
-            .iterator()
-            .forEachRemaining(sortable::add);
-        // Reverse the order, we want the most specific options first
-        if (sortable.isEmpty()) {
-            APContext.messager().printError(
-                "There are no elements loaded by the service loader"
-            );
-        }
-        Collections.sort(sortable);
-        return List.copyOf(sortable);
-    };
-
-    private static final Supplier<List<InterfaceVisitor>> INTERFACE_VISITORS = () -> {
-        final List<InterfaceVisitor> sortable = new ArrayList<>();
-        ServiceLoader.load(InterfaceVisitor.class, InterfaceVisitor.class.getClassLoader())
-            .iterator()
-            .forEachRemaining(sortable::add);
-        // Interfaces we don't mind if there are no found operations, so no error here
-        Collections.sort(sortable);
-        return List.copyOf(sortable);
-    };
-
-    private final Set<String> supportedAnnotations = new HashSet<>();
-    private UtilsProcessingContext context;
+    @Nullable
+    private BeanScope globalBeanScope;
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
@@ -82,12 +50,14 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
+        Objects.requireNonNull(globalBeanScope, "Init was not called first!");
+        final SupportedAnnotations supportedAnnotations = globalBeanScope.get(SupportedAnnotations.class);
+
         // First, find any meta-annotations
-        findMetaAnnotations(roundEnv);
+        findMetaAnnotations(roundEnv, supportedAnnotations.annotations());
+
         // OK, now loop through all those and analyse them!
-        findGenerationTargets(roundEnv);
-        // Build all the utils classes
-        context.processElements(RECORD_VISITORS, INTERFACE_VISITORS);
+        findAndProcessTargets(roundEnv, supportedAnnotations.annotations());
 
         if(roundEnv.processingOver()) {
             APContext.clear();
@@ -95,18 +65,37 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void findGenerationTargets(final RoundEnvironment roundEnv) {
-        for(final String annotation : Set.copyOf(supportedAnnotations)) {
-            final TypeElement annoType = processingEnv.getElementUtils().getTypeElement(annotation);
-            for(final Element annotatedElement : roundEnv.getElementsAnnotatedWith(annoType)) {
-                context.analyseRootElement(annotatedElement);
-            }
+    private void findAndProcessTargets(final RoundEnvironment roundEnv, final Set<TypeElement> supportedAnnotations) {
+        Objects.requireNonNull(globalBeanScope, "Init was not called first!");
+        final UtilsProcessingContext context = globalBeanScope.get(UtilsProcessingContext.class);
+        final List<TargetAnalyser> analysers = globalBeanScope.list(TargetAnalyser.class);
+        final ExecutorService executorService = globalBeanScope.get(ExecutorService.class);
+        final CompletableFuture<?>[] futures = Set.copyOf(supportedAnnotations)
+                .stream()
+                .map(roundEnv::getElementsAnnotatedWith)
+                .flatMap(Set::stream)
+                .map(
+                        (Element el) -> CompletableFuture.runAsync(
+                                () -> {
+                                    APContext.init(processingEnv);
+                                    context.analyseRootElement(el, analysers);
+                                    APContext.clear();
+                                },
+                                executorService
+                        )
+                )
+                .toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(futures).join();
+        try {
+            context.matchInterfaces();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        context.processElements(globalBeanScope);
     }
 
-    private void findMetaAnnotations(final RoundEnvironment roundEnv) {
-        for(final String annotation : Set.copyOf(supportedAnnotations)) {
-            final TypeElement annoType = processingEnv.getElementUtils().getTypeElement(annotation);
+    private void findMetaAnnotations(final RoundEnvironment roundEnv, final Set<TypeElement> supportedAnnotations) {
+        for(final TypeElement annoType : Set.copyOf(supportedAnnotations)) {
             for(final Element annotatedElement : roundEnv.getElementsAnnotatedWith(annoType)) {
                 if (annotatedElement instanceof TypeElement typeAnnoElement && ElementKind.ANNOTATION_TYPE.equals(typeAnnoElement.getKind())) {
                     // This is an annotation!
@@ -125,7 +114,7 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
                     } catch (Exception e) {
                         APContext.messager().printError("Error writing meta annotation: " + e.getMessage());
                     }
-                    supportedAnnotations.add(name);
+                    supportedAnnotations.add(typeAnnoElement);
                 }
             }
         }
@@ -135,84 +124,47 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
     public synchronized void init(final ProcessingEnvironment env) {
         super.init(env);
         APContext.init(env);
-        context = new UtilsProcessingContext(env);
-        try {
-            loadSupportedAnnotations();
-        } catch (final Exception ex) {
-            env.getMessager().printMessage(Diagnostic.Kind.ERROR, "Failed to load meta-annotations from classpath: " + ex.getMessage());
-        }
-    }
-
-    private void loadSupportedAnnotations() throws IOException {
-        supportedAnnotations.add(AdvancedRecordUtilsPrism.PRISM_TYPE);
-        supportedAnnotations.add(AdvancedRecordUtilsGeneratedPrism.PRISM_TYPE);
-
-        final Messager messager = APContext.messager();
-
-        ClassLoader classLoader = RecordVisitor.class.getClassLoader();
-        if (classLoader == null) {
-            classLoader = Thread.currentThread().getContextClassLoader();
-        }
-        if (classLoader == null) {
-            classLoader = getClass().getClassLoader();
-        }
-        if (classLoader == null) {
-            messager.printMessage(Diagnostic.Kind.WARNING, "Could not obtain ClassLoader to search for resources.");
-            return; 
-        }
-
-        final Enumeration<URL> resourceUrls = classLoader.getResources(META_ANNOTATION_RESOURCE_PATH);
-        while(resourceUrls.hasMoreElements()) {
-            final URL dirUrl = resourceUrls.nextElement();
-            try {
-                if ("file".equals(dirUrl.getProtocol())) {
-                    loadSupportedAnnotationsFromFile(dirUrl);
-                } else if ("jar".equals(dirUrl.getProtocol())) {
-                    loadSupportedAnnotationsFromJar(dirUrl);
-                } else {
-                     messager.printMessage(Diagnostic.Kind.WARNING, "Unsupported protocol for resource URL: " + dirUrl);
-                }
-            } catch (final URISyntaxException e) {
-                messager.printMessage(Diagnostic.Kind.WARNING, "Invalid URI syntax for resource URL: " + dirUrl + ", Error: " + e.getMessage());
-            } catch (final IOException e) {
-                messager.printMessage(Diagnostic.Kind.WARNING, "Could not process resource URL: " + dirUrl + ", Error: " + e.getMessage());
-            }
-        }
-    }
-
-    private void loadSupportedAnnotationsFromJar(final URL dirUrl) throws IOException {
-        final JarURLConnection jarURLConnection = (JarURLConnection) dirUrl.openConnection();
-        jarURLConnection.setUseCaches(false); 
-        try (JarFile jarFile = jarURLConnection.getJarFile()) {
-            final String entryPrefix = jarURLConnection.getEntryName() + "/";
-
-            final Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                final JarEntry entry = entries.nextElement();
-                final String entryName = entry.getName();
-                if (!entry.isDirectory() && entryName.startsWith(entryPrefix)) {
-                    final String fileName = entryName.substring(entryPrefix.length());
-                    if (!fileName.isEmpty() && !fileName.contains("/")) {
-                        supportedAnnotations.add(fileName);
-                    }
-                }
-            }
-        }
-    }
-
-    private void loadSupportedAnnotationsFromFile(final URL dirUrl) throws URISyntaxException, IOException {
-        final Path dirPath = Paths.get(dirUrl.toURI());
-        if (Files.isDirectory(dirPath)) {
-            try (Stream<Path> stream = Files.list(dirPath)) {
-                stream.filter(Files::isRegularFile)
-                      .map(path -> path.getFileName().toString())
-                      .forEach(supportedAnnotations::add);
-            }
-        }
-    }
+        loadAruAnnotations();
+        this.globalBeanScope = BeanScopeFactory.loadGlobalScope(env);
+    }   
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return Set.copyOf(supportedAnnotations);
+        Objects.requireNonNull(globalBeanScope, "Init was not called first!");
+        return globalBeanScope.get(SupportedAnnotations.class).annotations()
+                .stream()
+                .map(ClassName::get)
+                .map(ClassName::canonicalName)
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    private static void loadAruAnnotations() {
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DEFAULT.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.LoggingGeneration.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.BuiltCollectionType.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.LibraryIntegration.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.ValidationApi.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.NameGeneration.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DiffEvaluationMode.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.TypeNameOptions.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.BuilderOptions.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.WitherOptions.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.MergerOptions.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.XmlOptions.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DiffOptions.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.TargetConstructor.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.class));
+
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsFull.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.Version.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.InternalUtil.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(TypeConverter.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(Generated.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(GeneratedUtil.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(LoggingConstants.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(TypeAlias.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(Integer.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(Boolean.class));
     }
 }

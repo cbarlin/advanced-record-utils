@@ -6,19 +6,21 @@ import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 
 import javax.lang.model.element.Modifier;
 
-import io.avaje.spi.ServiceProvider;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerRecordScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import jakarta.inject.Singleton;
 
-@ServiceProvider
+@Singleton
+@XmlPerRecordScope
 public final class ToXmlMethodNoTag extends XmlVisitor {
 
-    public ToXmlMethodNoTag() {
-        super(Claims.XML_STATIC_CLASS_TO_XML_NO_TAG);
+    public ToXmlMethodNoTag(final XmlRecordHolder xmlRecordHolder) {
+        super(Claims.XML_STATIC_CLASS_TO_XML_NO_TAG, xmlRecordHolder);
     }
 
     @Override
@@ -27,12 +29,7 @@ public final class ToXmlMethodNoTag extends XmlVisitor {
     }
 
     @Override
-    protected boolean innerIsApplicable(final AnalysedRecord analysedRecord) {
-        return true;
-    }
-
-    @Override
-    protected boolean visitStartOfClassImpl(final AnalysedRecord analysedRecord) {
+    protected boolean visitStartOfClassImpl() {
         final var xmlStaticClassName = xmlStaticClass.className();
         final MethodSpec.Builder methodBuilder = xmlStaticClass.createMethod(STATIC_WRITE_XML_NAME, claimableOperation)
             .addModifiers(Modifier.STATIC);

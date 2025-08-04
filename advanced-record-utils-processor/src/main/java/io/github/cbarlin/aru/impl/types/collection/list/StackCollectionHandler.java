@@ -3,12 +3,14 @@ package io.github.cbarlin.aru.impl.types.collection.list;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STACK;
 
-import io.avaje.spi.ServiceProvider;
+import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec.Builder;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
-@ServiceProvider
+@Component
+@GlobalScope
 public final class StackCollectionHandler extends ListCollectionHandler {
     public StackCollectionHandler() {
         super(STACK, STACK);

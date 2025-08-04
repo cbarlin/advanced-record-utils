@@ -1,25 +1,31 @@
 package io.github.cbarlin.aru.impl.xml.utils.attribute;
 
+import io.avaje.inject.RequiresBean;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
+import io.github.cbarlin.aru.core.types.AnalysedComponent;
+import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
+import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
+import io.github.cbarlin.aru.impl.xml.XmlVisitor;
+import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import jakarta.inject.Singleton;
+
+import java.util.Optional;
+
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 
-import java.util.Optional;
-
-import io.avaje.spi.ServiceProvider;
-import io.github.cbarlin.aru.core.OptionalClassDetector;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.impl.Constants.Claims;
-import io.github.cbarlin.aru.impl.xml.XmlVisitor;
-import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
-
-@ServiceProvider
+@Singleton
+@XmlPerComponentScope
+@RequiresBean(XmlAttributePrism.class)
 public final class WriteCharSequenceWithCommonsLang extends XmlVisitor {
 
-    public WriteCharSequenceWithCommonsLang() {
-        super(Claims.XML_WRITE_FIELD);
+    private final XmlAttributePrism xmlAttributePrism;
+    public WriteCharSequenceWithCommonsLang(final XmlRecordHolder xmlRecordHolder, final XmlAttributePrism xmlAttributePrism) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
+        this.xmlAttributePrism = xmlAttributePrism;
     }
 
     @Override
@@ -29,18 +35,12 @@ public final class WriteCharSequenceWithCommonsLang extends XmlVisitor {
     
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        return Boolean.TRUE.equals(
-            xmlAttributePrism(analysedComponent)
-                .map(prism -> {
-                    final boolean isApplicable = OptionalClassDetector.checkSameOrSubType(analysedComponent.serialisedTypeName(), CHAR_SEQUENCE);
-                    if (isApplicable) {
-                        visitAttributeComponent(analysedComponent, prism);
-                        return Boolean.TRUE;
-                    }
-                    return Boolean.FALSE;
-                })
-                .orElse(Boolean.FALSE)
-        );
+        final boolean isApplicable = OptionalClassDetector.checkSameOrSubType(analysedComponent.serialisedTypeName(), CHAR_SEQUENCE);
+        if (isApplicable && OptionalClassDetector.doesDependencyExist(STRINGUTILS)) {
+            visitAttributeComponent(analysedComponent, xmlAttributePrism);
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     void visitAttributeComponent(final AnalysedComponent analysedComponent, final XmlAttributePrism prism) {
@@ -64,10 +64,5 @@ public final class WriteCharSequenceWithCommonsLang extends XmlVisitor {
         if (!required) {
             methodBuilder.endControlFlow();
         }
-    }
-
-    @Override
-    protected boolean innerIsApplicable(AnalysedRecord analysedRecord) {
-        return OptionalClassDetector.doesDependencyExist(STRINGUTILS);
     }
 }

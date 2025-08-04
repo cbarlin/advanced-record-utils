@@ -1,11 +1,9 @@
 package io.github.cbarlin.aru.core.visitors;
 
-import java.util.Locale;
-
 import io.github.cbarlin.aru.core.ClaimableOperation;
-import io.github.cbarlin.aru.core.impl.types.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
@@ -13,8 +11,15 @@ import io.micronaut.sourcegen.javapoet.ClassName;
  */
 public abstract class CollectionRecordVisitor extends RecordVisitor {
 
-    protected CollectionRecordVisitor(ClaimableOperation claimableOperation) {
-        super(claimableOperation);
+    protected final AnalysedCollectionComponent analysedCollectionComponent;
+
+    protected CollectionRecordVisitor(
+        final ClaimableOperation claimableOperation, 
+        final AnalysedRecord analysedRecord, 
+        final AnalysedCollectionComponent analysedCollectionComponent
+    ) {
+        super(claimableOperation, analysedRecord);
+        this.analysedCollectionComponent = analysedCollectionComponent;
     }
 
     @Override
@@ -29,27 +34,22 @@ public abstract class CollectionRecordVisitor extends RecordVisitor {
 
     @Override
     protected final boolean visitComponentImpl(AnalysedComponent analysedComponent) {
-        return analysedComponent instanceof AnalysedCollectionComponent acc && visitCollectionComponent(acc);
+        return visitCollectionComponent();
     }
 
-    protected abstract boolean visitCollectionComponent(AnalysedCollectionComponent analysedCollectionComponent);
+    protected abstract boolean visitCollectionComponent();
 
-    public static String addNameMethodName(final AnalysedCollectionComponent acc) {
-        return acc.settings().prism().builderOptions().adderMethodPrefix() + 
-            capitalise(acc.name()) + 
-            acc.settings().prism().builderOptions().adderMethodSuffix();
+    protected String addNameMethodName() {
+        return analysedCollectionComponent.settings().prism().builderOptions().adderMethodPrefix() + 
+            capitalise(analysedCollectionComponent.name()) + 
+            analysedCollectionComponent.settings().prism().builderOptions().adderMethodSuffix();
     }
 
-    public static String addCnToNameMethodName(final AnalysedCollectionComponent acc, final ClassName targetClassName) {
-        return acc.settings().prism().builderOptions().adderMethodPrefix() + 
+    protected String addCnToNameMethodName(final ClassName targetClassName) {
+        return analysedCollectionComponent.settings().prism().builderOptions().adderMethodPrefix() + 
             targetClassName.simpleName() + 
-            acc.settings().prism().builderOptions().multiTypeAdderBridge() + 
-            capitalise(acc.name()) + 
-            acc.settings().prism().builderOptions().adderMethodSuffix();
-    }
-
-    private static String capitalise(final String variableName) {
-        return (variableName.length() < 2) ? variableName.toUpperCase(Locale.ROOT)
-                : (Character.toUpperCase(variableName.charAt(0)) + variableName.substring(1));
+            analysedCollectionComponent.settings().prism().builderOptions().multiTypeAdderBridge() + 
+            capitalise(analysedCollectionComponent.name()) + 
+            analysedCollectionComponent.settings().prism().builderOptions().adderMethodSuffix();
     }
 }
