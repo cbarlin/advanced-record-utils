@@ -1,15 +1,5 @@
 package io.github.cbarlin.aru.impl.diff;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPERATION_EXCEPTION;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.DIFFER_UTILS_CLASS;
-
-import java.util.HashSet;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Bean;
 import io.avaje.inject.BeanTypes;
 import io.avaje.inject.Factory;
@@ -33,6 +23,15 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
+
+import javax.lang.model.element.Modifier;
+import java.util.HashSet;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPERATION_EXCEPTION;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.DIFFER_UTILS_CLASS;
 
 @Factory
 @DiffPerRecordScope
@@ -122,6 +121,7 @@ public final class DiffFactory {
     DiffResultsClass resultsClass(final DiffInterfaceClass differInterface) {
         final String resultName = diffOptionsPrism.diffResultPrefix() + analysedRecord.typeSimpleName() + diffOptionsPrism.diffResultSuffix();
         final ToBeBuilt differResult = analysedRecord.utilsClassChildClass(resultName, Claims.DIFFER_RESULT);
+        AnnotationSupplier.addGeneratedAnnotation(differResult, DiffFactory.class, Claims.DIFFER_RESULT);
         final MethodSpec.Builder differResultRecordConstructor = differResult.createConstructor();
         final MethodSpec.Builder differResultInterfaceConstructor = differResult.createMethod("<init>", Claims.DIFFER_IFACE);
         final TypeSpec.Builder classSpec = differResult.builder();

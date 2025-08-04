@@ -51,7 +51,7 @@ public final class TypeConverterAnalyser implements TargetAnalyser {
         return Optional.of(executableElement)
                 .filter(TypeConverterAnalyser::validateExecutableElement)
                 .filter(TypeConverterAnalyser::validateEnclosingClasses)
-                .filter(e -> validateReturn || validateReturnType(e))
+                .filter(e -> (!validateReturn) || validateReturnType(e))
                 .map(TypeConverterAnalyser::create)
                 .map(atc -> new TargetAnalysisResult(Optional.empty(), Set.of(), false, Set.of(atc)));
     }

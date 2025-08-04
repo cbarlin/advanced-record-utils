@@ -26,6 +26,60 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>a_core_dependency</artifactId>
+            <version>0.6.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>a_core_dependent</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>b_infer_xml</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>b_type_alias</artifactId>
+            <version>0.6.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>c_deeply_nested_commons_lang</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>c_deeply_nested_structure</artifactId>
+            <version>0.6.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>c_odd_types</artifactId>
+            <version>0.6.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>d_eclipse_collections</artifactId>
+            <version>0.6.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>xml_util</artifactId>
+            <version>0.6.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
