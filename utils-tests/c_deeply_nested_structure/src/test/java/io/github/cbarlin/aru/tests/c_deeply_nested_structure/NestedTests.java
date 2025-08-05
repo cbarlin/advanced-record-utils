@@ -1,20 +1,18 @@
 package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import io.avaje.jsonb.Jsonb;
+import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
+import org.junit.jupiter.api.Test;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import javax.xml.stream.XMLStreamException;
-
-import org.junit.jupiter.api.Test;
-
-import io.avaje.jsonb.Jsonb;
-import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NestedTests {
 
@@ -43,8 +41,12 @@ class NestedTests {
                 )
             )
             .anotherField(42)
+            // This call will be replaced by the one below it, but
+            //   it will prove that the settings of the package and the
+            //   root item have been merged (as one defines "update" and the other "ToCurrent")
+            .updateTestOdtElToCurrent()
             .testOdtEl(OffsetDateTime.of(2025, 7, 01, 18, 15, 42, 0, ZoneOffset.ofHours(10)))
-            .build();
+            .make();
         
         final RootItem rootItemB = RootItemUtils.builder()
             .anotherField(69)
@@ -75,7 +77,7 @@ class NestedTests {
                 )
             )
             .testOdtAttr(OffsetDateTime.of(2025, 01, 01, 18, 15, 42, 0, ZoneOffset.ofHours(10)))
-            .build();
+            .make();
         
         final RootItem merged = rootItemA.merge(rootItemB);
 
@@ -100,7 +102,7 @@ class NestedTests {
         final RootItem someRecord = RootItemUtils.builder()
             .testDefault("NotThis!")
             .yetAnotherField("I am required!")
-            .build();
+            .make();
 
         ConvertToXml.compareXml(out -> assertDoesNotThrow(() -> someRecord.writeSelfTo(out)), "expected_a.xml");
     }
@@ -109,7 +111,7 @@ class NestedTests {
     void notSetRequired() throws IOException, XMLStreamException {
         final RootItem someRecord = RootItemUtils.builder()
             .testDefault("NotThis!")
-            .build();
+            .make();
         
         ConvertToXml.convertToXml(out -> assertThrows(IllegalArgumentException.class, () -> someRecord.writeSelfTo(out)));
     }
