@@ -17,12 +17,11 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 public final class MapBasedAnnotationMirror implements AnnotationMirror {
 
-    private static final Map<ClassName, Optional<TypeElement>> LOADED_ANNOTATIONS = new ConcurrentHashMap<>();
+    private static final Map<ClassName, Optional<TypeElement>> LOADED_ANNOTATIONS = new HashMap<>();
     private final Map<ExecutableElement, AnnotationValue> elementValues;
     private final DeclaredType declaredType;
 

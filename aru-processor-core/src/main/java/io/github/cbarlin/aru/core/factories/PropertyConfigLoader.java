@@ -8,13 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class PropertyConfigLoader implements ConfigPropertyPlugin {
 
-    private static final ConcurrentHashMap<String, Optional<String>> CLAZZ_DETECT = new ConcurrentHashMap<>();
+    private static final Map<String, Optional<String>> CLAZZ_DETECT = new HashMap<>();
     private static final String FALSE = Boolean.FALSE.toString();
     private static final String TRUE = Boolean.TRUE.toString();
 

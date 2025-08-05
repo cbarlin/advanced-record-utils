@@ -12,13 +12,13 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -67,7 +67,7 @@ public final class AdvRecUtilsSettings {
         throw new IllegalStateException("Internal element is not a TypeElement or PackageElement");
     }
 
-    private static final Map<PackageElement, Optional<AnnotationMirror>> PACKAGE_MIRRORS = new ConcurrentHashMap<>();
+    private static final Map<PackageElement, Optional<AnnotationMirror>> PACKAGE_MIRRORS = new HashMap<>();
 
     private static Optional<AnnotationMirror> obtainMirrorOnPackageElement(PackageElement pkgEl, ProcessingEnvironment env) {
         return PACKAGE_MIRRORS.computeIfAbsent(pkgEl, ignored -> obtainMirrorOnElement(pkgEl, env));

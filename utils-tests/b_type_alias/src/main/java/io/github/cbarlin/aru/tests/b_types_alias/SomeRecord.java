@@ -21,7 +21,20 @@ public record SomeRecord(
     @XmlAttribute(name = "C")
     RandomIntC randomIntC,
     @XmlTransient
-    AnEnumInDep anEnumInDep
+    AnEnumInDep anEnumInDep,
+    @XmlTransient
+    String another
 ) implements SomeRecordUtils.All {
 
+    // Test to ensure that inferring intended constructor without annotation works
+    public SomeRecord (
+        BookName bookName,
+        AuthorName authorName,
+        RandomIntA randomIntA,
+        RandomIntB randomIntB,
+        RandomIntC randomIntC,
+        AnEnumInDep anEnumInDep
+    ) {
+        this(bookName, authorName, randomIntA, randomIntB, randomIntC, anEnumInDep, "Some string");
+    }
 }

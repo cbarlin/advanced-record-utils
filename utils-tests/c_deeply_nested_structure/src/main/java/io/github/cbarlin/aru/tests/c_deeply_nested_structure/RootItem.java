@@ -1,23 +1,26 @@
 package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuilderOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuiltCollectionType;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.WitherOptions;
-
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
+import java.time.OffsetDateTime;
+import java.util.List;
+
 @AdvancedRecordUtils(
     addJsonbImportAnnotation = true,
-    builderOptions = @BuilderOptions(builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE),
+    // Test that the items are merged between this and the package
+    builderOptions = @BuilderOptions(
+        builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE,
+        setTimeNowMethodSuffix = "ToCurrent"
+    ),
     createAllInterface = true,
     diffable = true,
     diffOptions = @DiffOptions(staticMethodsAddedToUtils = true),
