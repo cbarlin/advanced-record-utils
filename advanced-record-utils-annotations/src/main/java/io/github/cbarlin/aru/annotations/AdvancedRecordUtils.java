@@ -604,10 +604,10 @@ public @interface AdvancedRecordUtils {
 
     /**
      * An interface that requests the processor import "*Utils" classes from
-     *   and existing library.
+     *   an existing library.
      * <p>
      * While this has the same functionality as the {@link AdvancedRecordUtils#importTargets()}
-     *   the semantic naming
+     *   the semantic naming makes the intent clearer
      */
     @Target({MODULE, PACKAGE, TYPE, ANNOTATION_TYPE})
     @Retention(RetentionPolicy.CLASS)
