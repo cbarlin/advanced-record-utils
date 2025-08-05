@@ -70,45 +70,16 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>io.jstach.rainbowgum</groupId>
+            <artifactId>rainbowgum</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-annotations</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
-    <!-- Start laying ground work for Java 17 support (issue #80) -->
-    <profiles>
-        <profile>
-            <id>jdk-17-to-20-inclusive</id>
-            <activation>
-                <jdk>[17,21)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.tinylog</groupId>
-                    <artifactId>slf4j-tinylog</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.tinylog</groupId>
-                    <artifactId>tinylog-impl</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>jdk-21-plus</id>
-            <activation>
-                <jdk>[21,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>io.jstach.rainbowgum</groupId>
-                    <artifactId>rainbowgum</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>

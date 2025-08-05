@@ -13,9 +13,9 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
@@ -23,8 +23,8 @@ import java.util.function.Predicate;
  */
 public final class OptionalClassDetector {
 
-    private static final Map<TypeName, Optional<TypeElement>> DETECTED_MAP = new ConcurrentHashMap<>();
-    private static final Map<TypeName, Optional<TypeElement>> LOADED_ANNOTATIONS = new ConcurrentHashMap<>();
+    private static final Map<TypeName, Optional<TypeElement>> DETECTED_MAP = new HashMap<>();
+    private static final Map<TypeName, Optional<TypeElement>> LOADED_ANNOTATIONS = new HashMap<>();
 
     private OptionalClassDetector() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

@@ -19,9 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
@@ -102,8 +102,8 @@ public abstract class XmlVisitor extends RecordVisitor {
     }
 
     // I see us doing these a number of times, best to cache them
-    private static final Map<TypeElement, Optional<String>> NAMESPACE_CACHE = new ConcurrentHashMap<>();
-    private static final Map<TypeElement, String> ELEMENT_NAME_CACHE = new ConcurrentHashMap<>();
+    private static final Map<TypeElement, Optional<String>> NAMESPACE_CACHE = new HashMap<>();
+    private static final Map<TypeElement, String> ELEMENT_NAME_CACHE = new HashMap<>();
 
     protected Optional<String> namespaceName(final AnalysedRecord analysedRecord) {
         return namespaceName(analysedRecord.typeElement());

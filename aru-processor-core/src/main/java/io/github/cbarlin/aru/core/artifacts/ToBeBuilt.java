@@ -31,8 +31,8 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -43,8 +43,8 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
     private final ClassName className;
     protected final TypeSpec.Builder classBuilder;
     private final UtilsProcessingContext utilsProcessingContext;
-    private final Map<String, MethodSpec.Builder> unfinishedMethods = new ConcurrentHashMap<>();
-    private final Map<String, ToBeBuilt> childArtifacts = new ConcurrentHashMap<>();
+    private final Map<String, MethodSpec.Builder> unfinishedMethods = new HashMap<>();
+    private final Map<String, ToBeBuilt> childArtifacts = new HashMap<>();
     private boolean loggerAdded = false;
 
     protected ToBeBuilt(final ClassName className, final TypeSpec.Builder typeBuilder, final UtilsProcessingContext utilsProcessingContext) {

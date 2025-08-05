@@ -30,8 +30,6 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 @ServiceProvider
@@ -69,28 +67,12 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         Objects.requireNonNull(globalBeanScope, "Init was not called first!");
         final UtilsProcessingContext context = globalBeanScope.get(UtilsProcessingContext.class);
         final List<TargetAnalyser> analysers = globalBeanScope.list(TargetAnalyser.class);
-        final ExecutorService executorService = globalBeanScope.get(ExecutorService.class);
-        final CompletableFuture<?>[] futures = Set.copyOf(supportedAnnotations)
-                .stream()
-                .map(roundEnv::getElementsAnnotatedWith)
-                .flatMap(Set::stream)
-                .map(
-                        (Element el) -> CompletableFuture.runAsync(
-                                () -> {
-                                    APContext.init(processingEnv);
-                                    context.analyseRootElement(el, analysers);
-                                    APContext.clear();
-                                },
-                                executorService
-                        )
-                )
-                .toArray(CompletableFuture[]::new);
-        CompletableFuture.allOf(futures).join();
-        try {
-            context.matchInterfaces();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        for (final TypeElement typeElement : Set.copyOf(supportedAnnotations)) {
+            for (final Element annotatedElement : roundEnv.getElementsAnnotatedWith(typeElement)) {
+                context.analyseRootElement(annotatedElement, analysers);
+            }
         }
+        context.matchInterfaces();
         context.processElements(globalBeanScope);
     }
 
