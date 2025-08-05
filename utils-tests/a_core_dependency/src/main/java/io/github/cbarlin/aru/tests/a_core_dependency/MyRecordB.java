@@ -7,7 +7,8 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.LoggingGeneration;
 public record MyRecordB(
     MyRecordA otherItem,
     MyRecordA woo,
-    MyRecordB recursionFtw
+    MyRecordB recursionFtw,
+    AnEnumInDep andImAnEnum
 ) {
 
 }

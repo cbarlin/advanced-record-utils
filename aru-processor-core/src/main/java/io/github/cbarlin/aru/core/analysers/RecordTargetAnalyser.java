@@ -75,7 +75,7 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
         final Optional<ProcessingTarget> result = Optional.of(new AnalysedRecord(typeElement, context, settings, intendedType, canonicalConstructor, intendedConstructor));
         final Set<TypeElement> references = findReferences(typeElement, settings);
 
-        return new TargetAnalysisResult(result, references, isRoot, Optional.empty());
+        return new TargetAnalysisResult(result, references, isRoot, Set.of());
     }
 
     private Set<TypeElement> findReferences(final TypeElement typeElement, final AdvRecUtilsSettings settings) {

@@ -73,7 +73,7 @@ public final class InterfaceTargetAnalyser extends ConcreteTargetAnalyser {
 
         references.removeAll(recursiveIgnored(settings.prism()));
 
-        return new TargetAnalysisResult(target, references, false, Optional.empty());
+        return new TargetAnalysisResult(target, references, false, Set.of());
     }
 
 

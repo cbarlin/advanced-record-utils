@@ -1,10 +1,11 @@
 package io.github.cbarlin.aru.tests.b_types_alias;
 
+import io.github.cbarlin.aru.tests.a_core_dependency.AnEnumInDep;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
-import org.junit.jupiter.api.Test;
 
 class BuilderTests {
 
@@ -41,5 +42,24 @@ class BuilderTests {
         assertNull(withSwap.authorName());
         assertNull(withoutSwap.randomIntA());
         assertNotNull(withoutSwap.authorName());
+    }
+
+    @Test
+    void testCrossCompilationTypeConverterDetection() {
+        // The "AnEnumInDep" from String converter should be loaded via the
+        //   request to load MyRecordBUtils, which should have the converter
+        //   from when it was found in the "AnEnumInDep" class itself
+        final SomeRecord withEnumMonday = SomeRecordUtils.builder()
+            .anEnumInDep("Monday")
+            .build();
+        final SomeRecord withEnumTuesday = SomeRecordUtils.builder()
+            .anEnumInDep("Tuesday")
+            .build();
+        final SomeRecord withEnumOther = SomeRecordUtils.builder()
+            .anEnumInDep("Some other string")
+            .build();
+        assertEquals(AnEnumInDep.MONDAY, withEnumMonday.anEnumInDep());
+        assertEquals(AnEnumInDep.TUESDAY, withEnumTuesday.anEnumInDep());
+        assertEquals(AnEnumInDep.TUESDAY, withEnumOther.anEnumInDep());
     }
 }

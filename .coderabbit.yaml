@@ -17,6 +17,10 @@ knowledge_base:
     scope: 'local'
 reviews:
   profile: 'assertive'
+  estimate_code_review_effort: false
+  tools:
+    github-checks:
+      timeout_ms: 300000
   finishing_touches:
     docstrings:
       enabled: false
@@ -29,10 +33,9 @@ reviews:
         All the code for the annotation processor should be checked, please.
 
         Please do these:
-        * Review code using Java 17 standards, taking into account the vague rules and samples defined in `CONTRIBUTING.md`
+        * Review code using Java 21 standards, taking into account the vague rules and samples defined in `CONTRIBUTING.md`
         * Validate that code indentation uses spaces, not tabs, with an indent of multiple of 4
-        * Propose changes that only use the Java 17 API, not the API of Guava 
-            * Note that we have not fully transitioned to 17 support, so some Java 21 code is still present. We should prefer 17 code though.
+        * Propose changes using Java 21 API
 
         Please keep in mind:
         * The pattern matching `instanceof` expression safely handles `null`, returning `false`

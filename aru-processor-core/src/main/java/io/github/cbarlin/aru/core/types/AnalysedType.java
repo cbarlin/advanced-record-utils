@@ -1,34 +1,5 @@
 package io.github.cbarlin.aru.core.types;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_INTERNAL_UTILS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_MAIN_ANNOTATION;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
-import javax.tools.Diagnostic;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
-import org.jspecify.annotations.NonNull;
-
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
@@ -42,6 +13,33 @@ import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
+import org.jspecify.annotations.NonNull;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_INTERNAL_UTILS;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_MAIN_ANNOTATION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
 
 public abstract sealed class AnalysedType implements ProcessingTarget permits AnalysedInterface, AnalysedRecord {
     
@@ -55,6 +53,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     protected final AdvRecUtilsSettings settings;
 
     protected final Set<ClassName> referencedUtilsClasses = new HashSet<>();
+    protected final Set<ClassName> referencedTypeConverters = new HashSet<>();
     protected final Map<ClaimableOperation, AruVisitor<?>> claimedOperations = new HashMap<>();
     /**
      * Annotations that are not on the Element but are "projected"
@@ -142,6 +141,13 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         if (this != other) {
             this.referencedUtilsClasses.add(other.utilsClassName());
         }
+    }
+
+    /**
+     * Add a reference to a {@link AnalysedTypeConverter} that is relevant to the current builder
+     */
+    public void addTypeConverter(final AnalysedTypeConverter analysedTypeConverter) {
+        this.referencedTypeConverters.add(analysedTypeConverter.enclosedClass());
     }
 
     /**
@@ -295,6 +301,17 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
             "references",
             "{\n    " + StringUtils.join(referenceFormat, ",\n    ") + "\n}",
             sortedRefs.toArray()
+        );
+
+        final List<String> convertFormat = new ArrayList<>(referencedTypeConverters.size());
+        final List<ClassName> sortedConverters = referencedTypeConverters.stream()
+            .sorted(Comparator.comparing(ClassName::canonicalName))
+            .toList();
+        sortedConverters.forEach(ignored -> convertFormat.add(CLASS_REFERENCE_FORMAT));
+        utilsGeneratorAnnotation.addMember(
+            "usedTypeConverters",
+            "{\n    " + StringUtils.join(convertFormat, ",\n    ") + "\n}",
+            sortedConverters.toArray()
         );
 
         utilsBuilder.addAnnotation(utilsGeneratorAnnotation.build())

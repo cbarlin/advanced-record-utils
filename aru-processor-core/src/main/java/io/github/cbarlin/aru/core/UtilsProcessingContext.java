@@ -129,11 +129,12 @@ public final class UtilsProcessingContext {
 
     private void withAnalysisResult(Optional<AdvRecUtilsSettings> rootSettings, TargetAnalysisResult analysisResult, LinkedHashSet<EleInQueue> queue) {
         analysisResult.target().ifPresent(tar -> analysedTypes.putIfAbsent(tar.typeElement(), tar));
-        analysisResult.foundConverter().ifPresent(converter -> {
-            final Queue<AnalysedTypeConverter> converterQueue = analysedConverters.computeIfAbsent(converter.resultingType(), ign -> new ConcurrentLinkedQueue<>());
-            converterQueue.add(converter);
-            processedConverters.add(converter.executableElement());
-        });
+        analysisResult.foundConverter()
+                .forEach(converter -> {
+                    final Queue<AnalysedTypeConverter> converterQueue = analysedConverters.computeIfAbsent(converter.resultingType(), ign -> new ConcurrentLinkedQueue<>());
+                    converterQueue.add(converter);
+                    processedConverters.add(converter.executableElement());
+                });
         final Optional<AdvRecUtilsSettings> passDown = analysisResult.target()
                 .filter(AnalysedType.class::isInstance)
                 .map(AnalysedType.class::cast)

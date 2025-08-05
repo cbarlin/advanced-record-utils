@@ -1,9 +1,9 @@
 package io.github.cbarlin.aru.core;
 
+import io.micronaut.sourcegen.javapoet.ClassName;
+
 import static io.github.cbarlin.aru.core.types.OperationType.CLASS;
 import static io.github.cbarlin.aru.core.types.OperationType.FIELD_AND_ACCESSORS;
-
-import io.micronaut.sourcegen.javapoet.ClassName;
 
 /**
  * Hold all the constant values across the processor
@@ -39,6 +39,7 @@ public enum CommonsConstants {
         public static final ClassName ARU_INTERNAL_UTILS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "InternalUtil");
         public static final ClassName ARU_LOGGING_CONSTANTS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "LoggingConstants");
         public static final ClassName ARU_MAIN_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "AdvancedRecordUtils");
+        public static final ClassName ARU_IMPORT_LIBRARY = ARU_MAIN_ANNOTATION.nestedClass("ImportLibraryUtils");
         public static final ClassName ARU_VERSION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "Version");
         public static final ClassName COLLECTION = ClassName.get(JAVA_UTIL, "Collection");
         public static final ClassName COLLECTORS = ClassName.get(JAVA_UTIL + ".stream", "Collectors");

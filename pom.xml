@@ -313,7 +313,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                     <configuration>
-                        <argLine>-javaagent:${org.mockito:mockito-core:jar}
+                        <argLine>-javaagent:${org.mockito:mockito-core:jar} ${jacoco.agent.argLine}
                             -Dlogging.level.io.github.cbarlin=TRACE</argLine>
                     </configuration>
                 </plugin>

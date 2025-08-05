@@ -153,6 +153,7 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.XmlOptions.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.DiffOptions.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.TargetConstructor.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.ImportLibraryUtils.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtils.class));
 
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsFull.class));

@@ -27,6 +27,7 @@ public final class SupportedAnnotationsFactory {
     SupportedAnnotations initialAnnotations() throws IOException {
         final HashSet<String> supportedAnnotations = new HashSet<>();
         supportedAnnotations.add(AdvancedRecordUtils.class.getCanonicalName());
+        supportedAnnotations.add(AdvancedRecordUtils.ImportLibraryUtils.class.getCanonicalName());
         supportedAnnotations.add(AdvancedRecordUtilsFull.class.getCanonicalName());
         supportedAnnotations.add(TypeConverter.class.getCanonicalName());
         return new SupportedAnnotations(loadAnnotations(supportedAnnotations));

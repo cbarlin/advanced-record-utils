@@ -52,10 +52,10 @@
 @GeneratePrism(value = AdvancedRecordUtils.XmlOptions.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtils.DiffOptions.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtils.TargetConstructor.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.ImportLibraryUtils.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtilsGenerated.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtilsGenerated.InternalUtil.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtilsGenerated.Version.class, publicAccess = true)
-@GeneratePrism(value = AdvancedRecordUtilsGenerated.UsedTypeConverter.class, publicAccess = true)
 @GeneratePrism(value = io.github.cbarlin.aru.annotations.TypeConverter.class, publicAccess = true)
 @GeneratePrism(value = io.github.cbarlin.aru.annotations.Generated.class, publicAccess = true)
 package io.github.cbarlin.aru.prism.prison;
