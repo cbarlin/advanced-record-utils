@@ -1,9 +1,8 @@
-package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
+package io.github.cbarlin.aru.tests.cdncl;
 
 import java.util.Set;
 
 import io.github.cbarlin.aru.annotations.TypeConverter;
-
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 

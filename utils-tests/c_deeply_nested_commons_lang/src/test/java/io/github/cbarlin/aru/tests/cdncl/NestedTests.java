@@ -1,4 +1,4 @@
-package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
+package io.github.cbarlin.aru.tests.cdncl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

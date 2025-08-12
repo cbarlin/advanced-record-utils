@@ -5,6 +5,6 @@
         @XmlNs(namespaceURI = "ns://namedB", prefix = "yayyyyy")
     }
 )
-package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
+package io.github.cbarlin.aru.tests.cdncl;
 
 import jakarta.xml.bind.annotation.XmlNs;
