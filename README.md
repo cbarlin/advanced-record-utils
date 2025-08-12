@@ -11,12 +11,12 @@
 Advanced Record Utils is an annotation-processor based code generator that creates a companion `*Utils` class (e.g., `PersonUtils` for a `Person` record) that contains a builder, and then optionally:
  * A "Builder" for the record
  * A "With"er interface
- * A "Merger" utlity and interface
+ * A "Merger" utility and interface
  * An "XML" utility and interface for serialisation to XML
  * A "Diff" interface and result class:
    * Collections compute added/removed elements, as well as changed/unchanged ones (if the elements themselves are diffable)
+   * Nested records can pass their own diff (if present on both original instances)
    * Standard fields can tell you if they have/have not changed
-   * A choice between eager evaluation and lazy evaluation (lazy not yet complete)
  * An "All" interface that bundles all the other interfaces together
 
 It's configurable, and does away with a lot of boilerplate. It can also import records from libraries (in case you can't control their source code), and can work recursively down a tree of records that reference other records/interfaces.
@@ -26,22 +26,21 @@ It's configurable, and does away with a lot of boilerplate. It can also import r
 Goals include:
  * Making working with deeply nested data structures easy
  * Moving work to compile-time where possible
- * Wrap serialisation/deserialsation into XML and JSON
+ * Wrap serialisation/de-serialisation into XML and (eventually) JSON
  * JPMS support
  * Opt-in dependencies based on the settings chosen
- * Readble generated source code
- * Reproduceable builds
-    * The tests that get run by GitHub validate that not only our published JARs are reproduceable, but that the code we generate is also reproduceable too!
+ * Readable generated source code
+ * Reproducible builds
+    * The tests that get run by GitHub validate that not only our published JARs are reproducible, but that the code we generate is also reproducible too!
 
-Kinda-goals:
+Secondary goals:
  * Keep the dependency tree small - some settings would either require a lot of code... or just delegate to a library that's intended for that use
- * Make generated code generate debug/trace logs where appropriate - if it's 3am and you are debugging something in prod, you want to be able to easily see what's happening
+ * Make generated code generate debug/trace logs where appropriate - if you are debugging something in prod at 3am, you want to be able to easily see what's happening
 
 Non-goals:
  * Actually implement de/serialisation - delegate to a dedicated library (e.g. Java's own StAX)
  * ORM/JPA/JDO etc
  * Schema generation
-
 
 # Quick start
 
@@ -108,9 +107,9 @@ You can add the processor to your dependencies using the below steps. However, t
 2. Add the dependency:
 ```xml
 <dependency>
-  <groupId>io.avaje</groupId>
-  <artifactId>avaje-validator-generator</artifactId>
-  <version>${avaje.validator.version}</version>
+  <groupId>io.github.cbarlin</groupId>
+  <artifactId>advanced-record-utils-processor</artifactId>
+  <version>${aru.version}</version>
   <scope>provided</scope>
   <optional>true</optional>
 </dependency>
@@ -147,13 +146,13 @@ Person personB = PersonUtils.builder()
   .build();
 ```
 
-To use the wither, also implement the `PersonUtils.With` or `PersonUtils.All` interface:
+To use the wither, also implement the `PersonUtils.All` interface:
 
- > Note: Using the `All` interface is preferred as it generates sealed interfaces
+ > Note: Using the `All` interface is preferred as it generates sealed interfaces, but you can implement `With` if you prefer
 
 ```java
-@AdvancedRecordUtils(wither = true)
-public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.With { }
+@AdvancedRecordUtils
+public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.All { }
 ```
 
 And then you can use "with" methods:
@@ -165,10 +164,10 @@ PersonUtils.Builder backToBuilder = personB.with();
 Person aViaBuilder = personA.with(builder -> builder.name("Connie"));
 ```
 
-You can configure what it generates for you by passing in different options. For example, to enable the "merger" feature, just turn that on and extend the generated interface (`PersonUtils.Merger` or `PersonUtils.All`):
+You can configure what it generates for you bypassing in different options. For example, to enable the "merger" feature, just turn that on and extend the generated interface (`PersonUtils.Merger` or `PersonUtils.All`):
 
 ```java
-@AdvancedRecordUtils(merger = true, createAllInterface = true)
+@AdvancedRecordUtils(merger = true)
 public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.All {}
 ```
 
@@ -180,7 +179,7 @@ Person missingAge = PersonUtils.builder().name("Jane").addFavouriteColour("pink"
 
 Person allTogether = missingName.merge(missingAge);
 // Which would be the same as doing:
-Person isTheSameAs = PersonUtils.builder().age(42).favouriteColours(List.of("red", "orange", "pink")).name("Jane").build()
+Person isTheSameAs = PersonUtils.builder().age(42).favouriteColours(List.of("red", "orange", "pink")).name("Jane").build();
 ```
 
 ## Where did it come from
@@ -194,13 +193,15 @@ This project was greatly inspired by [Randgalt's Record Builder project](https:/
 Versioning will follow SemVer - with a `major.minor.patch` structure, and `major` pre-1 being prone to breaking external code.
 
 Patch:
- * Bug fixes
+ * Bug fixes (except those that impact serialisation)
  * Dependency updates
 
 Minor:
  * Additional features (including optional integrations)
  * Refactoring of the processor
  * Different implementations with the same external interface
+ * Serialisation bug fixes
+ * Added support for new types in serialisation
 
 Major:
  * Different external interfaces
@@ -209,20 +210,17 @@ Major:
  * Changes to generated serialisations (not just semantic changes)
      * A change to support a dependency that would change serialisations would be minor, not major 
 
-With the same settings, changing the minor or patch version of the processor should be completely transparent to a consumer, even if the code the processor generates completely changes. A major version would only be needed if the end-user would be required to change their code. Alterations that do change "internal" implementation details are marked as "minor" as a way of flagging that, while it *should* externally be the same there is a non-zero risk it isn't.
+With the same settings, changing the minor or patch version of the processor should be completely transparent to a consumer, even if the code the processor generates completely changes. A major version would only be needed if the end-user would be required to change their code or if it could break items external to that consumer (e.g. serialisation). Alterations that do change "internal" implementation details are marked as "minor" as a way of flagging that, while it *should* externally be the same there is a non-zero risk it isn't.
 
 ## Desired features:
 
 Some of these may be quite large:
  * Avaje JSONB support (as in, generate their handlers by using Jakarta XML annotations)
     * This includes hooking into e.g. Eclipse Collection support
+ * Jackson POJO builder support
  * Memoized operations (using `vavr` maybe?)
  * XML Deserialisation
  * `Map` support - the plumbing is there, just need it to be done!
-
-## Known defects
-
- * Meta-annotations across compilation boundaries don't work - META-INF entries are written, just not detected
 
 # Contributing
 

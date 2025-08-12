@@ -1,8 +1,10 @@
 package io.github.cbarlin.aru.core.mirrorhandlers;
 
 import io.github.cbarlin.aru.core.APContext;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -21,7 +23,6 @@ import java.util.function.Predicate;
 
 public final class MapBasedAnnotationMirror implements AnnotationMirror {
 
-    private static final Map<ClassName, Optional<TypeElement>> LOADED_ANNOTATIONS = new HashMap<>();
     private final Map<ExecutableElement, AnnotationValue> elementValues;
     private final DeclaredType declaredType;
 
@@ -33,15 +34,8 @@ public final class MapBasedAnnotationMirror implements AnnotationMirror {
         this(annotationClassName, values.orElse(Map.of()));
     }
 
-    private static synchronized Optional<TypeElement> annotationLoader(final ClassName className) {
-        return Optional.of(className.canonicalName())
-                .filter(Predicate.not(String::isBlank))
-                .map(APContext.elements()::getTypeElement)
-                .filter((TypeElement te) -> ElementKind.ANNOTATION_TYPE.equals(te.getKind()));
-    }
-
-    public MapBasedAnnotationMirror(final ClassName annotationClassName, final Map<String, Object> values) {
-        final Optional<TypeElement> optAte = LOADED_ANNOTATIONS.computeIfAbsent(annotationClassName, MapBasedAnnotationMirror::annotationLoader);
+    public MapBasedAnnotationMirror(final ClassName annotationClassName, final Map<String, @Nullable Object> values) {
+        final Optional<TypeElement> optAte = OptionalClassDetector.loadAnnotation(annotationClassName);
         
         this.declaredType = optAte
             .map(TypeElement::asType)
@@ -52,7 +46,7 @@ public final class MapBasedAnnotationMirror implements AnnotationMirror {
         final TypeElement typeElement = optAte.get();
         
         final Map<ExecutableElement, AnnotationValue> out = HashMap.newHashMap(values.size());
-        values.forEach((String key, Object value) -> {
+        values.forEach((String key, @Nullable Object value) -> {
             if (StringUtils.isBlank(key) || Objects.isNull(value)) {
                 return;
             }
@@ -66,10 +60,10 @@ public final class MapBasedAnnotationMirror implements AnnotationMirror {
                 final ExecutableElement nKey = opt.get();
                 final AnnotationValue nValue = switch(value) {
                     case final Collection<?> col when (!col.isEmpty()) -> new SyntheticAnnotationValue(col.stream().filter(Objects::nonNull).map(SyntheticAnnotationValue::new).toList());
-                    case final Collection<?> col when (col.isEmpty()) -> new SyntheticAnnotationValue(List.of());
+                    case final Collection<?> ignored -> new SyntheticAnnotationValue(List.of());
                     case final Class<?> clz -> new SyntheticAnnotationValue(APContext.elements().getTypeElement(ClassName.get(clz).canonicalName()).asType());
                     case final ClassName clz -> new SyntheticAnnotationValue(APContext.elements().getTypeElement(clz.canonicalName()).asType());
-                    case final Enum<?> enm -> {
+                    case final Enum<?> ignored -> {
                         APContext.messager().printError("Cannot process enum elements when creating synthetic annotations");
                         yield new SyntheticAnnotationValue(value);
                     }
