@@ -1,4 +1,4 @@
-==== Differ
+= Differ
 
 The "differ" allows you to compute the difference between two instances of a record. The processor creates a new class that contains details about the difference between the two instances field by field, including:
 

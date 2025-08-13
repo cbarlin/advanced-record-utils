@@ -1,8 +1,8 @@
-=== Importing items
+= Importing items
 
 You can also import records and generate `+*Utils+` classes for them, or make use of their existing `+*Utils+` classes if they exist.
 
-==== Importing records/interfaces
+== Importing records/interfaces
 
 You can import records and interfaces in any place that you can place an `+@AdvancedRecordUtils+` annotation by using the `+importTargets+` setting. This can be used to create `+*Utils+` classes for records in a library, or in a different package to the one the record is defined in.
 
@@ -28,7 +28,7 @@ This will generate `+*Utils+` classes for each of the requested items, using the
 
 WARNING: Importing the same record or interface twice in two different packages or with two different settings will result in unreproducible and unreliable builds as which location/settings are used isn't guaranteed.
 
-==== Importing existing utils classes
+== Importing existing utils classes
 
 Importing existing `+*Utils+` classes allows the following:
 
@@ -58,7 +58,7 @@ An example:
 ----
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 
-@AdvancedRecordUtils.ImportLibraryUtils({TopLevelRecord.class})
+@AdvancedRecordUtils.ImportLibraryUtils({TopLevelRecordUtils.class})
 module org.example {
     requires io.github.cbarlin.aru.annotations;
 }

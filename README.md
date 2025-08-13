@@ -14,10 +14,7 @@ Advanced Record Utils is an annotation-processor based code generator that creat
  * A "With"er interface
  * A "Merger" utility and interface
  * An "XML" utility and interface for serialisation to XML
- * A "Diff" interface and result class:
-   * Collections compute added/removed elements, as well as changed/unchanged ones (if the elements themselves are diffable)
-   * Nested records can pass their own diff (if present on both original instances)
-   * Standard fields can tell you if they have/have not changed
+ * A "Diff" interface and result class
  * An "All" interface that bundles all the other interfaces together
 
 It's configurable, and does away with a lot of boilerplate. It can also import records from libraries (in case you can't control their source code), and can work recursively down a tree of records that reference other records/interfaces.
@@ -70,6 +67,7 @@ If you use java modules, you will need to add:
 
 ```java
 requires io.github.cbarlin.aru.annotations;
+// No explicit 'requires org.jspecify' needed; it's re-exported transitively by the annotations module
 ```
 
 Annotate your record like so:

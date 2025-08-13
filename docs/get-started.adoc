@@ -1,10 +1,10 @@
-== Get started
+= Get started
 
 We recommend the approach of adding the annotations as a dependency and the processor to your maven compiler plugin config. This is so that dependencies that the processor has don't end up in your project, and because the default in Java 23+ is to not automatically scan dependencies for annotation processors (which could be a security risk!)
 
-=== Configuring your build tooling
+== Configuring your build tooling
 
-==== Maven
+=== Maven
 
 . {empty}
 +
@@ -74,7 +74,7 @@ If you don't have a `+build+` section of your pom, you can use the below.
 ====
 --
 
-==== Gradle
+=== Gradle
 
 Gradle 5.2 added better support for annotation processors, so ensure you are using that version or newer.
 
@@ -94,14 +94,14 @@ Add the declarations for the dependency and the annotation processor like so:
 [source,gradle]
 ----
 dependencies {
-  implementation('io.github.cbarlin:advanced-record-utils-annotations:${aru.version}')
-  annotationProcessor('io.github.cbarlin:advanced-record-utils-processor:${aru.version}')
-  testAnnotationProcessor('io.github.cbarlin:advanced-record-utils-processor:${aru.version}')
+  implementation("io.github.cbarlin:advanced-record-utils-annotations:${aru.version}")
+  annotationProcessor("io.github.cbarlin:advanced-record-utils-processor:${aru.version}")
+  testAnnotationProcessor("io.github.cbarlin:advanced-record-utils-processor:${aru.version}")
 }
 ----
 --
 
-=== Java modules
+== Java modules
 
 If you are using Java's module system, you will need to add the below to your `+module-info.java+` file:
 
@@ -109,10 +109,11 @@ If you are using Java's module system, you will need to add the below to your `+
 ----
 module org.example {
     requires io.github.cbarlin.aru.annotations;
+    // No explicit 'requires org.jspecify' needed; it's re-exported transitively by the annotations module
 }
 ----
 
-=== Reproducible Builds
+== Reproducible Builds
 
 image::https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json["Reproducible Builds", link=https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md]
 

@@ -16,10 +16,10 @@ Advanced Record Utils is an annotation-processor based source code generator tha
 * A "Diff" interface and result class
 * An "All" interface that bundles all the other interfaces together
 
-It works recursively down a structure, or can import all records/interfaces in a package or that are manually requested.
+It works recursively down a structure, can be asked to import all records/interfaces in a package, and can import requested records from libraries or previously compiled modules.
 
-include::get-started.adoc[]
+include::get-started.adoc[leveloffset=+1]
 
-include::usage/index.adoc[]
+include::usage/index.adoc[leveloffset=+1]
 
-include::options/index.adoc[]
+include::options/index.adoc[leveloffset=+1]

@@ -1,4 +1,4 @@
-==== Basic usage
+= Basic usage
 
 Annotate a record like so:
 
@@ -8,7 +8,7 @@ Annotate a record like so:
 public record Person(String name, int age, List<String> favouriteColours) {}
 ----
 
-When you build the class, will take that and generate source code for you, which will then be compiled.
+When you build the class, the processor will take that and generate readable source code for you, which will then be compiled.
 
 .Full generated source code for default settings
 [%collapsible]

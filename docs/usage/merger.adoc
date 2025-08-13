@@ -1,4 +1,4 @@
-==== Merger
+= Merger
 
 The merger allows you to "merge" two instances of a record together. The merge process involves two instances of a record (`+personA+` and `+personB+` for example) and creates a new instance where the value of each field is determined like so:
 

@@ -1,3 +1,3 @@
-=== Global Options
+= Top-level Options
 
 TODO: Finish writing this!

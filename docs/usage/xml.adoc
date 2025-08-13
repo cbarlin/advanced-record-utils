@@ -1,8 +1,8 @@
-==== XML
+= XML
 
 The XML utility allows you to serialise a record to XML. At the moment, only serialisation is supported.
 
-WARNING: This requires you to have the `+jakarta.xml.bind-api+` dependency
+WARNING: Using this utility requires you to have `+jakarta.xml.bind-api+` on the classpath as you will need to use the annotations from that library to control the output.
 
 To enable the generation of an `+XML+` interface, enable the `+xmlable+` setting and mark your record fields with the required annotations. To use, implement the `+All+` (or `+XML+`) interface like so:
 
@@ -323,6 +323,7 @@ And then you can convert an instance into XML:
 
 [source,java]
 ----
+// You will need to handle the XMLStreamException that can be thrown in this example
 final XMLStreamWriter streamWriter = createXmlWriter();
 streamWriter.writeStartDocument();
 // personA from earlier example

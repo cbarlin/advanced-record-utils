@@ -1,4 +1,4 @@
-=== Type Converter
+= Type Converter
 
 By annotating a `+public static+` method with `+@TypeConverter+`, then any time that the return type of that method is a field of a record, the generated builder will also include a method that invokes the `TypeConverter` annotated method. This applies globally across all builders.
 

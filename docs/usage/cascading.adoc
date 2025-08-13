@@ -1,4 +1,4 @@
-=== Cascading usage
+= Cascading usage
 
 In the event that you have records that reference other records that are in the same package or sub-package, the processor will automatically "cascade" down the "tree" and work on the referenced record without needing to annotate it. This can be extremely useful if you have a large tree of records, such as one that represents an XML schema.
 

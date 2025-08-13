@@ -1,4 +1,4 @@
-=== Interfaces
+= Interfaces
 
 Advanced Record Utils can handle the use of interfaces in a tree of records that use/reference each other.
 
@@ -27,9 +27,9 @@ public record MyRecordG(
 ) {}
 ----
 
-As described above, the processor is not able to work with the `+SomeInterface+` interface, and so builders for the two records that implement it are unable to do so. There are several approaches that can be used to resolve this.
+As described above, the processor is not able to work with the `+SomeInterface+` interface, and so will not generate `+*Utils+` classes for the two implementing records, nor will there be builder methods (such as fluent setters) for them. There are several approaches that can be used to resolve this.
 
-==== Seal the interface
+== Seal the interface
 
 If you change the definition of the interface so that it is sealed, like so:
 
@@ -62,7 +62,7 @@ Then the processor will be able to read the `+permits+` clause and the cascading
 
 include::iface-generated.adoc[]
 
-==== Annotate the records
+== Annotate the records
 
 If you annotate the records that implement the interface as well as `+MyRecordG+` like so:
 
@@ -101,7 +101,7 @@ include::iface-generated.adoc[]
 
 CAUTION: If you only annotate one of the records, then a `+*Utils+` class won't be generated for the omitted record, and the both the interface's and `+MyRecordG+` generated `+*Utils+` classes will only be able to reference the one record
 
-==== Use package-wide application
+== Use package-wide application
 
 If you annotate the package that contains the structure like so:
 

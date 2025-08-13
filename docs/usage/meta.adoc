@@ -1,4 +1,4 @@
-=== Meta-annotations
+= Meta-annotations
 
 You can also use meta-annotations to define a group of settings to apply to a number of disparate records/interfaces. Like the normal annotation, these settings cascade (see above for details), and like the normal annotation the settings it defines gets "merged" with others. The order of preference for the merge is:
 
@@ -68,7 +68,7 @@ package org.example;
 public record Video(String name, int uploadYear) {}
 ----
 
-Then that is the equivalent of doing the following without the `+packge-info.java+` or the `+GenerateDiff+` annotation:
+Then that is the equivalent of doing the following without the `+package-info.java+` or the `+GenerateDiff+` annotation:
 
 .Person.java
 [source,java]

@@ -60,6 +60,11 @@ reviews:
     - path: 'aru-prism-prison/**'
       instructions: |
         The README of `aru-prism-prison` covers this folder quite well
+    - path: 'docs/**'
+      instructions: |
+        These are bundled into one large page and published to GitHub Pages. When reviewing, do not review code snippets. 
+        
+        Do not review code snippets that represent generated output.
     - path: 'aru-processor-core/**/*.java'
       instructions: |
         This folder contains the dense code that wires together the processor. The `module-info` specifies that the code is `@NullMarked`, therefore

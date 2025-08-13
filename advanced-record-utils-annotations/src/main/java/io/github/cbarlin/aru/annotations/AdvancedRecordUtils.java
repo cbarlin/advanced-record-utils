@@ -1,6 +1,5 @@
 package io.github.cbarlin.aru.annotations;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,6 +9,7 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.MODULE;
 import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
 
 /**
  * Indicates that the target type should have elements created for it.
@@ -19,6 +19,8 @@ import static java.lang.annotation.ElementType.TYPE;
  * So a record named {@code MyRecord} will create {@code MyRecordUtils} (which contains {@code MyRecordUtils.Builder}, {@code MyRecordUtils.With}, etc)
  * <p>
  * If applied to a package, then only {@link #importTargets()} is considered (unless {@link #applyToAllInPackage()} is true)
+ * <p>
+ * This annotation can also be used as a meta-annotation (target: {@code ANNOTATION_TYPE}) to compose your own presets with opinionated defaults for your codebase.
  */
 @Target({PACKAGE, TYPE, ANNOTATION_TYPE})
 @Retention(RetentionPolicy.CLASS)
@@ -148,7 +150,9 @@ public @interface AdvancedRecordUtils {
     /**
      * Should an Avaje Jsonb import annotation be created for you
      * <p>
-     * Useful if you don't want to have to annotate everything in a tree/package
+     * Useful if you want to avoid annotating every type in a hierarchy or an entire package.
+     * <p>
+     * Note: Enabling this requires Avaje JSONB annotations on the compilation classpath (optional dependency).
      */
     boolean addJsonbImportAnnotation() default false;
     //#endregion
@@ -203,18 +207,24 @@ public @interface AdvancedRecordUtils {
          */
         NONE,
         /**
-         * Generate logging output using slf4j where the logs are for the {@link GeneratedUtil} interface.
+         * Generate logging output using SLF4J where the logs are for the {@link GeneratedUtil} interface.
          * <p>
          * If generating log lines, do consider this one as it makes it easy to silence just AdvancedRecordUtils log lines across the entire
          * app while leaving debug or trace turned on
+         * <p>
+         * Note: Selecting this option generates SLF4J-based logging calls; ensure SLF4J is available on the classpath (optional dependency).
          */
         SLF4J_GENERATED_UTIL_INTERFACE,
         /**
-         * Generate logging output using slf4j where the logs are for the wrapping "Utils" class
+         * Generate logging output using SLF4J where the logs are for the wrapping "Utils" class
+         * <p>
+         * Note: Selecting this option generates SLF4J-based logging calls; ensure SLF4J is available on the classpath (optional dependency).
          */
         SLF4J_UTILS_CLASS,
         /**
-         * Generate logging output using slf4j where the logs are for each subclass
+         * Generate logging output using SLF4J where the logs are for each subclass
+         * <p>
+         * Note: Selecting this option generates SLF4J-based logging calls; ensure SLF4J is available on the classpath (optional dependency).
          */
         SLF4J_PER_SUBCLASS
     }
@@ -281,7 +291,7 @@ public @interface AdvancedRecordUtils {
      * Only required if there are multiple constructors
      */
     @Retention(RetentionPolicy.SOURCE)
-    @Target({ ElementType.CONSTRUCTOR })
+    @Target({ CONSTRUCTOR })
     public @interface TargetConstructor {
 
     }
