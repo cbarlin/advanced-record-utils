@@ -1,0 +1,57 @@
+****
+
+.Generated code within the "Builder" class
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        public Builder addPhoneNumbers(@NonNull final Consumer<PhoneNumberUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final PhoneNumberUtils.Builder builder = PhoneNumberUtils.Builder.builder();
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.addPhoneNumbers(builder.build());
+        }
+
+        public Builder address(@NonNull final Consumer<AddressUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final AddressUtils.Builder builder = (Objects.isNull(this.address())) ? AddressUtils.Builder.builder() : AddressUtils.Builder.builder(this.address());
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.address(builder.build());
+        }
+    }
+}
+----
+=====
+
+.Generated code with interface
+[%collapsible]
+=====
+
+The below code assumes that the "Address" is an interface with a "PostalAddress" implementation.
+
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        public Builder addressAsPostalAddress(@NonNull final Consumer<PostalAddress.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final PostalAddress.Builder builder;
+            if (Objects.nonNull(this.address()) && this.address() instanceof PostalAddress oth) {
+                builder = PostalAddress.Builder.builder(oth);
+            } else {
+                builder = PostalAddress.Builder.builder();
+            }
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.address(builder.build());
+        }
+    }
+}
+----
+=====
+
+****

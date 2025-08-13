@@ -1,5 +1,6 @@
 package io.github.cbarlin.aru.impl.xml.inferencer;
 
+import io.github.cbarlin.aru.core.ExecutableElementUtils;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.mirrorhandlers.MapBasedAnnotationMirror;
 import io.github.cbarlin.aru.impl.wiring.XmlPerRecordScope;
@@ -9,12 +10,14 @@ import io.github.cbarlin.aru.prism.prison.JsonBPropertyPrism;
 import io.github.cbarlin.aru.prism.prison.JsonPropertyPrism;
 import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
+import io.github.cbarlin.aru.prism.prison.XmlElementWrapperPrism;
 import io.github.cbarlin.aru.prism.prison.XmlElementsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.RecordComponentElement;
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,12 +42,27 @@ public final class XmlElementMapper {
             return Optional.empty();
         }
         if (element instanceof final RecordComponentElement rce) {
-            return XmlElementPrism.getOptionalOn(rce.getAccessor())
+            return upCallingTree(rce.getAccessor())
                 .or(() -> XmlElementPrism.getOptionalOn(element))
                 .or(() -> inferAnnotationMirror(element));
+        } else if (element instanceof final ExecutableElement exe) {
+            return upCallingTree(exe);
         }
         return XmlElementPrism.getOptionalOn(element)
             .or(() -> inferAnnotationMirror(element));
+    }
+
+    private Optional<XmlElementPrism> upCallingTree(final ExecutableElement executableElement) {
+
+        return XmlElementPrism.getOptionalOn(executableElement)
+            .or(
+                () -> ExecutableElementUtils.obtainOverrideTree(executableElement)
+                    .stream()
+                    .map(XmlElementPrism::getOptionalOn)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .findFirst()
+            );
     }
 
 

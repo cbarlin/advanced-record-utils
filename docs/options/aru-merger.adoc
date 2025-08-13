@@ -1,0 +1,107 @@
+= Merger options
+
+These control the names and behaviour for generating the `+Mergeable+` interface. These are applied to the `+mergerOptions = @MergerOptions()+` sub-setting like so:
+
+.Placement example
+[source,java]
+----
+@AdvancedRecordUtils(
+    mergerOptions = @MergerOptions(
+        // Options go here
+    ),
+    merger = true
+)
+public record Person(String name, int age) {}
+----
+
+.`+mergerName+`
+[%collapsible]
+====
+Sets the name of the `+Mergeable+` interface.
+
+*Type*:: `+String+`
+*Default*:: `+"Mergeable"+`
+
+.Usage: Changing the name of the interface
+[source,java]
+----
+@AdvancedRecordUtils(
+    mergerOptions = @MergerOptions(
+        mergerName = "Combinable"
+    ),
+    merger = true
+)
+public record Person(String name, int age)
+implements PersonUtils.Combinable {}
+----
+====
+
+.`+mergerMethodName+`
+[%collapsible]
+====
+Sets the name of the method that combines two instances of the record together.
+
+*Type*:: `+String+`
+*Default*:: `+"merge"+`
+
+.Usage: Changing the method name
+[source,java]
+----
+@AdvancedRecordUtils(
+    mergerOptions = @MergerOptions(
+        mergerMethodName = "combine"
+    ),
+    merger = true
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, the generated method is callable like so:
+
+.Sample method body
+[source,java]
+----
+Person personC = personA.combine(personB);
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+Person personC = personA.merge(personB);
+----
+====
+
+.`+staticMethodsAddedToUtils+`
+[%collapsible]
+====
+Should a static version of the `+merge+` method be placed on the top-level `+*Utils+` class?
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Create the static method
+[source,java]
+----
+@AdvancedRecordUtils(
+    mergerOptions = @MergerOptions(
+        staticMethodsAddedToUtils = true
+    ),
+    merger = true
+)
+public record Person(String name, int age) {}
+----
+
+You can then use it like so:
+
+.Sample method body
+[source,java]
+----
+Person personC = PersonUtils.merge(personA, personB);
+----
+
+include::../generated-code/options/merger-static.adoc[]
+
+====

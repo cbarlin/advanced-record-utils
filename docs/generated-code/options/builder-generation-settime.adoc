@@ -1,0 +1,27 @@
+****
+
+.Generated code within the "Builder" class when `+true+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+
+        public Builder setLocalDateTimeToNow() {
+            return this.localDateTime(LocalDateTime.now());
+        }
+
+        public Builder setOffsetDateTimeToNow() {
+            return this.offsetDateTime(OffsetDateTime.now());
+        }
+
+        public Builder setZonedDateTimeToNow() {
+            return this.zonedDateTime(ZonedDateTime.now());
+        }
+    }
+}
+----
+=====
+
+****

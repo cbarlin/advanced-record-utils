@@ -1,0 +1,44 @@
+= Merger
+
+The merger allows you to "merge" two instances of a record together. The merge process involves two instances of a record (`+personA+` and `+personB+` for example) and creates a new instance where the value of each field is determined like so:
+
+****
+. If both of the two instances have a null value, then the field is null
+. If one of the two instances has a null value, then take the non-null value
+. If both are non-null, and the field itself can be merged (i.e. another record that has a `+*Utils+` class with a merger), then merge the values using that other merger
+. If both are non-null, and the field is a collection, then union the collections
+. Otherwise, keep the value in the "preferred" instance
+****
+
+NOTE: “Preferred instance” means the left-hand operand of the merge — for `this.merge(other)`, `this` wins when both values are non-null and non-mergeable.
+
+TIP: You can use `+Optional+` (or `+OptionalInt+`, `+OptionalLong+`, or `+OptionalDouble+`) instead of nullable fields - the merger will treat an empty optional the same as a null value
+
+To enable the generation of a `+Mergeable+` interface, enable the `+merger+` setting. To use, implement the `+All+` (or `+Mergeable+`) interface like so:
+
+.Person.java
+[source,java]
+----
+@AdvancedRecordUtils(merger = true)
+public record Person(String name, Integer age, List<String> favouriteColours) implements PersonUtils.All {}
+----
+
+NOTE: Merging primitives will always take the "preferred" instance as there is no `+null+`, so this example has swapped to a boxed value. An `+OptionalInt+` would also work for this example.
+
+WARNING: The generated code does not account for the possibility of cyclic references.
+
+include::../generated-code/usage/merger.adoc[]
+
+And then you can "merge" instances of records together:
+
+.Sample method body
+[source,java]
+----
+Person missingName = PersonUtils.builder().age(23).favouriteColours(List.of("red", "violet")).build();
+Person missingAge = PersonUtils.builder().name("Zack").addFavouriteColour("blue").build();
+
+Person allTogether = missingName.merge(missingAge);
+
+// Which would be the same as doing:
+Person isTheSameAs = PersonUtils.builder().age(23).favouriteColours(List.of("red", "violet", "blue")).name("Zack").build();
+----

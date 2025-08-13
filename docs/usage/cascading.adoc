@@ -1,0 +1,53 @@
+= Cascading usage
+
+In the event that you have records that reference other records that are in the same package or sub-package, the processor will automatically "cascade" down the "tree" and work on the referenced record without needing to annotate it. This can be extremely useful if you have a large tree of records, such as one that represents an XML schema.
+
+This is the default behaviour, so as an example take the following records:
+
+.MyRecordA.java
+[source,java]
+----
+public record MyRecordA(
+    String someStringField,
+    int someIntField
+) {
+}
+----
+
+.MyRecordB.java
+[source,java]
+----
+@AdvancedRecordUtils(merger = true)
+public record MyRecordB(
+    MyRecordA otherItem,
+    MyRecordA woo,
+    MyRecordB recursionFtw // The processor deals with self-referencing types
+) {
+
+}
+----
+
+Then both a `+MyRecordBUtils+` _and_ a `+MyRecordAUtils+` are created, despite the `+MyRecordA+` not having an annotation!
+
+include::../generated-code/usage/cascading.adoc[]
+
+And you can use them both:
+
+.Sample method body
+[source,java]
+----
+final MyRecordA myA = MyRecordAUtils.builder().someStringField("blah").someIntField(42).build();
+final MyRecordB firstRound = MyRecordBUtils.builder()
+    .woo(myA)
+    // A fluent use of a sub-builder is available by default
+    .otherItem((MyRecordAUtils.Builder otherBuilder) -> otherBuilder.someIntField(42))
+    .build();
+final MyRecordB secondRound = MyRecordBUtils.builder(firstRound)
+    // You aren't required to define the type either
+    .otherItem(otherBuilder -> otherBuilder.someIntField(420))
+    .build();
+----
+
+Since `+MyRecordB+` had enabled `+merger+` then `+MyRecordA+` will also have a merger, so `+MyRecordA+` instances can be merged too!
+
+CAUTION: Deep or partially adopted hierarchies can introduce edge cases. If only some records in a chain implement the generated interfaces (e.g., via per-record adoption, cross-package imports, or mixed compilation units), certain deep behaviours (like deep diffs or mergers) may stop at non-participating boundaries. Prefer annotating the root(s) so the cascade can generate utilities across the entire in-package tree.

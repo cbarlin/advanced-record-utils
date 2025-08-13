@@ -1,0 +1,112 @@
+= Scope control options
+
+These are applied on the annotation directly, such as:
+
+.Placement example
+[source,java]
+----
+@AdvancedRecordUtils(recursiveExcluded = {RecordToMakeExcluded.class})
+----
+
+.`+recursiveExcluded+`
+[%collapsible]
+====
+When <<use-cascading,cascading>>, do not include the listed classes.
+
+*Type*:: `+Class<?>[]+`
+*Default*:: `+{}+`
+
+.Usage: Place on any item in which cascading imports are possible
+[source,java]
+----
+public record Address(String state) {}
+
+@AdvancedRecordUtils(recursiveExcluded = {Address.class})
+public record Person(String name, int age, Address address) {}
+----
+
+CAUTION: This does *not* apply globally, only to the current element being analysed and everything that cascades from it. If there are two annotations that from the originating element can form a path to a record, and you put the exclusion on one of them, then that record will still be detected from the other annotation.
+====
+
+.`+importTargets+`
+[%collapsible]
+====
+Allows the <<#use-imp,importing>> of elements into the current generation scope.
+
+*Type*:: `+Class<?>[]+`
+*Default*:: `+{}+`
+
+.Usage: Place on any package or record
+[source,java]
+----
+@AdvancedRecordUtils(
+    importTargets = {
+        ExternalDependencyRecordA.class,
+        ExternalDependencyRecordB.class,
+        ExternalDependencyInterface.class
+    }
+)
+package org.example;
+----
+
+See the earlier section on <<#use-imp,importing>>, particularly the section on <<#use-imp-new-utils,Importing records/interfaces to create new `+*Utils+` classes>>.
+====
+
+[#options-top-scope-applypkg]
+.`+applyToAllInPackage+`
+[%collapsible]
+====
+Allows package-wide `+*Utils+` generation.
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Place on any package
+[source,java]
+----
+@AdvancedRecordUtils(
+    applyToAllInPackage = true
+)
+package org.example;
+----
+
+See the earlier section on <<#use-pkg-apply,Automatically applying to all items in a package>> for more details.
+====
+
+.`+attemptToFindExistingUtils+`
+[%collapsible]
+====
+Request that when the processor is evaluating a record as part of its cascading evaluation, that it first attempts to find an existing `+*Utils+` class.
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Place on any package or record
+[source,java]
+----
+@AdvancedRecordUtils(attemptToFindExistingUtils = true)
+package org.example;
+----
+
+See the earlier section on <<#use-imp,importing>>, particularly the section on <<#use-imp-existing-utils,Importing existing utils classes>>.
+====
+
+.`+useInterface+`
+[%collapsible]
+====
+Request that when generating builders, withers, etc that the return type is instead an interface that the record implements, rather than the record's type itself.
+
+*Type*:: `+Class<?>+`
+*Default*:: `+DEFAULT.class+` (internal sentinel value for "disabled")
+
+.Usage: Place on any record that implements an interface
+[source,java]
+----
+public interface MyInterface {
+
+}
+
+@AdvancedRecordUtils(useInterface = MyInterface.class)
+public record MyInterfaceImpl() implements MyInterface {}
+----
+====

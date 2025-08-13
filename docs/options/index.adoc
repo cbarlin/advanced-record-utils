@@ -1,0 +1,19 @@
+= Configuration options
+
+This section outlines every configuration toggle the processor understands, with defaults, trade‑offs, and cross‑references to usage examples.
+
+include::aru-top-general.adoc[leveloffset=+1]
+
+include::aru-top-scope.adoc[leveloffset=+1]
+
+include::aru-typename.adoc[leveloffset=+1]
+
+include::aru-builder/index.adoc[leveloffset=+1]
+
+include::aru-wither.adoc[leveloffset=+1]
+
+include::aru-merger.adoc[leveloffset=+1]
+
+include::aru-diffable.adoc[leveloffset=+1]
+
+include::aru-xml.adoc[leveloffset=+1]

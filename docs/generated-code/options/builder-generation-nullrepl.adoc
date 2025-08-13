@@ -1,0 +1,35 @@
+****
+
+.Generated code within the "Builder" class when `+false+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        public Builder address(@Nullable final Address address) {
+            this.address = Objects.nonNull(address) ? address : this.address;
+            return this;
+        }
+    }
+}
+----
+=====
+
+.Generated code within the "Builder" class when `+true+` (default)
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        public Builder address(@Nullable final Address address) {
+            this.address = address;
+            return this;
+        }
+    }
+}
+----
+=====
+
+****

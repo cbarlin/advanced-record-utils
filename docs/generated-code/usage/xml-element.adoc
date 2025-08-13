@@ -1,0 +1,105 @@
+NOTE: Generated code varies depending on the kind of the record component, if it is required or not, and if there is a default specified. Generally speaking, the processor converts the component value into a sensible string value and outputs that. The methods are named after the component.
+
+****
+
+.Generated code for an `+OffsetDateTime+` field (`+@XmlElement(name = "offsetDateTimeElement")+`)
+[%collapsible]
+=====
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void offsetDateTimeElement(@NonNull final XMLStreamWriter output, @Nullable final OffsetDateTime val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            if (Objects.nonNull(val)) {
+                output.writeStartElement("offsetDateTimeElement");
+                output.writeCharacters(val.atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                output.writeEndElement();
+            }
+        }
+    }
+}
+----
+=====
+
+.Generated code for a `+String+` field (`+@XmlElement(name = "stringElement")+`)
+[%collapsible]
+=====
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void stringElement(@NonNull final XMLStreamWriter output, @Nullable final CharSequence val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            if (Objects.nonNull(val) && StringUtils.isNotBlank(val.toString())) {
+                output.writeStartElement("stringElement");
+                output.writeCharacters(val.toString());
+                output.writeEndElement();
+            }
+        }
+    }
+}
+----
+=====
+
+.Generated code for an `+Integer+` field with a default (`+@XmlElement(name = "boxedIntElementDefault", default = "1")+`)
+[%collapsible]
+=====
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void boxedIntElementDefault(@NonNull final XMLStreamWriter output, @Nullable final Integer val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            output.writeStartElement("boxedIntElementDefault");
+            if(Objects.nonNull(val)) {
+                output.writeCharacters(val.toString());
+            } else {
+                // Supplied value for boxedIntElementDefault (element name boxedIntElementDefault) was null/blank, writing default of 1
+                output.writeCharacters("1");
+            }
+            output.writeEndElement();
+        }
+    }
+}
+----
+=====
+
+.Generated code for an `+Integer+` field that is required (`+@XmlElement(name = "boxedIntElementRequired", required = true)+`)
+[%collapsible]
+=====
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void boxedIntElementRequired(@NonNull final XMLStreamWriter output, @Nullable final Integer val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            Objects.requireNonNull(val, "Element is marked as required - cannot provide a null/blank value for field boxedIntElementRequired (element name: boxedIntElementRequired)");
+            output.writeStartElement("boxedIntElementRequired");
+            output.writeCharacters(val.toString());
+            output.writeEndElement();
+        }
+    }
+}
+----
+=====
+
+.Generated code for another record (`+@XmlElement(name = "MyOtherRecord")+`)
+[%collapsible]
+=====
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void someOtherRecord(@NonNull final XMLStreamWriter output, @Nullable final OtherRecord val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            if (Objects.nonNull(val)) {
+                OtherRecordUtils._XmlUtils.writeToXml(val, output, "MyOtherRecord", null, currentDefaultNamespace);
+            }
+        }
+    }
+}
+----
+=====
+
+****

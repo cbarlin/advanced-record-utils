@@ -1,0 +1,296 @@
+.Generated Utils subclasses
+[%collapsible]
+====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    @NullUnmarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.XmlStaticClassGenerator"},
+            comments = "Related class claim: xmlStaticClass"
+    )
+    public static final class _XmlUtils {
+        private static final Optional<String> __DEFAULT_NAMESPACE_URI = Optional.empty();
+
+        private static final String __DEFAULT_TAG_NAME = "Person";
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.XmlStaticClassGenerator"},
+                comments = "Related class claim: xmlStaticClass"
+        )
+        private _XmlUtils() {
+            throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+        }
+
+        /**
+         * Write out the class to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param el The item to write to XML
+         * @param output The output to write to
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.ToXmlMethodNoTag"},
+                comments = "Related class claim: xmlStaticClassToXmlNoTag"
+        )
+        public static void writeToXml(@NonNull final Person el, @NonNull final XMLStreamWriter output) throws XMLStreamException {
+            _XmlUtils.writeToXml(el, output, null, null, null);
+        }
+
+        /**
+         * Write out the class to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param el The item to write to XML
+         * @param output The output to write to
+         * @param requestedTagName The tag name requested for this element. If null, will use the default tag name
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.ToXmlMethodNoNamespace"},
+                comments = "Related class claim: xmlStaticClassToXmlNoNS"
+        )
+        public static void writeToXml(@NonNull final Person el, @NonNull final XMLStreamWriter output, final String requestedTagName) throws
+                XMLStreamException {
+            _XmlUtils.writeToXml(el, output, requestedTagName, null, null);
+        }
+
+        /**
+         * Write out the class to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param el The item to write to XML
+         * @param output The output to write to
+         * @param requestedTagName The tag name requested for this element. If null, will use the default tag name
+         * @param requestedNamespace The namespace requested for this element. If null, will use the default namespace (NOT the one on the element)
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.ToXmlMethodNoDefNamespace"},
+                comments = "Related class claim: xmlStaticClassToXmlNoDefNS"
+        )
+        public static void writeToXml(@NonNull final Person el, @NonNull final XMLStreamWriter output, final String requestedTagName,
+                final String requestedNamespace) throws XMLStreamException {
+            _XmlUtils.writeToXml(el, output, requestedTagName, requestedNamespace, null);
+        }
+
+        /**
+         * Write out the provided instance to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param el The item to write to XML
+         * @param output The output to write to
+         * @param requestedTagName The tag name requested for this element. If null, will use the default tag name
+         * @param requestedNamespace The namespace requested for this element. If null, will use the default namespace (NOT the one on the element)
+         * @param currentDefaultNamespace The current default namespace
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.WriteStaticToXml"},
+                comments = "Related class claim: xmlStaticClassToXml"
+        )
+        public static void writeToXml(@NonNull final Person el, @NonNull final XMLStreamWriter output, final String requestedTagName,
+                final String requestedNamespace, final String currentDefaultNamespace) throws XMLStreamException {
+            Objects.requireNonNull(el, "Cannot supply null element to be written to XML");
+            Objects.requireNonNull(output, "Cannot supply null output for XML content");
+            final String tag = _XmlUtils.createTag(requestedTagName);
+            final Optional<String> namespace = _XmlUtils.createNamespace(requestedNamespace, currentDefaultNamespace);
+            final Optional<String> defNs = _XmlUtils.__DEFAULT_NAMESPACE_URI.filter(ignored -> Objects.nonNull(requestedNamespace) && (!requestedNamespace.isBlank()));
+            if (defNs.isPresent()) {
+                output.setDefaultNamespace(defNs.get());
+            }
+            final @Nullable String namespaceToPassDown = defNs.orElse(currentDefaultNamespace);
+            if (namespace.isPresent()) {
+                output.writeStartElement(namespace.get(), tag);
+            } else {
+                output.writeStartElement(tag);
+            }
+            // The write order is as follows:
+            //  1. Attributes in the propOrder if present
+            //  2. Remaining attributes in declaration order
+            //  3. Element or Elements in the propOrder if present
+            //  4. Element or Elements in declaration order
+            _XmlUtils.age(output, el.age(), namespaceToPassDown);
+            _XmlUtils.name(output, el.name(), namespaceToPassDown);
+            output.writeEndElement();
+        }
+
+        /**
+         * Add the {@code age} field to the XML output
+         *
+         * @param output The output to write to
+         * @param val The item to write
+         * @param currentDefaultNamespace The current default namespace
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.attribute.WritePrimitiveInt"},
+                comments = "Related component claim: xmlWriteField"
+        )
+        private static final void age(@NonNull final XMLStreamWriter output, @Nullable final int val, @Nullable final String currentDefaultNamespace)
+                throws XMLStreamException {
+            output.writeAttribute("Age", String.valueOf(val));
+        }
+
+        /**
+         * Determine the final namespace of the current XmlType
+         *
+         * @param requestedNamespace The requested namespace when called
+         * @param currentDefaultNamespace The currently available namespace
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.WriteStaticToXml"},
+                comments = "Related class claim: xmlStaticClassToXml"
+        )
+        private static final Optional<String> createNamespace(@Nullable final String requestedNamespace,
+                @Nullable final String currentDefaultNamespace) {
+            return Optional.ofNullable(requestedNamespace)
+                        .filter(Objects::nonNull)
+                        .filter(Predicate.not(String::isBlank))
+                        .filter(x -> !AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(x))
+                        .or(() -> __DEFAULT_NAMESPACE_URI)
+                        .or(
+                            () -> Optional.ofNullable(currentDefaultNamespace)
+                                .filter(Objects::nonNull)
+                                .filter(Predicate.not(String::isBlank))
+                                .filter(x -> !AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(x))
+                        );
+        }
+
+        /**
+         * Determine the tag to write out for the current XML Element
+         *
+         * @param incomingTag The incoming tag that was requested
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.WriteStaticToXml"},
+                comments = "Related class claim: xmlStaticClassToXml"
+        )
+        private static final String createTag(final String incomingTag) {
+            return Optional.ofNullable(incomingTag)
+                            .filter(Objects::nonNull)
+                            .filter(Predicate.not(String::isBlank))
+                            .filter(x -> !AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(x))
+                            .orElse(__DEFAULT_TAG_NAME);
+        }
+
+        /**
+         * Add the {@code name} field to the XML output
+         *
+         * @param output The output to write to
+         * @param val The item to write
+         * @param currentDefaultNamespace The current default namespace
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.utils.elements.noncollections.WriteCharSequence"},
+                comments = "Related component claim: xmlWriteField"
+        )
+        private static final void name(@NonNull final XMLStreamWriter output, @Nullable final CharSequence val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            if (Objects.nonNull(val) && Objects.nonNull(val.toString()) && (!val.toString().isBlank()) ) {
+                output.writeStartElement("Name");
+                output.writeCharacters(val.toString());
+                output.writeEndElement();
+            }
+        }
+    }
+
+    /**
+     * Provides the ability for a class to convert itself into XML
+     */
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.XmlInterfaceGenerator"},
+            comments = "Related class claim: xmlInterface"
+    )
+    interface XML extends _MatchingInterface {
+        /**
+         * Write out the class to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param output The output to write to
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.iface.ToXmlMethodNoTag"},
+                comments = "Related class claim: xmlInterfaceToXmlNoTag"
+        )
+        default void writeSelfTo(@NonNull final XMLStreamWriter output) throws XMLStreamException {
+            this.writeSelfTo(output, null, null, null);
+        }
+
+        /**
+         * Write out the class to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param output The output to write to
+         * @param requestedTagName The tag name requested for this element. If null, will use the default tag name
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.iface.ToXmlMethodNoNamespace"},
+                comments = "Related class claim: xmlInterfaceToXmlNoNs"
+        )
+        default void writeSelfTo(@NonNull final XMLStreamWriter output, @Nullable final String requestedTagName) throws XMLStreamException {
+            this.writeSelfTo(output, requestedTagName, null, null);
+        }
+
+        /**
+         * Write out the class to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param output The output to write to
+         * @param requestedTagName The tag name requested for this element. If null, will use the default tag name
+         * @param requestedNamespace The namespace requested for this element. If null, will use the default namespace (NOT the one on the element)
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.iface.ToXmlMethodNoDefNamespace"},
+                comments = "Related class claim: xmlInterfaceToXmlNoDefNs"
+        )
+        default void writeSelfTo(@NonNull final XMLStreamWriter output, @Nullable final String requestedTagName,
+                @Nullable final String requestedNamespace) throws XMLStreamException {
+            this.writeSelfTo(output, requestedTagName, requestedNamespace, null);
+        }
+
+        /**
+         * Write out the current instance to the requested {@link XMLStreamWriter}, referring to itself with the reqested tag name
+         * <p>
+         * This method will close any tags it opens. It is not expected that it will start or end the document.
+         *
+         * @param output The output to write to
+         * @param requestedTagName The tag name requested for this element. If null, will use the default tag name
+         * @param requestedNamespace The namespace requested for this element. If null, will use the default namespace (NOT the one on the element)
+         * @param currentDefaultNamespace The current default namespace
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.xml.iface.WriteIfaceToXml"},
+                comments = "Related class claim: xmlInterfaceToXml"
+        )
+        default void writeSelfTo(@NonNull final XMLStreamWriter output, @Nullable final String requestedTagName,
+                @Nullable final String requestedNamespace, final String currentDefaultNamespace) throws XMLStreamException {
+            Objects.requireNonNull(output, "Cannot supply null output for XML content");
+            final String tag = _XmlUtils.createTag(requestedTagName);
+            final Optional<String> namespace = _XmlUtils.createNamespace(requestedNamespace, currentDefaultNamespace);
+            final Optional<String> defNs = _XmlUtils.__DEFAULT_NAMESPACE_URI.filter(ignored -> Objects.isNull(requestedNamespace) || (requestedNamespace.isBlank()));
+            if (defNs.isPresent()) {
+                output.setDefaultNamespace(defNs.get());
+            }
+            final @Nullable String namespaceToPassDown = defNs.orElse(currentDefaultNamespace);
+            if (namespace.isPresent()) {
+                output.writeStartElement(namespace.get(), tag);
+            } else {
+                output.writeStartElement(tag);
+            }
+            // The write order is as follows:
+            //  1. Attributes in the propOrder if present
+            //  2. Remaining attributes in declaration order
+            //  3. Element or Elements in the propOrder if present
+            //  4. Element or Elements in declaration order
+            _XmlUtils.age(output, this.age(), namespaceToPassDown);
+            _XmlUtils.name(output, this.name(), namespaceToPassDown);
+            output.writeEndElement();
+        }
+    }
+}
+----
+====

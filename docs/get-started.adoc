@@ -1,0 +1,159 @@
+= Get started
+
+We recommend the approach of adding the annotations as a dependency and the processor to your Maven Compiler Plugin configuration. This is so that dependencies that the processor has don't end up in your project, and because the default in Java 23+ is to not automatically scan dependencies for annotation processors (which could be a security risk!)
+
+== Configuring your build tooling
+
+=== Maven
+
+. {empty}
++
+--
+Add a property for the version of Advanced Record Utils. The current version is
+
+image::https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils["Maven Central release", link=https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations]
+
+This guide will assume that the property is named `+aru.version+`.
+--
+. {empty}
++
+--
+Add the annotations as a dependency:
+
+.pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>advanced-record-utils-annotations</artifactId>
+    <version>${aru.version}</version>
+</dependency>
+----
+--
+. {empty}
++
+--
+Add the annotation processor to your annotation processor paths:
+
+NOTE: If you are using some optional integrations with e.g. avaje-jsonb, then ensure that our processor comes first
+
+.pom.xml
+[source,xml]
+----
+<path>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>advanced-record-utils-processor</artifactId>
+    <version>${aru.version}</version>
+</path>
+----
+.Where does this block go?
+[%collapsible]
+====
+
+If you don't have a `+build+` section of your pom, you can use the below.
+
+.pom.xml
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>io.github.cbarlin</groupId>
+                        <artifactId>advanced-record-utils-processor</artifactId>
+                        <version>${aru.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+
+====
+--
+
+=== Gradle
+
+Gradle 5.2 added better support for annotation processors, so ensure you are using that version or newer.
+
+. {empty}
++
+--
+Add a property for the version of Advanced Record Utils. The current version is
+
+image::https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils["Maven Central release", link=https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations]
+
+This guide will assume that the property is named `+aru.version+`.
+--
+. {empty}
++
+--
+Add the declarations for the dependency and the annotation processor like so:
+
+.Gradle file
+[source,gradle]
+----
+dependencies {
+  implementation("io.github.cbarlin:advanced-record-utils-annotations:${aru.version}")
+  annotationProcessor("io.github.cbarlin:advanced-record-utils-processor:${aru.version}")
+  testAnnotationProcessor("io.github.cbarlin:advanced-record-utils-processor:${aru.version}")
+}
+----
+--
+
+== Java modules
+
+If you are using Java's module system, you will need to add the below to your `+module-info.java+` file:
+
+.module-info.java
+[source,java]
+----
+module org.example {
+    requires io.github.cbarlin.aru.annotations;
+    // No explicit 'requires org.jspecify' needed; it's re-exported transitively by the annotations module
+}
+----
+
+== Optional dependencies
+
+This library has optional integration with several dependencies. Some of these integrations, such as XML serialisations, are enabled based on the options you chose and are mandatory for those options. Where an option would require you to have a dependency, this will be documented.
+
+Other integrations are based purely on detecting the dependency in your classpath and using them where it makes sense to do so without you being required to do anything. These integrations are:
+
+* Eclipse Collections
+* Apache commons-lang3
+
+== Reproducible Builds
+
+image::https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json["Reproducible Builds", link=https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md]
+
+This project is reproducible (and independently verified - thanks https://github.com/hboutemy[hboutemy]!). In addition, our GitHub builds ensure that the generated code is _also_ reproducible.
+
+Assuming you have done everything else you need to do for reproducible builds (see the https://reproducible-builds.org/docs/jvm/[JVM guide]) then use of Advanced Record Utils will not stop that (barring one edge case - see "Importing records/interfaces" below).
+
+NOTE: If your build isn't reproducible and it should be, please create a new issue on our GitHub.
+
+== Generated code
+
+Code is usually generated in the `target/generated-sources/annotations/`. We aim to generate readable code.
+
+The top-level `+*Utils+` class contains the `builder` static method to create a new builder. Depending on your settings, other static methods may be available. The `+*Utils+` class also contains other classes and interfaces, depending on your options.
+
+NOTE: Classes that begin with an `+_+` (an underscore) are intended to be "internal". While these are still readable, you aren't intended to directly use them. They are still public though, as other `+*Utils+` classes may use them. Static methods that you may wish to use should have a setting to expose them on the top-level `+*Utils+` class
+
+The top-level `+*Utils+` class also has an `+@AdvancedRecordUtilsGenerated+` annotation on it. This contains metadata about the generated code and serves two purposes:
+
+* It's used by the processor if the generated code is used in a library to re-create the "tree" of records (if applicable), as well as containing details about the settings used, generated classes, and version of the processor.
+* If there's an issue involving generated code, it can be used to confirm things like the version and settings that were "detected" (see <<use-cascading, cascading>> and <<use-pkg-settings,using a package to apply settings>> for details).
+
+Generated methods and classes should have:
+
+* relevant Javadoc
+* a `+@Generated+` annotation that contains information that's useful for debugging and "hiding" from code coverage tools.
+
+IMPORTANT: We consider it a bug if a method, interface, or class doesn't have Javadoc or if it is missing its a `+@Generated+` annotation.

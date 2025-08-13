@@ -1,0 +1,20 @@
+= Builder options
+
+These control the methods available on, and the behaviour of, the generated `+Builder+` subclass. These are applied to the `+builderOptions = @BuilderOptions()+` sub setting like so:
+
+.Placement example
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        // Options go here
+    )
+)
+public record Person(String name, int age) {}
+----
+
+NOTE: The generated `+With+` and `+Mergeable+` interfaces delegate all usage to the `+Builder+`, so all settings here impact those. In addition, the `+With+` interface creates some methods based on the methods being generated for the `+Builder+`.
+
+include::naming.adoc[leveloffset=+1]
+
+include::generation.adoc[leveloffset=+1]

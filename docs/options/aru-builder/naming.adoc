@@ -1,0 +1,325 @@
+= Naming options
+
+.`+builderName+`
+[%collapsible]
+====
+Set the name of the `+Builder+` subclass.
+
+*Type*:: `+String+`
+*Default*:: `+"Builder"+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        builderName = "Factory"
+    )
+)
+public record Person(String name, int age) {}
+----
+
+In the above example, the generated "Builder" would be found at `+PersonUtils.Factory+`:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.Factory personFactory = PersonUtils.builder();
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.Builder personBuilder = PersonUtils.builder();
+----
+====
+
+.`+emptyCreationName+`
+[%collapsible]
+====
+Set the name of the no-arg static method that creates an empty instance of the "Builder" class.
+
+*Type*:: `+String+`
+*Default*:: `+"builder"+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        emptyCreationName = "factory"
+    )
+)
+public record Person(String name, int age) {}
+----
+
+In the above example, the generated "Builder" can be created by using the method named `+factory+`
+
+.Sample method body
+[source,java]
+----
+PersonUtils.Builder personBuilder = PersonUtils.factory();
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.Builder personBuilder = PersonUtils.builder();
+----
+====
+
+.`+copyCreationName+`
+[%collapsible]
+====
+Set the name of the static method that creates an instance of the "Builder" class by copying from an existing instance.
+
+*Type*:: `+String+`
+*Default*:: `+"builder"+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        copyCreationName = "from"
+    )
+)
+public record Person(String name, int age) {}
+----
+
+In the above example, the generated "Builder" can copy an existing instance using the `+from+` method like so:
+
+.Sample method body
+[source,java]
+----
+Person personA = // create an instance
+PersonUtils.Builder personBuilder = PersonUtils.from(personA);
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+Person personA = // create an instance
+PersonUtils.Builder personBuilder = PersonUtils.builder(personA);
+----
+====
+
+.`+buildMethodName+`
+[%collapsible]
+====
+Set the name of the method that the "Builder" has to create a new instance based on its internal state
+
+*Type*:: `+String+`
+*Default*:: `+"build"+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        buildMethodName = "make"
+    )
+)
+public record Person(String name, int age) {}
+----
+
+In the above example, the generated "Builder" creates a new instance using a method named `+make+` like so:
+
+.Sample method body
+[source,java]
+----
+Person personA = PersonUtils.builder()
+    .make();
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+Person personA = PersonUtils.builder()
+    .build();
+----
+====
+
+.`+adderMethodPrefix+` / `+adderMethodSuffix+`
+[%collapsible]
+====
+Set the prefix and suffix that are joined with the name of a collection component for “add”-er methods on the “Builder”.
+
+*Type*:: `+String+`
+*Default*:: `+"add"+` (prefix), `+""+` (suffix)
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        adderMethodPrefix = "",
+        adderMethodSuffix = "Append"
+    )
+)
+public record Person(Set<PhoneNumber> phoneNumbers) {}
+----
+
+In the above example, the generated "Builder" contains a method called `+phoneNumbersAppend+` that will add a new `PhoneNumber` to the builder 
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .phoneNumbersAppend(new PhoneNumber());
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .addPhoneNumbers(new PhoneNumber());
+----
+====
+
+.`+setTimeNowMethodPrefix+` / `+setTimeNowMethodSuffix+`
+[%collapsible]
+====
+Set the prefix and suffix that are joined with the name of a time component for setting its value to the current time.
+
+*Type*:: `+String+`
+*Default*:: `+"set"+` (prefix), `+"ToNow"+` (suffix)
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        setTimeNowMethodPrefix = "update",
+        setTimeNowMethodSuffix = "ToPresent"
+    )
+)
+public record Person(OffsetDateTime dateOfBirth) {}
+----
+
+In the above example, the generated “Builder” contains a method called `+updateDateOfBirthToPresent+` that will set the `dateOfBirth` value to the present time:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .updateDateOfBirthToPresent();
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .setDateOfBirthToNow();
+----
+====
+
+.`+multiTypeSetterBridge+`
+[%collapsible]
+====
+Set the bridge between the name of a component and the name of an implementing class on the setter, if the component targets an interface and we know the implementing records.
+
+*Type*:: `+String+`
+*Default*:: `+"As"+`
+
+.Usage
+[source,java]
+----
+public sealed interface MyInterface permits ImplA, ImplB {}
+
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        multiTypeSetterBridge = "OfKind"
+    )
+)
+public record Person(MyInterface metadata) {}
+----
+
+In the above example, the generated “Builder” contains methods called `+metadataOfKindImplA+` and `+metadataOfKindImplB+` that only allow passing instances of that particular record:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .metadataOfKindImplA(new ImplA());
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .metadataAsImplA(new ImplA());
+----
+
+This is particularly useful for using fluent nested builders.
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .metadataAsImplA(implABuilder -> implABuilder.someField("a"));
+----
+====
+
+.`+multiTypeAdderBridge+`
+[%collapsible]
+====
+Set the bridge between the name of a component and the name of an implementing class on the adder, if the component targets a collection of an interface and we know the implementing records.
+
+*Type*:: `+String+`
+*Default*:: `+"To"+`
+
+.Usage
+[source,java]
+----
+public sealed interface MyInterface permits ImplA, ImplB {}
+
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        multiTypeAdderBridge = "In"
+    )
+)
+public record Person(Set<MyInterface> metadata) {}
+----
+
+In the above example, the generated “Builder” contains methods called `+addImplAInMetadata+` and `+addImplBInMetadata+` that only allow passing instances of that particular record:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .addImplAInMetadata(new ImplA());
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .addImplAToMetadata(new ImplA());
+----
+
+This is particularly useful for using fluent nested builders.
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .addImplAToMetadata(implABuilder -> implABuilder.someField("a"));
+----
+====

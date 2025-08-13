@@ -1,0 +1,64 @@
+****
+
+.Generated logging line within a method
+[%collapsible]
+=====
+[source,java]
+----
+__LOGGER.atTrace()
+    .addKeyValue(LoggingConstants.VISITOR_NAME_KEY, "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction")
+    .addKeyValue(LoggingConstants.PROCESSOR_NAME_KEY, LoggingConstants.PROCESSOR_NAME_VALUE)
+    .addKeyValue(LoggingConstants.CLAIM_OP_NAME_KEY, "builderCopy")
+    .addKeyValue(LoggingConstants.CLAIM_OP_TYPE_KEY, LoggingConstants.CLAIM_OP_TYPE_VALUE_CLASS)
+    .addKeyValue(LoggingConstants.INTENDED_TYPE_KEY, "io.github.cbarlin.aru.tests.cdncl.RootItem")
+    .addKeyValue(LoggingConstants.ORIGINAL_TYPE_KEY, "io.github.cbarlin.aru.tests.cdncl.RootItem")
+    .log("Copying an existing instance");
+----
+=====
+
+.Structure when using `+SLF4J_GENERATED_UTIL_INTERFACE+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    private static final Logger __LOGGER = LoggerFactory.getLogger(GeneratedUtil.class);
+
+    public static final class Builder {
+        // No logger here
+    }
+}
+----
+=====
+
+.Structure when using `+SLF4J_UTILS_CLASS+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    private static final Logger __LOGGER = LoggerFactory.getLogger(PersonUtils.class);
+
+    public static final class Builder {
+        // No logger here
+    }
+}
+----
+=====
+
+.Structure when using `+SLF4J_PER_SUBCLASS+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    private static final Logger __LOGGER = LoggerFactory.getLogger(PersonUtils.class);
+
+    public static final class Builder {
+        private static final Logger __LOGGER = LoggerFactory.getLogger(PersonUtils.Builder.class);
+    }
+}
+----
+=====
+
+****

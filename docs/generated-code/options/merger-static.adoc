@@ -1,0 +1,19 @@
+****
+
+.Generated code on the top-level `+*Utils+` class
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final Person merge(
+            @Nullable final Person preferred,
+            @Nullable final Person other
+    ) {
+        return _MergerUtils.merge(preferred, other);
+    }
+}
+----
+=====
+
+****

@@ -1,0 +1,41 @@
+= Reading this document
+
+The following are some details about how this document is written and intended to be read.
+
+== Callouts/Admonitions
+
+Throughout this documentation, you will find several types of admonition blocks used to highlight information. Understanding their meaning will help you get the most out of this guide.
+
+TIP: This is a tip. A tip can offer a helpful suggestion, a shortcut, or a best practice that can improve your experience or efficiency when using the library.
+
+NOTE: This is a note. A note contains supplementary information that might be relevant but isn't critical to the main point. Think of it as an "FYI" or a "by the way."
+
+IMPORTANT: This is something important. This highlights information that is crucial for the correct functioning of a feature.
+
+CAUTION: This is something to be cautious of. These generally advise you against a course of action, to inform you of potential challenges, or to act carefully.
+
+WARNING: This is a warning. Ignoring a warning is very likely to result in significant problems. Warnings are used to call out things that will break your code, or segments of code that are deliberately bad examples.
+
+== Collapsible segments
+
+Generated code - and sometimes other items - is contained in collapsible segments like the following:
+
+.Knock, knock
+[%collapsible]
+=====
+
+Who's there?
+
+=====
+
+== Code blocks
+
+Throughout this document, you'll see code blocks that look like this:
+
+.Person.java
+[source,java]
+----
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+Code blocks in this document do not include import statements.

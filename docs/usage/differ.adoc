@@ -1,0 +1,49 @@
+= Differ
+
+The "differ" allows you to compute the difference between two instances of a record. The processor creates a new class that contains details about the difference between the two instances field by field, including:
+
+****
+* Has the field changed?
+** What was the original value?
+** What was the updated value?
+* If the field was a collection you can obtain an order-agnostic sub-diff of the contents that were:
+** Added
+** Removed
+** In common between the two
+* If the field is also diffable (i.e. another record that has a `+*Utils+` class with a differ) then a diff of that field can also be obtained
+****
+
+To enable the generation of a `+Diffable+` interface, enable the `+diffable+` setting. To use, implement the `+All+` (or `+Diffable+`) interface like so:
+
+.Person.java
+[source,java]
+----
+@AdvancedRecordUtils(diffable = true)
+public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.All {}
+----
+
+include::../generated-code/usage/differ.adoc[]
+
+And then you can compute the difference between two instances:
+
+.Sample method body
+[source,java]
+----
+Person personA = PersonUtils.builder()
+    .name("Aerith")
+    .addFavouriteColours("red")
+    .addFavouriteColours("pink")
+    .build();
+Person personB = PersonUtils.builder()
+    .name("Tifa")
+    .favouriteColours(List.of("purple", "teal"))
+    .build();
+
+PersonUtils.DiffOfPerson diff = personA.diff(personB);
+if (diff.hasAgeChanged()) {
+    // Do something
+}
+if (diff.diffFavouriteColours().addedElements().isEmpty()) {
+    // Do something
+}
+----
