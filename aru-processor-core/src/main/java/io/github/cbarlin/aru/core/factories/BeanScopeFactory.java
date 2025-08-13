@@ -46,7 +46,7 @@ public final class BeanScopeFactory {
             .modules(new CoreGlobalModule(processingEnvironment))
             .build();
 
-        final List<AvajeModule> otherModules = new ArrayList<>();
+        final List<AvajeModule> otherModules = new ArrayList<>(2);
         MODULE_FINDERS.forEach(finder -> otherModules.addAll(finder.globalModules(coreScope)));
         if (!otherModules.isEmpty()) {
             final BeanScopeBuilder fullScopeBuilder = BeanScope.builder();
@@ -67,10 +67,11 @@ public final class BeanScopeFactory {
         coreScopeBuilder.configPlugin(propertyConfigLoader);
         final BeanScope coreScope = coreScopeBuilder.parent(globalScope, true)
             .bean(AnalysedRecord.class, analysedRecord)
+            .bean(PropertyConfigLoader.class, propertyConfigLoader)
             .modules(new CorePerRecordModule(analysedRecord))
             .build();
 
-        final List<AvajeModule> otherModules = new ArrayList<>();
+        final List<AvajeModule> otherModules = new ArrayList<>(10);
         MODULE_FINDERS.forEach(finder -> otherModules.addAll(finder.recordModules(coreScope, analysedRecord)));
         if (!otherModules.isEmpty()) {
             final BeanScopeBuilder fullScopeBuilder = BeanScope.builder();
@@ -97,7 +98,7 @@ public final class BeanScopeFactory {
             .build();
 
 
-        final List<AvajeModule> otherModules = new ArrayList<>();
+        final List<AvajeModule> otherModules = new ArrayList<>(5);
         MODULE_FINDERS.forEach(finder -> otherModules.addAll(finder.interfaceModules(coreScope, analysedInterface)));
         if (!otherModules.isEmpty()) {
             final BeanScopeBuilder fullScopeBuilder = BeanScope.builder();
@@ -112,17 +113,17 @@ public final class BeanScopeFactory {
         }
     }
 
-    public static ScopeHolder loadComponentScope(final RecordComponentElement rce, final BeanScope globalScope, final AnalysedRecord analysedRecord) {
-        final PropertyConfigLoader propertyConfigLoader = new PropertyConfigLoader(analysedRecord.prism());
+    public static ScopeHolder loadComponentScope(final RecordComponentElement rce, final BeanScope recordScope, final AnalysedRecord analysedRecord) {
+        final PropertyConfigLoader propertyConfigLoader = recordScope.get(PropertyConfigLoader.class);
 
         final BeanScopeBuilder coreScopeBuilder = BeanScope.builder();
         coreScopeBuilder.configPlugin(propertyConfigLoader);
-        final BeanScope coreScope = coreScopeBuilder.parent(globalScope, true)
+        final BeanScope coreScope = coreScopeBuilder.parent(recordScope, true)
             .bean(RecordComponentElement.class, rce)
             .modules(new CorePerComponentModule(rce))
             .build();
 
-        final List<AvajeModule> otherModules = new ArrayList<>();
+        final List<AvajeModule> otherModules = new ArrayList<>(10);
         MODULE_FINDERS.forEach(finder -> otherModules.addAll(finder.componentModules(coreScope, analysedRecord.prism())));
         if (!otherModules.isEmpty()) {
             final BeanScopeBuilder fullScopeBuilder = BeanScope.builder();

@@ -72,22 +72,21 @@ public final class XmlElementsMapper {
     }
 
     public Optional<XmlElementsPrism> inferAnnotationMirror(final Element element) {
-        if (element instanceof TypeElement te) {
-            if (TypeName.get(te.asType()) instanceof ParameterizedTypeName ptn) {
-                Optional.of(inferMirror(ptn))
-                    .filter(Predicate.not(List::isEmpty))
-                    .map(annotationMirrors -> new MapBasedAnnotationMirror(XML_ELEMENTS, Map.of("value", annotationMirrors)))
-                    .map(XmlElementsPrism::getInstance);
-            }
-            return Optional.of(extractFromConcreteTypeElement(te))
+        return switch (element) {
+            case RecordComponentElement rce -> upCallingTree(rce.getAccessor())
+                .or(() -> XmlElementsPrism.getOptionalOn(element))
+                .or(() -> inferAnnotationMirror(rce.asType()));
+            case ExecutableElement exe -> upCallingTree(exe);
+            case TypeElement te when TypeName.get(te.asType()) instanceof ParameterizedTypeName ptn -> Optional.of(inferMirror(ptn))
                 .filter(Predicate.not(List::isEmpty))
                 .map(annotationMirrors -> new MapBasedAnnotationMirror(XML_ELEMENTS, Map.of("value", annotationMirrors)))
-                .map(XmlElementsPrism::getInstance);
-
-        } else if (element instanceof RecordComponentElement recordComponentElement) {
-            return this.inferAnnotationMirror(recordComponentElement.asType());
-        }
-        return Optional.empty();
+                .flatMap(XmlElementsPrism::getOptional);
+            case TypeElement te -> Optional.of(extractFromConcreteTypeElement(te))
+                .filter(Predicate.not(List::isEmpty))
+                .map(annotationMirrors -> new MapBasedAnnotationMirror(XML_ELEMENTS, Map.of("value", annotationMirrors)))
+                .flatMap(XmlElementsPrism::getOptional);
+            case null, default -> Optional.empty();
+        };
     }
 
     private List<AnnotationMirror> inferMirror(final TypeName typeName) {

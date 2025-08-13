@@ -75,7 +75,7 @@ public final class CoreSpecialisedComponentFactory {
     @BeanTypes(TypeConverterComponent.class)
     Optional<TypeConverterComponent> typeConverterComponent() {
         return Optional.of(component.typeName())
-                .flatMap(utilsProcessingContext::obtainConverter)
+                .flatMap(utilsProcessingContext::obtainConverters)
                 .map(lst -> new TypeConverterComponent(component, lst));
     }
 }

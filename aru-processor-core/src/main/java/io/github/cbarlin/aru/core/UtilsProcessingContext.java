@@ -60,7 +60,7 @@ public final class UtilsProcessingContext {
         return analysedTypes.get(typeElement);
     }
 
-    public Optional<List<AnalysedTypeConverter>> obtainConverter(final TypeName typeName) {
+    public Optional<List<AnalysedTypeConverter>> obtainConverters(final TypeName typeName) {
         return Optional.of(typeName)
                 .filter(analysedConverters::containsKey)
                 .map(analysedConverters::get)
