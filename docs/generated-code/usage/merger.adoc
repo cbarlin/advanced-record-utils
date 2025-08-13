@@ -1,0 +1,161 @@
+.Generated Utils subclasses
+[%collapsible]
+====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+            comments = "Related class claim: mergerStaticClass"
+    )
+    public static final class _MergerUtils {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+                comments = "Related class claim: mergerStaticClass"
+        )
+        private _MergerUtils() {
+            throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+        }
+
+        /**
+         * Merge two instances of {@link Person} together
+         *
+         * @param preferred The preferred element
+         * @param other The non-preferred element
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.MergeMethod"},
+                comments = "Related class claim: mergeStaticMergeMethod"
+        )
+        public static Person merge(@Nullable final Person preferred, @Nullable final Person other) {
+            if (Objects.isNull(other))  {
+                // "Short-circuit of merge - other is null"
+                return preferred;
+            } else if (Objects.isNull(preferred)) {
+                // "Short-circuit of merge - preferred is null"
+                return other;
+            }
+            // "Merging two instances together"
+            return Builder.builder()
+                    .name(_MergerUtils.mergeString(preferred.name(), other.name()))
+                    .age(_MergerUtils.mergeInteger(preferred.age(), other.age()))
+                    .favouriteColours(_MergerUtils.mergeListString(preferred.favouriteColours(), other.favouriteColours()))
+                    .build();
+        }
+
+        /**
+         * Merger for fields of class {@link Integer}
+         *
+         * @param elA The preferred input
+         * @param elB The non-preferred input
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.Fallback"},
+                comments = "Related component claim: mergerAddFieldMergerMethod"
+        )
+        private static final Integer mergeInteger(@Nullable final Integer elA, @Nullable final Integer elB) {
+            if (Objects.isNull(elA)) {
+                return elB;
+            }
+            return elA;
+        }
+
+        /**
+         * Merger for fields of class {@link List<String>}
+         *
+         * @param elA The preferred input
+         * @param elB The non-preferred input
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.CollectionMerge"},
+                comments = "Related component claim: mergerAddFieldMergerMethod"
+        )
+        private static final List<String> mergeListString(@Nullable final List<String> elA, @Nullable final List<String> elB) {
+            if (Objects.isNull(elA) || elA.isEmpty()) {
+                return elB;
+            } else if (Objects.isNull(elB) || elB.isEmpty()) {
+                return elA;
+            }
+            final ArrayList<String> combined = new ArrayList();
+            combined.addAll(elA);
+            combined.addAll(elB);
+            return combined;
+        }
+
+        /**
+         * Merger for fields of class {@link String}
+         *
+         * @param elA The preferred input
+         * @param elB The non-preferred input
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.CharSequenceField"},
+                comments = "Related component claim: mergerAddFieldMergerMethod"
+        )
+        private static final String mergeString(@Nullable final String elA, @Nullable final String elB) {
+            return (Objects.nonNull(elA) && Objects.nonNull(elA.toString()) && (!elA.toString().isBlank())) ? elA : elB;
+        }
+    }
+
+    /**
+     * Interface for a record that can be merged with itself.
+     * <p>
+     * Intended merge process is that, for each field:
+     * <ol>
+     * <li>If both of the two instances have a null value, then the result is null</li>
+     * <li>If one of the two instances has a null value, then take the non-null value</li>
+     * <li>If both are non-null, and the field is itself can be merged, then merge the values using the other merger</li>
+     * <li>If both are non-null, and the field is a collection, then union the collections</li>
+     * <li>Otherwise, keep the value in this instance (instead of the one in the other instance)</li>
+     * </ol>
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+            comments = "Related class claim: mergerStaticClass"
+    )
+    interface Mergeable extends _MatchingInterface {
+        /**
+         * Merge the current instance into the other instance, if it is present
+         * @return The result of the merge
+         *
+         * @param other The element to merge into this one, if it is present
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.iface.MergeOptionalMethod"},
+                comments = "Related class claim: mergeInterfaceMergeOptionalMethod"
+        )
+        default Person merge(@NonNull final Optional<Person> other) {
+            Objects.requireNonNull(other, "You cannot supply a null Optional parameter");
+            return other.map(oth -> this.merge(oth)).orElse(this.merge((Person) null));
+        }
+
+        /**
+         * Merge the current instance into the other instance.
+         * @return The result of the merge
+         *
+         * @param other The element to merge into this one
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.iface.MergeMethod"},
+                comments = "Related class claim: mergeInterfaceMergeMethod"
+        )
+        default Person merge(@Nullable final Person other) {
+            final var optOther = Optional.ofNullable(other);
+            return Builder.builder()
+                    .name(_MergerUtils.mergeString(this.name(), optOther.map(Person::name).orElse(null)))
+                    .age(_MergerUtils.mergeInteger(this.age(), optOther.map(Person::age).orElse(null)))
+                    .favouriteColours(_MergerUtils.mergeListString(this.favouriteColours(), optOther.map(Person::favouriteColours).orElse(null)))
+                    .build();
+        }
+    }
+}
+----
+====

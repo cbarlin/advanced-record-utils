@@ -1,0 +1,96 @@
+= Importing items
+
+You can also import records and generate `+*Utils+` classes for them, or make use of their existing `+*Utils+` classes if they exist.
+
+[#use-imp-new-utils]
+== Importing records/interfaces to create new `+*Utils+` classes
+
+You can import records and interfaces in any place that you can place an `+@AdvancedRecordUtils+` annotation by using the `+importTargets+` setting. This can be used to create `+*Utils+` classes for records in a library, or in a different package to the one the record is defined in.
+
+CAUTION: This process will not cascade record/interface references. If you wish to import a tree of records, you will have to include all elements of the tree in your import.
+
+An example that's on a `+package-info.java+` (but you can use it on a record or an interface if you wish):
+
+.package-info.java
+[source,java]
+----
+@AdvancedRecordUtils(
+    importTargets = {
+        ExternalDependencyRecordA.class,
+        ExternalDependencyRecordB.class,
+        ExternalDependencyInterface.class
+    }
+)
+package org.example;
+
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+----
+
+This will generate `+*Utils+` classes for each of the requested items, using the settings of the item doing the importing, and places them in the same package as the place they were imported.
+
+WARNING: Importing the same record or interface twice in two different packages or with two different settings will result in unreproducible and unreliable builds as which location/settings are used isn't guaranteed.
+
+[#use-imp-existing-utils]
+== Importing existing utils classes
+
+Importing existing `+*Utils+` classes allows the following:
+
+* Use of a `+TypeConverter+` defined in that library and used by a `+*Utils+` class
+* Fluent methods when using the associated record in your records
+
+TIP: When importing trees of records, you only need to import the "root" of each tree. This is because the `+*Utils+` classes include a metadata annotation that the processor can read back in to recreate the tree. That includes `+*Utils+` classes that it imported too!
+
+NOTE: A `+*Utils+` class can be imported multiple times in multiple ways without any negative effects. It can also only be imported in one place and used everywhere - their context, like `+@TypeConverter+`, is global.
+
+There are a few ways to do this:
+
+. {empty}
++
+--
+You can place the `+@AdvancedRecordUtils.ImportLibraryUtils+` annotation on any of:
+
+* `+module-info.java+`
+* Any `+package-info.java+`
+* Any record, interface, or even normal class!
+
+When defined, you list in an array the classes of the `+*Utils+` implementations to be imported.
+
+An example:
+
+.module-info.java
+[source,java]
+----
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+
+@AdvancedRecordUtils.ImportLibraryUtils({TopLevelRecordUtils.class})
+module org.example {
+    requires io.github.cbarlin.aru.annotations;
+}
+----
+--
+. You can use the aforementioned `importTargets` and target the `+*Utils+` class instead of the record/interface.
+. {empty}
++
+--
+On a record that references the record/interface that has a `+*Utils+` class already generated, you can add the `+attemptToFindExistingUtils = true+` top level setting like so:
+
+.MyCurrentRecord.java
+[source,java]
+----
+@AdvancedRecordUtils(
+    attemptToFindExistingUtils = true
+)
+public record MyCurrentRecord(
+    MyRecordFromLibrary myRecordFromLibrary
+) {}
+----
+
+Note that this method is:
+
+* Slow; and
+* Will only detect the `+*Utils+` that is named using either:
+** The current settings; or
+** The default settings
+
+It's probably better to use either of the above methods instead
+--

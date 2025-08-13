@@ -1,0 +1,37 @@
+.`+@XmlAccessorOrder+`
+[%collapsible]
+====
+Defines the order in which the components are written.
+
+.Usage: Place on a record.
+[source,java]
+----
+@XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
+public record Person(
+    String name,
+    int age
+) {}
+----
+
+.Alternative Usage: Place on a package to apply to all records in the package.
+[source,java]
+----
+@XmlAccessorOrder(XmlAccessOrder.ALPHABETICAL)
+package org.example;
+----
+
+NOTE: If applied to both a record and a package, the setting on the record will apply.
+
+There are only two possible values:
+
+****
+* `+UNDEFINED+` (Default) - The ordering of fields and properties in a record is undefined.
+* `+ALPHABETICAL+` - The ordering of fields and properties in a class is in alphabetical order.
+****
+
+NOTE: When ordering alphabetically, we sort on the name of the _component_ not the name of the _element when serialised_, as per the documentation of the annotation. In addition, all attributes will be written before all elements (although this will control the order _within_ those categories).
+
+CAUTION: The processor currently treats `+UNDEFINED+` as the order in which the components are defined in the record. However, strictly speaking, the specification doesn't mandate this and therefore the order may be changed in a future major version.
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlaccessororder[Javadoc for XmlAccessorOrder^] for more details
+====

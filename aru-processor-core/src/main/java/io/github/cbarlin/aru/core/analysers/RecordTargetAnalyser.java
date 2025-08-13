@@ -4,6 +4,7 @@ import io.avaje.inject.Component;
 import io.avaje.inject.Priority;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
+import io.github.cbarlin.aru.core.ExecutableElementUtils;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.PreviousCompilationChecker;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
@@ -122,13 +123,26 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
                 }
             });
 
-        XmlElementsPrism.getOptionalOn(recordComponentElement.getAccessor())
+        upCallingTree(recordComponentElement.getAccessor())
             .ifPresent(prism -> {
                 for (final XmlElementPrism value : prism.value()) {
                     final TypeName tn = TypeName.get(value.type());
                     checkAndAddToPotentialTargets(tn, packageName, references, attemptToFindLibrary);
                 }
             });
+    }
+
+    private Optional<XmlElementsPrism> upCallingTree(final ExecutableElement executableElement) {
+
+        return XmlElementsPrism.getOptionalOn(executableElement)
+            .or(
+                () -> ExecutableElementUtils.obtainOverrideTree(executableElement)
+                    .stream()
+                    .map(XmlElementsPrism::getOptionalOn)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .findFirst()
+            );
     }
 
     private TypeElement intendedType(final TypeElement targetElement, final AdvRecUtilsSettings settings) {

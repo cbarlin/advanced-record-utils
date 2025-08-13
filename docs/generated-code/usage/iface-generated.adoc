@@ -1,0 +1,588 @@
+.Generated `+*Utils+` classes for the interface
+[%collapsible]
+====
+//
+.SomeInterfaceUtils
+[source,java]
+----
+
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.annotations.Generated;
+import io.github.cbarlin.aru.annotations.GeneratedUtil;
+import org.jspecify.annotations.NullMarked;
+
+/**
+ * The Utils class for an interface. Serves mostly to point to concrete implementationsAn auto-generated utility class to work with {@link SomeInterface} objects
+ * <p>
+ * This includes a builder, as well as other generated utilities based on the values provided to the {@link AdvancedRecordUtils} annotation
+ * <p>
+ * For more details, see the GitHub page for cbarlin/advanced-record-utils
+ */
+@NullMarked
+@Generated("io.github.cbarlin.aru.core.AdvRecUtilsProcessor")
+@AdvancedRecordUtilsGenerated(
+        generatedFor = SomeInterface.class,
+        version = @AdvancedRecordUtilsGenerated.Version(
+                major = 0,
+                minor = 6,
+                patch = 0
+        ),
+        settings = @AdvancedRecordUtils(
+                builderOptions = @AdvancedRecordUtils.BuilderOptions(copyCreationName = "from", builtCollectionType = AdvancedRecordUtils.BuiltCollectionType.AUTO),
+                attemptToFindExistingUtils = true
+        ),
+        internalUtils = {
+
+        },
+        references = {
+            MyRecordFOptionAUtils.class,
+            MyRecordFOptionBUtils.class
+        },
+        usedTypeConverters = {
+
+        }
+)
+public final class SomeInterfaceUtils implements GeneratedUtil {
+    /**
+     * Obtain the builder for {@link MyRecordFOptionA}
+     */
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.IfaceAddBuilderEmpty"},
+            comments = "Related class claim: builderEmpty"
+    )
+    public static final MyRecordFOptionAUtils.Builder builderAsMyRecordFOptionA() {
+        return MyRecordFOptionAUtils.Builder.builder();
+    }
+
+    /**
+     * Obtain the builder for {@link MyRecordFOptionB}
+     */
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.IfaceAddBuilderEmpty"},
+            comments = "Related class claim: builderEmpty"
+    )
+    public static final MyRecordFOptionBUtils.Builder builderAsMyRecordFOptionB() {
+        return MyRecordFOptionBUtils.Builder.builder();
+    }
+
+    /**
+     * Obtain the builder for {@link MyRecordFOptionA}
+     *
+     * @param existing The instance to copy
+     */
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.IfaceAddBuilderCopy"},
+            comments = "Related class claim: builderCopy"
+    )
+    public static final MyRecordFOptionAUtils.Builder fromAsMyRecordFOptionA(final MyRecordFOptionA existing) {
+        return MyRecordFOptionAUtils.Builder.from(existing);
+    }
+
+    /**
+     * Obtain the builder for {@link MyRecordFOptionB}
+     *
+     * @param existing The instance to copy
+     */
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.IfaceAddBuilderCopy"},
+            comments = "Related class claim: builderCopy"
+    )
+    public static final MyRecordFOptionBUtils.Builder fromAsMyRecordFOptionB(final MyRecordFOptionB existing) {
+        return MyRecordFOptionBUtils.Builder.from(existing);
+    }
+}
+----
+//
+//
+.MyRecordGUtils
+[source,java]
+----
+
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.annotations.Generated;
+import io.github.cbarlin.aru.annotations.GeneratedUtil;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * An auto-generated utility class to work with {@link MyRecordG} objects
+ * <p>
+ * This includes a builder, as well as other generated utilities based on the values provided to the {@link AdvancedRecordUtils} annotation
+ * <p>
+ * For more details, see the GitHub page for cbarlin/advanced-record-utils
+ */
+@Generated("io.github.cbarlin.aru.core.AdvRecUtilsProcessor")
+@AdvancedRecordUtilsGenerated(
+        generatedFor = MyRecordG.class,
+        version = @AdvancedRecordUtilsGenerated.Version(
+                major = 0,
+                minor = 6,
+                patch = 0
+        ),
+        settings = @AdvancedRecordUtils(
+                builderOptions = @AdvancedRecordUtils.BuilderOptions(copyCreationName = "from", builtCollectionType = AdvancedRecordUtils.BuiltCollectionType.AUTO),
+                attemptToFindExistingUtils = true
+        ),
+        internalUtils = {
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "All", implementation = MyRecordGUtils.All.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "Builder", implementation = MyRecordGUtils.Builder.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "With", implementation = MyRecordGUtils.With.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "_MatchingInterface", implementation = MyRecordGUtils._MatchingInterface.class)
+        },
+        references = {
+            MyRecordFOptionAUtils.class,
+            MyRecordFOptionBUtils.class,
+            SomeInterfaceUtils.class
+        },
+        usedTypeConverters = {
+
+        }
+)
+public final class MyRecordGUtils implements GeneratedUtil {
+    /**
+     * Create a blank builder of {@link MyRecordG}
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+            comments = "Related class claim: builderEmpty"
+    )
+    public static final Builder builder() {
+        return Builder.builder();
+    }
+
+    /**
+     * Creates a new builder of {@link MyRecordG} by copying an existing instance
+     *
+     * @param original The existing instance to copy
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+            comments = "Related class claim: builderCopy"
+    )
+    public static final Builder from(final MyRecordG original) {
+        return Builder.from(original);
+    }
+
+    /**
+     * A class used for building {@link MyRecordG} objects
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.BuilderClassCreatorVisitor"},
+            comments = "Related class claim: builder"
+    )
+    public static final class Builder {
+        @Nullable
+        private SomeInterface anInterface;
+
+        @NonNull
+        private ArrayList<SomeInterface> listOfInterface = new ArrayList<SomeInterface>();
+
+        /**
+         * Create a blank builder of {@link MyRecordG}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+                comments = "Related class claim: builderEmpty"
+        )
+        public static final Builder builder() {
+            return new Builder();
+        }
+
+        /**
+         * Creates a new builder of {@link MyRecordG} by copying an existing instance
+         *
+         * @param original The existing instance to copy
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+                comments = "Related class claim: builderCopy"
+        )
+        public static final Builder from(final MyRecordG original) {
+            Objects.requireNonNull(original, "Cannot copy a null instance");
+            // "Copying an existing instance"
+            return Builder.builder()
+                    .anInterface(original.anInterface())
+                    .listOfInterface(original.listOfInterface());
+        }
+
+        /**
+         * Add a singular {@link SomeInterface} to the collection for the field {@code listOfInterface}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param listOfInterface A singular instance to be added to the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAdder"},
+                comments = "Related component claim: builderAdd"
+        )
+        public Builder addListOfInterface(@Nullable final SomeInterface listOfInterface) {
+            this.listOfInterface.add(listOfInterface);
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided collection to {@code listOfInterface}
+         *
+         * @param listOfInterface A collection to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addListOfInterface(@NonNull final Collection<SomeInterface> listOfInterface) {
+            if (Objects.nonNull(listOfInterface)) {
+                this.listOfInterface.addAll(listOfInterface);
+            }
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided iterable to {@code listOfInterface}
+         *
+         * @param listOfInterface An iterable to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addListOfInterface(@NonNull final Iterable<SomeInterface> listOfInterface) {
+            if (Objects.nonNull(listOfInterface)) {
+                for (final SomeInterface __addable : listOfInterface) {
+                    this.addListOfInterface(__addable);
+                }
+            }
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided iterator to {@code listOfInterface}
+         *
+         * @param listOfInterface An iterator to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addListOfInterface(@NonNull final Iterator<SomeInterface> listOfInterface) {
+            if (Objects.nonNull(listOfInterface)) {
+                while(listOfInterface.hasNext()) {
+                    this.addListOfInterface(listOfInterface.next());
+                }
+            }
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided spliterator to {@code listOfInterface}
+         *
+         * @param listOfInterface A spliterator to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addListOfInterface(@NonNull final Spliterator<SomeInterface> listOfInterface) {
+            if (Objects.nonNull(listOfInterface)) {
+                listOfInterface.forEachRemaining(this::addListOfInterface);
+            }
+            return this;
+        }
+
+        /**
+         * Uses a supplied builder to build an instance of {@link MyRecordFOptionA} and add to the value of {@link addListOfInterface}
+         *
+         * @param subBuilder Builder used to invoke {@code addListOfInterface}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddFluentAdderFromInterface"},
+                comments = "Related component claim: builderFluentSetter"
+        )
+        public Builder addListOfInterfaceToMyRecordFOptionA(@NonNull final Consumer<MyRecordFOptionAUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final MyRecordFOptionAUtils.Builder builder = MyRecordFOptionAUtils.Builder.builder();
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.addListOfInterface(builder.build());
+        }
+
+        /**
+         * Uses a supplied builder to build an instance of {@link MyRecordFOptionB} and add to the value of {@link addListOfInterface}
+         *
+         * @param subBuilder Builder used to invoke {@code addListOfInterface}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddFluentAdderFromInterface"},
+                comments = "Related component claim: builderFluentSetter"
+        )
+        public Builder addListOfInterfaceToMyRecordFOptionB(@NonNull final Consumer<MyRecordFOptionBUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final MyRecordFOptionBUtils.Builder builder = MyRecordFOptionBUtils.Builder.builder();
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.addListOfInterface(builder.build());
+        }
+
+        /**
+         * Returns the current value of {@code anInterface}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public SomeInterface anInterface() {
+            return this.anInterface;
+        }
+
+        /**
+         * Updates the value of {@code anInterface}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param anInterface The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder anInterface(@Nullable final SomeInterface anInterface) {
+            this.anInterface = anInterface;
+            return this;
+        }
+
+        /**
+         * Uses a supplied builder to build an instance of {@link MyRecordFOptionA} and replace the value of {@link anInterface}
+         *
+         * @param subBuilder Builder that can be used to replace {@code anInterface}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.AddFluentSetterFromInterface"},
+                comments = "Related component claim: builderFluentSetter"
+        )
+        public Builder anInterfaceAsMyRecordFOptionA(@NonNull final Consumer<MyRecordFOptionAUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final MyRecordFOptionAUtils.Builder builder;
+            if (Objects.nonNull(this.anInterface()) && this.anInterface() instanceof MyRecordFOptionA oth) {
+                builder = MyRecordFOptionAUtils.Builder.from(oth);
+            } else {
+                builder = MyRecordFOptionAUtils.Builder.builder();
+            }
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.anInterface(builder.build());
+        }
+
+        /**
+         * Uses a supplied builder to build an instance of {@link MyRecordFOptionB} and replace the value of {@link anInterface}
+         *
+         * @param subBuilder Builder that can be used to replace {@code anInterface}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.AddFluentSetterFromInterface"},
+                comments = "Related component claim: builderFluentSetter"
+        )
+        public Builder anInterfaceAsMyRecordFOptionB(@NonNull final Consumer<MyRecordFOptionBUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final MyRecordFOptionBUtils.Builder builder;
+            if (Objects.nonNull(this.anInterface()) && this.anInterface() instanceof MyRecordFOptionB oth) {
+                builder = MyRecordFOptionBUtils.Builder.from(oth);
+            } else {
+                builder = MyRecordFOptionBUtils.Builder.builder();
+            }
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.anInterface(builder.build());
+        }
+
+        /**
+         * Creates a new instance of {@link MyRecordG} from the fields set on this builder
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddPlainBuild"},
+                comments = "Related class claim: builderBuild"
+        )
+        public MyRecordG build() {
+            // "Creating new instance"
+            return new MyRecordG(
+                    this.anInterface(),
+                    	this.listOfInterface()
+                    );
+        }
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public List<SomeInterface> listOfInterface() {
+            return this.listOfInterface;
+        }
+
+        /**
+         * Updates the value of {@code listOfInterface}
+         * <p>
+         * Supplying a null value will set the current value to null/empty
+         *
+         * @param listOfInterface The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder listOfInterface(@Nullable final List<SomeInterface> listOfInterface) {
+            this.listOfInterface.clear();
+            if (Objects.nonNull(listOfInterface)) {
+                this.listOfInterface.addAll(listOfInterface);
+            }
+            return this;
+        }
+    }
+
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.AllInterfaceGenerator"},
+            comments = "Related class claim: allIface"
+    )
+    public interface All extends With {
+    }
+
+    /**
+     * An interface that provides the ability to create new instances of a record with modifications
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WitherPrismInterfaceFactory"},
+            comments = "Related class claim: wither"
+    )
+    interface With extends _MatchingInterface {
+        /**
+         * Creates a builder with the current fields
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BackToBuilder"},
+                comments = "Related class claim: witherToBuilder"
+        )
+        default Builder with() {
+            return Builder.builder()
+                    .anInterface(this.anInterface())
+                    .listOfInterface(this.listOfInterface());
+        }
+
+        /**
+         * Allows creation of a copy of this instance with some tweaks via a builder
+         *
+         * @param subBuilder A function to modify a new copy of the object
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BuilderFluent"},
+                comments = "Related class claim: witherFluentBuilder"
+        )
+        default MyRecordG with(@NonNull final Consumer<Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final Builder ___builder = this.with();
+            subBuilder.accept(___builder);
+            return ___builder.build();
+        }
+
+        /**
+         * Return a new instance with a different {@code listOfInterface} field
+         *
+         * @param listOfInterface Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithAdd"},
+                comments = "Related component claim: witherWithAdd"
+        )
+        default MyRecordG withAddListOfInterface(final List<SomeInterface> listOfInterface) {
+            return this.with()
+                    .addListOfInterface(listOfInterface)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code anInterface} field
+         *
+         * @param anInterface Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default MyRecordG withAnInterface(final SomeInterface anInterface) {
+            return this.with()
+                    .anInterface(anInterface)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code listOfInterface} field
+         *
+         * @param listOfInterface Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default MyRecordG withListOfInterface(final List<SomeInterface> listOfInterface) {
+            return this.with()
+                    .listOfInterface(listOfInterface)
+                    .build();
+        }
+    }
+
+    @NullUnmarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceFactory"},
+            comments = "Related component claim: internalMatchingIface"
+    )
+    interface _MatchingInterface {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        SomeInterface anInterface();
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        List<SomeInterface> listOfInterface();
+    }
+}
+
+----
+//
+====

@@ -1,0 +1,34 @@
+****
+
+.Generated annotation for record `+*Utils+` classes
+[%collapsible]
+=====
+[source,java]
+----
+@Json.Import({RootItem.class})
+public final class RootItemUtils implements GeneratedUtil {
+
+}
+----
+=====
+
+.Generated annotation for interface `+*Utils+` classes
+[%collapsible]
+=====
+[source,java]
+----
+@Json.Import(
+        value = {MyInterface.class},
+        subtypes = {
+        	@Json.SubType(type = MyImplA.class),
+        	@Json.SubType(type = MyImplB.class),
+        	@Json.SubType(type = MyImplC.class),
+        }
+)
+public final class MyInterfaceUtils implements GeneratedUtil {
+
+}
+----
+=====
+
+****

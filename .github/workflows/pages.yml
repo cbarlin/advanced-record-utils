@@ -1,0 +1,20 @@
+name: GitHub Pages Publish
+on:
+  push:
+    branches:
+      - main
+      # TODO: Remove me once the PR that adds docs is merged
+      - cbarlin/issue17
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: asciidoctor-ghpages
+        uses: manoelcampos/asciidoctor-ghpages-action@60643a4db90d0da4647f891dfd460e1d38a4c02b
+        with:
+          asciidoctor_params: --attribute=nofooter
+          source_dir: docs/
+          post_build: |
+            rm -rf ./usage ./options ./generated-code

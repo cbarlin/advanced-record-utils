@@ -1,0 +1,35 @@
+****
+
+.Generated code
+[%collapsible]
+=====
+
+This is using the Eclipse Collection `+ImmutableList+`, but will work with any Java `+Collection+` type.
+
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void someItemsAsElements(@NonNull final XMLStreamWriter output, @Nullable final ImmutableList<String> val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            if (Objects.nonNull(val)) {
+                if (!val.isEmpty()) {
+                    output.writeStartElement("SomeElementStrings");
+                    for (final CharSequence __innerValue : val) {
+                        if(Objects.isNull(__innerValue)) {
+                            continue;
+                        }
+                        output.writeStartElement("SomeElementString");
+                        output.writeCharacters(__innerValue.toString());
+                        output.writeEndElement();
+                    }
+                    output.writeEndElement();
+                }
+            }
+        }
+    }
+}
+----
+=====
+
+****

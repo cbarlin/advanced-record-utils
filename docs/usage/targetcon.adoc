@@ -1,0 +1,57 @@
+= Target Constructor
+
+In a record with a non-canonical constructor that is a subset of the canonical one, the processor will generate the "Builder", "With", and "Merger" against that constructor instead of the canonical one.
+
+Take the following example:
+
+.SomeRecord.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record SomeRecord (
+    String a,
+    String b,
+    String c,
+    String ab
+) {
+    public SomeRecord (String a, String b, String c) {
+        this(a, b, c, "Mist");
+    }
+}
+----
+
+You then are not able to do:
+
+WARNING: With this example, the below code block will not compile.
+
+.Broken method body
+[source,java]
+----
+SomeRecordUtils.builder()
+    .ab("Inaba"); // Compile error - the method does not exist!
+----
+
+If you have multiple subset constructors to choose from, you can annotate the one you want the processor to use:
+
+.SomeRecord.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record SomeRecord (
+    String a,
+    String b,
+    String c,
+    String ab
+) {
+    @AdvancedRecordUtils.TargetConstructor
+    public SomeRecord (String a, String b, String c) {
+        this(a, b, c, "I Mist");
+    }
+
+    public SomeRecord (String a, String b) {
+        this(a, b, "I tried to catch fog yesterday.", "I Mist");
+    }
+}
+----
+
+CAUTION: If you have multiple subset constructors and do not annotate one, the processor will use the canonical one. You must be explicit.

@@ -1,0 +1,371 @@
+= XML
+
+The XML utility allows you to serialise a record to XML. At the moment, only serialisation is supported.
+
+IMPORTANT: Using this utility requires you to have `+jakarta.xml.bind-api+` on the classpath as you will need to use the annotations from that library to control the output. It also requires the JDK provided XML StAX utilities (no dependency), which are part of the `java.xml` module.
+
+To enable the generation of an `+XML+` interface, enable the `+xmlable+` setting and mark your record fields with the required annotations. To use, implement the `+All+` (or `+XML+`) interface like so:
+
+.Person.java
+[source,java]
+----
+@AdvancedRecordUtils(xmlable = true)
+public record Person(
+    @XmlElement(name = "Name")
+    String name,
+    @XmlAttribute(name = "Age")
+    int age,
+    @XmlTransient
+    List<String> favouriteColours
+) implements PersonUtils.All {
+}
+----
+
+CAUTION: The default behaviour of requires you to specify an annotation. If you do not specify one, the processor will fail compilation and tell you to specify one. If you wish to exclude a component, use `+@XmlTransient+` (or either Jackson's or Avaje Jsonb's ignore annotation).
+
+TIP: One of the settings (<<options-aru-xml-infername,inferXmlElementName>>) gives you the option to have the `+XmlElement+` annotation "inferred" for you so you don't have to annotate those fields.
+
+The processor will automatically handle `+Optional+` (including `+OptionalInt+`, `+OptionalDouble+`, and `+OptionalLong+`) as well as `+Collection+` items (like `+List+` and `+Set+`), and will treat empty the same as `+null+` values.
+
+The processor also handles interfaces, assuming it knows the implementing records.
+
+include::../generated-code/usage/xml.adoc[]
+
+And then you can convert an instance into XML:
+
+.Sample method body
+[source,java]
+----
+// You will need to handle the XMLStreamException that can be thrown in this example
+final XMLStreamWriter streamWriter = createXmlWriter();
+streamWriter.writeStartDocument();
+// personA from earlier example
+personA.writeSelfTo(streamWriter);
+streamWriter.writeEndDocument();
+----
+
+There are multiple `+writeSelfTo+` methods generated:
+
+****
+* One that takes just the output
+* One that takes the output and an override for the tag name
+* One that takes the output, an override for the tag name, and an override for the namespace
+* One that takes the output, and overrides for the tag name, the namespace, and the current default namespace
+****
+
+The defaults are based on available annotations (such as `+XmlType+`) if they are present, before finally defaulting to the name of the record (in this case, `+Person+`).
+
+The order in which components are written is:
+
+****
+. All `+@XmlAttribute+` components that appear in the `+propOrder+` (see below `+@XmlType+`)
+. All other `+@XmlAttribute+` components as per the `+@XmlAccessorOrder+` (see below)
+. All `+@XmlElement+` components that appear in the `+propOrder+`
+. All other `+@XmlElement+` components as per the `+@XmlAccessorOrder+`
+****
+
+[#use-xml-supported-annotations]
+We support the following annotations:
+
+[#use-xml-supported-annotations-component]
+== Component annotations
+
+.`+@XmlElement+`
+[%collapsible]
+====
+Indicates that a component of a record should be turned into an XML Element.
+
+TIP: There is a setting that allows the processor to pretend that un-annotated components in records are annotated with `+@XmlElement+`. See <<options-aru-xml-infername,inferXmlElementName>> for details.
+
+.Usage: Place on a component of a record.
+[source,java]
+----
+public record Person(
+    @XmlElement
+    String name
+) {}
+----
+
+.Alternate Usage: Place on a accessor method defined on an interface.
+[source,java]
+----
+public interface PersonIface {
+    @XmlElement
+    String name();
+}
+
+public record Person(
+    String name
+) implements PersonIface {}
+----
+
+We support the following fields:
+
+* `+name+` - the name of the written element
+* `+namespace+` - the namespace of the written element
+* `+defaultValue+` - the default value to be written into the element if none is defined
+* `+required+` - indicates that the field is required, and throw an exception if it's not defined
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlelement[Javadoc for XmlElement^] for more details
+
+include::../generated-code/usage/xml-element.adoc[]
+
+====
+
+.`+@XmlAttribute+`
+[%collapsible]
+====
+Indicates that a component of a record should be turned into an XML Attribute.
+
+.Usage: Place on a component of a record.
+[source,java]
+----
+public record Person(
+    @XmlAttribute
+    String name
+) {}
+----
+
+.Alternate Usage: Place on a accessor method defined on an interface.
+[source,java]
+----
+public interface PersonIface {
+    @XmlAttribute
+    String name();
+}
+
+public record Person(
+    String name
+) implements PersonIface {}
+----
+
+We support the following options:
+
+* `+name+` - the name of the written attribute
+* `+namespace+` - the namespace of the written attribute
+* `+required+` - indicates that the field is required, and throw an exception if it's not defined
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlattribute[Javadoc for XmlAttribute^] for more details
+
+include::../generated-code/usage/xml-attribute.adoc[]
+
+====
+
+.`+@XmlTransient+`
+[%collapsible]
+====
+Indicates that a component of a record should be skipped when converting to XML.
+
+TIP: You can also use Jackson or Avaje JsonB annotations ignore annotations - the processor will "infer" that the component is annotated with `+@XmlTransient+`
+
+.Usage: Place on a component of a record.
+[source,java]
+----
+public record Person(
+    @XmlTransient
+    String name
+) {}
+----
+
+.Alternate Usage: Place on a accessor method defined on an interface.
+[source,java]
+----
+public interface PersonIface {
+    @XmlTransient
+    String name();
+}
+
+public record Person(
+    String name
+) implements PersonIface {}
+----
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmltransient[Javadoc for XmlTransient^] for more details
+====
+
+.`+@XmlElements+`
+[%collapsible]
+====
+Indicates that a component of a record that points at an interface should be turned into different elements based on the implementing type.
+
+.Usage: Place on a component of a record.
+[source,java]
+----
+public record MyRecord(
+    @XmlElements({
+        @XmlElement(type = ImplementationOne.class, name = "ImplementationA"),
+        @XmlElement(type = ImplementationTwo.class),
+    })
+    SomeInterface someInterface
+) {}
+----
+
+.Alternate Usage: Place on a accessor method defined on an interface.
+[source,java]
+----
+public interface AnIface {
+    @XmlElements({
+        @XmlElement(type = ImplementationOne.class, name = "ImplementationA"),
+        @XmlElement(type = ImplementationTwo.class),
+    })
+    SomeInterface someInterface();
+}
+
+public record MyRecord(
+    SomeInterface someInterface
+) implements AnIface {}
+----
+
+We support the following fields:
+
+* `+name+` - the name of the written element
+* `+namespace+` - the namespace of the written element
+* `+type+` - the target type of the interface
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlelements[Javadoc for XmlElements^] for more details
+
+include::../generated-code/usage/xml-elements.adoc[]
+
+====
+
+TIP: `+@XmlElements+` is inferred if there are other ways in which the processor can find implementing records. When doing this, the processor uses the calculated defaults for the name and namespace of the element.
+
+.`+@XmlElementWrapper+`
+[%collapsible]
+====
+Indicates that a collection component of a record that is annotated with either `+@XmlElement+` or `+@XmlElements+` (or if they are inferred) should be wrapped in another element when converting to XML.
+
+.Usage: Place on a collection component of a record.
+[source,java]
+----
+public record Address(
+    @XmlElementWrapper(name = "Components")
+    @XmlElement(name = "Component")
+    List<String> component
+) {}
+----
+
+.Alternate Usage: Place on a accessor method defined on an interface.
+[source,java]
+----
+public interface AddressIface {
+    @XmlElementWrapper(name = "Components")
+    @XmlElement(name = "Component")
+    List<String> component();
+}
+
+public record Address(
+    List<String> component
+) implements AddressIface {}
+----
+
+We support the following options:
+
+* `+name+` - the name of the written wrapper
+* `+namespace+` - the namespace of the written wrapper
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlelementwrapper[Javadoc for XmlElementWrapper^] for more details
+
+include::../generated-code/usage/xml-element-wrapper.adoc[]
+
+====
+
+[#use-xml-supported-annotations-iface]
+== Interface annotations
+
+.`+@XmlSeeAlso+`
+[%collapsible]
+====
+Lists the implementing records of an interface
+
+.Usage: Place on an interface.
+[source,java]
+----
+@XmlSeeAlso({ImplementationOne.class, ImplementationTwo.class})
+public interface MyInterface {}
+----
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlseealso[Javadoc for XmlSeeAlso^] for more details
+====
+
+[#use-xml-supported-annotations-record]
+== Record annotations
+
+[#use-xml-supported-annotations-xmltype]
+.`+@XmlType+`
+[%collapsible]
+====
+Defines options for the serialisation of a record.
+
+.Usage: Place on a record.
+[source,java]
+----
+@XmlType
+public record Person(
+    String name
+) {}
+----
+
+We support the following fields:
+
+* `+name+` - the default name for the record when being serialised
+* `+namespace+` - the default namespace for the record when being serialised
+* `+propOrder+` - the names of components of the record, in the order in which they should be written
+
+NOTE: The `+propOrder+` must match the name of the _component_ not the name of the _element when serialised_, as per the documentation of the annotation. In addition, all attributes will be written before all elements (although this will control the order _within_ those categories)
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmltype[Javadoc for XmlType^] for more details
+====
+
+.`+@XmlRootElement+`
+[%collapsible]
+====
+Defines options for the serialisation of the root of a tree of records
+
+.Usage: Place on a record.
+[source,java]
+----
+@XmlRootElement
+public record Person(
+    String name
+) {}
+----
+
+We support the following fields:
+
+* `+name+` - the default name for the record when being serialised
+* `+namespace+` - the default namespace for the record when being serialised and all child elements.
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlrootelement[Javadoc for XmlRootElement^] for more details
+====
+
+IMPORTANT: The settings `+@XmlType+` take priority over the `+@XmlRootElement+`. However, the `+@XmlRootElement+` determines where to set the information from `+@XmlSchema+` (if applicable)
+
+include::xml-accessor-order.adoc[]
+
+[#use-xml-supported-annotations-package]
+== Package annotations
+
+.`+@XmlSchema+`
+[%collapsible]
+====
+Defines information about the schemas for all records in the package
+
+.Usage: Place on a package.
+[source,java]
+----
+@XmlSchema
+package org.example;
+----
+
+We support the following fields:
+
+* `+namespace+` - sets the default namespace for the records in the package
+* `+xmlns+` - sets the namespace URI prefixes for the package
+
+NOTE: The settings from the `+@XmlSchema+` annotation are applied when processing records with `+@XmlRootElement+` annotations
+
+See the https://jakarta.ee/specifications/xml-binding/4.0/apidocs/jakarta.xml.bind/jakarta/xml/bind/annotation/xmlschema[Javadoc for XmlSchema^] for more details
+====
+
+include::xml-accessor-order.adoc[]

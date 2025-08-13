@@ -1,0 +1,59 @@
+= Advanced Record Utils - User Guide
+cbarlin
+:toc: left
+:toclevels: 3
+:toc-title: Contents
+:source-highlighter: rouge
+:icons: font
+:numbered:
+
+Advanced Record Utils is an annotation-processor based source code generator that creates a companion `+*Utils+` class (e.g., `+PersonUtils+` for a `+Person+` record) that contains:
+
+* A "Builder" for the record
+* A "With"er interface
+* A "Merger" utility and interface
+* An "XML" utility and interface for serialisation to XML
+* A "Diff" interface and result class
+* An "All" interface that bundles all the other interfaces together
+
+It works recursively through a structure to create a "tree" of records, can import all records/interfaces in a package, or import specific records/interfaces from libraries or previously compiled modules.
+
+////
+
+Style guide
+
+Language should generally use a formal (though not "stuffy") tone. It should use British English (en-GB), and serial/Oxford comma unless it would introduce ambiguity.
+
+Please stick to the intended use of warning and caution:
+
+* Use CAUTION to advise the reader to act carefully (i.e., exercise care).
+* Use WARNING to inform the reader of danger, harm, or consequences that exist.
+
+We should also:
+
+* refer to the generated top-level classes as `+*Utils+` classes
+* be funny in small doses - nobody like reading dry documentation and nobody wants comedy when looking for information (thanks Jdbi for the wording of this!)
+* ensure external links should use a caret at the end of the link title e.g. link:path/to/doc[the title^] so they open in separate tabs
+* ensure code blocks have a lead-in title like ".Method body" or ".MyRecordA.java", unless it is generated code inside a collapsible
+* keep titles as sentence case unless we are talking about:
+** a class, in which case use class naming conventions (e.g. "Type Converter")
+** an external project, in which case we follow their branding (e.g. "Reproducible Builds")
+* be inclusive: prefer neutral language and keep usage of male and female names equal in code examples.
+
+Other rules:
+
+* Defining multiple classes/records in one code block should be avoided.
+* There is no limit to line length.
+* Items in a list only need a full stop only if all items in the list are complete sentences. A full stop is used only on the last list item:
+** if all list items could be separated by commas and/or semicolons; or
+** if each list item makes a complete, independent sentence with the list's lead-in.
+
+////
+
+include::how-to-read.adoc[leveloffset=+1]
+
+include::get-started.adoc[leveloffset=+1]
+
+include::usage/index.adoc[leveloffset=+1]
+
+include::options/index.adoc[leveloffset=+1]

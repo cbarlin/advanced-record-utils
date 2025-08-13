@@ -1,0 +1,113 @@
+= Wither options
+
+These control the names of and in the generated `+With+` interface. These are applied to the `+witherOptions = @WitherOptions()+` sub setting like so:
+
+.Placement example
+[source,java]
+----
+@AdvancedRecordUtils(
+    witherOptions = @WitherOptions(
+        // Options go here
+    )
+)
+public record Person(String name, int age) {}
+----
+
+.`+witherName+`
+[%collapsible]
+====
+Sets the name of the `+With+` interface.
+
+*Type*:: `+String+`
+*Default*:: `+"With"+`
+
+.Usage: Changing the name of the interface
+[source,java]
+----
+@AdvancedRecordUtils(
+    witherOptions = @WitherOptions(
+        witherName = "Having"
+    )
+)
+public record Person(String name, int age)
+implements PersonUtils.Having {}
+----
+====
+
+.`+convertToBuilder+`
+[%collapsible]
+====
+Sets the name of the method that converts an instance of the record back into the builder.
+
+*Type*:: `+String+`
+*Default*:: `+"with"+`
+
+.Usage: Changing the name of method
+[source,java]
+----
+@AdvancedRecordUtils(
+    witherOptions = @WitherOptions(
+        convertToBuilder = "toBuilder"
+    )
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, the generated method is callable like so
+
+.Sample method body
+[source,java]
+----
+PersonUtils.Builder personFactory = person.toBuilder();
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.Builder personBuilder = person.with();
+----
+====
+
+.`+withMethodPrefix+` / `+withMethodSuffix+`
+[%collapsible]
+====
+
+Set the prefix and suffix for the `+with+` methods.
+
+NOTE: These are combined with the name of the method on the _`+Builder+`_, which is based on the component name. This is because the `+With+` internally calls the `+Builder+` to perform the requested change.
+
+*Type*:: `+String+`
+*Default*:: `+"with"+` (prefix), `+""+` (suffix)
+
+.Usage: Changing the name of method
+[source,java]
+----
+@AdvancedRecordUtils(
+    witherOptions = @WitherOptions(
+        withMethodPrefix = "",
+        withMethodSuffix = "ButDifferent"
+    )
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, the generated method is callable like so
+
+.Sample method body
+[source,java]
+----
+Person personC = personA.nameButDifferent("Cloud");
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+Person personC = personA.withName("Cissnei");
+----
+====

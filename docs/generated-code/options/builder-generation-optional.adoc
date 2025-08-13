@@ -1,0 +1,41 @@
+****
+
+.Generated code within the "Builder" class when `+true+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+
+        public OptionalInt age() {
+            return Objects.requireNonNullElse(this.age, OptionalInt.empty());
+        }
+
+        public Builder age(final int age) {
+            return this.age(OptionalInt.of(age));
+        }
+
+        public Builder age(@Nullable final OptionalInt age) {
+            this.age = age;
+            return this;
+        }
+
+        public Optional<String> surname() {
+            return Objects.requireNonNullElse(this.surname, Optional.empty());
+        }
+
+        public Builder surname(@Nullable final String surname) {
+            return this.surname(Optional.ofNullable(surname));
+        }
+
+        public Builder surname(@Nullable final Optional<String> surname) {
+            this.surname = surname;
+            return this;
+        }
+    }
+}
+----
+=====
+
+****

@@ -77,7 +77,7 @@ public final class AddFluentAdderFromInterface extends CollectionRecordVisitor {
                     .build();
 
             final ClassName targetCN = ClassName.get(asTarget.typeElement());
-            final String methodName = addMethodName + myPrism.multiTypeAdderBridge() + targetCN.simpleName();
+            final String methodName = addCnToNameMethodName(targetCN);
 
             final MethodSpec.Builder methodBuilder = builder.createMethod(methodName, claimableOperation, asTarget.typeElement(), paramTypeName)
                 .addAnnotation(NON_NULL)

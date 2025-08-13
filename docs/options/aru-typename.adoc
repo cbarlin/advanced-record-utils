@@ -1,0 +1,37 @@
+= Top-level naming options
+
+These control the name of the top level `+*Utils+` class. These are applied to the `+typeNameOptions = @TypeNameOptions()+` sub setting like so:
+
+.Usage: Changing the top-level name
+[source,java]
+----
+@AdvancedRecordUtils(
+    typeNameOptions = @TypeNameOptions(
+        utilsImplementationPrefix = "UtilFor",
+        utilsImplementationSuffix = ""
+    )
+)
+public record Person(String name, int age) {}
+----
+
+There are only two options:
+
+.`+utilsImplementationSuffix+`
+[%collapsible]
+====
+A suffix to be applied to the record/interface name for the top-level class
+
+*Type*:: `+String+`
+*Default*:: `+"Utils"+`
+====
+
+.`+utilsImplementationPrefix+`
+[%collapsible]
+====
+A prefix to be applied to the record/interface name for the top-level class
+
+*Type*:: `+String+`
+*Default*:: `+""+` (empty string)
+====
+
+For the above settings, instead of generating a `+PersonUtils+` class, this will generate a `+UtilForPerson+` class.

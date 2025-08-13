@@ -47,7 +47,7 @@ public final class XmlElementsMapper {
     public Optional<XmlElementsPrism> optionalInstanceOn(final Element element) {
         if (element instanceof final RecordComponentElement rce) {
             return upCallingTree(rce.getAccessor()).or(() -> XmlElementsPrism.getOptionalOn(element));
-        } else if (element instanceof ExecutableElement exe) {
+        } else if (element instanceof final ExecutableElement exe) {
             return upCallingTree(exe);
         }
         return XmlElementsPrism.getOptionalOn(element);

@@ -1,0 +1,162 @@
+= XML Options
+
+These control the names and behaviour for generating the `+XML+` interface and related classes. These are applied to the `+mergerOptions = @MergerOptions()+` sub setting like so:
+
+.Placement example
+[source,java]
+----
+@AdvancedRecordUtils(
+    xmlOptions = @XmlOptions(
+        // Options go here
+    ),
+    xmlable = true
+)
+public record Person(
+    @XmlElement(name = "Name")
+    String name,
+    @XmlElement(name = "Age")
+    int age
+) {}
+----
+
+.`+xmlName+`
+[%collapsible]
+====
+Sets the name of the `+XML+` interface.
+
+*Type*:: `+String+`
+*Default*:: `+"XML"+`
+
+.Usage: Changing the name of the interface
+[source,java]
+----
+@AdvancedRecordUtils(
+    xmlOptions = @XmlOptions(
+        xmlName = "SerialXml"
+    ),
+    xmlable = true
+)
+public record Person(
+    @XmlElement(name = "Name")
+    String name,
+    @XmlElement(name = "Age")
+    int age
+)
+implements PersonUtils.SerialXml {}
+----
+====
+
+.`+continueAddingToXmlMethodName+`
+[%collapsible]
+====
+Sets the name of the method on the interface that writes the object to an `+XmlStreamWriter+`.
+
+*Type*:: `+String+`
+*Default*:: `+"writeSelfTo"+`
+
+.Usage: Changing the name of the method
+[source,java]
+----
+@AdvancedRecordUtils(
+    xmlOptions = @XmlOptions(
+        continueAddingToXmlMethodName = "out"
+    ),
+    xmlable = true
+)
+public record Person(
+    @XmlElement(name = "Name")
+    String name,
+    @XmlElement(name = "Age")
+    int age
+)
+implements PersonUtils.All {}
+----
+
+In the above example, the generated method is callable like so:
+
+.Sample method body
+[source,java]
+----
+// You will need to handle the XMLStreamException that can be thrown in this example
+personA.out(xmlStreamWriter);
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+// You will need to handle the XMLStreamException that can be thrown in this example
+personA.writeSelfTo(xmlStreamWriter);
+----
+====
+
+[#options-aru-xml-infername]
+.`+inferXmlElementName+`
+[%collapsible]
+====
+Determines if `+@XmlElement+` annotations should be inferred and, if so, how the inference is done.
+
+*Type*:: https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/AdvancedRecordUtils.NameGeneration.html[`+NameGeneration+`^]
+*Default*:: `+NameGeneration.NONE+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    xmlOptions = @XmlOptions(
+        inferXmlElementName = .AdvancedRecordUtilsNameGeneration.UPPER_FIRST_LETTER
+    ),
+    xmlable = true
+)
+public record Person(
+    String name,
+    int age
+)
+implements PersonUtils.All {}
+----
+
+The three values are:
+
+* `+NONE+` - do not infer an `+@XmlElement+` annotation
+* `+MATCH+` - if there are no other `+@Xml*+` annotations, infer an `+@XmlElement+` with a `+name+` value that matches the component name
+* `+UPPER_FIRST_LETTER+` - if there are no other `+@Xml*+` annotations, infer an `+@XmlElement+` with a `+name+` value that matches the component name with the first letter capitalised.
+
+CAUTION: The default behaviour of `+NONE+` requires you to specify an annotation. If you do not specify one, the processor will fail compilation and tell you to specify one. If you wish to exclude a component, use `+@XmlTransient+`.
+
+The above example is the equivalent of doing:
+
+.Person.java
+[source,java]
+----
+@AdvancedRecordUtils(
+    xmlable = true
+)
+public record Person(
+    @XmlElement(name = "Name")
+    String name,
+    @XmlElement(name = "Age")
+    int age
+)
+implements PersonUtils.All {}
+----
+
+The final value of `+MATCH+` would be the equivalent of doing:
+
+.Person.java
+[source,java]
+----
+@AdvancedRecordUtils(
+    xmlable = true
+)
+public record Person(
+    @XmlElement(name = "name")
+    String name,
+    @XmlElement(name = "age")
+    int age
+)
+implements PersonUtils.All {}
+----
+
+Both of these settings "skip" anything that is annotated already with an `+@Xml*+` annotation (`+@XmlTransient+`, `+@XmlAttribute+`, or `+@XmlElements+`).
+====

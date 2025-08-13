@@ -1,0 +1,109 @@
+****
+
+.Generated code within the "Builder" class (default settings)
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+
+        public Builder addPhoneNumbers(@Nullable final PhoneNumber phoneNumbers) {
+            this.phoneNumbers.add(phoneNumbers);
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Collection<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                this.phoneNumbers.addAll(phoneNumbers);
+            }
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Iterable<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                for (final PhoneNumber __addable : phoneNumbers) {
+                    this.addPhoneNumbers(__addable);
+                }
+            }
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Iterator<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                while(phoneNumbers.hasNext()) {
+                    this.addPhoneNumbers(phoneNumbers.next());
+                }
+            }
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Spliterator<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                phoneNumbers.forEachRemaining(this::addPhoneNumbers);
+            }
+            return this;
+        }
+    }
+}
+----
+=====
+
+.Generated code within the "Builder" class (with `buildNullCollectionToEmpty = false`)
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+
+        public Builder addPhoneNumbers(@Nullable final PhoneNumber phoneNumbers) {
+            if (Objects.isNull(this.phoneNumbers)) {
+                this.phoneNumbers = new ArrayList<PhoneNumber>();
+            } else if (!(this.phoneNumbers instanceof ArrayList)) {
+                this.phoneNumbers = new ArrayList<PhoneNumber>(this.phoneNumbers);
+            }
+            this.phoneNumbers.add(phoneNumbers);
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Iterable<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                for (final PhoneNumber __addable : phoneNumbers) {
+                    this.addPhoneNumbers(__addable);
+                }
+            }
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Iterable<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                for (final PhoneNumber __addable : phoneNumbers) {
+                    this.addPhoneNumbers(__addable);
+                }
+            }
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Iterator<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                while(phoneNumbers.hasNext()) {
+                    this.addPhoneNumbers(phoneNumbers.next());
+                }
+            }
+            return this;
+        }
+
+        public Builder addPhoneNumbers(@NonNull final Spliterator<PhoneNumber> phoneNumbers) {
+            if (Objects.nonNull(phoneNumbers)) {
+                phoneNumbers.forEachRemaining(this::addPhoneNumbers);
+            }
+            return this;
+        }
+    }
+}
+----
+=====
+
+
+****
