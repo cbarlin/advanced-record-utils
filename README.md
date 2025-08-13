@@ -4,6 +4,7 @@
 [![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md)
 [![Build](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml/badge.svg)](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml)
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils)](https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations)
+[![javadoc](https://javadoc.io/badge2/io.github.cbarlin/advanced-record-utils-annotations/javadoc.svg)](https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations)
 [![GitHub License](https://img.shields.io/github/license/cbarlin/advanced-record-utils)](https://github.com/cbarlin/advanced-record-utils?tab=MIT-1-ov-file#readme)
 
 ## What is Advanced Record Utils?
@@ -51,14 +52,7 @@ Add the following maven or gradle dependency for the annotations:
     <groupId>io.github.cbarlin</groupId>
     <artifactId>advanced-record-utils-annotations</artifactId>
     <version>${aru.version}</version>
-</dependency>
-<!-- The processor generates JSpecify nullness annotations -->
-<dependency>
-    <groupId>org.jspecify</groupId>
-    <artifactId>jspecify</artifactId>
-    <scope>provided</scope>
-    <version>1.0.0</version>
-</dependency>
+</dependency> <!-- This will bring in JSpecify for you -->
 ```
 
 And the following to your annotation processor paths (note: if using integrations with e.g. `avaje-json`, make sure this processor is first):
@@ -121,7 +115,7 @@ If you use java modules, you will need to add:
 
 ```java
 requires io.github.cbarlin.aru.annotations;
-requires static org.jspecify;
+// this will also transitively include JSpecify
 ```
 
 Annotate your record like so:
