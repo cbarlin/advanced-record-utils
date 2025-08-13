@@ -1,0 +1,3 @@
+== Configuration
+
+include::global-options.adoc[]

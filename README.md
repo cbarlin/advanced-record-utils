@@ -4,11 +4,12 @@
 [![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md)
 [![Build](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml/badge.svg)](https://github.com/cbarlin/advanced-record-utils/actions/workflows/build.yml)
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils)](https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations)
+[![javadoc](https://javadoc.io/badge2/io.github.cbarlin/advanced-record-utils-annotations/javadoc.svg)](https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations)
 [![GitHub License](https://img.shields.io/github/license/cbarlin/advanced-record-utils)](https://github.com/cbarlin/advanced-record-utils?tab=MIT-1-ov-file#readme)
 
 ## What is Advanced Record Utils?
 
-Advanced Record Utils is an annotation-processor based code generator that creates a companion `*Utils` class (e.g., `PersonUtils` for a `Person` record) that contains a builder, and then optionally:
+Advanced Record Utils is an annotation-processor based code generator that creates a companion `*Utils` class (e.g., `PersonUtils` for a `Person` record) that contains:
  * A "Builder" for the record
  * A "With"er interface
  * A "Merger" utility and interface
@@ -52,13 +53,7 @@ Add the following maven or gradle dependency for the annotations:
     <artifactId>advanced-record-utils-annotations</artifactId>
     <version>${aru.version}</version>
 </dependency>
-<!-- The processor generates JSpecify nullness annotations -->
-<dependency>
-    <groupId>org.jspecify</groupId>
-    <artifactId>jspecify</artifactId>
-    <scope>provided</scope>
-    <version>1.0.0</version>
-</dependency>
+<!-- JSpecify is included as a transitive dependency -->
 ```
 
 And the following to your annotation processor paths (note: if using integrations with e.g. `avaje-json`, make sure this processor is first):
@@ -71,57 +66,10 @@ And the following to your annotation processor paths (note: if using integration
 </path>
 ```
 
-<details>
-<summary>Full POM location of Annotation Processor path</summary>
-
-If you don't have a `build` section of your pom, you can use the below.
-  
-```xml
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-                <annotationProcessorPaths>
-                    <path>
-                        <groupId>io.github.cbarlin</groupId>
-                        <artifactId>advanced-record-utils-processor</artifactId>
-                        <version>${aru.version}</version>
-                    </path>
-                </annotationProcessorPaths>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
-```
-<hr />
-</details>
-
-<details>
-<summary>Alternative method - adding to dependencies (not recommended)</summary>
-
-You can add the processor to your dependencies using the below steps. However, the use of processor paths is recommended because the JDK team have changed the default behaviour after Java 23 (for good reason - see [Quality Outreach Heads-up - JDK 23: Changes Default Annotation Processing Policy](https://inside.java/2024/06/18/quality-heads-up/) for some of them)
-
-1. Add the following maven property (required for Java 23+) - `<maven.compiler.proc>full</maven.compiler.proc>`
-2. Add the dependency:
-```xml
-<dependency>
-  <groupId>io.github.cbarlin</groupId>
-  <artifactId>advanced-record-utils-processor</artifactId>
-  <version>${aru.version}</version>
-  <scope>provided</scope>
-  <optional>true</optional>
-</dependency>
-```
-<hr />
-</details>
-
 If you use java modules, you will need to add: 
 
 ```java
 requires io.github.cbarlin.aru.annotations;
-requires static org.jspecify;
 ```
 
 Annotate your record like so:
@@ -146,41 +94,8 @@ Person personB = PersonUtils.builder()
   .build();
 ```
 
-To use the wither, also implement the `PersonUtils.All` interface:
+For more details, see the [documentation](https://cbarlin.github.io/advanced-record-utils)!
 
- > Note: Using the `All` interface is preferred as it generates sealed interfaces, but you can implement `With` if you prefer
-
-```java
-@AdvancedRecordUtils
-public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.All { }
-```
-
-And then you can use "with" methods:
-
-```java
-// Code from before
-Person aButDifferentAge = personA.withAge(42);
-PersonUtils.Builder backToBuilder = personB.with();
-Person aViaBuilder = personA.with(builder -> builder.name("Connie"));
-```
-
-You can configure what it generates for you bypassing in different options. For example, to enable the "merger" feature, just turn that on and extend the generated interface (`PersonUtils.Merger` or `PersonUtils.All`):
-
-```java
-@AdvancedRecordUtils(merger = true)
-public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.All {}
-```
-
-And now you can merge records together:
-
-```java
-Person missingName = PersonUtils.builder().age(42).favouriteColours(List.of("red", "orange")).build();
-Person missingAge = PersonUtils.builder().name("Jane").addFavouriteColour("pink").build();
-
-Person allTogether = missingName.merge(missingAge);
-// Which would be the same as doing:
-Person isTheSameAs = PersonUtils.builder().age(42).favouriteColours(List.of("red", "orange", "pink")).name("Jane").build();
-```
 
 ## Where did it come from
 

@@ -1,0 +1,505 @@
+==== Basic usage
+
+Annotate a record like so:
+
+[source,java]
+----
+@AdvancedRecordUtils
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+When you build the class, will take that and generate source code for you, which will then be compiled.
+
+.Full generated source code for default settings
+[%collapsible]
+====
+[source,java]
+----
+
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.annotations.Generated;
+import io.github.cbarlin.aru.annotations.GeneratedUtil;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * An auto-generated utility class to work with {@link Person} objects
+ * <p>
+ * This includes a builder, as well as other generated utilities based on the values provided to the {@link AdvancedRecordUtils} annotation
+ * <p>
+ * For more details, see the GitHub page for cbarlin/advanced-record-utils
+ */
+@Generated("io.github.cbarlin.aru.core.AdvRecUtilsProcessor")
+@AdvancedRecordUtilsGenerated(
+        generatedFor = Person.class,
+        version = @AdvancedRecordUtilsGenerated.Version(
+                major = 0,
+                minor = 6,
+                patch = 0
+        ),
+        settings = @AdvancedRecordUtils,
+        internalUtils = {
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "All", implementation = PersonUtils.All.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "Builder", implementation = PersonUtils.Builder.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "With", implementation = PersonUtils.With.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "_MatchingInterface", implementation = PersonUtils._MatchingInterface.class)
+        },
+        references = {
+
+        },
+        usedTypeConverters = {
+
+        }
+)
+public final class PersonUtils implements GeneratedUtil {
+    /**
+     * Create a blank builder of {@link Person}
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+            comments = "Related class claim: builderEmpty"
+    )
+    public static final Builder builder() {
+        return Builder.builder();
+    }
+
+    /**
+     * Creates a new builder of {@link Person} by copying an existing instance
+     *
+     * @param original The existing instance to copy
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+            comments = "Related class claim: builderCopy"
+    )
+    public static final Builder builder(final Person original) {
+        return Builder.builder(original);
+    }
+
+    /**
+     * A class used for building {@link Person} objects
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.BuilderClassCreatorVisitor"},
+            comments = "Related class claim: builder"
+    )
+    public static final class Builder {
+        @Nullable
+        private int age;
+
+        @NonNull
+        private ArrayList<String> favouriteColours = new ArrayList<String>();
+
+        @Nullable
+        private String name;
+
+        /**
+         * Create a blank builder of {@link Person}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+                comments = "Related class claim: builderEmpty"
+        )
+        public static final Builder builder() {
+            return new Builder();
+        }
+
+        /**
+         * Creates a new builder of {@link Person} by copying an existing instance
+         *
+         * @param original The existing instance to copy
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+                comments = "Related class claim: builderCopy"
+        )
+        public static final Builder builder(final Person original) {
+            Objects.requireNonNull(original, "Cannot copy a null instance");
+            // "Copying an existing instance"
+            return Builder.builder()
+                    .name(original.name())
+                    .age(original.age())
+                    .favouriteColours(original.favouriteColours());
+        }
+
+        /**
+         * Add a singular {@link String} to the collection for the field {@code favouriteColours}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param favouriteColours A singular instance to be added to the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAdder"},
+                comments = "Related component claim: builderAdd"
+        )
+        public Builder addFavouriteColours(@Nullable final String favouriteColours) {
+            this.favouriteColours.add(favouriteColours);
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided collection to {@code favouriteColours}
+         *
+         * @param favouriteColours A collection to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addFavouriteColours(@NonNull final Collection<String> favouriteColours) {
+            if (Objects.nonNull(favouriteColours)) {
+                this.favouriteColours.addAll(favouriteColours);
+            }
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided iterable to {@code favouriteColours}
+         *
+         * @param favouriteColours An iterable to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addFavouriteColours(@NonNull final Iterable<String> favouriteColours) {
+            if (Objects.nonNull(favouriteColours)) {
+                for (final String __addable : favouriteColours) {
+                    this.addFavouriteColours(__addable);
+                }
+            }
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided iterator to {@code favouriteColours}
+         *
+         * @param favouriteColours An iterator to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addFavouriteColours(@NonNull final Iterator<String> favouriteColours) {
+            if (Objects.nonNull(favouriteColours)) {
+                while(favouriteColours.hasNext()) {
+                    this.addFavouriteColours(favouriteColours.next());
+                }
+            }
+            return this;
+        }
+
+        /**
+         * Adds all elements of the provided spliterator to {@code favouriteColours}
+         *
+         * @param favouriteColours A spliterator to be merged into the collection
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddAddAll"},
+                comments = "Related component claim: builderAddAllIterable"
+        )
+        public Builder addFavouriteColours(@NonNull final Spliterator<String> favouriteColours) {
+            if (Objects.nonNull(favouriteColours)) {
+                favouriteColours.forEachRemaining(this::addFavouriteColours);
+            }
+            return this;
+        }
+
+        /**
+         * Returns the current value of {@code age}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public int age() {
+            return this.age;
+        }
+
+        /**
+         * Updates the value of {@code age}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param age The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder age(@Nullable final int age) {
+            this.age = age;
+            return this;
+        }
+
+        /**
+         * Creates a new instance of {@link Person} from the fields set on this builder
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddPlainBuild"},
+                comments = "Related class claim: builderBuild"
+        )
+        public Person build() {
+            // "Creating new instance"
+            return new Person(
+                    this.name(),
+                    	this.age(),
+                    	this.favouriteColours()
+                    );
+        }
+
+        /**
+         * Returns the current value of {@code favouriteColours}
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public List<String> favouriteColours() {
+            final List<String> ___immutable = this.favouriteColours.stream()
+                        .filter(Objects::nonNull)
+                        .toList();
+            return ___immutable;
+        }
+
+        /**
+         * Updates the value of {@code favouriteColours}
+         * <p>
+         * Supplying a null value will set the current value to null/empty
+         *
+         * @param favouriteColours The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.collection.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder favouriteColours(@Nullable final List<String> favouriteColours) {
+            this.favouriteColours.clear();
+            if (Objects.nonNull(favouriteColours)) {
+                this.favouriteColours.addAll(favouriteColours);
+            }
+            return this;
+        }
+
+        /**
+         * Returns the current value of {@code name}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public String name() {
+            return this.name;
+        }
+
+        /**
+         * Updates the value of {@code name}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param name The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder name(@Nullable final String name) {
+            this.name = name;
+            return this;
+        }
+    }
+
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.AllInterfaceGenerator"},
+            comments = "Related class claim: allIface"
+    )
+    public interface All extends With {
+    }
+
+    /**
+     * An interface that provides the ability to create new instances of a record with modifications
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WitherPrismInterfaceFactory"},
+            comments = "Related class claim: wither"
+    )
+    interface With extends _MatchingInterface {
+        /**
+         * Creates a builder with the current fields
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BackToBuilder"},
+                comments = "Related class claim: witherToBuilder"
+        )
+        default Builder with() {
+            return Builder.builder()
+                    .name(this.name())
+                    .age(this.age())
+                    .favouriteColours(this.favouriteColours());
+        }
+
+        /**
+         * Allows creation of a copy of this instance with some tweaks via a builder
+         *
+         * @param subBuilder A function to modify a new copy of the object
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BuilderFluent"},
+                comments = "Related class claim: witherFluentBuilder"
+        )
+        default Person with(@NonNull final Consumer<Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final Builder ___builder = this.with();
+            subBuilder.accept(___builder);
+            return ___builder.build();
+        }
+
+        /**
+         * Return a new instance with a different {@code favouriteColours} field
+         *
+         * @param favouriteColours Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithAdd"},
+                comments = "Related component claim: witherWithAdd"
+        )
+        default Person withAddFavouriteColours(final List<String> favouriteColours) {
+            return this.with()
+                    .addFavouriteColours(favouriteColours)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code age} field
+         *
+         * @param age Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default Person withAge(final int age) {
+            return this.with()
+                    .age(age)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code favouriteColours} field
+         *
+         * @param favouriteColours Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default Person withFavouriteColours(final List<String> favouriteColours) {
+            return this.with()
+                    .favouriteColours(favouriteColours)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code name} field
+         *
+         * @param name Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default Person withName(final String name) {
+            return this.with()
+                    .name(name)
+                    .build();
+        }
+    }
+
+    @NullUnmarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceFactory"},
+            comments = "Related component claim: internalMatchingIface"
+    )
+    interface _MatchingInterface {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        int age();
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        List<String> favouriteColours();
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        String name();
+    }
+}
+
+----
+====
+
+And you'll have access to a builder that you can use!
+
+[source,java]
+----
+Person personA = PersonUtils.builder()
+  .name("Conrad")
+  .age(conradsAge)
+  .addFavouriteColours("blue")
+  .addFavouriteColours("purple")
+  .build();
+Person personB = PersonUtils.builder()
+  .name("Fred")
+  .favouriteColours(List.of("red", "orange"))
+  .build();
+----
+
+The default configuration also allows you to "copy" from an existing instance:
+
+[source,java]
+----
+Person personC = PersonUtils.builder(personA)
+  .name("Barret")
+  .build();
+----

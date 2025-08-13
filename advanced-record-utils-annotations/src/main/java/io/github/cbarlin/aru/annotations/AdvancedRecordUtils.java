@@ -148,7 +148,7 @@ public @interface AdvancedRecordUtils {
     /**
      * Should an Avaje Jsonb import annotation be created for you
      * <p>
-     * Useful if you don't want to have annotate everything in a tree/package
+     * Useful if you don't want to have to annotate everything in a tree/package
      */
     boolean addJsonbImportAnnotation() default false;
     //#endregion
@@ -214,7 +214,7 @@ public @interface AdvancedRecordUtils {
          */
         SLF4J_UTILS_CLASS,
         /**
-         * Generate logging output using slf4j where the logs are for each sub-class
+         * Generate logging output using slf4j where the logs are for each subclass
          */
         SLF4J_PER_SUBCLASS
     }
@@ -272,7 +272,7 @@ public @interface AdvancedRecordUtils {
     }
     //#endregion
 
-    //#region Enclosed Element anntoations
+    //#region Enclosed Element annotations
 
     /**
      * Indicate to the annotation processor which constructor is the one that should be

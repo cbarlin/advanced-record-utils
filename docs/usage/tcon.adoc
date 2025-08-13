@@ -1,0 +1,98 @@
+=== Type Converter
+
+By annotating a `+public static+` method with `+@TypeConverter+`, then any time that the return type of that method is a field of a record, the generated builder will also include a method that invokes the `TypeConverter` annotated method. This applies globally across all builders.
+
+CAUTION: Because `+@TypeConverter+` applies globally, if you attempt to use the same permutation of return type and parameters compilation will fail. This includes `+@TypeConverter+` methods that are found from imports (see below for details on imports)
+
+A good example of this is for enums. Given the following enum using the common pattern of having a `+label+` that we would like to be able to use:
+
+.AnEnumInDep.java
+[source,java]
+----
+import io.github.cbarlin.aru.annotations.TypeConverter;
+
+public enum AnEnumInDep {
+    MONDAY("Monday"),
+    TUESDAY("Tuesday");
+
+    private final String label;
+
+    AnEnumInDep(final String label) {
+        this.label = label;
+    }
+
+    public String label() {
+        return label;
+    }
+
+    @TypeConverter
+    public static AnEnumInDep fromLabel(final String label) {
+        if ("Monday".equals(label)) {
+            return MONDAY;
+        }
+        return TUESDAY;
+    }
+}
+----
+
+Then if we have a record that uses that enum:
+
+[source,java]
+----
+@AdvancedRecordUtils
+public record MyRecord(
+    AnEnumInDep andImAnEnum,
+    AnEnumInDep theEnumAgain
+) {}
+----
+
+Then you can implicitly use the `+fromLabel+` method on the builder of `+MyRecord+` like so:
+
+[source,java]
+----
+final MyRecord myB = MyRecordUtils.builder()
+    // This internally calls the method annotated with TypeConverter
+    .andImAnEnum("Monday")
+    // You can still pass in the item directly
+    .theEnumAgain(AnEnumInDep.TUESDAY)
+    .build();
+----
+
+.Generated Builder Methods
+[%collapsible]
+====
+[source,java]
+----
+/**
+ * Updates the value of {@code andImAnEnum}
+ * <p>
+ * Supplying a null value will set the current value to null
+ *
+ * @param andImAnEnum The replacement value
+ */
+@NonNull
+@Generated(
+        value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+        comments = "Related component claim: builderPlainSetter"
+)
+public Builder andImAnEnum(@Nullable final AnEnumInDep andImAnEnum) {
+    this.andImAnEnum = andImAnEnum;
+    return this;
+}
+
+/**
+ * Updates the value of {@code andImAnEnum}
+ */
+@Generated(
+        value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.UsingTypeConverter"},
+        comments = "Related component claim: builderUseTypeConverter"
+)
+public Builder andImAnEnum(final String label) {
+    return this.andImAnEnum(AnEnumInDep.fromLabel(label));
+}
+----
+====
+
+This isn't restricted to enums - you can translate any parameters to (almost) any return type and it'll be picked up.
+
+WARNING: By default, the processor rejects methods that use extremely common types (e.g. `+String+`) that may "flood" generated builders. If you wish to do this anyway, you can add a `+permitReturnTypeWhichMayResultInTooManyMethods = true+` setting on the `+@TypeConverter+`

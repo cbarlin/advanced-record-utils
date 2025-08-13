@@ -1,0 +1,1053 @@
+=== Cascading usage
+
+In the event that you have records that reference other records that are in the same package or sub-package, the processor will automatically "cascade" down the "tree" and work on the referenced record without needing to annotate it. This can be extremely useful if you have a large tree of records, such as one that represents an XML schema.
+
+This is the default behaviour, so as an example take the following records:
+
+[source,java]
+----
+public record MyRecordA(
+    String someStringField,
+    int someIntField
+) {
+}
+
+@AdvancedRecordUtils(merger = true)
+public record MyRecordB(
+    MyRecordA otherItem,
+    MyRecordA woo,
+    MyRecordB recursionFtw
+) {
+
+}
+----
+
+Then both a `+MyRecordBUtils+` _and_ a `+MyRecordAUtils+` are created, despite the `+MyRecordA+` not having an annotation!
+
+.Generated MyRecordAUtils
+[%collapsible]
+====
+[source,java]
+----
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.annotations.Generated;
+import io.github.cbarlin.aru.annotations.GeneratedUtil;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * An auto-generated utility class to work with {@link MyRecordA} objects
+ * <p>
+ * This includes a builder, as well as other generated utilities based on the values provided to the {@link AdvancedRecordUtils} annotation
+ * <p>
+ * For more details, see the GitHub page for cbarlin/advanced-record-utils
+ */
+@Generated("io.github.cbarlin.aru.core.AdvRecUtilsProcessor")
+@AdvancedRecordUtilsGenerated(
+        generatedFor = MyRecordA.class,
+        version = @AdvancedRecordUtilsGenerated.Version(
+                major = 0,
+                minor = 6,
+                patch = 0
+        ),
+        settings = @AdvancedRecordUtils(
+                merger = true
+        ),
+        internalUtils = {
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "All", implementation = MyRecordAUtils.All.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "Builder", implementation = MyRecordAUtils.Builder.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "Mergeable", implementation = MyRecordAUtils.Mergeable.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "With", implementation = MyRecordAUtils.With.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "_MatchingInterface", implementation = MyRecordAUtils._MatchingInterface.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "_MergerUtils", implementation = MyRecordAUtils._MergerUtils.class)
+        },
+        references = {
+
+        },
+        usedTypeConverters = {
+
+        }
+)
+public final class MyRecordAUtils implements GeneratedUtil {
+    /**
+     * Create a blank builder of {@link MyRecordA}
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+            comments = "Related class claim: builderEmpty"
+    )
+    public static final Builder builder() {
+        return Builder.builder();
+    }
+
+    /**
+     * Creates a new builder of {@link MyRecordA} by copying an existing instance
+     *
+     * @param original The existing instance to copy
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+            comments = "Related class claim: builderCopy"
+    )
+    public static final Builder builder(final MyRecordA original) {
+        return Builder.builder(original);
+    }
+
+    /**
+     * A class used for building {@link MyRecordA} objects
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.BuilderClassCreatorVisitor"},
+            comments = "Related class claim: builder"
+    )
+    public static final class Builder {
+        @Nullable
+        private int someIntField;
+
+        @Nullable
+        private String someStringField;
+
+        /**
+         * Create a blank builder of {@link MyRecordA}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+                comments = "Related class claim: builderEmpty"
+        )
+        public static final Builder builder() {
+            return new Builder();
+        }
+
+        /**
+         * Creates a new builder of {@link MyRecordA} by copying an existing instance
+         *
+         * @param original The existing instance to copy
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+                comments = "Related class claim: builderCopy"
+        )
+        public static final Builder builder(final MyRecordA original) {
+            Objects.requireNonNull(original, "Cannot copy a null instance");
+            // "Copying an existing instance"
+            return Builder.builder()
+                    .someStringField(original.someStringField())
+                    .someIntField(original.someIntField());
+        }
+
+        /**
+         * Creates a new instance of {@link MyRecordA} from the fields set on this builder
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddPlainBuild"},
+                comments = "Related class claim: builderBuild"
+        )
+        public MyRecordA build() {
+            // "Creating new instance"
+            return new MyRecordA(
+                    this.someStringField(),
+                    	this.someIntField()
+                    );
+        }
+
+        /**
+         * Returns the current value of {@code someIntField}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public int someIntField() {
+            return this.someIntField;
+        }
+
+        /**
+         * Updates the value of {@code someIntField}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param someIntField The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder someIntField(@Nullable final int someIntField) {
+            this.someIntField = someIntField;
+            return this;
+        }
+
+        /**
+         * Returns the current value of {@code someStringField}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public String someStringField() {
+            return this.someStringField;
+        }
+
+        /**
+         * Updates the value of {@code someStringField}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param someStringField The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder someStringField(@Nullable final String someStringField) {
+            this.someStringField = someStringField;
+            return this;
+        }
+    }
+
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.AllInterfaceGenerator"},
+            comments = "Related class claim: allIface"
+    )
+    public interface All extends Mergeable, With {
+    }
+
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+            comments = "Related class claim: mergerStaticClass"
+    )
+    public static final class _MergerUtils {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+                comments = "Related class claim: mergerStaticClass"
+        )
+        private _MergerUtils() {
+            throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+        }
+
+        /**
+         * Merge two instances of {@link MyRecordA} together
+         *
+         * @param preferred The preferred element
+         * @param other The non-preferred element
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.MergeMethod"},
+                comments = "Related class claim: mergeStaticMergeMethod"
+        )
+        public static MyRecordA merge(@Nullable final MyRecordA preferred, @Nullable final MyRecordA other) {
+            if (Objects.isNull(other))  {
+                // "Short-circuit of merge - other is null"
+                return preferred;
+            } else if (Objects.isNull(preferred)) {
+                // "Short-circuit of merge - preferred is null"
+                return other;
+            }
+            // "Merging two instances together"
+            return Builder.builder()
+                    .someStringField(_MergerUtils.mergeString(preferred.someStringField(), other.someStringField()))
+                    .someIntField(_MergerUtils.mergeint(preferred.someIntField(), other.someIntField()))
+                    .build();
+        }
+
+        /**
+         * Merger for fields of class {@link String}
+         *
+         * @param elA The preferred input
+         * @param elB The non-preferred input
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.CharSequenceField"},
+                comments = "Related component claim: mergerAddFieldMergerMethod"
+        )
+        private static final String mergeString(@Nullable final String elA, @Nullable final String elB) {
+            return (Objects.nonNull(elA) && Objects.nonNull(elA.toString()) && (!elA.toString().isBlank())) ? elA : elB;
+        }
+
+        /**
+         * Merger for a primitive field
+         *
+         * @param elA The preferred input
+         * @param elB The non-preferred input
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.Primitive"},
+                comments = "Related component claim: mergerAddFieldMergerMethod"
+        )
+        private static final int mergeint(final int elA, final int elB) {
+            // For primitives, we simply return the preferred value
+            return elA;
+        }
+    }
+
+    /**
+     * Interface for a record that can be merged with itself.
+     * <p>
+     * Intended merge process is that, for each field:
+     * <ol>
+     * <li>If both of the two instances have a null value, then the result is null</li>
+     * <li>If one of the two instances has a null value, then take the non-null value</li>
+     * <li>If both are non-null, and the field is itself can be merged, then merge the values using the other merger</li>
+     * <li>If both are non-null, and the field is a collection, then union the collections</li>
+     * <li>Otherwise, keep the value in this instance (instead of the one in the other instance)</li>
+     * </ol>
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+            comments = "Related class claim: mergerStaticClass"
+    )
+    interface Mergeable extends _MatchingInterface {
+        /**
+         * Merge the current instance into the other instance, if it is present
+         * @return The result of the merge
+         *
+         * @param other The element to merge into this one, if it is present
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.iface.MergeOptionalMethod"},
+                comments = "Related class claim: mergeInterfaceMergeOptionalMethod"
+        )
+        default MyRecordA merge(@NonNull final Optional<MyRecordA> other) {
+            Objects.requireNonNull(other, "You cannot supply a null Optional parameter");
+            return other.map(oth -> this.merge(oth)).orElse(this.merge((MyRecordA) null));
+        }
+
+        /**
+         * Merge the current instance into the other instance.
+         * @return The result of the merge
+         *
+         * @param other The element to merge into this one
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.iface.MergeMethod"},
+                comments = "Related class claim: mergeInterfaceMergeMethod"
+        )
+        default MyRecordA merge(@Nullable final MyRecordA other) {
+            final var optOther = Optional.ofNullable(other);
+            return Builder.builder()
+                    .someStringField(_MergerUtils.mergeString(this.someStringField(), optOther.map(MyRecordA::someStringField).orElse(null)))
+                    .someIntField(_MergerUtils.mergeint(this.someIntField(), optOther.map(MyRecordA::someIntField).orElse(null)))
+                    .build();
+        }
+    }
+
+    /**
+     * An interface that provides the ability to create new instances of a record with modifications
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WitherPrismInterfaceFactory"},
+            comments = "Related class claim: wither"
+    )
+    interface With extends _MatchingInterface {
+        /**
+         * Creates a builder with the current fields
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BackToBuilder"},
+                comments = "Related class claim: witherToBuilder"
+        )
+        default Builder with() {
+            return Builder.builder()
+                    .someStringField(this.someStringField())
+                    .someIntField(this.someIntField());
+        }
+
+        /**
+         * Allows creation of a copy of this instance with some tweaks via a builder
+         *
+         * @param subBuilder A function to modify a new copy of the object
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BuilderFluent"},
+                comments = "Related class claim: witherFluentBuilder"
+        )
+        default MyRecordA with(@NonNull final Consumer<Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final Builder ___builder = this.with();
+            subBuilder.accept(___builder);
+            return ___builder.build();
+        }
+
+        /**
+         * Return a new instance with a different {@code someIntField} field
+         *
+         * @param someIntField Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default MyRecordA withSomeIntField(final int someIntField) {
+            return this.with()
+                    .someIntField(someIntField)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code someStringField} field
+         *
+         * @param someStringField Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default MyRecordA withSomeStringField(final String someStringField) {
+            return this.with()
+                    .someStringField(someStringField)
+                    .build();
+        }
+    }
+
+    @NullUnmarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceFactory"},
+            comments = "Related component claim: internalMatchingIface"
+    )
+    interface _MatchingInterface {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        int someIntField();
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        String someStringField();
+    }
+}
+----
+====
+
+.Generated MyRecordBUtils
+[%collapsible]
+====
+[source,java]
+----
+
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.annotations.Generated;
+import io.github.cbarlin.aru.annotations.GeneratedUtil;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * An auto-generated utility class to work with {@link MyRecordB} objects
+ * <p>
+ * This includes a builder, as well as other generated utilities based on the values provided to the {@link AdvancedRecordUtils} annotation
+ * <p>
+ * For more details, see the GitHub page for cbarlin/advanced-record-utils
+ */
+@Generated("io.github.cbarlin.aru.core.AdvRecUtilsProcessor")
+@AdvancedRecordUtilsGenerated(
+        generatedFor = MyRecordB.class,
+        version = @AdvancedRecordUtilsGenerated.Version(
+                major = 0,
+                minor = 6,
+                patch = 0
+        ),
+        settings = @AdvancedRecordUtils(
+                merger = true
+        ),
+        internalUtils = {
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "All", implementation = MyRecordBUtils.All.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "Builder", implementation = MyRecordBUtils.Builder.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "Mergeable", implementation = MyRecordBUtils.Mergeable.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "With", implementation = MyRecordBUtils.With.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "_MatchingInterface", implementation = MyRecordBUtils._MatchingInterface.class),
+            @AdvancedRecordUtilsGenerated.InternalUtil(type = "_MergerUtils", implementation = MyRecordBUtils._MergerUtils.class)
+        },
+        references = {
+            MyRecordAUtils.class
+        },
+        usedTypeConverters = {
+
+        }
+)
+public final class MyRecordBUtils implements GeneratedUtil {
+    /**
+     * Create a blank builder of {@link MyRecordB}
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+            comments = "Related class claim: builderEmpty"
+    )
+    public static final Builder builder() {
+        return Builder.builder();
+    }
+
+    /**
+     * Creates a new builder of {@link MyRecordB} by copying an existing instance
+     *
+     * @param original The existing instance to copy
+     */
+    @NonNull
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+            comments = "Related class claim: builderCopy"
+    )
+    public static final Builder builder(final MyRecordB original) {
+        return Builder.builder(original);
+    }
+
+    /**
+     * A class used for building {@link MyRecordB} objects
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.BuilderClassCreatorVisitor"},
+            comments = "Related class claim: builder"
+    )
+    public static final class Builder {
+        @Nullable
+        private MyRecordA otherItem;
+
+        @Nullable
+        private MyRecordB recursionFtw;
+
+        @Nullable
+        private MyRecordA woo;
+
+        /**
+         * Create a blank builder of {@link MyRecordB}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddEmptyConstruction"},
+                comments = "Related class claim: builderEmpty"
+        )
+        public static final Builder builder() {
+            return new Builder();
+        }
+
+        /**
+         * Creates a new builder of {@link MyRecordB} by copying an existing instance
+         *
+         * @param original The existing instance to copy
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddCopyConstruction"},
+                comments = "Related class claim: builderCopy"
+        )
+        public static final Builder builder(final MyRecordB original) {
+            Objects.requireNonNull(original, "Cannot copy a null instance");
+            // "Copying an existing instance"
+            return Builder.builder()
+                    .otherItem(original.otherItem())
+                    .woo(original.woo())
+                    .recursionFtw(original.recursionFtw());
+        }
+
+        /**
+         * Creates a new instance of {@link MyRecordB} from the fields set on this builder
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddPlainBuild"},
+                comments = "Related class claim: builderBuild"
+        )
+        public MyRecordB build() {
+            // "Creating new instance"
+            return new MyRecordB(
+                    this.otherItem(),
+                    	this.woo(),
+                    	this.recursionFtw()
+                    );
+        }
+
+        /**
+         * Returns the current value of {@code otherItem}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public MyRecordA otherItem() {
+            return this.otherItem;
+        }
+
+        /**
+         * Updates the value of {@code otherItem}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param otherItem The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder otherItem(@Nullable final MyRecordA otherItem) {
+            this.otherItem = otherItem;
+            return this;
+        }
+
+        /**
+         * Uses a supplied builder to replace the value at {@code otherItem}
+         *
+         * @param subBuilder Builder that can be used to replace {@code otherItem}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.AddFluentSetterFromRecord"},
+                comments = "Related component claim: builderFluentSetter"
+        )
+        public Builder otherItem(@NonNull final Consumer<MyRecordAUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final MyRecordAUtils.Builder builder = (Objects.isNull(this.otherItem())) ? MyRecordAUtils.Builder.builder() : MyRecordAUtils.Builder.builder(this.otherItem());
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.otherItem(builder.build());
+        }
+
+        /**
+         * Returns the current value of {@code recursionFtw}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public MyRecordB recursionFtw() {
+            return this.recursionFtw;
+        }
+
+        /**
+         * Updates the value of {@code recursionFtw}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param recursionFtw The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder recursionFtw(@Nullable final MyRecordB recursionFtw) {
+            this.recursionFtw = recursionFtw;
+            return this;
+        }
+
+        /**
+         * Uses a supplied builder to replace the value at {@code recursionFtw}
+         *
+         * @param subBuilder Builder that can be used to replace {@code recursionFtw}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.AddFluentSetterFromRecord"},
+                comments = "Related component claim: builderFluentSetter"
+        )
+        public Builder recursionFtw(@NonNull final Consumer<Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final Builder builder = (Objects.isNull(this.recursionFtw())) ? Builder.builder() : Builder.builder(this.recursionFtw());
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.recursionFtw(builder.build());
+        }
+
+        /**
+         * Returns the current value of {@code woo}
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddGetter"},
+                comments = "Related component claim: builderGetter"
+        )
+        public MyRecordA woo() {
+            return this.woo;
+        }
+
+        /**
+         * Updates the value of {@code woo}
+         * <p>
+         * Supplying a null value will set the current value to null
+         *
+         * @param woo The replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+                comments = "Related component claim: builderPlainSetter"
+        )
+        public Builder woo(@Nullable final MyRecordA woo) {
+            this.woo = woo;
+            return this;
+        }
+
+        /**
+         * Uses a supplied builder to replace the value at {@code woo}
+         *
+         * @param subBuilder Builder that can be used to replace {@code woo}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.AddFluentSetterFromRecord"},
+                comments = "Related component claim: builderFluentSetter"
+        )
+        public Builder woo(@NonNull final Consumer<MyRecordAUtils.Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final MyRecordAUtils.Builder builder = (Objects.isNull(this.woo())) ? MyRecordAUtils.Builder.builder() : MyRecordAUtils.Builder.builder(this.woo());
+            // "Passing over to provided consumer"
+            subBuilder.accept(builder);
+            return this.woo(builder.build());
+        }
+    }
+
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.AllInterfaceGenerator"},
+            comments = "Related class claim: allIface"
+    )
+    public interface All extends Mergeable, With {
+    }
+
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+            comments = "Related class claim: mergerStaticClass"
+    )
+    public static final class _MergerUtils {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+                comments = "Related class claim: mergerStaticClass"
+        )
+        private _MergerUtils() {
+            throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+        }
+
+        /**
+         * Merge two instances of {@link MyRecordB} together
+         *
+         * @param preferred The preferred element
+         * @param other The non-preferred element
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.MergeMethod"},
+                comments = "Related class claim: mergeStaticMergeMethod"
+        )
+        public static MyRecordB merge(@Nullable final MyRecordB preferred, @Nullable final MyRecordB other) {
+            if (Objects.isNull(other))  {
+                // "Short-circuit of merge - other is null"
+                return preferred;
+            } else if (Objects.isNull(preferred)) {
+                // "Short-circuit of merge - preferred is null"
+                return other;
+            }
+            // "Merging two instances together"
+            return Builder.builder()
+                    .otherItem(_MergerUtils.mergeMyRecordA(preferred.otherItem(), other.otherItem()))
+                    .woo(_MergerUtils.mergeMyRecordA(preferred.woo(), other.woo()))
+                    .recursionFtw(_MergerUtils.mergeMyRecordB(preferred.recursionFtw(), other.recursionFtw()))
+                    .build();
+        }
+
+        /**
+         * Merger for fields of class {@link MyRecordA}
+         *
+         * @param elA The preferred input
+         * @param elB The non-preferred input
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.OtherProcessed"},
+                comments = "Related component claim: mergerAddFieldMergerMethod"
+        )
+        private static final MyRecordA mergeMyRecordA(@Nullable final MyRecordA elA, @Nullable final MyRecordA elB) {
+            return MyRecordAUtils._MergerUtils.merge(elA, elB);
+        }
+
+        /**
+         * Merger for fields of class {@link MyRecordB}
+         *
+         * @param elA The preferred input
+         * @param elB The non-preferred input
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.utils.OtherProcessed"},
+                comments = "Related component claim: mergerAddFieldMergerMethod"
+        )
+        private static final MyRecordB mergeMyRecordB(@Nullable final MyRecordB elA, @Nullable final MyRecordB elB) {
+            return _MergerUtils.merge(elA, elB);
+        }
+    }
+
+    /**
+     * Interface for a record that can be merged with itself.
+     * <p>
+     * Intended merge process is that, for each field:
+     * <ol>
+     * <li>If both of the two instances have a null value, then the result is null</li>
+     * <li>If one of the two instances has a null value, then take the non-null value</li>
+     * <li>If both are non-null, and the field is itself can be merged, then merge the values using the other merger</li>
+     * <li>If both are non-null, and the field is a collection, then union the collections</li>
+     * <li>Otherwise, keep the value in this instance (instead of the one in the other instance)</li>
+     * </ol>
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.MergerFactory"},
+            comments = "Related class claim: mergerStaticClass"
+    )
+    interface Mergeable extends _MatchingInterface {
+        /**
+         * Merge the current instance into the other instance, if it is present
+         * @return The result of the merge
+         *
+         * @param other The element to merge into this one, if it is present
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.iface.MergeOptionalMethod"},
+                comments = "Related class claim: mergeInterfaceMergeOptionalMethod"
+        )
+        default MyRecordB merge(@NonNull final Optional<MyRecordB> other) {
+            Objects.requireNonNull(other, "You cannot supply a null Optional parameter");
+            return other.map(oth -> this.merge(oth)).orElse(this.merge((MyRecordB) null));
+        }
+
+        /**
+         * Merge the current instance into the other instance.
+         * @return The result of the merge
+         *
+         * @param other The element to merge into this one
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.merger.iface.MergeMethod"},
+                comments = "Related class claim: mergeInterfaceMergeMethod"
+        )
+        default MyRecordB merge(@Nullable final MyRecordB other) {
+            final var optOther = Optional.ofNullable(other);
+            return Builder.builder()
+                    .otherItem(_MergerUtils.mergeMyRecordA(this.otherItem(), optOther.map(MyRecordB::otherItem).orElse(null)))
+                    .woo(_MergerUtils.mergeMyRecordA(this.woo(), optOther.map(MyRecordB::woo).orElse(null)))
+                    .recursionFtw(_MergerUtils.mergeMyRecordB(this.recursionFtw(), optOther.map(MyRecordB::recursionFtw).orElse(null)))
+                    .build();
+        }
+    }
+
+    /**
+     * An interface that provides the ability to create new instances of a record with modifications
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WitherPrismInterfaceFactory"},
+            comments = "Related class claim: wither"
+    )
+    interface With extends _MatchingInterface {
+        /**
+         * Creates a builder with the current fields
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BackToBuilder"},
+                comments = "Related class claim: witherToBuilder"
+        )
+        default Builder with() {
+            return Builder.builder()
+                    .otherItem(this.otherItem())
+                    .woo(this.woo())
+                    .recursionFtw(this.recursionFtw());
+        }
+
+        /**
+         * Allows creation of a copy of this instance with some tweaks via a builder
+         *
+         * @param subBuilder A function to modify a new copy of the object
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.BuilderFluent"},
+                comments = "Related class claim: witherFluentBuilder"
+        )
+        default MyRecordB with(@NonNull final Consumer<Builder> subBuilder) {
+            Objects.requireNonNull(subBuilder, "Cannot supply a null function argument");
+            final Builder ___builder = this.with();
+            subBuilder.accept(___builder);
+            return ___builder.build();
+        }
+
+        /**
+         * Return a new instance with a different {@code otherItem} field
+         *
+         * @param otherItem Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default MyRecordB withOtherItem(final MyRecordA otherItem) {
+            return this.with()
+                    .otherItem(otherItem)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code otherItem} field, obtaining the value by invoking the builder
+         *
+         * @param subBuilder Builder that can be used to replace {@code otherItem}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithFluentMethod"},
+                comments = "Related component claim: witherWithFluent"
+        )
+        default MyRecordB withOtherItem(@NonNull final Consumer<MyRecordAUtils.Builder> subBuilder) {
+            return this.with()
+                    .otherItem(subBuilder)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code recursionFtw} field
+         *
+         * @param recursionFtw Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default MyRecordB withRecursionFtw(final MyRecordB recursionFtw) {
+            return this.with()
+                    .recursionFtw(recursionFtw)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code recursionFtw} field, obtaining the value by invoking the builder
+         *
+         * @param subBuilder Builder that can be used to replace {@code recursionFtw}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithFluentMethod"},
+                comments = "Related component claim: witherWithFluent"
+        )
+        default MyRecordB withRecursionFtw(@NonNull final Consumer<Builder> subBuilder) {
+            return this.with()
+                    .recursionFtw(subBuilder)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code woo} field
+         *
+         * @param woo Replacement value
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithMethodOnField"},
+                comments = "Related component claim: witherWith"
+        )
+        default MyRecordB withWoo(final MyRecordA woo) {
+            return this.with()
+                    .woo(woo)
+                    .build();
+        }
+
+        /**
+         * Return a new instance with a different {@code woo} field, obtaining the value by invoking the builder
+         *
+         * @param subBuilder Builder that can be used to replace {@code woo}
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.wither.WithFluentMethod"},
+                comments = "Related component claim: witherWithFluent"
+        )
+        default MyRecordB withWoo(@NonNull final Consumer<MyRecordAUtils.Builder> subBuilder) {
+            return this.with()
+                    .woo(subBuilder)
+                    .build();
+        }
+    }
+
+    @NullUnmarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceFactory"},
+            comments = "Related component claim: internalMatchingIface"
+    )
+    interface _MatchingInterface {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        MyRecordA otherItem();
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        MyRecordB recursionFtw();
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.misc.MatchingInterfaceGenerator"},
+                comments = "Related component claim: internalMatchingIface"
+        )
+        MyRecordA woo();
+    }
+}
+----
+====
+
+And you can use them both:
+
+[source,java]
+----
+final MyRecordA myA = MyRecordAUtils.builder().someStringField("blah").someIntField(42).build();
+final MyRecordB firstRound = MyRecordBUtils.builder()
+    .woo(myA)
+    // A fluent use of a sub-builder is available by default
+    .otherItem(oth -> oth.someIntField(42))
+    .build();
+final MyRecordB secondRound = MyRecordBUtils.builder(firstRound)
+    .otherItem(oth -> oth.someIntField(420))
+    .build();
+----

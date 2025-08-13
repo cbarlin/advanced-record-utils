@@ -1,0 +1,123 @@
+== Get started
+
+We recommend the approach of adding the annotations as a dependency and the processor to your maven compiler plugin config. This is so that dependencies that the processor has don't end up in your project, and because the default in Java 23+ is to not automatically scan dependencies for annotation processors (which could be a security risk!)
+
+=== Configuring your build tooling
+
+==== Maven
+
+. {empty}
++
+--
+Add a property for the version of Advanced Record Utils. The current version is
+
+image::https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils["Maven Central release", link=https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations]
+
+This guide will assume that the property is named `+aru.version+`
+--
+. {empty}
++
+--
+Add the annotations as a dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>advanced-record-utils-annotations</artifactId>
+    <version>${aru.version}</version>
+</dependency>
+----
+--
+. {empty}
++
+--
+Add the annotation processor to your annotation processor paths
+
+NOTE: If you are using some optional integrations with e.g. avaje-jsonb, then ensure that our processor comes first
+
+[source,xml]
+----
+<path>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>advanced-record-utils-processor</artifactId>
+    <version>${aru.version}</version>
+</path>
+----
+.Where does this block go?
+[%collapsible]
+====
+
+If you don't have a `+build+` section of your pom, you can use the below.
+
+[source,xml]
+----
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>io.github.cbarlin</groupId>
+                        <artifactId>advanced-record-utils-processor</artifactId>
+                        <version>${aru.version}</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+----
+
+====
+--
+
+==== Gradle
+
+Gradle 5.2 added better support for annotation processors, so ensure you are using that version or newer.
+
+. {empty}
++
+--
+Add a property for the version of Advanced Record Utils. The current version is
+
+image::https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils["Maven Central release", link=https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations]
+
+This guide will assume that the property is named `+aru.version+`
+--
+. {empty}
++
+--
+Add the declarations for the dependency and the annotation processor like so:
+[source,gradle]
+----
+dependencies {
+  implementation('io.github.cbarlin:advanced-record-utils-annotations:${aru.version}')
+  annotationProcessor('io.github.cbarlin:advanced-record-utils-processor:${aru.version}')
+  testAnnotationProcessor('io.github.cbarlin:advanced-record-utils-processor:${aru.version}')
+}
+----
+--
+
+=== Java modules
+
+If you are using Java's module system, you will need to add the below to your `+module-info.java+` file:
+
+[source,java]
+----
+module org.example {
+    requires io.github.cbarlin.aru.annotations;
+}
+----
+
+=== Reproducible Builds
+
+image::https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json["Reproducible Builds", link=https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md]
+
+This project is reproducible (and independently verified - thanks https://github.com/hboutemy[hboutemy]!). In addition, our github builds ensure that the generated code is _also_ reproducible.
+
+Assuming you have done everything else you need to do for reproducible builds (see the https://reproducible-builds.org/docs/jvm/[JVM guide]) then use of Advanced Record Utils will not stop that (barring one edge case - see "Importing records/interfaces" below).
+
+NOTE: If your build isn't reproducible and it should be, please create a new issue on our GitHub.
