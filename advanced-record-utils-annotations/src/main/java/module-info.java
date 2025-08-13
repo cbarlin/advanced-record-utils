@@ -12,5 +12,5 @@ module io.github.cbarlin.aru.annotations {
     exports io.github.cbarlin.aru.annotations.aliases;
 
     requires java.base;
-    requires static org.jspecify;
+    requires transitive org.jspecify;
 }
