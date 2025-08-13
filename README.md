@@ -49,8 +49,7 @@ Add the following maven or gradle dependency for the annotations:
     <groupId>io.github.cbarlin</groupId>
     <artifactId>advanced-record-utils-annotations</artifactId>
     <version>${aru.version}</version>
-</dependency>
-<!-- JSpecify is included as a transitive dependency -->
+</dependency> <!-- This will bring in JSpecify for you -->
 ```
 
 And the following to your annotation processor paths (note: if using integrations with e.g. `avaje-json`, make sure this processor is first):
@@ -67,7 +66,7 @@ If you use java modules, you will need to add:
 
 ```java
 requires io.github.cbarlin.aru.annotations;
-// No explicit 'requires org.jspecify' needed; it's re-exported transitively by the annotations module
+// this will also transitively include JSpecify
 ```
 
 Annotate your record like so:
