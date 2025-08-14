@@ -1,0 +1,370 @@
+.Generated Utils subclasses
+[%collapsible]
+====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    /**
+     * The result of a diff between two instances of {@link Person}
+     * <p>
+     * Results are pre-computed and stored in memory
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.DiffFactory"},
+            comments = "Related class claim: differResult"
+    )
+    public static final class DiffOfPerson {
+        /**
+         * Has any field changed in this diff?
+         */
+        private final boolean __overallChanged;
+
+        /**
+         * Has the field named $S changed?
+         */
+        private final boolean age;
+
+        /**
+         * Diff of the field named $S
+         */
+        private final ListString favouriteColours;
+
+        /**
+         * Has the field named $S changed?
+         */
+        private final boolean name;
+
+        /**
+         * The original field named $S
+         */
+        @Nullable
+        private final int originalAge;
+
+        /**
+         * The original field named $S
+         */
+        @Nullable
+        private final List<String> originalFavouriteColours;
+
+        /**
+         * The original field named $S
+         */
+        @Nullable
+        private final String originalName;
+
+        /**
+         * The (potentially) updated field named $S
+         */
+        @Nullable
+        private final int updatedAge;
+
+        /**
+         * The (potentially) updated field named $S
+         */
+        @Nullable
+        private final List<String> updatedFavouriteColours;
+
+        /**
+         * The (potentially) updated field named $S
+         */
+        @Nullable
+        private final String updatedName;
+
+        /**
+         * Creates a new diff between two instances of {@link Diffable}
+         * <p>
+         * Results are pre-computed and stored in memory
+         *
+         * @param original The originating element of the diff
+         * @param updated The (potentially) changed element of the diff
+         */
+        public DiffOfPerson(final Diffable original, final Diffable updated) {
+            Objects.requireNonNull(original, "The originating element cannot be null");
+            Objects.requireNonNull(updated, "The (potentially) changed element cannot be null");
+            // "Computing the diff of " + "name" + " by calling Objects.equals"
+            this.name = _DifferUtils.hasStringChanged(original.name(), updated.name());
+            this.originalName = original.name();
+            this.updatedName = updated.name();
+            // "Computing the diff of " + "age" + " by calling Objects.equals"
+            this.age = _DifferUtils.hasintChanged(original.age(), updated.age());
+            this.originalAge = original.age();
+            this.updatedAge = updated.age();
+            // "Computing the diff of " + "favouriteColours" + " by using their generated diff utils"
+            this.favouriteColours = _DifferUtils.hasListStringChanged(original.favouriteColours(), updated.favouriteColours());
+            this.originalFavouriteColours = original.favouriteColours();
+            this.updatedFavouriteColours = updated.favouriteColours();
+            this.__overallChanged = this.hasNameChanged() || this.hasAgeChanged() || this.hasFavouriteColoursChanged() || false;
+        }
+
+        /**
+         * Creates a new diff between two instances of {@link Person}
+         * <p>
+         * Results are pre-computed and stored in memory
+         *
+         * @param original The originating element of the diff
+         * @param updated The (potentially) changed element of the diff
+         */
+        DiffOfPerson(final Person original, final Person updated) {
+            Objects.requireNonNull(original, "The originating element cannot be null");
+            Objects.requireNonNull(updated, "The (potentially) changed element cannot be null");
+            // "Computing the diff of " + "name" + " by calling Objects.equals"
+            this.name = _DifferUtils.hasStringChanged(original.name(), updated.name());
+            this.originalName = original.name();
+            this.updatedName = updated.name();
+            // "Computing the diff of " + "age" + " by calling Objects.equals"
+            this.age = _DifferUtils.hasintChanged(original.age(), updated.age());
+            this.originalAge = original.age();
+            this.updatedAge = updated.age();
+            // "Computing the diff of " + "favouriteColours" + " by using their generated diff utils"
+            this.favouriteColours = _DifferUtils.hasListStringChanged(original.favouriteColours(), updated.favouriteColours());
+            this.originalFavouriteColours = original.favouriteColours();
+            this.updatedFavouriteColours = updated.favouriteColours();
+            this.__overallChanged = this.hasNameChanged() || this.hasAgeChanged() || this.hasFavouriteColoursChanged() || false;
+        }
+
+        /**
+         * Obtains the diff of the "favouriteColours" field
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.EagerCollectionDiffResultCreator"},
+                comments = "Related component claim: differComputation"
+        )
+        public final ListString diffFavouriteColours() {
+            return this.favouriteColours;
+        }
+
+        /**
+         * Has the "age" field changed between the two versions?
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.EagerStandardFieldChanged"},
+                comments = "Related component claim: differComputation"
+        )
+        public final boolean hasAgeChanged() {
+            return this.age;
+        }
+
+        /**
+         * Has any field changed in this diff?
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.EagerStandardHasChangedCheck"},
+                comments = "Related class claim: differGlobalHasChanged"
+        )
+        public final boolean hasChanged() {
+            return this.__overallChanged;
+        }
+
+        /**
+         * Has the "favouriteColours" field changed between the two versions?
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.EagerCollectionDiffResultCreator"},
+                comments = "Related component claim: differComputation"
+        )
+        public final boolean hasFavouriteColoursChanged() {
+            // If there are no added elements and no removed elements, nothing has changed
+            return !(this.favouriteColours.addedElements().isEmpty() && this.favouriteColours.removedElements().isEmpty());
+        }
+
+        /**
+         * Has the "name" field changed between the two versions?
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.EagerStandardFieldChanged"},
+                comments = "Related component claim: differComputation"
+        )
+        public final boolean hasNameChanged() {
+            return this.name;
+        }
+
+        /**
+         * Return the original value for "age"
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.ValueHolder"},
+                comments = "Related component claim: differValueHolding"
+        )
+        public final int originalAge() {
+            return this.originalAge;
+        }
+
+        /**
+         * Return the original value for "favouriteColours"
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.ValueHolder"},
+                comments = "Related component claim: differValueHolding"
+        )
+        public final List<String> originalFavouriteColours() {
+            return this.originalFavouriteColours;
+        }
+
+        /**
+         * Return the original value for "name"
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.ValueHolder"},
+                comments = "Related component claim: differValueHolding"
+        )
+        public final String originalName() {
+            return this.originalName;
+        }
+
+        /**
+         * Return the non-original value for "age"
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.ValueHolder"},
+                comments = "Related component claim: differValueHolding"
+        )
+        public final int updatedAge() {
+            return this.updatedAge;
+        }
+
+        /**
+         * Return the non-original value for "favouriteColours"
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.ValueHolder"},
+                comments = "Related component claim: differValueHolding"
+        )
+        public final List<String> updatedFavouriteColours() {
+            return this.updatedFavouriteColours;
+        }
+
+        /**
+         * Return the non-original value for "name"
+         */
+        @Nullable
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.results.ValueHolder"},
+                comments = "Related component claim: differValueHolding"
+        )
+        public final String updatedName() {
+            return this.updatedName;
+        }
+
+        /**
+         * A record containing the difference between two collections
+         *
+         * @param addedElements The elements added to the collection
+         * @param elementsInCommon The elements in common between the two instances
+         * @param removedElements The elements removed from the collection
+         */
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.utils.CollectionDiffCreation"},
+                comments = "Related component claim: differUtilsComputation"
+        )
+        public record ListString(
+                List<String> addedElements,
+                List<String> elementsInCommon,
+                List<String> removedElements
+        ) {
+        }
+    }
+
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.DiffFactory"},
+            comments = "Related class claim: differUtils"
+    )
+    public static final class _DifferUtils {
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.DiffFactory"},
+                comments = "Related class claim: differUtils"
+        )
+        private _DifferUtils() {
+            throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+        }
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.utils.CollectionDiffCreation"},
+                comments = "Related component claim: differUtilsComputation"
+        )
+        public static final DiffOfPerson.ListString hasListStringChanged(@Nullable final List<String> original,
+                @Nullable final List<String> updated) {
+            // Create frequency maps to count occurrences
+            final Map<String, Long> originalFreq = Objects.requireNonNullElse(original, List.<String>of()).stream()
+                        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+            final Map<String, Long> updatedFreq = Objects.requireNonNullElse(updated, List.<String>of()).stream()
+                        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+            final List<String> added = new ArrayList<>();
+            final List<String> removed = new ArrayList<>();
+            final List<String> common = new ArrayList<>();
+            // Obtain unique elements
+            final Set<String> allUniqueElements = new HashSet<>(originalFreq.keySet());
+            allUniqueElements.addAll(updatedFreq.keySet());
+            for (final String element : allUniqueElements) {
+                final long originalCount = originalFreq.getOrDefault(element, 0L);
+                final long updatedCount = updatedFreq.getOrDefault(element, 0L);
+                final long commonCount = Math.min(originalCount, updatedCount);
+                for (long i = 0; i < commonCount; i++) {
+                    common.add(element);
+                }
+                if (originalCount > updatedCount) {
+                    final long removedCount = originalCount - updatedCount;
+                    for (long i = 0; i < removedCount; i++) {
+                        removed.add(element);
+                    }
+                }
+                if (updatedCount > originalCount) {
+                    final long addedCount = updatedCount - originalCount;
+                    for (long i = 0; i < addedCount; i++) {
+                        added.add(element);
+                    }
+                }
+            }
+            return new DiffOfPerson.ListString(List.copyOf(added), List.copyOf(common), List.copyOf(removed));
+        }
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.utils.BasicHasChangedCheck"},
+                comments = "Related component claim: differUtilsComputation"
+        )
+        public static final boolean hasStringChanged(@Nullable final String original, @Nullable final String updated) {
+            return !Objects.equals(original, updated);
+        }
+
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.utils.BasicHasChangedCheck"},
+                comments = "Related component claim: differUtilsComputation"
+        )
+        public static final boolean hasintChanged(@Nullable final int original, @Nullable final int updated) {
+            return !Objects.equals(original, updated);
+        }
+    }
+
+    /**
+     * Interface for a record that can compute differences against another instance of the same type
+     */
+    @NullMarked
+    @Generated(
+            value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.DiffFactory"},
+            comments = "Related class claim: differInterface"
+    )
+    interface Diffable extends _MatchingInterface {
+        /**
+         * Generate the diff between this instance ("original") and the provided instance ("updated")
+         * <p>
+         * Diff is computed as soon as this method is called
+         * @return The result of the diff
+         */
+        @NonNull
+        @Generated(
+                value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.diff.DiffFactory"},
+                comments = "Related class claim: differInterface"
+        )
+        default DiffOfPerson diff(@NonNull final Diffable updated) {
+            return new DiffOfPerson(this, updated);
+        }
+    }
+}
+----
+====

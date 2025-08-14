@@ -1,0 +1,34 @@
+.Generated Builder Methods
+[%collapsible]
+====
+[source,java]
+----
+/**
+ * Updates the value of {@code andImAnEnum}
+ * <p>
+ * Supplying a null value will set the current value to null
+ *
+ * @param andImAnEnum The replacement value
+ */
+@NonNull
+@Generated(
+        value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
+        comments = "Related component claim: builderPlainSetter"
+)
+public Builder andImAnEnum(@Nullable final AnEnumInDep andImAnEnum) {
+    this.andImAnEnum = andImAnEnum;
+    return this;
+}
+
+/**
+ * Updates the value of {@code andImAnEnum}
+ */
+@Generated(
+        value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.UsingTypeConverter"},
+        comments = "Related component claim: builderUseTypeConverter"
+)
+public Builder andImAnEnum(final String label) {
+    return this.andImAnEnum(AnEnumInDep.fromLabel(label));
+}
+----
+====

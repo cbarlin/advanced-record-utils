@@ -16,7 +16,7 @@ Say we have the following:
 .package-info.java
 [source,java]
 ----
-@io.github.cbarlin.aru.annotations.AdvancedRecordUtils(merger = true)
+@io.github.cbarlin.aru.annotations.AdvancedRecordUtils(applyToAllInPackage = true)
 package org.example;
 ----
 
@@ -102,7 +102,7 @@ package org.example;
 public record Person(String name, int age, List<String> favouriteColours) {}
 ----
 
-== Automatically importing all items in a package
+== Automatically applying to all items in a package
 
 You can also request that all records within a given package have `+*Utils+` classes generated for them. These records will use the settings specified on the package, similar to the above case of packages specifying default settings. To use, set `+applyToAllInPackage = true+` on the package. You can still add annotations on the individual records including settings for that record, and that record will respect its own settings.
 

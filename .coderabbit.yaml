@@ -62,9 +62,10 @@ reviews:
         The README of `aru-prism-prison` covers this folder quite well
     - path: 'docs/**'
       instructions: |
-        These are bundled into one large page and published to GitHub Pages. When reviewing, do not review code snippets. 
-        
-        Do not review code snippets that represent generated output.
+        These are bundled into one large page and published to GitHub Pages.
+
+        References to the "generated-code" folder all exist and will resolve, but the contents of that folder have been hidden from you.
+        This is because the folder is full of "noise" that makes it hard for you to review.
     - path: 'aru-processor-core/**/*.java'
       instructions: |
         This folder contains the dense code that wires together the processor. The `module-info` specifies that the code is `@NullMarked`, therefore

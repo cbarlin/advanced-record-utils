@@ -10,7 +10,7 @@ To use `+with+` methods (methods that create a new copy of the record with a fie
 public record Person(String name, int age, List<String> favouriteColours) implements PersonUtils.All { }
 ----
 
-TIP: Implementing the `+All+` interface is preferable to implementing the `+With+` interface directly because if you enable more utilities they'll be immediately available.
+TIP: Implementing the `+All+` interface is preferable to implementing the `+With+` interface directly because if you enable more utilities they'll be immediately available. Using the `+All+` interface also generates `sealed` interfaces.
 
 And now you can use `+with+` style methods!
 
@@ -24,4 +24,4 @@ PersonUtils.Builder backToBuilder = personB.with(); // Returns a builder instanc
 Person aViaBuilder = personA.with(builder -> builder.name("Connie")); // Fluent use of the builder, allowing for multiple changes to be made easily
 ----
 
-The `+with+` methods generated broadly align with the same methods generated on the `+Builder+`. For example, if the builder has `+add+` methods enabled on collections (like `+addFavouriteColours+`) then the wither will have an `+add+` method as well (`+withAddFavouriteColours+`)
+The `+with+` methods generated broadly align with the same methods generated on the `+Builder+`. For example, if the builder has `+add+` methods enabled on collections (like `+addFavouriteColours+`) then the wither will have an `+withAdd+` method as well (`+withAddFavouriteColours+`), which creates a copy with the element having been added to that field.

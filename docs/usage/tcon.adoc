@@ -58,41 +58,8 @@ final MyRecord myB = MyRecordUtils.builder()
     .build();
 ----
 
-.Generated Builder Methods
-[%collapsible]
-====
-[source,java]
-----
-/**
- * Updates the value of {@code andImAnEnum}
- * <p>
- * Supplying a null value will set the current value to null
- *
- * @param andImAnEnum The replacement value
- */
-@NonNull
-@Generated(
-        value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.core.impl.visitors.builder.AddSetter"},
-        comments = "Related component claim: builderPlainSetter"
-)
-public Builder andImAnEnum(@Nullable final AnEnumInDep andImAnEnum) {
-    this.andImAnEnum = andImAnEnum;
-    return this;
-}
+include::../generated-code/usage/tcon.adoc[]
 
-/**
- * Updates the value of {@code andImAnEnum}
- */
-@Generated(
-        value = {"io.github.cbarlin.aru.core.AdvRecUtilsProcessor", "io.github.cbarlin.aru.impl.builder.UsingTypeConverter"},
-        comments = "Related component claim: builderUseTypeConverter"
-)
-public Builder andImAnEnum(final String label) {
-    return this.andImAnEnum(AnEnumInDep.fromLabel(label));
-}
-----
-====
-
-This isn't restricted to enums - you can translate any parameters to (almost) any return type and it'll be picked up.
+This is not restricted to enums - you can translate any parameters to (almost) any return type and it'll be picked up.
 
 WARNING: By default, the processor rejects methods that use extremely common types (e.g. `+String+`) that may "flood" generated builders. If you wish to do this anyway, you can add a `+permitReturnTypeWhichMayResultInTooManyMethods = true+` setting on the `+@TypeConverter+`

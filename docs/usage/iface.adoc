@@ -27,7 +27,9 @@ public record MyRecordG(
 ) {}
 ----
 
-As described above, the processor is not able to work with the `+SomeInterface+` interface, and so will not generate `+*Utils+` classes for the two implementing records, nor will there be builder methods (such as fluent setters) for them. There are several approaches that can be used to resolve this.
+As described above, the processor is not able to work with the `+SomeInterface+` interface, and so will not generate `+*Utils+` classes for the two implementing records, nor will there be builder methods (such as fluent setters) for them. This also applies to any other utilities generated - no mergers or differs - and so those tools will fall back to default methods of working.
+
+There are several approaches that can be used to resolve this.
 
 == Seal the interface
 
@@ -60,7 +62,7 @@ Then the processor will be able to read the `+permits+` clause and the cascading
 * `+MyRecordFOptionA+`
 * `+MyRecordFOptionB+`
 
-include::iface-generated.adoc[]
+include::../generated-code/usage/iface-generated.adoc[]
 
 == Annotate the records
 
@@ -97,9 +99,9 @@ Then when the processor reads the interface defined on both of the records it is
 
 NOTE: The below collapsible is the same as the one under "Seal the interface"
 
-include::iface-generated.adoc[]
+include::../generated-code/usage/iface-generated.adoc[]
 
-CAUTION: If you only annotate one of the records, then a `+*Utils+` class won't be generated for the omitted record, and the both the interface's and `+MyRecordG+` generated `+*Utils+` classes will only be able to reference the one record
+CAUTION: If you only annotate one of the records, then a `+*Utils+` class won't be generated for the omitted record, and both the interface's and `+MyRecordG+` generated `+*Utils+` classes will only be able to reference the one record
 
 == Use package-wide application
 
@@ -136,4 +138,4 @@ Then when the processor reads the interface defined on both of the records it is
 
 NOTE: The below collapsible is the same as the one under "Seal the interface"
 
-include::iface-generated.adoc[]
+include::../generated-code/usage/iface-generated.adoc[]

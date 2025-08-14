@@ -2,7 +2,7 @@
 
 You can also import records and generate `+*Utils+` classes for them, or make use of their existing `+*Utils+` classes if they exist.
 
-== Importing records/interfaces
+== Importing records/interfaces to create new `+Utils+` classes
 
 You can import records and interfaces in any place that you can place an `+@AdvancedRecordUtils+` annotation by using the `+importTargets+` setting. This can be used to create `+*Utils+` classes for records in a library, or in a different package to the one the record is defined in.
 

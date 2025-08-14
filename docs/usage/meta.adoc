@@ -1,6 +1,6 @@
 = Meta-annotations
 
-You can also use meta-annotations to define a group of settings to apply to a number of disparate records/interfaces. Like the normal annotation, these settings cascade (see above for details), and like the normal annotation the settings it defines gets "merged" with others. The order of preference for the merge is:
+You can also use meta-annotations to define a group of settings to apply to a number of disparate records/interfaces. Like the normal annotation, these settings cascade (see above for details), and like the normal annotation the settings it defines get "merged" with others. The order of preference for the merge is:
 
 . Settings on the record itself
 . Settings inherited via meta-annotations
@@ -108,4 +108,4 @@ public record Address(String country, String state) {}
 public record Video(String name, int uploadYear) {}
 ----
 
-TIP: There is an `+@AdvancedRecordUtilsFull+` which acts similarly to this (except that it is known to the processor ahead-of-time), and has most optional settings turned on.
+TIP: There is an https://github.com/cbarlin/advanced-record-utils/blob/main/advanced-record-utils-annotations/src/main/java/io/github/cbarlin/aru/annotations/AdvancedRecordUtilsFull.java[`+@AdvancedRecordUtilsFull+`] which acts similarly to this (except that it is known to the processor ahead-of-time), and has most optional settings turned on.
