@@ -70,7 +70,7 @@
         <jakarta-xml-bind-api.version>4.0.2</jakarta-xml-bind-api.version>
         <jspecify.version>1.0.0</jspecify.version>
         <junit-bom.version>5.13.4</junit-bom.version>
-        <mockito.version>5.18.0</mockito.version>
+        <mockito.version>5.19.0</mockito.version>
         <stax2-api.version>4.2.2</stax2-api.version>
         <vavr.version>0.10.7</vavr.version>
         <woodstox.version>7.1.1</woodstox.version>
@@ -89,7 +89,7 @@
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.11.3</maven-javadoc-plugin.version>
         <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
