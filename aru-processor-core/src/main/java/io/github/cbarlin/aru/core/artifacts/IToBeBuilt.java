@@ -20,19 +20,8 @@ public interface IToBeBuilt<T extends IToBeBuilt<T>> {
 
     T delegate();
 
-    /**
-     * Determine if this artifact actually has any content
-     */
-    default boolean hasContent() {
-        return delegate().hasContent();
-    }
-
     default ClassName className() {
         return delegate().className();
-    }
-
-    default void cleanup() {
-        delegate().cleanup();
     }
 
     /**

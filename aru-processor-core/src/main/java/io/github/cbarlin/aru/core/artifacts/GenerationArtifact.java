@@ -11,8 +11,4 @@ public interface GenerationArtifact<T extends GenerationArtifact<T>> {
 
     @Nullable
     public T childArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation);
-
-    default void cleanup() {
-        // No-op
-    }
 }
