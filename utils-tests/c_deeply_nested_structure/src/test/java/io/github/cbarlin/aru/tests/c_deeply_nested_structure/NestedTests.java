@@ -61,6 +61,9 @@ class NestedTests {
                                 five -> five.nowToSix(
                                     six -> six.woo(
                                         seven -> seven
+                                            // This is set to null (proving the method exists)
+                                            //  and then immediately overridden.
+                                            // The override is tested via the XML check
                                             .setAndImDoneToNull()
                                             .andImDone(
                                                 recurringAgain -> recurringAgain.itemA("Hi!")

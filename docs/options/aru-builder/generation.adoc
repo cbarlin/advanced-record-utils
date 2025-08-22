@@ -257,32 +257,34 @@ include::../../generated-code/options/builder-generation-settime.adoc[]
 .`+setToNullMethods+`
 [%collapsible]
 ====
-Should the builder contain methods that allow you to set a field to:
+Should the builder generate methods to explicitly reset a field to a “null-like” state?
 
-* Empty, for `+Optional+` type component
-* Empty, for collection components if `+buildNullCollectionToEmpty+` is `+true+`
-* `+null+` in all other cases
+* Empty for `+Optional+` components
+* Empty for collection components when `+buildNullCollectionToEmpty+` is `+true+`
+* `+null+` for all other component types
 
 *Type*:: `+boolean+`
 *Default*:: `+false+`
+
+.CAUTION
+When `nullReplacesNotNull = false`, these `setXToNull` methods will not be generated at all.
 
 .Usage
 [source,java]
 ----
 @AdvancedRecordUtils(
-    builderOptions = @BuilderOptions(
-        setToNullMethods = true
+    builderOptions = @AdvancedRecordUtils.BuilderOptions(
+        setToNullMethods      = true
     )
 )
 public record Person(
     OffsetDateTime offsetDateTime,
-    ZonedDateTime zonedDateTime,
-    LocalDateTime localDateTime
-) {
-}
+    List<String> tags,
+    String name
+) { }
 ----
 
-include::../../generated-code/options/builder-generation-settime.adoc[]
+include::../../generated-code/options/builder-generation-setnull.adoc[]
 
 ====
 

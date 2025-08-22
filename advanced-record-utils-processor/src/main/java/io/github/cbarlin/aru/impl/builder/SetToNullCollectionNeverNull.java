@@ -6,6 +6,7 @@ import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
+import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants;
@@ -16,18 +17,19 @@ import javax.lang.model.element.Modifier;
 
 @Component
 @BuilderPerComponentScope
-@RequiresBean({ConstructorComponent.class})
+@RequiresBean({ConstructorComponent.class, AnalysedCollectionComponent.class})
 @RequiresProperty(value = "setToNullMethods", equalTo = "true")
 @RequiresProperty(value = "nullReplacesNotNull", equalTo = "true")
-public final class SetToNull extends RecordVisitor {
+@RequiresProperty(value = "buildNullCollectionToEmpty", equalTo = "true")
+public final class SetToNullCollectionNeverNull extends RecordVisitor {
 
-    public SetToNull(final AnalysedRecord analysedRecord) {
+    public SetToNullCollectionNeverNull(final AnalysedRecord analysedRecord) {
         super(Constants.Claims.BUILDER_SET_TO_NULL, analysedRecord);
     }
 
     @Override
     public int specificity() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -39,13 +41,13 @@ public final class SetToNull extends RecordVisitor {
         final MethodSpec.Builder builder = analysedRecord.builderArtifact().createMethod(methodName, claimableOperation)
             .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
             .addStatement(
-                "this.$L = null",
+                "this.$L.clear()",
                 analysedComponent.name()
             )
             .addStatement("return this")
             .addAnnotation(Constants.Names.NON_NULL)
             .addJavadoc(
-                "Sets the value of $L to null.\n",
+                "Sets the value of $L to an empty collection.\nThis is because {@code null} collections become empty.\n",
                 analysedComponent.name()
             )
             .returns(analysedRecord.builderArtifact().className());

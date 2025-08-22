@@ -56,6 +56,7 @@ public final class PropertyConfigLoader implements ConfigPropertyPlugin {
                 case "fluent" -> Boolean.FALSE.equals(prism.builderOptions().fluent()) ? FALSE : TRUE;
                 case "concreteSettersForOptional" -> Boolean.FALSE.equals(prism.builderOptions().concreteSettersForOptional()) ? FALSE : TRUE;
                 case "nullReplacesNotNull" -> Boolean.FALSE.equals(prism.builderOptions().nullReplacesNotNull()) ? FALSE : TRUE;
+                case "buildNullCollectionToEmpty" -> Boolean.FALSE.equals(prism.builderOptions().buildNullCollectionToEmpty()) ? FALSE : TRUE;
                 // Default of false means `null` is false, so compare against true
                 case "setTimeNowMethods" -> Boolean.TRUE.equals(prism.builderOptions().setTimeNowMethods()) ? TRUE : FALSE;
                 case "setToNullMethods" -> Boolean.TRUE.equals(prism.builderOptions().setToNullMethods()) ? TRUE : FALSE;

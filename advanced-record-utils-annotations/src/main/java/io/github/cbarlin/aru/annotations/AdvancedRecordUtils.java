@@ -410,7 +410,17 @@ public @interface AdvancedRecordUtils {
         boolean nullReplacesNotNull() default true;
 
         /**
-         * Should the builder generate "setXToNull" type methods?
+         * Should the builder generate explicit {@code setXToNull()} methods?
+         * <p>
+         * Notes:
+         * <ul>
+         *   <li>Only generated for reference types (non-primitives).</li>
+         *   <li>When applied to collection components, this sets the builder field to {@code null};
+         *       the final built value may still be an empty collection if
+         *       {@link BuilderOptions#buildNullCollectionToEmpty()} is {@code true}.</li>
+         *   <li>This is orthogonal to {@link BuilderOptions#nullReplacesNotNull()} — calling
+         *       {@code setXToNull()} always sets the builder field to {@code null}.</li>
+         * </ul>
          */
         boolean setToNullMethods() default false;
 

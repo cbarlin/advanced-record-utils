@@ -1,7 +1,6 @@
 package io.github.cbarlin.aru.impl.types.collection.set;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.LIST;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
