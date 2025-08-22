@@ -16,6 +16,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import static io.github.cbarlin.aru.core.analysers.ConcreteTargetAnalyser.recursiveIgnored;
+
 @Component
 @CoreGlobalScope
 @Priority(3)
@@ -50,6 +52,8 @@ public final class PackageTargetAnalyser implements TargetAnalyser {
                 .filter(TypeElement.class::isInstance)
                 .map(TypeElement.class::cast)
                 .forEach(typeElements::add);
+
+        typeElements.removeAll(recursiveIgnored(prism));
 
         return new TargetAnalysisResult(Optional.empty(), typeElements, true, Set.of());
     }

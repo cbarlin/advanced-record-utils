@@ -1,0 +1,278 @@
+= Diffable Options
+
+These control the names and behaviour for generating the `+Diffable+` interface and related classes. These are applied to the `+diffOptions = @DiffOptions()+` sub-setting like so:
+
+.Placement example
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        // Options go here
+    ),
+    diffable = true
+)
+public record Person(String name, int age) {}
+----
+
+.`+differName+`
+[%collapsible]
+====
+Sets the name of the `+Diffable+` interface.
+
+*Type*:: `+String+`
+*Default*:: `+"Diffable"+`
+
+.Usage: Changing the name of the interface
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        differName = "DeltaGeneratable"
+    ),
+    diffable = true
+)
+public record Person(String name, int age)
+implements PersonUtils.DeltaGeneratable {}
+----
+====
+
+.`+differMethodName+`
+[%collapsible]
+====
+Sets the name of the method that computes the diff.
+
+*Type*:: `+String+`
+*Default*:: `+"diff"+`
+
+.Usage: Changing the name of the method
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        differMethodName = "delta"
+    ),
+    diffable = true
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, the generated method is callable like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.delta(personA);
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+----
+====
+
+.`+diffResultPrefix+` / `+diffResultSuffix+`
+[%collapsible]
+====
+Sets the prefix and suffix applied to the record that contains the results of the diff computation.
+
+*Type*:: `+String+`
+*Default*:: `+"DiffOf"+` (prefix), `+""+` (suffix)
+
+.Usage: Changing the name of the result type
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        diffResultPrefix = "",
+        diffResultSuffix = "Changes"
+    ),
+    diffable = true
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, the result of the diff is stored in an `+PersonChanges+` class like so:
+
+.Sample method body
+[source,java]
+----
+PersonChanges diff = personA.diff(personA);
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+----
+====
+
+.`+originatingElementName+` / `+comparedToElementName+`
+[%collapsible]
+====
+Sets the name of the first and second elements being compared.
+
+*Type*:: `+String+`
+*Default*:: `+"original"+` (originating), `+"updated"+` (comparedTo)
+
+.Usage: Changing the compared element names
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        originatingElementName = "parent",
+        comparedToElementName = "child"
+    ),
+    diffable = true
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, obtaining the input items or their fields works like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+String parentName = diff.parentName();
+String childName = diff.childName();
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+String originalName = diff.originalName();
+String updatedName = diff.updatedName();
+----
+====
+
+.`+changedCheckPrefix+` / `+changedCheckSuffix+`
+[%collapsible]
+====
+Sets the prefix and suffix applied to the component name that reports if that component has changed.
+
+*Type*:: `+String+`
+*Default*:: `+"has"+` (prefix), `+"Changed"+` (suffix)
+
+.Usage: Changing the changed-check naming
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        changedCheckPrefix = "is",
+        changedCheckSuffix = "Different"
+    ),
+    diffable = true
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, to see if a field has changed you can do this:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+if (diff.isAgeDifferent()) {
+    // Do something
+}
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+if (diff.hasAgeChanged()) {
+    // Do something
+}
+----
+====
+
+.`+changedAnyMethodName+`
+[%collapsible]
+====
+Sets the name of the method that reports if any component is different between the two instances.
+
+*Type*:: `+String+`
+*Default*:: `+"hasChanged"+`
+
+.Usage: Changing the aggregate changed-check method
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        changedAnyMethodName = "isDifferent"
+    ),
+    diffable = true
+)
+public record Person(String name, int age)
+implements PersonUtils.All {}
+----
+
+In the above example, the generated method is callable like so
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+if (diff.isDifferent()) {
+    // Do something
+}
+----
+
+The default looks like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = personA.diff(personA);
+if (diff.hasChanged()) {
+    // Do something
+}
+----
+====
+
+.`+staticMethodsAddedToUtils+`
+[%collapsible]
+====
+Should a static version of the `+diff+` method be placed on the top-level `+*Utils+` class?
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Create the static method
+[source,java]
+----
+@AdvancedRecordUtils(
+    diffOptions = @DiffOptions(
+        staticMethodsAddedToUtils = true
+    ),
+    diffable = true
+)
+public record Person(String name, int age) {}
+----
+
+You can then use it like so:
+
+.Sample method body
+[source,java]
+----
+DiffOfPerson diff = PersonUtils.diff(personA, personB);
+----
+
+include::../generated-code/options/differ-static.adoc[]
+
+====

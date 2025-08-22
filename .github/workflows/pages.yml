@@ -1,0 +1,29 @@
+name: GitHub Pages Publish
+on:
+  workflow_dispatch: { }
+  push:
+    branches:
+      - main
+      # TODO: Remove me once the PR that adds docs is merged
+      - cbarlin/issue17
+    paths:
+      - "**.adoc"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: gh-pages
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: asciidoctor-ghpages
+        # Pinned to tag v2.3.0
+        uses: manoelcampos/asciidoctor-ghpages-action@60643a4db90d0da4647f891dfd460e1d38a4c02b
+        with:
+          asciidoctor_params: --attribute=nofooter
+          source_dir: docs/
+          post_build: |
+            rm -rf ./usage ./options ./generated-code ./get-started.html ./how-to-read.html

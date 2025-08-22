@@ -1,0 +1,21 @@
+NOTE: Generated code varies depending on the kind of the record component, and if it is required or not. Generally speaking, the processor converts the component value into a sensible string value and outputs that. The methods are named after the component.
+
+****
+
+.Generated code for a primitive `+long+` field (`+@XmlAttribute(name = "primitiveLongAttribute")+`)
+[%collapsible]
+=====
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void primitiveLongAttribute(@NonNull final XMLStreamWriter output, @Nullable final long val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            output.writeAttribute("primitiveLongAttribute", String.valueOf(val));
+        }
+    }
+}
+----
+=====
+
+****

@@ -1,0 +1,157 @@
+= General output options
+
+These are applied on the annotation directly, such as:
+
+.Placement example
+[source,java]
+----
+@AdvancedRecordUtils(wither = false)
+----
+
+.`+wither+`
+[%collapsible]
+====
+Enables or disables the generation of the `+With+` interface. With-methods provide an immutable way to create a new record instance with a single field changed.
+
+*Type*:: `+boolean+`
+*Default*:: `+true+`
+
+.Usage: Disabling the wither
+[source,java]
+----
+@AdvancedRecordUtils(wither = false)
+public record Person(String name, int age) {}
+----
+
+For more information on the Wither, see <<use-record-wither,the earlier section>>. For more information on the options for the Wither, see the later section.
+====
+
+.`+merger+`
+[%collapsible]
+====
+Enables or disables the generation of the `+Mergeable+` interface (and internal `+_MergerUtils+`). This allows you to merge two instances of a record.
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Enabling the merger
+[source,java]
+----
+@AdvancedRecordUtils(merger = true)
+public record Person(String name, int age) {}
+----
+
+For more information on the Merger, see <<use-record-merger,the earlier section>>. For more information on the options for the Merger, see the later section.
+====
+
+.`+xmlable+`
+[%collapsible]
+====
+Enables or disables the generation of the `+XML+` interface (and internal `+_XmlUtils+`). This allows you to convert an instance of your record to XML.
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Enabling the XML
+[source,java]
+----
+@AdvancedRecordUtils(xmlable = true)
+public record Person(String name, int age) {}
+----
+
+For more information on the XML generation, see <<use-record-xml,the earlier section>> including the section on <<use-xml-supported-annotations,supported annotations>>. For more information on the options for the XML, see the later section.
+====
+
+.`+diffable+`
+[%collapsible]
+====
+Enables or disables the generation of the `+Diffable+` interface and diff result classes (and internal `+_DiffUtils+`). This allows you to compute and inspect differences between two instances of a record.
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Enabling the Diffable generation
+[source,java]
+----
+@AdvancedRecordUtils(diffable = true)
+public record Person(String name, int age) {}
+----
+
+For more information on the Differ, see <<use-record-differ,the earlier section>>. For more information on the options for the Differ, see the later section.
+====
+
+.`+createAllInterface+`
+[%collapsible]
+====
+Enables or disables the generation of the `+All+` interface. This interface extends all the generated interfaces, so you only need to import the one thing. If you implement it, the processor will seal the interfaces it generates.
+
+*Type*:: `+boolean+`
+*Default*:: `+true+`
+
+.Usage: Disabling the `+All+` interface
+[source,java]
+----
+@AdvancedRecordUtils(createAllInterface = false)
+public record Person(String name, int age) {}
+----
+====
+
+.`+logGeneration+`
+[%collapsible]
+====
+Defines the type of logging performed by generated code, if any.
+
+*Type*:: https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/AdvancedRecordUtils.LoggingGeneration.html[`+LoggingGeneration+`]
+*Default*:: `+LoggingGeneration.NONE+`
+
+.Usage: Choosing a setting
+[source,java]
+----
+@AdvancedRecordUtils(logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE)
+public record Person(String name, int age) {}
+----
+
+Valid values are:
+
+* `+NONE+` (Default) - no logs are generated (instead, comments are written into the generated code)
+* `+SLF4J_GENERATED_UTIL_INTERFACE+` - Use the SLF4J library to write logs as if they came from the https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/GeneratedUtil.html[`+GeneratedUtil+`^] interface
+* `+SLF4J_UTILS_CLASS+` - Use the SLF4J library to write logs as if they all came from the top-level `+*Utils+` class
+* `+SLF4J_PER_SUBCLASS+` - Use the SLF4J library to write logs on a per-subclass basis
+
+TIP: Using the `+SLF4J_GENERATED_UTIL_INTERFACE+` option can make it easier to control the logging of all generated code by setting the level of the `+io.github.cbarlin.aru.annotations+` package.
+
+When enabled, the generated logs include a number of attributes in order to make them easily filterable. These are:
+
+* advancedRecordUtilsProcessor - a constant, "io.github.cbarlin.aru.core.AdvRecUtilsProcessor"
+* originalType - this is the FQN of the record class that we are generating code for
+* intendedType - this is the type that the builder will build for you. It may be the same as "originalType". See `+useInterface+` option
+* advancedRecordUtilsVisitor - an internal reference for AdvancedRecordUtils maintainers. It's the FQN of the class that generated the method (and thus, the log line)
+* claimedOperationName - an internal reference. It's the "claim" that was obtained to generate the method
+* claimedOperationType - for the aforementioned claim, was it made at a class or component level
+
+include::../generated-code/options/aru-top-logging.adoc[]
+
+====
+
+.`+addJsonbImportAnnotation+`
+[%collapsible]
+====
+Enables or disables the generation of an https://javadoc.io/doc/io.avaje/avaje-jsonb/latest/io.avaje.jsonb/io/avaje/jsonb/Json.Import.html[Avaje `+@Json.Import+`] annotation on the `+*Utils+` classes.
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Add to any place you can add the annotation
+[source,java]
+----
+@AdvancedRecordUtils(addJsonbImportAnnotation = true)
+public record Person(String name, int age) {}
+----
+
+Particularly useful on large trees of records, as the <<#use-cascading,cascading>> effect means you do not have to annotate each record. The processor also automatically handles interfaces.
+
+IMPORTANT: When generating for interfaces, the annotation uses Avaje's default convention for type determination.
+
+include::../generated-code/options/aru-top-general.adoc[]
+
+====

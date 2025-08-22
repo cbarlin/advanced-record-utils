@@ -1,0 +1,45 @@
+= Usage
+
+== Record usage
+
+[#use-record-basic]
+include::basic-usage.adoc[leveloffset=+2]
+
+[#use-record-intended-constructor]
+include::targetcon.adoc[leveloffset=+2]
+
+[#use-record-wither]
+include::wither.adoc[leveloffset=+2]
+
+[#use-record-merger]
+include::merger.adoc[leveloffset=+2]
+
+[#use-record-differ]
+include::differ.adoc[leveloffset=+2]
+
+[#use-record-xml]
+include::xml.adoc[leveloffset=+2]
+
+// These items are not enclosed in "Record Usage"
+
+[#use-tcon]
+include::tcon.adoc[leveloffset=+1]
+
+[#use-cascading]
+include::cascading.adoc[leveloffset=+1]
+
+[#use-pkg]
+include::pkg.adoc[leveloffset=+1]
+
+[#use-meta]
+include::meta.adoc[leveloffset=+1]
+
+[#use-iface]
+include::iface.adoc[leveloffset=+1]
+
+== Type Alias
+
+TODO: Write this section
+
+[#use-imp]
+include::imp.adoc[leveloffset=+1]

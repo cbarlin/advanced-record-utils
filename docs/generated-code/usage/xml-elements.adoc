@@ -1,0 +1,27 @@
+****
+
+.Generated code
+[%collapsible]
+=====
+[source,java]
+----
+public final class ExampleUtils implements GeneratedUtil {
+    public static final class _XmlUtils {
+        private static final void someValue(@NonNull final XMLStreamWriter output, @Nullable final ThirdLevelInterface val,
+                @Nullable final String currentDefaultNamespace) throws XMLStreamException {
+            if (Objects.isNull(val)) {
+                return;
+            } else if (val instanceof ThirdLevelAFromA tVal) {
+                ThirdLevelAFromAUtils._XmlUtils.writeToXml(tVal, output, "ThirdLevelAFromA", null, currentDefaultNamespace);
+            } else if (val instanceof ThirdLevelBFromA tVal) {
+                ThirdLevelBFromAUtils._XmlUtils.writeToXml(tVal, output, "someValueB", null, currentDefaultNamespace);
+            } else if (val instanceof ThirdLevelCFromA tVal) {
+                ThirdLevelCFromAUtils._XmlUtils.writeToXml(tVal, output, "someValueC", null, currentDefaultNamespace);
+            }
+        }
+    }
+}
+----
+=====
+
+****

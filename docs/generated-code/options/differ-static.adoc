@@ -1,0 +1,16 @@
+****
+
+.Generated code on the top-level `+*Utils+` class
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final DiffOfPerson diff(final Person original, final Person updated) {
+        return new DiffOfRootItem(original, updated);
+    }
+}
+----
+=====
+
+****

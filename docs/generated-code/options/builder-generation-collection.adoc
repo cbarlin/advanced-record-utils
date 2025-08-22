@@ -1,0 +1,60 @@
+****
+
+.Generated code within the "Builder" class when set to `+JAVA_IMMUTABLE+` (default)
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+
+        public Set<String> names() {
+            final Set<String> ___immutable = this.names.stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toUnmodifiableSet());
+            return ___immutable;
+        }
+
+        public List<PhoneNumber> phoneNumbers() {
+            final List<PhoneNumber> ___immutable = this.phoneNumbers.stream()
+                        .filter(Objects::nonNull)
+                        .toList();
+            return ___immutable;
+        }
+
+        public Set<ExampleEnum> exampleEnum() {
+            // Usually you use Set.copyOf, but that internally uses a slower HashSet. This keeps the speed of an EnumSet, and maintains deep immutability by using a collection that can't be used elsewhere
+            final EnumSet<ExampleEnum> ___copy = EnumSet.copyOf(this.exampleEnum);
+            return Collections.unmodifiableSet(___copy);
+        }
+    }
+}
+----
+=====
+
+.Generated code within the "Builder" class when set to `+AUTO+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+
+        public Set<String> names() {
+            return this.names;
+        }
+
+        public List<PhoneNumber> phoneNumbers() {
+            return this.phoneNumbers;
+        }
+
+        public Set<ExampleEnum> exampleEnum() {
+            return this.exampleEnum;
+        }
+    }
+}
+----
+=====
+
+
+****

@@ -1,0 +1,44 @@
+****
+
+.Generated code within the "Builder" class when `+true+` (default)
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        @NonNull
+        private ArrayList<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+
+        public Builder phoneNumbers(@Nullable final List<PhoneNumber> phoneNumbers) {
+            this.phoneNumbers.clear();
+            if (Objects.nonNull(phoneNumbers)) {
+                this.phoneNumbers.addAll(phoneNumbers);
+            }
+            return this;
+        }
+    }
+}
+----
+=====
+
+.Generated code within the "Builder" class when `+false+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        @Nullable
+        private List<PhoneNumber> phoneNumbers;
+
+        public Builder phoneNumbers(@Nullable final List<PhoneNumber> phoneNumbers) {
+            this.phoneNumbers = phoneNumbers;
+            return this;
+        }
+    }
+}
+----
+=====
+
+****

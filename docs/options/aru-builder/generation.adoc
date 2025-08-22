@@ -1,0 +1,292 @@
+= Generation options
+
+.`+fluent+`
+[%collapsible]
+====
+Determine if fluent versions of methods should be built. These are methods that take a lambda with a single argument, which is the referenced type's builder.
+
+*Type*:: `+boolean+`
+*Default*:: `+"true"+`
+
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        fluent = false
+    )
+)
+public record Person(Address address, List<PhoneNumber> phoneNumbers) {}
+
+public record Address(String country) {}
+
+public record PhoneNumber(String number) {}
+----
+
+With the default setting of `+true+`, you can set the "address" field like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .address(addressBuilder -> addressBuilder.country("Australia"));
+----
+
+You can also add to the "phoneNumbers" field (assuming you haven't disabled that functionality) like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .addPhoneNumbers(builder -> builder.number("04 4444 4444"));
+----
+
+The processor also handles self-referencing types easily. Take the following definition:
+
+.MyRecordB.java
+[source,java]
+----
+@AdvancedRecordUtils(merger = true)
+public record MyRecordB(
+    String aField,
+    MyRecordB recursionFtw // The processor deals with self-referencing types
+) {
+
+}
+----
+
+You can then do:
+
+.Sample method body
+[source,java]
+----
+MyRecordBUtils.builder()
+    .recursionFtw(
+        b1 -> b1.aField("Nesting 1")
+            .recursionFtw(
+                b2 -> b2.aField("Nesting 2")
+                    .recursionFtw(
+                        b3 -> b3.aField("Nesting 3")
+                    )
+            )
+    );
+----
+
+include::../../generated-code/options/builder-generation-fluent.adoc[]
+
+====
+
+.`+createAdderMethods+`
+[%collapsible]
+====
+Should "add"-er type methods be created on the Builder?
+
+*Type*:: `+boolean+`
+*Default*:: `+"true"+`
+
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        createAdderMethods = false
+    )
+)
+public record Person(Address address, List<PhoneNumber> phoneNumbers) {}
+
+public record Address(String country) {}
+
+public record PhoneNumber(String number) {}
+----
+
+With the default setting of `+true+`, you can add to the "phoneNumbers" field like so:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .addPhoneNumbers(new PhoneNumber("04 4444 4444"));
+----
+
+include::../../generated-code/options/builder-generation-adder.adoc[]
+
+====
+
+.`+nullReplacesNotNull+`
+[%collapsible]
+====
+Should the builder allow setting a "null" value if there's already a non-null value?
+
+*Type*:: `+boolean+`
+*Default*:: `+"true"+`
+
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        nullReplacesNotNull = false
+    )
+)
+public record Person(Address address, List<PhoneNumber> phoneNumbers) {}
+
+public record Address(String country) {}
+
+public record PhoneNumber(String number) {}
+----
+
+If you set this to `+false+`, the below will pass:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.Builder builder = PersonUtils.builder()
+    .address(new Address("Australia"))
+    .address(null);
+// It's not null on the builder object
+Objects.requireNonNull(builder.address());
+// And it's not null when built
+Objects.requireNonNull(builder.build().address());
+----
+
+include::../../generated-code/options/builder-generation-nullrepl.adoc[]
+
+====
+
+.`+builtCollectionType+`
+[%collapsible]
+====
+If the Builder points to a generic collection type (such as `+List+` or `+Set+`), what should the builder construct when building?
+
+NOTE: If you define a concrete type the Builder will attempt to respect that type (e.g. specifying a `+LinkedList+`).
+
+*Type*:: https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/AdvancedRecordUtils.BuiltCollectionType.html[`+BuiltCollectionType+`^]
+*Default*:: `+BuiltCollectionType.JAVA_IMMUTABLE+`
+
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        builtCollectionType = AdvancedRecordUtils.BuiltCollectionType.AUTO
+    )
+)
+public record Person(Address address, List<PhoneNumber> phoneNumbers, Set<String> names) {}
+
+public record Address(String country) {}
+
+public record PhoneNumber(String number) {}
+----
+
+It has the following values:
+
+* `+AUTO+` - the collection will be whatever type is passed into the builder, unless you attempt to call an "add"-er method, in which case a sane default will be chosen (`+ArrayList+`, `+HashSet+`, etc)
+* `+JAVA_IMMUTABLE+` - the resulting collection will always be immutable
+
+include::../../generated-code/options/builder-generation-collection.adoc[]
+
+====
+
+.`+buildNullCollectionToEmpty+`
+[%collapsible]
+====
+If the Builder is going to result in a `+null+` value for a collection, should we instead return an empty collection?
+
+*Type*:: `+boolean+`
+*Default*:: `+true+`
+
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        buildNullCollectionToEmpty = false
+    )
+)
+public record Person(Address address, List<PhoneNumber> phoneNumbers) {}
+
+public record Address(String country) {}
+
+public record PhoneNumber(String number) {}
+----
+
+NOTE: Instead of modifying the "getter" for the builder, this instead modifies the default value of the internal field when the builder is constructed as well as the "setter" to have different behaviour if you pass in `+null+`.
+
+include::../../generated-code/options/builder-generation-nullcollection.adoc[]
+
+====
+
+.`+setTimeNowMethods+`
+[%collapsible]
+====
+Should the builder contain methods that automatically set `+OffsetDateTime+`, `+ZonedDateTime+`, and `+LocalDateTime+` to the current time?
+
+*Type*:: `+boolean+`
+*Default*:: `+true+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        setTimeNowMethods = false
+    )
+)
+public record Person(
+    OffsetDateTime offsetDateTime,
+    ZonedDateTime zonedDateTime,
+    LocalDateTime localDateTime
+) {
+}
+----
+
+include::../../generated-code/options/builder-generation-settime.adoc[]
+
+====
+
+.`+concreteSettersForOptional+`
+[%collapsible]
+====
+If an optional type is used, should there be a setter that takes the concrete type?
+
+*Type*:: `+boolean+`
+*Default*:: `+true+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        concreteSettersForOptional = false
+    )
+)
+public record Person(
+    OptionalInt age,
+    Optional<String> surname
+) {
+}
+----
+
+If set to `+true+` (default), you are able to do the following:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .age(42)
+    .surname((String) null);
+----
+
+include::../../generated-code/options/builder-generation-optional.adoc[]
+
+====

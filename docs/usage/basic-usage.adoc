@@ -1,0 +1,41 @@
+= Basic usage
+
+Annotate a record like so:
+
+.Person.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+When you build the class, the processor will take that and generate readable source code for you, which will then be compiled.
+
+include::../generated-code/usage/basic-usage.adoc[]
+
+And you'll have access to a builder that you can use!
+
+.Sample method body
+[source,java]
+----
+Person personA = PersonUtils.builder()
+  .name("Rufus")
+  .age(30)
+  .addFavouriteColours("blue")
+  .addFavouriteColours("purple")
+  .build();
+Person personB = PersonUtils.builder()
+  .name("Aerith")
+  .favouriteColours(List.of("red"))
+  .build();
+----
+
+You can also "copy" an existing instance:
+
+.Sample method body
+[source,java]
+----
+Person personC = PersonUtils.builder(personA)
+  .name("Barret")
+  .build();
+----

@@ -16,6 +16,8 @@ knowledge_base:
   pull_requests:
     scope: 'local'
 reviews:
+  path_filters:
+    - "!docs/generated-code/**"
   profile: 'assertive'
   estimate_code_review_effort: false
   tools:
@@ -36,10 +38,13 @@ reviews:
         * Review code using Java 21 standards, taking into account the vague rules and samples defined in `CONTRIBUTING.md`
         * Validate that code indentation uses spaces, not tabs, with an indent of multiple of 4
         * Propose changes using Java 21 API
+        
+        Language used is British English (en-GB).
 
         Please keep in mind:
         * The pattern matching `instanceof` expression safely handles `null`, returning `false`
-        * Our rule is that builds must be reproduceable, and the annotation processor must not prevent a consuming build from being reproduceable
+        * Java 21 prefers the use of `HashSet.newHashSet(int size)` over the constructor
+        * Our rule is that builds must be reproducible, and the annotation processor must not prevent a consuming build from being reproducible
         * We would like to avoid adding additional `required` dependencies, but we are happy to detect if a library is present to generate code and those can be added as optional
     - path: 'utils-tests/**/*.java'
       instructions: |
@@ -60,6 +65,21 @@ reviews:
     - path: 'aru-prism-prison/**'
       instructions: |
         The README of `aru-prism-prison` covers this folder quite well
+    - path: 'docs/**'
+      instructions: |
+        Our comprehensive documentation. These are bundled into one large page and published to GitHub Pages.
+        
+        Language should generally use a formal (though not "stuffy") tone - a small amount of humour is desirable, but not too much.
+        It should use British English (en-GB), and serial/Oxford comma unless it would introduce ambiguity.
+
+        References to the "generated-code" folder all exist and will resolve, but the contents of that folder have been hidden from you.
+        This is because the folder is full of "noise" that makes it hard for you to review.
+
+        Please ensure that we stick to the intended use of warning and caution:
+         * Use CAUTION to advise the reader to act carefully (i.e., exercise care).
+         * Use WARNING to inform the reader of danger, harm, or consequences that exist.
+        
+        There are other style items listed in the `docs/README.adoc` file - please ensure they are followed.
     - path: 'aru-processor-core/**/*.java'
       instructions: |
         This folder contains the dense code that wires together the processor. The `module-info` specifies that the code is `@NullMarked`, therefore

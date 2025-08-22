@@ -1,0 +1,67 @@
+= Type Converter
+
+By annotating a `+public static+` method with `+@TypeConverter+`, then any time that the return type of that method is a field of a record, the generated builder will also include a method that invokes the `TypeConverter` annotated method. This applies globally across all builders.
+
+WARNING: Because `+@TypeConverter+` applies globally, using the same permutation of return type and parameters more than once will cause compilation to fail. This includes `+@TypeConverter+` methods discovered via imports (see below for details on imports).
+
+A good example of this is for enums. Given the following enum using the common pattern of having a `+label+` that we would like to be able to use:
+
+.AnEnumInDep.java
+[source,java]
+----
+import io.github.cbarlin.aru.annotations.TypeConverter;
+
+public enum AnEnumInDep {
+    MONDAY("Monday"),
+    TUESDAY("Tuesday");
+
+    private final String label;
+
+    AnEnumInDep(final String label) {
+        this.label = label;
+    }
+
+    public String label() {
+        return label;
+    }
+
+    @TypeConverter
+    public static AnEnumInDep fromLabel(final String label) {
+        if ("Monday".equals(label)) {
+            return MONDAY;
+        }
+        return TUESDAY;
+    }
+}
+----
+
+Then if we have a record that uses that enum:
+
+.MyRecord.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record MyRecord(
+    AnEnumInDep andImAnEnum,
+    AnEnumInDep theEnumAgain
+) {}
+----
+
+Then you can implicitly use the `+fromLabel+` method on the builder of `+MyRecord+` like so:
+
+.Sample method body
+[source,java]
+----
+final MyRecord myB = MyRecordUtils.builder()
+    // This internally calls the method annotated with TypeConverter
+    .andImAnEnum("Monday")
+    // You can still pass in the item directly
+    .theEnumAgain(AnEnumInDep.TUESDAY)
+    .build();
+----
+
+include::../generated-code/usage/tcon.adoc[]
+
+This is not restricted to enums - you can translate any parameters to (almost) any return type and it'll be picked up.
+
+IMPORTANT: By default, the processor rejects methods that use extremely common types (e.g. `+String+`) that may "flood" generated builders. If you wish to do this anyway, you can add a `+permitReturnTypeWhichMayResultInTooManyMethods = true+` setting on the `+@TypeConverter+`

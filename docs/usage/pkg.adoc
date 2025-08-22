@@ -1,0 +1,148 @@
+= Package usage
+
+It is also possible to annotate a package. This has two possible uses:
+
+* setting some defaults for all records in that package
+* (optionally) automatically applying to all items in that package
+
+NOTE: Packages will not have their own `+*Utils+` classes generated
+
+[#use-pkg-settings]
+== Using a package to set default settings
+
+By placing an annotation on a package element and adding some settings, those settings are applied to all annotated records in that package.
+
+Say we have the following:
+
+.package-info.java
+[source,java]
+----
+@io.github.cbarlin.aru.annotations.AdvancedRecordUtils(merger = true)
+package org.example;
+----
+
+.Person.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+.Address.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils
+public record Address(String country, String state) {}
+----
+
+Then that would be the equivalent of doing the following and not having a `+package-info.java+`:
+
+.Person.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils(merger = true)
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+.Address.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils(merger = true)
+public record Address(String country, String state) {}
+----
+
+If an annotation inside a package has configuration items, then the processor will merge the settings, giving priority to items that are on the record. As an example:
+
+.package-info.java
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @AdvancedRecordUtils.BuilderOptions(
+        buildMethodName = "make",
+        setTimeNowMethodPrefix = "update"
+    )
+)
+package org.example;
+
+import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
+----
+
+.Person.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE,
+        setTimeNowMethodPrefix = "ensure"
+    )
+)
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+Then that would be the same as doing the following and not having a `+package-info.java+`:
+
+.Person.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        buildMethodName = "make",
+        builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE,
+        // This was set on both the package and record - record took priority
+        setTimeNowMethodPrefix = "ensure"
+    )
+)
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+[#use-pkg-apply]
+== Automatically applying to all items in a package
+
+You can also request that all records within a given package have `+*Utils+` classes generated for them. These records will use the settings specified on the package, similar to the above case of packages specifying default settings. To use, set the <<options-top-scope-applypkg,applyToAllInPackage>> to true. You can still add annotations on the individual records including settings for that record, and that record will respect its own settings.
+
+Say we have the following:
+
+.package-info.java
+[source,java]
+----
+@io.github.cbarlin.aru.annotations.AdvancedRecordUtils(merger = true, applyToAllInPackage = true)
+package org.example;
+----
+
+.Person.java
+[source,java]
+----
+package org.example;
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+.Address.java
+[source,java]
+----
+package org.example;
+public record Address(String country, String state) {}
+----
+
+Then that would be the equivalent of doing the following and not having a `+package-info.java+`:
+
+.Person.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils(merger = true)
+public record Person(String name, int age, List<String> favouriteColours) {}
+----
+
+.Address.java
+[source,java]
+----
+package org.example;
+@AdvancedRecordUtils(merger = true)
+public record Address(String country, String state) {}
+----

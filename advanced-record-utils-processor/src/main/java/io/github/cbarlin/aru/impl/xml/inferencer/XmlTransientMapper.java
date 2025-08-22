@@ -1,14 +1,17 @@
 package io.github.cbarlin.aru.impl.xml.inferencer;
 
+import io.github.cbarlin.aru.core.ExecutableElementUtils;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.mirrorhandlers.MapBasedAnnotationMirror;
 import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.github.cbarlin.aru.prism.prison.JsonBIgnorePrism;
 import io.github.cbarlin.aru.prism.prison.JsonIgnorePrism;
+import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.github.cbarlin.aru.prism.prison.XmlTransientPrism;
 import jakarta.inject.Singleton;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.RecordComponentElement;
 import java.util.Map;
 import java.util.Optional;
@@ -24,12 +27,27 @@ public final class XmlTransientMapper{
             return Optional.empty();
         }
         if (element instanceof final RecordComponentElement rce) {
-            return XmlTransientPrism.getOptionalOn(rce.getAccessor())
+            return upCallingTree(rce.getAccessor())
                 .or(() -> XmlTransientPrism.getOptionalOn(rce))
                 .or(() -> inferAnnotationMirror(element));
+        } else if (element instanceof final ExecutableElement exe) {
+            return upCallingTree(exe);
         }
         return XmlTransientPrism.getOptionalOn(element)
             .or(() -> inferAnnotationMirror(element));
+    }
+
+    private Optional<XmlTransientPrism> upCallingTree(final ExecutableElement executableElement) {
+
+        return XmlTransientPrism.getOptionalOn(executableElement)
+            .or(
+                () -> ExecutableElementUtils.obtainOverrideTree(executableElement)
+                    .stream()
+                    .map(XmlTransientPrism::getOptionalOn)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .findFirst()
+            );
     }
 
     private static Optional<XmlTransientPrism> inferAnnotationMirror(final Element element) {
