@@ -27,3 +27,9 @@ Person aViaBuilder = personA.with(builder -> builder.name("Tifa")); // Fluent us
 ----
 
 The `+with+` methods generated broadly align with the same methods generated on the `+Builder+`. For example, if the builder has `+add+` methods enabled on collections (like `+addFavouriteColours+`) then the wither will have an `+withAdd+` method as well (`+withAddFavouriteColours+`), which creates a copy with the element having been added to that field.
+
+.Sample method body
+[source,java]
+----
+Person withMoreColour = personA.withAddFavouriteColours("Cerulean");
+----

@@ -21,6 +21,17 @@ body:
       placeholder: E.g. "The generated code did not compile because xyz..."
     validations:
       required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps help a lot.
+      placeholder: |
+          1. Command or code snippet
+          2. Input/record used
+          3. Observed output or compiler error
+    validations:
+      required: false
   - type: dropdown
     id: version
     attributes:
@@ -29,18 +40,19 @@ body:
       options:
         - 0.6.1 (Latest)
         - 0.5.1 (Edge)
+        - Other/Not listed
       default: 0
     validations:
       required: true
   - type: textarea
     attributes:
       label: Expected Behavior
-      placeholder: E.g. "passing null to work"
+      placeholder: E.g. "passing null should work"
     validations:
       required: false
   - type: textarea
     attributes:
-      label: `@Generated` annotation
+      label: "`@Generated` annotation"
       description: Found above the created method or class (if applicable).
       placeholder: |
         @Generated(

@@ -21,11 +21,11 @@ public record Person(
 }
 ----
 
-CAUTION: The default behaviour of requires you to specify an annotation. If you do not specify one, the processor will fail compilation and tell you to specify one. If you wish to exclude a component, use `+@XmlTransient+` (or either Jackson's or Avaje Jsonb's ignore annotation).
+CAUTION: By default, you must annotate each component. If a required annotation is missing, the processor fails compilation, and explains what to add. To exclude a component, use `+@XmlTransient+` (or Jackson’s or Avaje Jsonb’s ignore annotation).
 
 TIP: One of the settings (<<options-aru-xml-infername,inferXmlElementName>>) gives you the option to have the `+XmlElement+` annotation "inferred" for you so you don't have to annotate those fields.
 
-The processor will automatically handle `+Optional+` (including `+OptionalInt+`, `+OptionalDouble+`, and `+OptionalLong+`) as well as `+Collection+` items (like `+List+` and `+Set+`), and will treat empty the same as `+null+` values.
+The processor will automatically handle `+Optional+` (including `+OptionalInt+`, `+OptionalDouble+`, and `+OptionalLong+`) as well as `+Collection+` items (like `+List+` and `+Set+`), and will treat empty values the same as `+null+` values.
 
 The processor also handles interfaces, assuming it knows the implementing records.
 
@@ -86,7 +86,7 @@ public record Person(
 ) {}
 ----
 
-.Alternate Usage: Place on a accessor method defined on an interface.
+.Alternate Usage: Place on an accessor method defined on an interface.
 [source,java]
 ----
 public interface PersonIface {
@@ -126,7 +126,7 @@ public record Person(
 ) {}
 ----
 
-.Alternate Usage: Place on a accessor method defined on an interface.
+.Alternate Usage: Place on an accessor method defined on an interface.
 [source,java]
 ----
 public interface PersonIface {
@@ -156,7 +156,7 @@ include::../generated-code/usage/xml-attribute.adoc[]
 ====
 Indicates that a component of a record should be skipped when converting to XML.
 
-TIP: You can also use Jackson or Avaje JsonB annotations ignore annotations - the processor will "infer" that the component is annotated with `+@XmlTransient+`
+TIP: You can also use Jackson or Avaje Jsonb annotations ignore annotations - the processor will "infer" that the component is annotated with `+@XmlTransient+`
 
 .Usage: Place on a component of a record.
 [source,java]
@@ -167,7 +167,7 @@ public record Person(
 ) {}
 ----
 
-.Alternate Usage: Place on a accessor method defined on an interface.
+.Alternate Usage: Place on an accessor method defined on an interface.
 [source,java]
 ----
 public interface PersonIface {
@@ -200,7 +200,7 @@ public record MyRecord(
 ) {}
 ----
 
-.Alternate Usage: Place on a accessor method defined on an interface.
+.Alternate Usage: Place on an accessor method defined on an interface.
 [source,java]
 ----
 public interface AnIface {
@@ -245,7 +245,7 @@ public record Address(
 ) {}
 ----
 
-.Alternate Usage: Place on a accessor method defined on an interface.
+.Alternate Usage: Place on an accessor method defined on an interface.
 [source,java]
 ----
 public interface AddressIface {

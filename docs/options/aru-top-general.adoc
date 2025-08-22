@@ -65,7 +65,7 @@ For more information on the XML generation, see <<use-record-xml,the earlier sec
 .`+diffable+`
 [%collapsible]
 ====
-Enables or disables the generation of the `+Diffable+` interface and diff result classes (and internal `+_DiffUtils+`). This allows you to convert an instance of your record to XML.
+Enables or disables the generation of the `+Diffable+` interface and diff result classes (and internal `+_DiffUtils+`). This allows you to compute and inspect differences between two instances of a record.
 
 *Type*:: `+boolean+`
 *Default*:: `+false+`
@@ -83,7 +83,7 @@ For more information on the Differ, see <<use-record-differ,the earlier section>
 .`+createAllInterface+`
 [%collapsible]
 ====
-Enables or disables the generation of the `+All+` interface. This interface extends all the generated interfaces, so you only need to import the one thing. If you implement it, the processor will seal the interfaces.
+Enables or disables the generation of the `+All+` interface. This interface extends all the generated interfaces, so you only need to import the one thing. If you implement it, the processor will seal the interfaces it generates.
 
 *Type*:: `+boolean+`
 *Default*:: `+true+`

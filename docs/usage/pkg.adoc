@@ -104,7 +104,7 @@ public record Person(String name, int age, List<String> favouriteColours) {}
 [#use-pkg-apply]
 == Automatically applying to all items in a package
 
-You can also request that all records within a given package have `+*Utils+` classes generated for them. These records will use the settings specified on the package, similar to the above case of packages specifying default settings. To use, set `+applyToAllInPackage = true+` on the package. You can still add annotations on the individual records including settings for that record, and that record will respect its own settings.
+You can also request that all records within a given package have `+*Utils+` classes generated for them. These records will use the settings specified on the package, similar to the above case of packages specifying default settings. To use, set the <<options-top-scope-applypkg,applyToAllInPackage>> to true. You can still add annotations on the individual records including settings for that record, and that record will respect its own settings.
 
 Say we have the following:
 

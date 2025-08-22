@@ -1,6 +1,6 @@
 = Get started
 
-We recommend the approach of adding the annotations as a dependency and the processor to your maven compiler plugin config. This is so that dependencies that the processor has don't end up in your project, and because the default in Java 23+ is to not automatically scan dependencies for annotation processors (which could be a security risk!)
+We recommend the approach of adding the annotations as a dependency and the processor to your Maven Compiler Plugin configuration. This is so that dependencies that the processor has don't end up in your project, and because the default in Java 23+ is to not automatically scan dependencies for annotation processors (which could be a security risk!)
 
 == Configuring your build tooling
 
@@ -132,7 +132,7 @@ Other integrations are based purely on detecting the dependency in your classpat
 
 image::https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/io/github/cbarlin/aru/badge.json["Reproducible Builds", link=https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/io/github/cbarlin/aru/README.md]
 
-This project is reproducible (and independently verified - thanks https://github.com/hboutemy[hboutemy]!). In addition, our github builds ensure that the generated code is _also_ reproducible.
+This project is reproducible (and independently verified - thanks https://github.com/hboutemy[hboutemy]!). In addition, our GitHub builds ensure that the generated code is _also_ reproducible.
 
 Assuming you have done everything else you need to do for reproducible builds (see the https://reproducible-builds.org/docs/jvm/[JVM guide]) then use of Advanced Record Utils will not stop that (barring one edge case - see "Importing records/interfaces" below).
 
@@ -156,4 +156,4 @@ Generated methods and classes should have:
 * relevant Javadoc
 * a `+@Generated+` annotation that contains information that's useful for debugging and "hiding" from code coverage tools.
 
-IMPORTANT: We consider it a bug if a method, interface, or class doesn't have Javadoc or if it is missing it's an `+@Generated+` annotation.
+IMPORTANT: We consider it a bug if a method, interface, or class doesn't have Javadoc or if it is missing its a `+@Generated+` annotation.

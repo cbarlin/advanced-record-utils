@@ -52,6 +52,7 @@ package org.example;
 See the earlier section on <<#use-imp,importing>>, particularly the section on <<#use-imp-new-utils,Importing records/interfaces to create new `+*Utils+` classes>>.
 ====
 
+[#options-top-scope-applypkg]
 .`+applyToAllInPackage+`
 [%collapsible]
 ====

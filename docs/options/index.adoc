@@ -1,5 +1,7 @@
 = Configuration options
 
+This section outlines every configuration toggle the processor understands, with defaults, trade‑offs, and cross‑references to usage examples.
+
 include::aru-top-general.adoc[leveloffset=+1]
 
 include::aru-top-scope.adoc[leveloffset=+1]

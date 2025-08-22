@@ -1,6 +1,6 @@
 = XML Options
 
-These control the names and behaviour for generating the `+XML+` interface and related classes. These are applied to the `+mergerOptions = @MergerOptions()+` sub setting like so:
+These control the names and behaviour for generating the `+XML+` interface and related classes. These are applied to the `+xmlOptions = @XmlOptions()+` sub-setting like so:
 
 .Placement example
 [source,java]
@@ -49,7 +49,7 @@ implements PersonUtils.SerialXml {}
 .`+continueAddingToXmlMethodName+`
 [%collapsible]
 ====
-Sets the name of the method on the interface that writes the object to an `+XmlStreamWriter+`.
+Sets the name of the method on the interface that writes the object to an `+XMLStreamWriter+`.
 
 *Type*:: `+String+`
 *Default*:: `+"writeSelfTo"+`
@@ -105,7 +105,7 @@ Determines if `+@XmlElement+` annotations should be inferred and, if so, how the
 ----
 @AdvancedRecordUtils(
     xmlOptions = @XmlOptions(
-        inferXmlElementName = .AdvancedRecordUtilsNameGeneration.UPPER_FIRST_LETTER
+        inferXmlElementName = .AdvancedRecordUtils.NameGeneration.UPPER_FIRST_LETTER
     ),
     xmlable = true
 )

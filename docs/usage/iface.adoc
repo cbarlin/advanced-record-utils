@@ -158,7 +158,7 @@ If you are using Jakarta's XML Binding annotations, you can use either:
 
 If you are using Jackson, you can use an `+@JsonSubTypes+` on the interface, listing the implementing records.
 
-CAUTION: As of version 0.6.1, the processor doesn't process the annotation on record components.
+CAUTION: As of 22nd August 2025 the latest version is 0.6.1, and this version of the processor doesn't process the annotation on record components.
 
 === Avaje Jsonb
 
@@ -178,7 +178,7 @@ package org.example;
 .SomeInterface.java
 [source,java]
 ----
-public interface SomeInterface{
+public interface SomeInterface {
 }
 ----
 

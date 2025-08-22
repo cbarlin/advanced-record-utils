@@ -16,6 +16,8 @@ knowledge_base:
   pull_requests:
     scope: 'local'
 reviews:
+  path_filters:
+    - "!docs/generated-code/**"
   profile: 'assertive'
   estimate_code_review_effort: false
   tools:

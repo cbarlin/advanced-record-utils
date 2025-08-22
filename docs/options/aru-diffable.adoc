@@ -1,6 +1,6 @@
 = Diffable Options
 
-These control the names and behaviour for generating the `+Diffable+` interface and related classes. These are applied to the `+diffOptions = @DiffOptions()+` sub setting like so:
+These control the names and behaviour for generating the `+Diffable+` interface and related classes. These are applied to the `+diffOptions = @DiffOptions()+` sub-setting like so:
 
 .Placement example
 [source,java]
@@ -44,7 +44,7 @@ Sets the name of the method that computes the diff.
 *Type*:: `+String+`
 *Default*:: `+"diff"+`
 
-.Usage: Changing the name of the interface
+.Usage: Changing the name of the method
 [source,java]
 ----
 @AdvancedRecordUtils(
@@ -82,7 +82,7 @@ Sets the prefix and suffix applied to the record that contains the results of th
 *Type*:: `+String+`
 *Default*:: `+"DiffOf"+` (prefix), `+""+` (suffix)
 
-.Usage: Changing the name of the interface
+.Usage: Changing the name of the result type
 [source,java]
 ----
 @AdvancedRecordUtils(
@@ -121,7 +121,7 @@ Sets the name of the first and second elements being compared.
 *Type*:: `+String+`
 *Default*:: `+"original"+` (originating), `+"updated"+` (comparedTo)
 
-.Usage: Changing the name of the interface
+.Usage: Changing the compared element names
 [source,java]
 ----
 @AdvancedRecordUtils(
@@ -164,7 +164,7 @@ Sets the prefix and suffix applied to the component name that reports if that co
 *Type*:: `+String+`
 *Default*:: `+"has"+` (prefix), `+"Changed"+` (suffix)
 
-.Usage: Changing the name of the interface
+.Usage: Changing the changed-check naming
 [source,java]
 ----
 @AdvancedRecordUtils(
@@ -209,7 +209,7 @@ Sets the name of the method that reports if any component is different between t
 *Type*:: `+String+`
 *Default*:: `+"hasChanged"+`
 
-.Usage: Changing the name of the interface
+.Usage: Changing the aggregate changed-check method
 [source,java]
 ----
 @AdvancedRecordUtils(
@@ -265,7 +265,7 @@ Should a static version of the `+diff+` method be placed on the top-level `+*Uti
 public record Person(String name, int age) {}
 ----
 
-You can then use it like so
+You can then use it like so:
 
 .Sample method body
 [source,java]

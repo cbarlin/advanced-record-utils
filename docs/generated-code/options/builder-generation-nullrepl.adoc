@@ -1,6 +1,6 @@
 ****
 
-.Generated code within the "Builder" class when `+true+`
+.Generated code within the "Builder" class when `+false+`
 [%collapsible]
 =====
 [source,java]
@@ -16,7 +16,7 @@ public final class PersonUtils implements GeneratedUtil {
 ----
 =====
 
-.Generated code within the "Builder" class when `+false+` (default)
+.Generated code within the "Builder" class when `+true+` (default)
 [%collapsible]
 =====
 [source,java]

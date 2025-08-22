@@ -7,8 +7,10 @@ The merger allows you to "merge" two instances of a record together. The merge p
 . If one of the two instances has a null value, then take the non-null value
 . If both are non-null, and the field itself can be merged (i.e. another record that has a `+*Utils+` class with a merger), then merge the values using that other merger
 . If both are non-null, and the field is a collection, then union the collections
-. Otherwise, keep the value in the "first" or "preferred" instance
+. Otherwise, keep the value in the "preferred" instance
 ****
+
+NOTE: “Preferred instance” means the left-hand operand of the merge — for `this.merge(other)`, `this` wins when both values are non-null and non-mergeable.
 
 TIP: You can use `+Optional+` (or `+OptionalInt+`, `+OptionalLong+`, or `+OptionalDouble+`) instead of nullable fields - the merger will treat an empty optional the same as a null value
 

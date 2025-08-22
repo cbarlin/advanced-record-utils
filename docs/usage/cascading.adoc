@@ -21,7 +21,7 @@ public record MyRecordA(
 public record MyRecordB(
     MyRecordA otherItem,
     MyRecordA woo,
-    MyRecordB recursionFtw
+    MyRecordB recursionFtw // The processor deals with self-referencing types
 ) {
 
 }
@@ -40,11 +40,14 @@ final MyRecordA myA = MyRecordAUtils.builder().someStringField("blah").someIntFi
 final MyRecordB firstRound = MyRecordBUtils.builder()
     .woo(myA)
     // A fluent use of a sub-builder is available by default
-    .otherItem(oth -> oth.someIntField(42))
+    .otherItem((MyRecordAUtils.Builder otherBuilder) -> otherBuilder.someIntField(42))
     .build();
 final MyRecordB secondRound = MyRecordBUtils.builder(firstRound)
-    .otherItem(oth -> oth.someIntField(420))
+    // You aren't required to define the type either
+    .otherItem(otherBuilder -> otherBuilder.someIntField(420))
     .build();
 ----
 
 Since `+MyRecordB+` had enabled `+merger+` then `+MyRecordA+` will also have a merger, so `+MyRecordA+` instances can be merged too!
+
+CAUTION: Deep or partially adopted hierarchies can introduce edge cases. If only some records in a chain implement the generated interfaces (e.g., via per-record adoption, cross-package imports, or mixed compilation units), certain deep behaviours (like deep diffs or mergers) may stop at non-participating boundaries. Prefer annotating the root(s) so the cascade can generate utilities across the entire in-package tree.

@@ -1,6 +1,6 @@
 = Merger options
 
-These control the names and behaviour for generating the `+Mergeable+` interface. These are applied to the `+mergerOptions = @MergerOptions()+` sub setting like so:
+These control the names and behaviour for generating the `+Mergeable+` interface. These are applied to the `+mergerOptions = @MergerOptions()+` sub-setting like so:
 
 .Placement example
 [source,java]
@@ -27,12 +27,12 @@ Sets the name of the `+Mergeable+` interface.
 ----
 @AdvancedRecordUtils(
     mergerOptions = @MergerOptions(
-        mergerName = "Combineable"
+        mergerName = "Combinable"
     ),
     merger = true
 )
 public record Person(String name, int age)
-implements PersonUtils.Combineable {}
+implements PersonUtils.Combinable {}
 ----
 ====
 
@@ -44,7 +44,7 @@ Sets the name of the method that combines two instances of the record together.
 *Type*:: `+String+`
 *Default*:: `+"merge"+`
 
-.Usage: Changing the name of method
+.Usage: Changing the method name
 [source,java]
 ----
 @AdvancedRecordUtils(
@@ -57,12 +57,12 @@ public record Person(String name, int age)
 implements PersonUtils.All {}
 ----
 
-In the above example, the generated method is callable like so
+In the above example, the generated method is callable like so:
 
 .Sample method body
 [source,java]
 ----
-Person personC = personA.combine(personA);
+Person personC = personA.combine(personB);
 ----
 
 The default looks like so:
@@ -70,7 +70,7 @@ The default looks like so:
 .Sample method body
 [source,java]
 ----
-Person personC = personA.merge(personA);
+Person personC = personA.merge(personB);
 ----
 ====
 
@@ -94,7 +94,7 @@ Should a static version of the `+merge+` method be placed on the top-level `+*Ut
 public record Person(String name, int age) {}
 ----
 
-You can then use it like so
+You can then use it like so:
 
 .Sample method body
 [source,java]

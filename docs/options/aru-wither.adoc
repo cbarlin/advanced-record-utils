@@ -1,6 +1,6 @@
 = Wither options
 
-These control the names of and in the generated `+With+` interface. These are applied to the `+witherOptions = @WitherOptions()+` sub setting like so:
+These control the naming of the generated `+With+` interface, and its methods. Apply them via the `+witherOptions = @WitherOptions()+` sub‑setting:
 
 .Placement example
 [source,java]
@@ -42,7 +42,7 @@ Sets the name of the method that converts an instance of the record back into th
 *Type*:: `+String+`
 *Default*:: `+"with"+`
 
-.Usage: Changing the name of method
+.Usage: Changing the method name
 [source,java]
 ----
 @AdvancedRecordUtils(
@@ -79,10 +79,12 @@ Set the prefix and suffix for the `+with+` methods.
 
 NOTE: These are combined with the name of the method on the _`+Builder+`_, which is based on the component name. This is because the `+With+` internally calls the `+Builder+` to perform the requested change.
 
+WARNING: Setting both of these to blank strings will result in conflicts with the accessor methods on the record.
+
 *Type*:: `+String+`
 *Default*:: `+"with"+` (prefix), `+""+` (suffix)
 
-.Usage: Changing the name of method
+.Usage: Changing the method name
 [source,java]
 ----
 @AdvancedRecordUtils(

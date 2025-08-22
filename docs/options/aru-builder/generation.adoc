@@ -8,7 +8,7 @@ Determine if fluent versions of methods should be built. These are methods that 
 *Type*:: `+boolean+`
 *Default*:: `+"true"+`
 
-// This would be difficult convey in multiple blocks, so we'll leave it in one
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
 
 .Usage
 [source,java]
@@ -43,6 +43,37 @@ PersonUtils.builder()
     .addPhoneNumbers(builder -> builder.number("04 4444 4444"));
 ----
 
+The processor also handles self-referencing types easily. Take the following definition:
+
+.MyRecordB.java
+[source,java]
+----
+@AdvancedRecordUtils(merger = true)
+public record MyRecordB(
+    String aField,
+    MyRecordB recursionFtw // The processor deals with self-referencing types
+) {
+
+}
+----
+
+You can then do:
+
+.Sample method body
+[source,java]
+----
+MyRecordBUtils.builder()
+    .recursionFtw(
+        b1 -> b1.aField("Nesting 1")
+            .recursionFtw(
+                b2 -> b2.aField("Nesting 2")
+                    .recursionFtw(
+                        b3 -> b3.aField("Nesting 3")
+                    )
+            )
+    );
+----
+
 include::../../generated-code/options/builder-generation-fluent.adoc[]
 
 ====
@@ -55,7 +86,7 @@ Should "add"-er type methods be created on the Builder?
 *Type*:: `+boolean+`
 *Default*:: `+"true"+`
 
-// This would be difficult convey in multiple blocks, so we'll leave it in one
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
 
 .Usage
 [source,java]
@@ -78,7 +109,7 @@ With the default setting of `+true+`, you can add to the "phoneNumbers" field li
 [source,java]
 ----
 PersonUtils.builder()
-    .addPhoneNumbers(new PhoneNumbers("04 4444 4444"));
+    .addPhoneNumbers(new PhoneNumber("04 4444 4444"));
 ----
 
 include::../../generated-code/options/builder-generation-adder.adoc[]
@@ -91,16 +122,16 @@ include::../../generated-code/options/builder-generation-adder.adoc[]
 Should the builder allow setting a "null" value if there's already a non-null value?
 
 *Type*:: `+boolean+`
-*Default*:: `+"false"+`
+*Default*:: `+"true"+`
 
-// This would be difficult convey in multiple blocks, so we'll leave it in one
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
 
 .Usage
 [source,java]
 ----
 @AdvancedRecordUtils(
     builderOptions = @BuilderOptions(
-        nullReplacesNotNull = true
+        nullReplacesNotNull = false
     )
 )
 public record Person(Address address, List<PhoneNumber> phoneNumbers) {}
@@ -110,7 +141,7 @@ public record Address(String country) {}
 public record PhoneNumber(String number) {}
 ----
 
-If you set this to `+true+`, the below will pass:
+If you set this to `+false+`, the below will pass:
 
 .Sample method body
 [source,java]
@@ -138,7 +169,7 @@ NOTE: If you define a concrete type the Builder will attempt to respect that typ
 *Type*:: https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/AdvancedRecordUtils.BuiltCollectionType.html[`+BuiltCollectionType+`^]
 *Default*:: `+BuiltCollectionType.JAVA_IMMUTABLE+`
 
-// This would be difficult convey in multiple blocks, so we'll leave it in one
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
 
 .Usage
 [source,java]
@@ -172,7 +203,7 @@ If the Builder is going to result in a `+null+` value for a collection, should w
 *Type*:: `+boolean+`
 *Default*:: `+true+`
 
-// This would be difficult convey in multiple blocks, so we'll leave it in one
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
 
 .Usage
 [source,java]

@@ -151,7 +151,7 @@ Person personA = PersonUtils.builder()
 .`+adderMethodPrefix+` / `+adderMethodSuffix+`
 [%collapsible]
 ====
-Set the prefix and suffix that's joined with the name of a collection component for "add"-er methods on the "Builder"
+Set the prefix and suffix that are joined with the name of a collection component for “add”-er methods on the “Builder”.
 
 *Type*:: `+String+`
 *Default*:: `+"add"+` (prefix), `+""+` (suffix)
@@ -190,7 +190,7 @@ PersonUtils.builder()
 .`+setTimeNowMethodPrefix+` / `+setTimeNowMethodSuffix+`
 [%collapsible]
 ====
-Set the prefix and suffix that's joined with the name of a collection component for setting the value of a time component to the current time.
+Set the prefix and suffix that are joined with the name of a time component for setting its value to the current time.
 
 *Type*:: `+String+`
 *Default*:: `+"set"+` (prefix), `+"ToNow"+` (suffix)
@@ -207,7 +207,7 @@ Set the prefix and suffix that's joined with the name of a collection component 
 public record Person(OffsetDateTime dateOfBirth) {}
 ----
 
-In the above example, the generated "Builder" contains a method called `+updateDateOfBirthToPresent+` that will set the the `dateOfBirth` value to the present time:
+In the above example, the generated “Builder” contains a method called `+updateDateOfBirthToPresent+` that will set the `dateOfBirth` value to the present time:
 
 .Sample method body
 [source,java]
@@ -247,7 +247,7 @@ public sealed interface MyInterface permits ImplA, ImplB {}
 public record Person(MyInterface metadata) {}
 ----
 
-In the above example, the generated "Builder" contains methods called `+metadataOfKindImplA+` and `+metadataOfKindImplB+` that only allows passing instances of that record:
+In the above example, the generated “Builder” contains methods called `+metadataOfKindImplA+` and `+metadataOfKindImplB+` that only allow passing instances of that particular record:
 
 .Sample method body
 [source,java]
@@ -278,7 +278,7 @@ PersonUtils.builder()
 .`+multiTypeAdderBridge+`
 [%collapsible]
 ====
-Set the bridge between the name of a component and the name of an implementing class on the setter, if the component targets a collection of an interface and we know the implementing records.
+Set the bridge between the name of a component and the name of an implementing class on the adder, if the component targets a collection of an interface and we know the implementing records.
 
 *Type*:: `+String+`
 *Default*:: `+"To"+`
@@ -296,7 +296,7 @@ public sealed interface MyInterface permits ImplA, ImplB {}
 public record Person(Set<MyInterface> metadata) {}
 ----
 
-In the above example, the generated "Builder" contains methods called `+addImplAInMetadata+` and `+addImplBInMetadata+` that only allows passing instances of that record:
+In the above example, the generated “Builder” contains methods called `+addImplAInMetadata+` and `+addImplBInMetadata+` that only allow passing instances of that particular record:
 
 .Sample method body
 [source,java]

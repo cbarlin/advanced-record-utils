@@ -1,6 +1,6 @@
 = Top-level naming options
 
-These control the name of the top level `+*Utils+` class. These are applied to the `+typeNameOptions = @TypeNameOptions()+` sub setting like so:
+These control the name of the top‑level `+*Utils+` class. Apply them via the `+typeNameOptions = @TypeNameOptions()+` sub‑option, like so:
 
 .Usage: Changing the top-level name
 [source,java]
