@@ -19,13 +19,17 @@ public final class JustListCollectionHandler extends ListCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String targetVariableName, final TypeName innerTypeName) {
-        methodBuilder.addStatement(
-            "final $T<$T> $L = $L.stream()\n    .filter($T::nonNull)\n    .toList()",
-            immutableClassName,
-            innerTypeName,
-            targetVariableName,
-            fieldName,
-            OBJECTS
-        );
+        methodBuilder
+            .beginControlFlow("if ($T.isNull($L))", OBJECTS, fieldName)
+            .addStatement("return $T.of()", LIST)
+            .endControlFlow()
+            .addStatement(
+                "final $T<$T> $L = $L.stream()\n    .filter($T::nonNull)\n    .toList()",
+                immutableClassName,
+                innerTypeName,
+                targetVariableName,
+                fieldName,
+                OBJECTS
+            );
     }
 }

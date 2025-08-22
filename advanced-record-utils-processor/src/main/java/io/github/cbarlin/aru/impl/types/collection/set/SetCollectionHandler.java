@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.impl.types.collection.set;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.LIST;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
@@ -23,15 +24,19 @@ public abstract class SetCollectionHandler extends StandardCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
-        methodBuilder.addStatement(
-            "final $T<$T> $L = $L.stream()\n    .filter($T::nonNull)\n    .collect($T.toUnmodifiableSet())",
-            immutableClassName,
-            innerTypeName,
-            assignmentName,
-            fieldName,
-            OBJECTS,
-            COLLECTORS
-        );
+        methodBuilder
+            .beginControlFlow("if ($T.isNull($L))", OBJECTS, fieldName)
+            .addStatement("return $T.of()", SET)
+            .endControlFlow()
+            .addStatement(
+                "final $T<$T> $L = $L.stream()\n    .filter($T::nonNull)\n    .collect($T.toUnmodifiableSet())",
+                immutableClassName,
+                innerTypeName,
+                assignmentName,
+                fieldName,
+                OBJECTS,
+                COLLECTORS
+            );
     }
 
     @Override

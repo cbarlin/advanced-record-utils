@@ -60,7 +60,7 @@ public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
         methodBuilder.returns(component.typeName())
             .addComment("Usually you use Set.copyOf, but that internally uses a slower HashSet. This keeps the speed of an EnumSet, and maintains deep immutability by using a collection that can't be used elsewhere")
             .addStatement("final $T<$T> ___copy = $T.copyOf(this.$L)", ENUM_SET, innerType, ENUM_SET, component.name())
-            .addStatement("return ___copy", COLLECTIONS);
+            .addStatement("return ___copy");
     }
 
     @Override

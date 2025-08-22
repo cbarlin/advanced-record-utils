@@ -107,6 +107,10 @@ class NestedTests {
             () -> SeventhLevelAUtils.Builder.class.getDeclaredMethod("setAndImDoneToNull")
         );
         assertNotNull(m);
+        // This shouldn't be generated because the component is a primitive
+        assertThrows(NoSuchMethodException.class, () -> {
+            ThirdLevelBFromAUtils.Builder.class.getDeclaredMethod("setSomeValueToNull");
+        }, "Method 'setSomeValueToNull' should not be declared on the builder.");
     }
 
     @Test
