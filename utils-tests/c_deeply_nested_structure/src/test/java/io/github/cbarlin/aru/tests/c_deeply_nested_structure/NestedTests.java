@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
 
 import io.avaje.jsonb.Jsonb;
+import io.github.cbarlin.aru.tests.a_core_dependency.MyRecordCUtils;
 import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,7 @@ import java.time.ZoneOffset;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NestedTests {
@@ -58,9 +60,11 @@ class NestedTests {
                             four -> four.letsGoFive(
                                 five -> five.nowToSix(
                                     six -> six.woo(
-                                        seven -> seven.andImDone(
-                                            recurringAgain -> recurringAgain.itemA("Hi!")
-                                        )
+                                        seven -> seven
+                                            .setAndImDoneToNull()
+                                            .andImDone(
+                                                recurringAgain -> recurringAgain.itemA("Hi!")
+                                            )
                                     )
                                 )
                             )
@@ -95,6 +99,14 @@ class NestedTests {
         assertThat(result)
             .isNotNull()
             .isNotBlank();
+    }
+
+    @Test
+    void setXToNullMethodDetection() {
+        var m = assertDoesNotThrow(
+            () -> SeventhLevelAUtils.Builder.class.getDeclaredMethod("setAndImDoneToNull")
+        );
+        assertNotNull(m);
     }
 
     @Test

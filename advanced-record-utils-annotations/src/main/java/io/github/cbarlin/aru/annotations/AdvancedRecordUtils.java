@@ -410,6 +410,11 @@ public @interface AdvancedRecordUtils {
         boolean nullReplacesNotNull() default true;
 
         /**
+         * Should the builder generate "setXToNull" type methods?
+         */
+        boolean setToNullMethods() default false;
+
+        /**
          * What type of collection should be built?
          */
         BuiltCollectionType builtCollectionType() default BuiltCollectionType.JAVA_IMMUTABLE;

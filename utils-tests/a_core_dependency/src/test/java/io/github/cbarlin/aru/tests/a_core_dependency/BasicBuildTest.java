@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BasicBuildTest {
 
@@ -26,6 +27,10 @@ class BasicBuildTest {
         assertNull(someInterface.bItem().recursionFtw().woo());
         assertNull(someInterface.bItem().recursionFtw().otherItem().someStringField());
         assertNull(someInterface.bItem().woo().someStringField());
+
+        assertThrows(NoSuchMethodException.class, () -> {
+            MyRecordCUtils.Builder.class.getDeclaredMethod("setBItemToNull");
+        }, "Method 'setBItemToNull' should not be declared on the builder.");
     }
 
     @Test

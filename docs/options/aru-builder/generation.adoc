@@ -254,6 +254,38 @@ include::../../generated-code/options/builder-generation-settime.adoc[]
 
 ====
 
+.`+setToNullMethods+`
+[%collapsible]
+====
+Should the builder contain methods that allow you to set a field to:
+
+* Empty, for `+Optional+` type component
+* Empty, for collection components if `+buildNullCollectionToEmpty+` is `+true+`
+* `+null+` in all other cases
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        setToNullMethods = true
+    )
+)
+public record Person(
+    OffsetDateTime offsetDateTime,
+    ZonedDateTime zonedDateTime,
+    LocalDateTime localDateTime
+) {
+}
+----
+
+include::../../generated-code/options/builder-generation-settime.adoc[]
+
+====
+
 .`+concreteSettersForOptional+`
 [%collapsible]
 ====

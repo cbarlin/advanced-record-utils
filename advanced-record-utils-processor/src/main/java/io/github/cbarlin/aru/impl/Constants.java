@@ -19,6 +19,7 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_CONCRETE_OPTIONAL = new ClaimableOperation("builderConcreteSetterForOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_SET_TIME_TO_NOW = new ClaimableOperation("builderSetTimeToNow", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_SET_TO_NULL = new ClaimableOperation("builderSetToNull", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_USE_TYPE_CONVERTER = new ClaimableOperation("builderUseTypeConverter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation DIFFER_COLLECTION_RESULT = new ClaimableOperation("differCollectionResult", CLASS);
         public static final ClaimableOperation DIFFER_COMPUTE_CHANGE = new ClaimableOperation("differComputation", FIELD_AND_ACCESSORS);

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BuilderTests {
 
@@ -25,6 +26,14 @@ class BuilderTests {
         assertEquals("And this is a book", someRecord.bookName().value());
         assertEquals(69, someRecord.randomIntB().value());
         assertEquals(13, someRecord.randomIntC().value());
+
+        assertThrows(NoSuchMethodException.class, () -> {
+            SomeRecordUtils.Builder.class.getDeclaredMethod("another");
+        }, "Method 'another' should not be declared on the builder.");
+
+        assertThrows(NoSuchMethodException.class, () -> {
+            SomeRecordUtils.Builder.class.getDeclaredMethod("another", String.class);
+        }, "Method 'another' should not be declared on the builder.");
     }
     
     @Test
