@@ -65,11 +65,6 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
     }
 
     @Override
-    public boolean hasContent() {
-        return (!unfinishedMethods.isEmpty()) || (!childArtifacts.isEmpty()) || (!classBuilder.methodSpecs.isEmpty()) || (!classBuilder.typeSpecs.isEmpty()) || (classBuilder.annotations.size() > GENERATED_ANNOTATIONS);
-    }
-
-    @Override
     public ClassName className() {
         return className;
     }
@@ -100,6 +95,17 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
             APContext.messager().printError("Oops!");
             throw new RuntimeException(e);
         }
+    }
+
+    public void cleanup() {
+        // Make sure that all children are cleaned up too
+        childArtifacts.values()
+            .forEach(ToBeBuilt::cleanup);
+        unfinishedMethods.clear();
+        classBuilder.fieldSpecs.clear();
+        classBuilder.methodSpecs.clear();
+        classBuilder.typeSpecs.clear();
+        classBuilder.annotations.clear();
     }
 
     @Override
