@@ -29,7 +29,8 @@ import java.util.UUID;
     logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE,
     attemptToFindExistingUtils = true,
     builderOptions = @AdvancedRecordUtils.BuilderOptions(
-        setToNullMethods = true
+        setToNullMethods = true,
+        validatedBuilder = AdvancedRecordUtils.ValidationApi.JAKARTA_PLAIN
     )
 )
 public record OddTypeBag(

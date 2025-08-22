@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.core.types;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsGenerated;
+import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.ClaimableOperation;
@@ -181,7 +182,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         if(OperationType.CLASS.equals(visitor.claimableOperation().operationType())) {
             final AruVisitor<?> claimant = claimedOperations.get(visitor.claimableOperation());
             if (Objects.isNull(claimant) || visitor != claimant) {
-                processingEnv().getMessager()
+                APContext.messager()
                     .printMessage(Diagnostic.Kind.ERROR, "Internal Error: Visitor %s attempted to retract claim that it doesn't hold".formatted(visitor.getClass().getCanonicalName()), typeElement);
             } else {
                 claimedOperations.remove(visitor.claimableOperation());
@@ -190,45 +191,8 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     }
     //#endregion
 
-    /**
-     * The current processing environment
-     */
-    public ProcessingEnvironment processingEnv() {
-        return utilsProcessingContext.processingEnv();
-    }
-
-    //#region Eq, HC, accessors, blah
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((typeMirror == null) ? 0 : typeMirror.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final AnalysedType other = (AnalysedType) obj;
-        if (typeMirror == null) {
-            if (other.typeMirror != null)
-                return false;
-        } else if (!processingEnv().getTypeUtils().isSameType(typeMirror, other.typeMirror))
-            return false;
-        return true;
-    }
-
     public String typeSimpleName() {
         return typeElement.getSimpleName().toString();
-    }
-
-    public UtilsProcessingContext utilsProcessingContext() {
-        return utilsProcessingContext;
     }
 
     public ClassName className() {
@@ -258,6 +222,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     public AdvancedRecordUtilsPrism prism() {
         return settings().prism();
     }
+
     @Override
     public String toString() {
         return className().canonicalName();

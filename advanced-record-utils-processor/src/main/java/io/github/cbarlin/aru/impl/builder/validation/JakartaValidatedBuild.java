@@ -62,7 +62,7 @@ public final class JakartaValidatedBuild extends RecordVisitor {
             )
             .addStatement("final $T built = this.$L()", analysedRecord.intendedType(), methodName)
             .addStatement("final $T validationResults = validator.validate(built)", setOfViolations)
-            .beginControlFlow("if ($T.nonNull(validationResults) && (!validationResults.isEmpty))", OBJECTS)
+            .beginControlFlow("if ($T.nonNull(validationResults) && (!validationResults.isEmpty()))", OBJECTS)
             .addStatement("resultConsumer.accept(validationResults)")
             .endControlFlow()
             .addStatement("return built");

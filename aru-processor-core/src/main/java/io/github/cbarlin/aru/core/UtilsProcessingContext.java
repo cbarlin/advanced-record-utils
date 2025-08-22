@@ -175,10 +175,6 @@ public final class UtilsProcessingContext {
             // Scope holder handles `close` on the BeanScope
             final BeanScope perTargetBeanScope = scopeHolder.scope(); 
             final List<RecordVisitor> perRecordVisitors = new ArrayList<>(perTargetBeanScope.list(RecordVisitor.class));
-            if (perRecordVisitors.isEmpty()) {
-                APContext.messager().printError("There are no available visitors", analysedRecord.typeElement());
-                return;
-            }
             Collections.sort(perRecordVisitors);
             perRecordVisitors.forEach(RecordVisitor::visitStartOfClass);
             for (final RecordComponentElement recordComponent : analysedRecord.typeElement().getRecordComponents() ) {

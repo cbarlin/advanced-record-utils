@@ -90,7 +90,7 @@ public enum Constants {
         public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(JAVA_LANG, "IllegalArgumentException");
         public static final ClassName ITERABLE = ClassName.get(JAVA_LANG, "Iterable");
         public static final ClassName ITERATOR = ClassName.get(JAVA_UTIL, "Iterator");
-        public static final ClassName JAKARTA_VALIDATOR = ClassName.get("jakarta.validator", "Validator");
+        public static final ClassName JAKARTA_VALIDATOR = ClassName.get("jakarta.validation", "Validator");
         public static final ClassName LINKED_LIST = ClassName.get(JAVA_UTIL, "LinkedList");
         public static final ClassName LIST = CommonsConstants.Names.LIST;
         public static final ClassName LOCAL_DATE_TIME = ClassName.get(JAVA_TIME, "LocalDateTime");
