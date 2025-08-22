@@ -23,11 +23,17 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.XmlOptions;
         // buildNullCollectionToEmpty = true
     ),
     diffable = true,
+    diffOptions = @AdvancedRecordUtils.DiffOptions(
+        staticMethodsAddedToUtils = true
+    ),
     xmlable = true,
     xmlOptions = @XmlOptions(
         inferXmlElementName = NameGeneration.MATCH
     ),
     merger = true,
+    mergerOptions = @AdvancedRecordUtils.MergerOptions(
+        staticMethodsAddedToUtils = true
+    ),
     wither = true
 )
 public record NonNullableImmutableCollectionBag(

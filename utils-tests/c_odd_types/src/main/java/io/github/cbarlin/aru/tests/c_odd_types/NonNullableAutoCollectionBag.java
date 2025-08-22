@@ -29,6 +29,12 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.XmlOptions;
         inferXmlElementName = NameGeneration.MATCH
     ),
     merger = true,
+    mergerOptions = @AdvancedRecordUtils.MergerOptions(
+        staticMethodsAddedToUtils = true
+    ),
+    diffOptions = @AdvancedRecordUtils.DiffOptions(
+        staticMethodsAddedToUtils = true
+    ),
     wither = true
 )
 public record NonNullableAutoCollectionBag(

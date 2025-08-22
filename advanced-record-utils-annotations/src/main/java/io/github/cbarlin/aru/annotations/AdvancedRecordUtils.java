@@ -410,6 +410,21 @@ public @interface AdvancedRecordUtils {
         boolean nullReplacesNotNull() default true;
 
         /**
+         * Should the builder generate explicit {@code setXToNull()} methods?
+         * <p>
+         * Notes:
+         * <ul>
+         *   <li>Only generated for reference types (non-primitives).</li>
+         *   <li>For {@code Optional<T>} components, this sets the builder field to {@code Optional.empty()}.</li>
+         *   <li>For collection components, this sets the builder field to {@code null}; the final built value may still
+         *       be an empty collection if {@link #buildNullCollectionToEmpty()} is {@code true}.</li>
+         *   <li>Generation is **gated** by {@link #nullReplacesNotNull()}: when that option is {@code false},
+         *       {@code setXToNull()} methods are not generated.</li>
+         * </ul>
+         */
+        boolean setToNullMethods() default false;
+
+        /**
          * What type of collection should be built?
          */
         BuiltCollectionType builtCollectionType() default BuiltCollectionType.JAVA_IMMUTABLE;

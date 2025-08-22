@@ -12,6 +12,7 @@ import java.time.ZoneOffset;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class NestedTests {
@@ -58,9 +59,14 @@ class NestedTests {
                             four -> four.letsGoFive(
                                 five -> five.nowToSix(
                                     six -> six.woo(
-                                        seven -> seven.andImDone(
-                                            recurringAgain -> recurringAgain.itemA("Hi!")
-                                        )
+                                        seven -> seven
+                                            // This is set to null (proving the method exists)
+                                            //  and then immediately overridden.
+                                            // The override is tested via the XML check
+                                            .setAndImDoneToNull()
+                                            .andImDone(
+                                                recurringAgain -> recurringAgain.itemA("Hi!")
+                                            )
                                     )
                                 )
                             )
@@ -95,6 +101,18 @@ class NestedTests {
         assertThat(result)
             .isNotNull()
             .isNotBlank();
+    }
+
+    @Test
+    void setXToNullMethodDetection() {
+        var m = assertDoesNotThrow(
+            () -> SeventhLevelAUtils.Builder.class.getDeclaredMethod("setAndImDoneToNull")
+        );
+        assertNotNull(m);
+        // This shouldn't be generated because the component is a primitive
+        assertThrows(NoSuchMethodException.class, () -> {
+            ThirdLevelBFromAUtils.Builder.class.getDeclaredMethod("setSomeValueToNull");
+        }, "Method 'setSomeValueToNull' should not be declared on the builder.");
     }
 
     @Test

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -42,6 +43,23 @@ class TypesTests {
         assertThrows(NoSuchMethodException.class, () -> {
             OddTypeBagUtils.Builder.class.getDeclaredMethod("thisShouldNotBeInTheBuilder", String.class);
         }, "Method 'thisShouldNotBeInTheBuilder' should not be declared on the builder.");
+    }
+
+    // This tests that Optionals and Collections handle the "setToNull" methods correctly
+    @Test
+    void setToNull() {
+        final OddTypeBag bag = assertDoesNotThrow(
+            () -> OddTypeBagUtils.builder()
+                .addMoreOptionalInts(OptionalInt.of(1))
+                .someOptional("Hi there!")
+                .setMoreOptionalIntsToNull()
+                .setSomeOptionalToNull()
+                .build()
+        );
+        assertNotNull(bag.someOptional());
+        assertTrue(bag.someOptional().isEmpty());
+        assertNotNull(bag.moreOptionalInts());
+        assertTrue(bag.moreOptionalInts().isEmpty());
     }
 
     @Test

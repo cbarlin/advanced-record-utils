@@ -22,10 +22,15 @@ import java.util.UUID;
     merger = true,
     wither = true,
     xmlable = true,
-    xmlOptions = @XmlOptions(inferXmlElementName = NameGeneration.UPPER_FIRST_LETTER),
+    xmlOptions = @XmlOptions(
+        inferXmlElementName = NameGeneration.UPPER_FIRST_LETTER
+    ),
     createAllInterface = true,
     logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE,
-    attemptToFindExistingUtils = true
+    attemptToFindExistingUtils = true,
+    builderOptions = @AdvancedRecordUtils.BuilderOptions(
+        setToNullMethods = true
+    )
 )
 public record OddTypeBag(
     @XmlElementWrapper(name = "WrapperOfLSO")

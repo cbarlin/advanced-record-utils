@@ -55,8 +55,11 @@ public final class PropertyConfigLoader implements ConfigPropertyPlugin {
                 case "createAllInterface" -> Boolean.FALSE.equals(prism.createAllInterface()) ? FALSE : TRUE;
                 case "fluent" -> Boolean.FALSE.equals(prism.builderOptions().fluent()) ? FALSE : TRUE;
                 case "concreteSettersForOptional" -> Boolean.FALSE.equals(prism.builderOptions().concreteSettersForOptional()) ? FALSE : TRUE;
+                case "nullReplacesNotNull" -> Boolean.FALSE.equals(prism.builderOptions().nullReplacesNotNull()) ? FALSE : TRUE;
+                case "buildNullCollectionToEmpty" -> Boolean.FALSE.equals(prism.builderOptions().buildNullCollectionToEmpty()) ? FALSE : TRUE;
                 // Default of false means `null` is false, so compare against true
                 case "setTimeNowMethods" -> Boolean.TRUE.equals(prism.builderOptions().setTimeNowMethods()) ? TRUE : FALSE;
+                case "setToNullMethods" -> Boolean.TRUE.equals(prism.builderOptions().setToNullMethods()) ? TRUE : FALSE;
                 case "addJsonbImportAnnotation" -> Boolean.TRUE.equals(prism.addJsonbImportAnnotation()) ? TRUE : FALSE;
                 case "diffOptions.staticMethodsAddedToUtils" -> Boolean.TRUE.equals(prism.diffOptions().staticMethodsAddedToUtils()) ? TRUE : FALSE;
                 // String(-ish) properties

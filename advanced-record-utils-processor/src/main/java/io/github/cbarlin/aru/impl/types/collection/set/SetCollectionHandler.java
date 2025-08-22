@@ -23,15 +23,19 @@ public abstract class SetCollectionHandler extends StandardCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
-        methodBuilder.addStatement(
-            "final $T<$T> $L = $L.stream()\n    .filter($T::nonNull)\n    .collect($T.toUnmodifiableSet())",
-            immutableClassName,
-            innerTypeName,
-            assignmentName,
-            fieldName,
-            OBJECTS,
-            COLLECTORS
-        );
+        methodBuilder
+            .beginControlFlow("if ($T.isNull($L))", OBJECTS, fieldName)
+            .addStatement("return $T.of()", SET)
+            .endControlFlow()
+            .addStatement(
+                "final $T<$T> $L = $L.stream()\n    .filter($T::nonNull)\n    .collect($T.toUnmodifiableSet())",
+                immutableClassName,
+                innerTypeName,
+                assignmentName,
+                fieldName,
+                OBJECTS,
+                COLLECTORS
+            );
     }
 
     @Override

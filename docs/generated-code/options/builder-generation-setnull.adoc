@@ -1,0 +1,29 @@
+****
+
+.Generated code
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        public final Builder setNameToNull() {
+            this.name = null;
+            return this;
+        }
+
+        public final Builder setOffsetDateTimeToNull() {
+            this.offsetDateTime = null;
+            return this;
+        }
+
+        public final Builder setTagsToNull() {
+            this.tags.clear();
+            return this;
+        }
+    }
+}
+----
+=====
+
+****
