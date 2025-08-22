@@ -221,6 +221,7 @@ public final class UtilsProcessingContext {
         } catch (IOException e) {
             APContext.messager().printError("Issue writing to file", analysedType.typeElement());
         }
+        analysedType.utilsClass().cleanup();
     }
 
     private record EleInQueue(

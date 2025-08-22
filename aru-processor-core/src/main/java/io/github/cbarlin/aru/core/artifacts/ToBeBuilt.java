@@ -103,6 +103,18 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
     }
 
     @Override
+    public void cleanup() {
+        // Make sure that all children are cleaned up too
+        childArtifacts.values()
+            .forEach(ToBeBuilt::cleanup);
+        unfinishedMethods.clear();
+        classBuilder.fieldSpecs.clear();
+        classBuilder.methodSpecs.clear();
+        classBuilder.typeSpecs.clear();
+        classBuilder.annotations.clear();
+    }
+
+    @Override
     public TypeSpec.Builder builder() {
         return this.classBuilder;
     }

@@ -31,6 +31,10 @@ public interface IToBeBuilt<T extends IToBeBuilt<T>> {
         return delegate().className();
     }
 
+    default void cleanup() {
+        delegate().cleanup();
+    }
+
     /**
      * Finishes up the class (or interface, or record) that we are building.
      * <p>
