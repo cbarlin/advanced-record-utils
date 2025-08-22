@@ -1,7 +1,6 @@
 package io.github.cbarlin.aru.tests.c_deeply_nested_structure;
 
 import io.avaje.jsonb.Jsonb;
-import io.github.cbarlin.aru.tests.a_core_dependency.MyRecordCUtils;
 import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
 import org.junit.jupiter.api.Test;
 

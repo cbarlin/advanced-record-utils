@@ -415,11 +415,11 @@ public @interface AdvancedRecordUtils {
          * Notes:
          * <ul>
          *   <li>Only generated for reference types (non-primitives).</li>
-         *   <li>When applied to collection components, this sets the builder field to {@code null};
-         *       the final built value may still be an empty collection if
-         *       {@link BuilderOptions#buildNullCollectionToEmpty()} is {@code true}.</li>
-         *   <li>This is orthogonal to {@link BuilderOptions#nullReplacesNotNull()} — calling
-         *       {@code setXToNull()} always sets the builder field to {@code null}.</li>
+         *   <li>For {@code Optional<T>} components, this sets the builder field to {@code Optional.empty()}.</li>
+         *   <li>For collection components, this sets the builder field to {@code null}; the final built value may still
+         *       be an empty collection if {@link #buildNullCollectionToEmpty()} is {@code true}.</li>
+         *   <li>Generation is **gated** by {@link #nullReplacesNotNull()}: when that option is {@code false},
+         *       {@code setXToNull()} methods are not generated.</li>
          * </ul>
          */
         boolean setToNullMethods() default false;

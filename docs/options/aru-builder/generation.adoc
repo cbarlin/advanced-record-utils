@@ -257,24 +257,26 @@ include::../../generated-code/options/builder-generation-settime.adoc[]
 .`+setToNullMethods+`
 [%collapsible]
 ====
+
 Should the builder generate methods to explicitly reset a field to a “null-like” state?
 
-* Empty for `+Optional+` components
-* Empty for collection components when `+buildNullCollectionToEmpty+` is `+true+`
-* `+null+` for all other component types
+The result of the method is:
+
+* empty for `+Optional+` components
+* empty for collection components when `+buildNullCollectionToEmpty+` is `+true+`
+* `+null+` for all other component types.
 
 *Type*:: `+boolean+`
 *Default*:: `+false+`
 
-.CAUTION
-When `nullReplacesNotNull = false`, these `setXToNull` methods will not be generated at all.
+CAUTION: When `nullReplacesNotNull = false`, these `setXToNull` methods will not be generated at all.
 
 .Usage
 [source,java]
 ----
 @AdvancedRecordUtils(
     builderOptions = @AdvancedRecordUtils.BuilderOptions(
-        setToNullMethods      = true
+        setToNullMethods = true
     )
 )
 public record Person(

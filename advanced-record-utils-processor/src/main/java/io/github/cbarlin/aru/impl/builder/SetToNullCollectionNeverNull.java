@@ -34,9 +34,6 @@ public final class SetToNullCollectionNeverNull extends RecordVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        if (analysedComponent.typeName().isPrimitive()) {
-            return false;
-        }
         final String methodName = "set" + analysedComponent.nameFirstLetterCaps() + "ToNull";
         final MethodSpec.Builder builder = analysedRecord.builderArtifact().createMethod(methodName, claimableOperation)
             .addModifiers(Modifier.FINAL, Modifier.PUBLIC)
