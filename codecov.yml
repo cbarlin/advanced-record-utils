@@ -1,0 +1,48 @@
+codecov:
+  strict_yaml_branch: 'main'
+coverage:
+  range: 60..80
+  round: down
+  precision: 2
+component_management:
+  individual_components:
+    - component_id: p_core
+      name: 'Processor core'
+      paths:
+        - 'aru-processor-core/**'
+    - component_id: p_main
+      name: 'Processor Implementation'
+      paths:
+        - 'advanced-record-utils-processor/**'
+    - component_id: t_core_depd
+      name: 'Test - core dependency'
+      paths:
+        - 'utils-tests/a_core_dependency/**'
+    - component_id: t_infer_xml
+      name: 'Test - infer XML'
+      paths:
+        - 'utils-tests/b_infer_xml/**'
+    - component_id: t_type_alias
+      name: 'Test - type alias'
+      paths:
+        - 'utils-tests/b_type_alias/**'
+    - component_id: t_odd_types
+      name: 'Test - odd types'
+      paths:
+        - 'utils-tests/c_odd_types/**'
+    - component_id: t_lang
+      name: 'Test - commons lang'
+      paths:
+        - 'utils-tests/c_deeply_nested_commons_lang/**'
+    - component_id: t_nested
+      name: 'Test - deeply nested structure'
+      paths:
+        - 'utils-tests/c_deeply_nested_structure/**'
+    - component_id: t_eclipse_collections
+      name: 'Test - Eclipse Collections'
+      paths:
+        - 'utils-tests/d_eclipse_collections/**'
+    - component_id: t_core_dept
+      name: 'Test - core dependent'
+      paths:
+        - 'utils-tests/a_core_dependent/**'
