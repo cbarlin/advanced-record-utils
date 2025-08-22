@@ -19,6 +19,8 @@ Advanced Record Utils is an annotation-processor based code generator that creat
 
 It's configurable, and does away with a lot of boilerplate. It can also import records from libraries (in case you can't control their source code), and can work recursively down a tree of records that reference other records/interfaces.
 
+For more details, see the [documentation](https://cbarlin.github.io/advanced-record-utils)!
+
 ## Goals, non-goals
 
 Goals include:
