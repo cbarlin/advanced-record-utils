@@ -79,6 +79,38 @@
             <artifactId>advanced-record-utils-annotations</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--
+            Fake define dependency on the processor itself - that way we force maven to build it first.
+                But exclude the dependencies otherwise they end up on the classpath... which means
+                the processor detects them and tries to build using them...
+        -->
+        <dependency>
+            <groupId>io.github.cbarlin</groupId>
+            <artifactId>advanced-record-utils-processor</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.avaje</groupId>
+                    <artifactId>avaje-inject</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.avaje</groupId>
+                    <artifactId>avaje-spi-service</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.micronaut.sourcegen</groupId>
+                    <artifactId>micronaut-sourcegen-generator-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>

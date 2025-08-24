@@ -35,7 +35,7 @@ jobs:
     - name: Maven version
       run: mvn --version
     - name: Build with Maven
-      run: rm -rf ~/.m2/io/github/cbarlin && mvn clean install -B && mvn clean verify artifact:compare -B && rm -rf ~/.m2/io/github/cbarlin
+      run: rm -rf ~/.m2/io/github/cbarlin && mvn clean install -B -T4 && mvn clean verify artifact:compare -T4 -B && rm -rf ~/.m2/io/github/cbarlin
     - name: Upload coverage reports to Codecov with GitHub Action
       uses: codecov/codecov-action@v5
       if: matrix.java_version == 21
