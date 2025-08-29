@@ -25,7 +25,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -81,6 +80,16 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
             case AnalysedType at -> at.className();
         };
         final String buildMethodName = processingTarget.prism().builderOptions().buildMethodName();
+        if (Boolean.TRUE.equals(processingTarget.prism().builderOptions().mapStructValidatesWithAvaje())) {
+            final List<ExecutableElement> validateMethod = findPublicBuildMethodsWithName(buildMethodName + "AndValidate", builderClass, target);
+            if (!validateMethod.isEmpty()) {
+                return validateMethod;
+            }
+        }
+        return findPublicBuildMethodsWithName(buildMethodName, builderClass, target);
+    }
+
+    private static List<ExecutableElement> findPublicBuildMethodsWithName(final String buildMethodName, final TypeElement builderClass, final TypeName target) {
         for (final ExecutableElement e : ElementFilter.methodsIn(builderClass.getEnclosedElements())) {
             if (
                 e.getParameters().isEmpty()

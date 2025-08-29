@@ -1,0 +1,67 @@
+****
+
+.Generated code when using `+JAKARTA_PLAIN+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        public Person build() {
+            // "Creating new instance"
+            return new Person(
+                    this.name()
+                    );
+        }
+
+        public Person build(@NonNull final Validator validator, @NonNull final Consumer<Set<ConstraintViolation<Person>>> resultConsumer) {
+            final Person built = this.build();
+            final Set<ConstraintViolation<Person>> validationResults = validator.validate(built);
+            if (Objects.nonNull(validationResults) && (!validationResults.isEmpty())) {
+                resultConsumer.accept(validationResults);
+            }
+            return built;
+        }
+
+        public Person build(@NonNull final Validator validator,
+                @NonNull final BiConsumer<Set<ConstraintViolation<Person>>, Person> resultConsumer) {
+            final Person built = this.build();
+            final Set<ConstraintViolation<Person>> validationResults = validator.validate(built);
+            resultConsumer.accept(validationResults, built);
+            return built;
+        }
+    }
+}
+----
+=====
+
+.Generated code when using `+AVAJE+`
+[%collapsible]
+=====
+[source,java]
+----
+public final class PersonUtils implements GeneratedUtil {
+    public static final class Builder {
+        public Person build() {
+            // "Creating new instance"
+            return new Person(
+                    this.name()
+                    );
+        }
+
+        public Person build(@NonNull final Validator validator, @Nullable final Class<?>... groups) throws ConstraintViolationException {
+            final Person built = this.build();
+            validator.validate(built, groups);
+            return built;
+        }
+
+        public Person buildAndValidate(@Nullable final Class<?>... groups) throws ConstraintViolationException {
+            return this.build(Validator.builder().build(), groups);
+        }
+    }
+}
+----
+=====
+
+
+****

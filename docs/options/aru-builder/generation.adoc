@@ -326,3 +326,108 @@ PersonUtils.builder()
 include::../../generated-code/options/builder-generation-optional.adoc[]
 
 ====
+
+[#options-builder-generation-validated]
+.`+validatedBuilder+`
+[%collapsible]
+====
+Should there be versions of the build methods that validate the built item?
+
+*Type*:: https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/AdvancedRecordUtils.ValidationApi.html[`+ValidationApi+`^]
+*Default*:: `+ValidationApi.NONE+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        validatedBuilder = ValidationApi.AVAJE
+    )
+)
+public record Person(
+    @NonNull @NotBlank @Size(max = 50)
+    String name
+) {
+}
+----
+
+There are three possible values, with the default `+NONE+` not generating any additional methods.
+
+NOTE: Use of any value other than `+NONE+` will need the necessary dependencies.
+
+The value of `+JAKARTA_PLAIN+` generates methods that allow you to use Jakarta's validation API directly in order to validate the built object like so:
+
+.Sample method body
+[source,java]
+----
+Validator validator = obtainValidator(); // You will need a validator
+PersonUtils.builder()
+    .build(
+        validator,
+        (Set<Set<ConstraintViolation<Person>>> violations) -> {
+            // This method is only called if there's at least one violation
+        }
+    );
+// Alternatively, you can do:
+PersonUtils.builder()
+    .build(
+        validator,
+        (Set<Set<ConstraintViolation<Person>>> violations, Person personThatWasBuilt) -> {
+            // This method is always called
+        }
+    );
+----
+
+The value of `+AVAJE+` generates methods that allows you to use the https://avaje.io/validator/[Avaje Validator^]. You can use it like so:
+
+.Sample method body
+[source,java]
+----
+Validator validator = obtainValidator(); // You will need a validator
+PersonUtils.Builder builder = PersonUtils.builder();
+try {
+    // These use your validator:
+    builder.build(validator);
+    builder.build(validator, GroupA.class, GroupB.class);
+    // These use the default validator
+    builder.buildAndValidate();
+    builder.buildAndValidate(GroupA.class, GroupB.class);
+    // And you can still use the original builder:
+    builder.build();
+} catch (ConstraintViolationException e) {
+    // Do something with the violations
+}
+----
+
+include::../../generated-code/options/builder-generation-validator.adoc[]
+
+====
+
+.`+mapStructValidatesWithAvaje+`
+[%collapsible]
+====
+When using both the Avaje validator (see <<#options-builder-generation-validated,validation settings>>) and MapStruct, should we request that MapStruct calls the method that uses the default validator?
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        validatedBuilder = ValidationApi.AVAJE,
+        mapStructValidatesWithAvaje = true
+    )
+)
+@Valid
+public record Person(
+    @NonNull @NotBlank @Size(max = 50)
+    String name
+) {
+}
+----
+
+When set to `+true+` and the "buildAndValidate" method has been created then the MapStruct integration will call that method. If false, or if there's no "buildAndValidate" method, then it will use the default "build" method.
+
+====
