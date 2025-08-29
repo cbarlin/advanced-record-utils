@@ -48,8 +48,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     }
 
     @Override
-    public void writeNullableAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull) {
-        if (nullReplacesNonNull) {
+    public void writeNullableAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull) {
+        if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L = $L", component.name(), component.name());
         } else {
             methodBuilder.addStatement("this.$L = $T.nonNull($L) ? $L : this.$L", component.name(), OBJECTS, component.name(), component.name(), component.name());
@@ -58,8 +58,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     }
 
     @Override
-    public void writeNullableImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull) {
-        writeNullableAutoSetter(component, methodBuilder, innerType, nullReplacesNonNull);
+    public void writeNullableImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull) {
+        writeNullableAutoSetter(component, methodBuilder, innerType, nullReplacesNotNull);
     }
 
     @Override
@@ -120,8 +120,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     }
 
     @Override
-    public void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull) {
-        if (nullReplacesNonNull) {
+    public void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull) {
+        if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L.clear()", component.name())
                 .beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
                 .addStatement("this.$L.addAll($L)", component.name(), component.name())
@@ -151,8 +151,8 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     }
 
     @Override
-    public void writeNonNullImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull) {
-        writeNonNullAutoSetter(component, methodBuilder, innerType, nullReplacesNonNull);
+    public void writeNonNullImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull) {
+        writeNonNullAutoSetter(component, methodBuilder, innerType, nullReplacesNotNull);
     }
 
     @Override

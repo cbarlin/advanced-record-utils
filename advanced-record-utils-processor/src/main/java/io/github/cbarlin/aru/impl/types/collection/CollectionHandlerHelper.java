@@ -23,7 +23,7 @@ public sealed interface CollectionHandlerHelper permits
     NullableImmutableCollectionHandler
 {
 
-    boolean nullReplacesNonNull();
+    boolean nullReplacesNotNull();
 
     /**
      * The component this is working with

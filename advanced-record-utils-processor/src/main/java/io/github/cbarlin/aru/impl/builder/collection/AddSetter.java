@@ -46,7 +46,7 @@ public final class AddSetter extends CollectionRecordVisitor {
         final MethodSpec.Builder method = builderClass
             .createMethod(name, claimableOperation, analysedCollectionComponent.element());
 
-        populateStartOfMethod(analysedCollectionComponent, method, minimalCollectionHandler.nullReplacesNonNull(), name);
+        populateStartOfMethod(analysedCollectionComponent, method, minimalCollectionHandler.nullReplacesNotNull(), name);
         minimalCollectionHandler.writeSetter(method);
 
         method.addStatement("return this");
@@ -55,7 +55,7 @@ public final class AddSetter extends CollectionRecordVisitor {
         return true;
     }
 
-    private void populateStartOfMethod(final AnalysedCollectionComponent ac, final MethodSpec.Builder method, final boolean nullReplacesNonNull, final String name) {
+    private void populateStartOfMethod(final AnalysedCollectionComponent ac, final MethodSpec.Builder method, final boolean nullReplacesNotNull, final String name) {
         final ParameterSpec param = ParameterSpec.builder(ac.typeName(), name, Modifier.FINAL)
             .addJavadoc("The replacement value")
             .addAnnotation(NULLABLE)
@@ -67,7 +67,7 @@ public final class AddSetter extends CollectionRecordVisitor {
             .addAnnotation(CommonsConstants.Names.NON_NULL)
             .addModifiers(Modifier.PUBLIC);
         
-        if (nullReplacesNonNull) {
+        if (nullReplacesNotNull) {
             method.addJavadoc("\n<p>\n")
                 .addJavadoc("Supplying a null value will set the current value to null/empty");
         } else {

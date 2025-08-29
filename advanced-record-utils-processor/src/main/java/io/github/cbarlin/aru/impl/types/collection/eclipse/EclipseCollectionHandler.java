@@ -37,8 +37,8 @@ public sealed abstract class EclipseCollectionHandler extends StandardCollection
     }
 
     @Override
-    public void writeNonNullAutoSetter(AnalysedComponent component, MethodSpec.Builder methodBuilder, TypeName innerType, boolean nullReplacesNonNull) {
-        if (nullReplacesNonNull) {
+    public void writeNonNullAutoSetter(AnalysedComponent component, MethodSpec.Builder methodBuilder, TypeName innerType, boolean nullReplacesNotNull) {
+        if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L.clear()", component.name())
                     .beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
                     .addStatement("this.$L.addAllIterable($L)", component.name(), component.name())

@@ -59,7 +59,7 @@ public abstract class CollectionHandler {
      * <p>
      * Does not write returns or params
      */
-    public abstract void writeNullableAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull);
+    public abstract void writeNullableAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull);
 
     /**
      * Write an "add" method in the builder that is nullable and inherits the type passed to it
@@ -102,7 +102,7 @@ public abstract class CollectionHandler {
      * <p>
      * Does not write returns or params
      */
-    public abstract void writeNullableImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull);
+    public abstract void writeNullableImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull);
 
     /**
      * Write an "add" method in the builder that is nullable and results in an immutable result
@@ -145,7 +145,7 @@ public abstract class CollectionHandler {
      * <p>
      * Does not write returns or params
      */
-    public abstract void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull);
+    public abstract void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull);
 
     /**
      * Write the "add" method in the builder that is never nullable, but inherits the type passed to it
@@ -189,7 +189,7 @@ public abstract class CollectionHandler {
      * <p>
      * Does not write returns or params
      */
-    public abstract void writeNonNullImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNonNull);
+    public abstract void writeNonNullImmutableSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull);
 
     /**
      * Write the "add" method in the builder that is never nullable and results in an immutable result
