@@ -37,7 +37,7 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 @GenerateAPContext
 public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
-    // This is static so that certain inter-links (e.g. MapStruct), it can be accessed
+    // Static so that inter-tool links (e.g. MapStruct) can access the global scope
     @Nullable
     private static BeanScope globalBeanScope;
 
@@ -50,9 +50,18 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         return Optional.ofNullable(globalBeanScope);
     }
 
-    public static BeanScope globalBeanScope(final ProcessingEnvironment processingEnvironment) {
+    public synchronized static BeanScope globalBeanScope(final ProcessingEnvironment processingEnvironment) {
         if (Objects.isNull(globalBeanScope)) {
             AdvRecUtilsProcessor.globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnvironment);
+        }
+
+        // Rebuild if we're invoked with a different ProcessingEnvironment (Gradle daemon / multi‐module safety)
+        final ProcessingEnvironment currentEnv = globalBeanScope.get(ProcessingEnvironment.class);
+        if (currentEnv != processingEnvironment) {
+            try {
+                globalBeanScope.close();
+            } catch (Exception ignored) { }
+            globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnvironment);
         }
         return globalBeanScope;
     }
@@ -68,6 +77,14 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
         // OK, now loop through all those and analyse them!
         findAndProcessTargets(beanScope, roundEnv, supportedAnnotations.annotations());
+
+        if (roundEnv.processingOver()) {
+            try {
+                Optional.ofNullable(globalBeanScope).ifPresent(BeanScope::close);
+            } catch (Exception ignored) { }
+            globalBeanScope = null;
+            APContext.clear();
+        }
 
         return true;
     }

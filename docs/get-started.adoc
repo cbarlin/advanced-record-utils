@@ -139,7 +139,7 @@ Assuming you have done everything else you need to do for reproducible builds (s
 
 NOTE: If your build isn't reproducible and it should be, please create a new issue on our GitHub.
 
-CAUTION: If you use MapStruct and want reproducible builds, you'll need to disable `+mapstruct.suppressGeneratorTimestamp+` and possibly also `+mapstruct.suppressGeneratorVersionInfoComment+`. See https://mapstruct.org/documentation/stable/reference/html/#configuration-options[their documentation^] for more details.
+CAUTION: If you use MapStruct and want reproducible builds, you'll need to set `+mapstruct.suppressGeneratorTimestamp=true+` and possibly also `+mapstruct.suppressGeneratorVersionInfoComment=true+`. See https://mapstruct.org/documentation/stable/reference/html/#configuration-options[their documentation^] for details on how to set those settings.
 
 == Generated code
 

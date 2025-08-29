@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface SomeImplMapper {
 
-    SomeImplMapper INSTANCE = Mappers.getMapper( SomeImplMapper.class );
+    SomeImplMapper INSTANCE = Mappers.getMapper(SomeImplMapper.class);
 
     @Mapping(source = "field", target = "anotherField")
     SomeImplB fromA(final SomeImplA someImplA);

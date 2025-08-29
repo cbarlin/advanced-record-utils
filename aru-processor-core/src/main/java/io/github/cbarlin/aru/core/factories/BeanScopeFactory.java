@@ -3,6 +3,7 @@ package io.github.cbarlin.aru.core.factories;
 import io.avaje.inject.BeanScope;
 import io.avaje.inject.BeanScopeBuilder;
 import io.avaje.inject.spi.AvajeModule;
+import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.CoreGlobalModule;
 import io.github.cbarlin.aru.core.CorePerComponentModule;
 import io.github.cbarlin.aru.core.CorePerInterfaceModule;
@@ -36,8 +37,23 @@ public final class BeanScopeFactory {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
+    private static void ensureAPContextConfiguredCorrectly(final ProcessingEnvironment processingEnvironment) {
+        final ProcessingEnvironment other;
+        try {
+            other = APContext.processingEnv();
+        } catch (IllegalStateException e) {
+            APContext.init(processingEnvironment);
+            return;
+        }
+        if (other != processingEnvironment) {
+            APContext.clear();
+            APContext.init(processingEnvironment);
+        }
+    }
+
     public static BeanScope loadGlobalScope(final ProcessingEnvironment processingEnvironment) {
         NoOpHandler.install();
+        ensureAPContextConfiguredCorrectly(processingEnvironment);
         final PropertyConfigLoader propertyConfigLoader = new PropertyConfigLoader(Optional.empty());
         final BeanScopeBuilder coreScopeBuilder = BeanScope.builder();
         coreScopeBuilder.configPlugin(propertyConfigLoader);

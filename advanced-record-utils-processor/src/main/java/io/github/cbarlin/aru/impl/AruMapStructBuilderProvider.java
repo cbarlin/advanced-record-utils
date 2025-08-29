@@ -5,6 +5,7 @@ import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.AnalysedType;
 import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
@@ -16,10 +17,12 @@ import org.mapstruct.ap.spi.BuilderProvider;
 import org.mapstruct.ap.spi.TypeHierarchyErroneousException;
 
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -31,14 +34,19 @@ import java.util.Optional;
  * </ul>
  * <p>
  * We can hint to the MapStruct processor (which uses this class) that it needs to wait to the next processing round
- *   by throwing an {@link TypeHierarchyErroneousException} containing the requested {@link TypeMirror}
+ *   by throwing an {@link TypeHierarchyErroneousException} containing the requested {@link TypeMirror}.
+ * <p>
+ * We can return {@code null} if we cannot handle the type, to allow the default MapStruct behaviour.
  */
 @ServiceProvider(BuilderProvider.class)
 public final class AruMapStructBuilderProvider implements BuilderProvider {
 
     @Override
     @Nullable
-    public BuilderInfo findBuilderInfo(final TypeMirror typeMirror) {
+    public BuilderInfo findBuilderInfo(final @Nullable TypeMirror typeMirror) {
+        if (Objects.isNull(typeMirror)) {
+            return null;
+        }
         final UtilsProcessingContext context = obtainContext(typeMirror);
         final Optional<ProcessingTarget> target = context.analysedType(typeMirror);
 
@@ -64,6 +72,7 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
         final TypeElement builderClass = optBuilderClass.get();
         return (new BuilderInfo.Builder())
             .buildMethod(buildMethods(builderClass, processingTarget))
+            // MapStruct has handlers for null
             .builderCreationMethod(builderCreator(utilsClass, processingTarget))
             .build();
     }
@@ -71,13 +80,14 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
     private static Collection<ExecutableElement> buildMethods(final TypeElement builderClass, final ProcessingTarget processingTarget) {
         final TypeName target = switch (processingTarget) {
             case LibraryLoadedTarget llt -> llt.intendedType();
+            case AnalysedRecord ar -> ar.intendedType();
             case AnalysedType at -> at.className();
         };
         final String buildMethodName = processingTarget.prism().builderOptions().buildMethodName();
         return ElementFilter.methodsIn(builderClass.getEnclosedElements())
             .stream()
             .filter(e -> e.getParameters().isEmpty())
-            .filter(e -> target.equals(TypeName.get(e.getReturnType())))
+            .filter(e -> OptionalClassDetector.checkSameOrSubType(TypeName.get(e.getReturnType()), target))
             .filter(e -> e.getSimpleName().toString().equals(buildMethodName))
             .toList();
     }
@@ -89,7 +99,13 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
         final var enclosedElements = utilsClass.getEnclosedElements();
         final var methods = ElementFilter.methodsIn(enclosedElements);
         for (final ExecutableElement method : methods) {
-            if (method.getSimpleName().toString().equals(creationMethodName) && method.getParameters().isEmpty() && TypeName.get(method.getReturnType()).equals(builderClassName)) {
+            if (
+                method.getSimpleName().toString().equals(creationMethodName)
+                    && method.getParameters().isEmpty()
+                    && method.getModifiers().contains(Modifier.STATIC)
+                    && method.getModifiers().contains(Modifier.PUBLIC)
+                    && TypeName.get(method.getReturnType()).equals(builderClassName)
+            ) {
                 return method;
             }
         }
@@ -103,11 +119,10 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
         if (optionalContext.isEmpty()) {
             throw new TypeHierarchyErroneousException(typeMirror);
         }
-        final UtilsProcessingContext context = optionalContext.get();
-        return context;
+        return optionalContext.get();
     }
 
-    private boolean annotationPresent(final TypeMirror typeMirror) {
+    private static boolean annotationPresent(final TypeMirror typeMirror) {
         return OptionalClassDetector.optionalDependencyTypeElement(typeMirror)
             .filter(AdvancedRecordUtilsPrism::isPresent)
             .isPresent();

@@ -13,6 +13,8 @@ class BasicMapStructTest {
             .build();
         final SomeImplB b = SomeImplMapper.INSTANCE.fromA(a);
         assertEquals(a.field(), b.anotherField());
+        // This proves that MapStruct has used the builder, as otherwise it'll
+        //   pass '0' to the canonical constructor
         assertEquals(42, b.iAmNotNeeded());
     }
 }
