@@ -15,6 +15,6 @@ class BasicMapStructTest {
         assertEquals(a.field(), b.anotherField());
         // This proves that MapStruct has used the builder, as otherwise it'll
         //   pass '0' to the canonical constructor
-        assertEquals(42, b.iAmNotNeeded());
+        assertEquals(42, b.iAmNotNeeded(), "ARU Builder was not used");
     }
 }

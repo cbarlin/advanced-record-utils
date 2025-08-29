@@ -3,6 +3,7 @@ package io.github.cbarlin.aru.core.factories;
 import io.avaje.inject.BeanScope;
 import io.avaje.inject.BeanScopeBuilder;
 import io.avaje.inject.spi.AvajeModule;
+import io.github.cbarlin.aru.annotations.Generated;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.CoreGlobalModule;
 import io.github.cbarlin.aru.core.CorePerComponentModule;
@@ -17,6 +18,7 @@ import io.github.cbarlin.aru.core.wiring.InjectModuleFinder;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.RecordComponentElement;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
@@ -30,13 +32,16 @@ public final class BeanScopeFactory {
         ServiceLoader.load(InjectModuleFinder.class, InjectModuleFinder.class.getClassLoader())
             .iterator()
             .forEachRemaining(finders::add);
+        finders.sort(Comparator.comparing(f -> f.getClass().getCanonicalName()));
         MODULE_FINDERS = List.copyOf(finders);
     }
 
+    @Generated("The constructor does not need to count for code coverage")
     private BeanScopeFactory() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
+    @Generated("We do not use a daemon, so this will never count as tested")
     private static void ensureAPContextConfiguredCorrectly(final ProcessingEnvironment processingEnvironment) {
         final ProcessingEnvironment other;
         try {

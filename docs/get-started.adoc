@@ -126,7 +126,7 @@ This library has optional integration with several dependencies. Some of these i
 Other integrations are based purely on detecting the dependency in your classpath and using them where it makes sense to do so without you being required to do anything. These integrations are:
 
 * https://github.com/eclipse-collections/eclipse-collections[Eclipse Collections^] - Collections from Eclipse Collections are detected if referenced and handled appropriately (e.g. creating `+ImmutableList+` if requested).
-* https://commons.apache.org/proper/commons-lang/[Apache commons-lang3^] - Commons Lang 3, if detected, will be used for `+Validate+` and `+StringUtils+` classes
+* https://commons.apache.org/proper/commons-lang/[Apache Commons Lang 3^] - Commons Lang 3, if detected, will be used for `+Validate+` and `+StringUtils+` classes
 * https://mapstruct.org/[MapStruct^] - Integration has been made on our end so that MapStruct will use our builders.
 
 == Reproducible Builds

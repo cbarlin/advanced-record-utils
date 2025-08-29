@@ -55,7 +55,7 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
             AdvRecUtilsProcessor.globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnvironment);
         }
 
-        // Rebuild if we're invoked with a different ProcessingEnvironment (Gradle daemon / multi‐module safety)
+        // Rebuild if we're invoked with a different ProcessingEnvironment (Gradle daemon / multi-module safety)
         final ProcessingEnvironment currentEnv = globalBeanScope.get(ProcessingEnvironment.class);
         if (currentEnv != processingEnvironment) {
             try {

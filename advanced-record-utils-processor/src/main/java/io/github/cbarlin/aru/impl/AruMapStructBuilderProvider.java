@@ -11,17 +11,20 @@ import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.TypeName;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.mapstruct.ap.spi.BuilderInfo;
 import org.mapstruct.ap.spi.BuilderProvider;
 import org.mapstruct.ap.spi.TypeHierarchyErroneousException;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -43,10 +46,7 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
 
     @Override
     @Nullable
-    public BuilderInfo findBuilderInfo(final @Nullable TypeMirror typeMirror) {
-        if (Objects.isNull(typeMirror)) {
-            return null;
-        }
+    public BuilderInfo findBuilderInfo(final @NonNull TypeMirror typeMirror) {
         final UtilsProcessingContext context = obtainContext(typeMirror);
         final Optional<ProcessingTarget> target = context.analysedType(typeMirror);
 
@@ -63,13 +63,10 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
     }
 
     private static BuilderInfo createBuilderInfo(final TypeMirror typeMirror, final ProcessingTarget processingTarget) {
-        final Optional<TypeElement> optUtilsClass = Optional.ofNullable(APContext.elements().getTypeElement(processingTarget.utilsClassName().canonicalName()));
-        final Optional<TypeElement> optBuilderClass = Optional.ofNullable(APContext.elements().getTypeElement(processingTarget.builderArtifact().className().canonicalName()));
-        if (optUtilsClass.isEmpty() || optBuilderClass.isEmpty()) {
-            throw new TypeHierarchyErroneousException(typeMirror);
-        }
-        final TypeElement utilsClass = optUtilsClass.get();
-        final TypeElement builderClass = optBuilderClass.get();
+        final TypeElement utilsClass = Optional.ofNullable(APContext.elements().getTypeElement(processingTarget.utilsClassName().canonicalName()))
+            .orElseThrow(() -> new TypeHierarchyErroneousException(typeMirror));
+        final TypeElement builderClass = Optional.ofNullable(APContext.elements().getTypeElement(processingTarget.builderArtifact().className().canonicalName()))
+            .orElseThrow(() -> new TypeHierarchyErroneousException(typeMirror));
         return (new BuilderInfo.Builder())
             .buildMethod(buildMethods(builderClass, processingTarget))
             // MapStruct has handlers for null
@@ -84,20 +81,25 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
             case AnalysedType at -> at.className();
         };
         final String buildMethodName = processingTarget.prism().builderOptions().buildMethodName();
-        return ElementFilter.methodsIn(builderClass.getEnclosedElements())
-            .stream()
-            .filter(e -> e.getParameters().isEmpty())
-            .filter(e -> OptionalClassDetector.checkSameOrSubType(TypeName.get(e.getReturnType()), target))
-            .filter(e -> e.getSimpleName().toString().equals(buildMethodName))
-            .toList();
+        for (final ExecutableElement e : ElementFilter.methodsIn(builderClass.getEnclosedElements())) {
+            if (
+                e.getParameters().isEmpty()
+                    && e.getModifiers().contains(Modifier.PUBLIC)
+                    && e.getSimpleName().toString().equals(buildMethodName)
+                    && OptionalClassDetector.checkSameOrSubType(TypeName.get(e.getReturnType()), target)
+            ) {
+                return List.of(e);
+            }
+        }
+        return List.of();
     }
 
     @Nullable
     private static ExecutableElement builderCreator(final TypeElement utilsClass, final ProcessingTarget processingTarget) {
         final String creationMethodName = processingTarget.prism().builderOptions().emptyCreationName();
         final TypeName builderClassName = processingTarget.builderArtifact().className();
-        final var enclosedElements = utilsClass.getEnclosedElements();
-        final var methods = ElementFilter.methodsIn(enclosedElements);
+        final List<? extends Element> enclosedElements = utilsClass.getEnclosedElements();
+        final List<ExecutableElement> methods = ElementFilter.methodsIn(enclosedElements);
         for (final ExecutableElement method : methods) {
             if (
                 method.getSimpleName().toString().equals(creationMethodName)
@@ -113,13 +115,10 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
     }
 
     private static UtilsProcessingContext obtainContext(final TypeMirror typeMirror) {
-        final Optional<UtilsProcessingContext> optionalContext = AdvRecUtilsProcessor.globalBeanScope()
+        return AdvRecUtilsProcessor.globalBeanScope()
             .flatMap(beanScope -> beanScope.getOptional(UtilsProcessingContext.class))
-            .filter(UtilsProcessingContext::hasPerformedAnalysis);
-        if (optionalContext.isEmpty()) {
-            throw new TypeHierarchyErroneousException(typeMirror);
-        }
-        return optionalContext.get();
+            .filter(UtilsProcessingContext::hasPerformedAnalysis)
+            .orElseThrow(() -> new TypeHierarchyErroneousException(typeMirror));
     }
 
     private static boolean annotationPresent(final TypeMirror typeMirror) {
