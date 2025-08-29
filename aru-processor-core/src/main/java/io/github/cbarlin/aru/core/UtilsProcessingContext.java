@@ -26,6 +26,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,8 +57,17 @@ public final class UtilsProcessingContext {
         return APContext.processingEnv();
     }
 
+    public boolean hasPerformedAnalysis() {
+        return !this.analysedTypes.isEmpty();
+    }
+
     public @Nullable ProcessingTarget analysedType(final TypeElement typeElement) {
         return analysedTypes.get(typeElement);
+    }
+
+    public Optional<ProcessingTarget> analysedType(final TypeMirror typeMirror) {
+        return OptionalClassDetector.optionalDependencyTypeElement(typeMirror)
+            .map(this::analysedType);
     }
 
     public Optional<List<AnalysedTypeConverter>> obtainConverters(final TypeName typeName) {

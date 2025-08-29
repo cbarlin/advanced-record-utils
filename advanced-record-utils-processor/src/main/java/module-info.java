@@ -24,7 +24,11 @@ module io.github.cbarlin.aru.worker {
 
     requires static io.avaje.spi;
     requires static org.jspecify;
+    requires static org.mapstruct.processor;
 
     provides io.github.cbarlin.aru.core.wiring.InjectModuleFinder with
         io.github.cbarlin.aru.impl.wiring.InjectModuleProvider;
+
+    provides org.mapstruct.ap.spi.BuilderProvider with
+        io.github.cbarlin.aru.impl.AruMapStructBuilderProvider;
 }

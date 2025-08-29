@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.core;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -36,31 +37,38 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 @GenerateAPContext
 public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
+    // This is static so that certain inter-links (e.g. MapStruct), it can be accessed
     @Nullable
-    private BeanScope globalBeanScope;
+    private static BeanScope globalBeanScope;
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
         return SourceVersion.latestSupported();
     }
 
+    public static Optional<BeanScope> globalBeanScope() {
+        return Optional.ofNullable(globalBeanScope);
+    }
+
+    public static BeanScope globalBeanScope(final ProcessingEnvironment processingEnvironment) {
+        if (Objects.isNull(globalBeanScope)) {
+            AdvRecUtilsProcessor.globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnvironment);
+        }
+        return globalBeanScope;
+    }
+
     @Override
     public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
-        if (Objects.isNull(globalBeanScope)) {
-            this.globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnv);
-            loadAruAnnotations();
-        }
-        final SupportedAnnotations supportedAnnotations = globalBeanScope.get(SupportedAnnotations.class);
+        final BeanScope beanScope = globalBeanScope(processingEnv);
+        loadAruAnnotations();
+        final SupportedAnnotations supportedAnnotations = beanScope.get(SupportedAnnotations.class);
 
         // First, find any meta-annotations
         findMetaAnnotations(roundEnv, supportedAnnotations.annotations());
 
         // OK, now loop through all those and analyse them!
-        findAndProcessTargets(globalBeanScope, roundEnv, supportedAnnotations.annotations());
+        findAndProcessTargets(beanScope, roundEnv, supportedAnnotations.annotations());
 
-        if(roundEnv.processingOver()) {
-            APContext.clear();
-        }
         return true;
     }
 
