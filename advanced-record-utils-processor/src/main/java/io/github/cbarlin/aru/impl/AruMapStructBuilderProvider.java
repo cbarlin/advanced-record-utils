@@ -22,6 +22,17 @@ import javax.lang.model.util.ElementFilter;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * SPI into MapStruct that allows it to use our builders. To do this, we need to:
+ * <ul>
+ *     <li>Have written the builder (since MapStruct needs the finished {@link ExecutableElement} objects)</li>
+ *     <li>Find the constructor for the builder and add it to MapStruct's {@link BuilderInfo.Builder#builderCreationMethod(ExecutableElement)}</li>
+ *     <li>Find the "finish" method on the builder and add it to MapStruct's {@link BuilderInfo.Builder#buildMethod(Collection)}</li>
+ * </ul>
+ * <p>
+ * We can hint to the MapStruct processor (which uses this class) that it needs to wait to the next processing round
+ *   by throwing an {@link TypeHierarchyErroneousException} containing the requested {@link TypeMirror}
+ */
 @ServiceProvider(BuilderProvider.class)
 public final class AruMapStructBuilderProvider implements BuilderProvider {
 
@@ -30,6 +41,7 @@ public final class AruMapStructBuilderProvider implements BuilderProvider {
     public BuilderInfo findBuilderInfo(final TypeMirror typeMirror) {
         final UtilsProcessingContext context = obtainContext(typeMirror);
         final Optional<ProcessingTarget> target = context.analysedType(typeMirror);
+
         if (target.isPresent()) {
             // Excellent, we can use this!
             return createBuilderInfo(typeMirror, target.get());
