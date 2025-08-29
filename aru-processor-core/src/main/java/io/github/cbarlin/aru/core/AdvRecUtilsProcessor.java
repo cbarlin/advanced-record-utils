@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.core;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -36,31 +37,55 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 @GenerateAPContext
 public final class AdvRecUtilsProcessor extends AbstractProcessor {
 
+    // Static so that inter-tool links (e.g. MapStruct) can access the global scope
     @Nullable
-    private BeanScope globalBeanScope;
+    private static BeanScope globalBeanScope;
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
         return SourceVersion.latestSupported();
     }
 
+    public static Optional<BeanScope> globalBeanScope() {
+        return Optional.ofNullable(globalBeanScope);
+    }
+
+    public synchronized static BeanScope globalBeanScope(final ProcessingEnvironment processingEnvironment) {
+        if (Objects.isNull(globalBeanScope)) {
+            AdvRecUtilsProcessor.globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnvironment);
+        }
+
+        // Rebuild if we're invoked with a different ProcessingEnvironment (Gradle daemon / multi-module safety)
+        final ProcessingEnvironment currentEnv = globalBeanScope.get(ProcessingEnvironment.class);
+        if (currentEnv != processingEnvironment) {
+            try {
+                globalBeanScope.close();
+            } catch (Exception ignored) { }
+            globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnvironment);
+        }
+        return globalBeanScope;
+    }
+
     @Override
     public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
-        if (Objects.isNull(globalBeanScope)) {
-            this.globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnv);
-            loadAruAnnotations();
-        }
-        final SupportedAnnotations supportedAnnotations = globalBeanScope.get(SupportedAnnotations.class);
+        final BeanScope beanScope = globalBeanScope(processingEnv);
+        loadAruAnnotations();
+        final SupportedAnnotations supportedAnnotations = beanScope.get(SupportedAnnotations.class);
 
         // First, find any meta-annotations
         findMetaAnnotations(roundEnv, supportedAnnotations.annotations());
 
         // OK, now loop through all those and analyse them!
-        findAndProcessTargets(globalBeanScope, roundEnv, supportedAnnotations.annotations());
+        findAndProcessTargets(beanScope, roundEnv, supportedAnnotations.annotations());
 
-        if(roundEnv.processingOver()) {
+        if (roundEnv.processingOver()) {
+            try {
+                Optional.ofNullable(globalBeanScope).ifPresent(BeanScope::close);
+            } catch (Exception ignored) { }
+            globalBeanScope = null;
             APContext.clear();
         }
+
         return true;
     }
 

@@ -14,7 +14,7 @@ import io.micronaut.sourcegen.javapoet.MethodSpec.Builder;
 public record NonNullImmutableNullCollectionHandler(
     AnalysedCollectionComponent component,
     CollectionHandler handler,
-    boolean nullReplacesNonNull
+    boolean nullReplacesNotNull
 ) implements CollectionHandlerHelper {
 
     @Override
@@ -29,7 +29,7 @@ public record NonNullImmutableNullCollectionHandler(
 
     @Override
     public void writeSetter(Builder methodBuilder) {
-        handler.writeNonNullImmutableSetter(component, methodBuilder, component.unNestedPrimaryTypeName(), nullReplacesNonNull);
+        handler.writeNonNullImmutableSetter(component, methodBuilder, component.unNestedPrimaryTypeName(), nullReplacesNotNull);
     }
 
     @Override

@@ -62,7 +62,7 @@ public final class AddAdder extends CollectionRecordVisitor {
             .addAnnotation(CommonsConstants.Names.NON_NULL)
             .addModifiers(Modifier.PUBLIC);
 
-        if (minimalCollectionHandler.nullReplacesNonNull()) {
+        if (minimalCollectionHandler.nullReplacesNotNull()) {
             method.addJavadoc("\n<p>\n")
                 .addJavadoc("Supplying a null value will set the current value to null");
         } else {

@@ -469,6 +469,18 @@ public @interface AdvancedRecordUtils {
          * Should we generate an overload for optional types that accepts the concrete one?
          */
         boolean concreteSettersForOptional() default true;
+
+        /**
+         * If both:
+         * <ul>
+         *     <li>You have {@link #validatedBuilder()} set to {@code AVAJE}; and</li>
+         *     <li>You are using MapStruct</li>
+         * </ul>
+         * <p>
+         * Then setting this to {@code true} will make MapStruct use the default Avaje validator to
+         *   validate the mapped object
+         */
+        boolean mapStructValidatesWithAvaje() default false;
     }
 
     /**

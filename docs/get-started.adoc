@@ -125,8 +125,9 @@ This library has optional integration with several dependencies. Some of these i
 
 Other integrations are based purely on detecting the dependency in your classpath and using them where it makes sense to do so without you being required to do anything. These integrations are:
 
-* Eclipse Collections
-* Apache commons-lang3
+* https://github.com/eclipse-collections/eclipse-collections[Eclipse Collections^] - Collections from Eclipse Collections are detected if referenced and handled appropriately (e.g. creating `+ImmutableList+` if requested).
+* https://commons.apache.org/proper/commons-lang/[Apache Commons Lang 3^] - Commons Lang 3, if detected, will be used for `+Validate+` and `+StringUtils+` classes
+* https://mapstruct.org/[MapStruct^] - Integration has been made on our end so that MapStruct will use our builders.
 
 == Reproducible Builds
 
@@ -137,6 +138,8 @@ This project is reproducible (and independently verified - thanks https://github
 Assuming you have done everything else you need to do for reproducible builds (see the https://reproducible-builds.org/docs/jvm/[JVM guide]) then use of Advanced Record Utils will not stop that (barring one edge case - see "Importing records/interfaces" below).
 
 NOTE: If your build isn't reproducible and it should be, please create a new issue on our GitHub.
+
+CAUTION: If you use MapStruct and want reproducible builds, you'll need to set `+mapstruct.suppressGeneratorTimestamp=true+` and possibly also `+mapstruct.suppressGeneratorVersionInfoComment=true+`. See https://mapstruct.org/documentation/stable/reference/html/#configuration-options[their documentation^] for details on how to set those settings.
 
 == Generated code
 

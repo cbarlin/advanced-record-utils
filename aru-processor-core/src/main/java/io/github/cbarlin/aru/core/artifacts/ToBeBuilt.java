@@ -235,7 +235,7 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
 
     @Override
     public MethodSpec.Builder createMethod(final String generatedCodeName, final ClaimableOperation claimableOperation, final ParameterizedTypeName paramTn) {
-        return createMethod(generatedCodeName, claimableOperation.operationName() + "$#$" + paramTn.toString());
+        return createMethod(generatedCodeName, claimableOperation.operationName() + "$#$" + paramTn);
     }
 
     @Override

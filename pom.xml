@@ -70,13 +70,13 @@
         <jakarta-xml-bind-api.version>4.0.2</jakarta-xml-bind-api.version>
         <jspecify.version>1.0.0</jspecify.version>
         <junit-bom.version>5.13.4</junit-bom.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <mockito.version>5.19.0</mockito.version>
         <stax2-api.version>4.2.2</stax2-api.version>
         <vavr.version>0.10.7</vavr.version>
         <woodstox.version>7.1.1</woodstox.version>
         <xmlunit.version>2.10.3</xmlunit.version>
         <rainbowgum.version>0.8.2</rainbowgum.version>
-        <tinylog.version>2.7.0</tinylog.version>
 
         <!-- Maven versions -->
         <central-publishing.version>0.8.0</central-publishing.version>
@@ -219,14 +219,14 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.tinylog</groupId>
-                <artifactId>slf4j-tinylog</artifactId>
-                <version>${tinylog.version}</version>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.tinylog</groupId>
-                <artifactId>tinylog-impl</artifactId>
-                <version>${tinylog.version}</version>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.jstach.rainbowgum</groupId>

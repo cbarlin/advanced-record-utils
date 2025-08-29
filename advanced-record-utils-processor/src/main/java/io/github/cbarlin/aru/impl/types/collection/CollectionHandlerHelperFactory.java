@@ -36,16 +36,16 @@ public final class CollectionHandlerHelperFactory {
     private CollectionHandlerHelper createHandler(final AnalysedCollectionComponent ac, final CollectionHandler handler, final BuilderOptionsPrism opts) {
         final boolean nonNull = !Boolean.FALSE.equals(opts.buildNullCollectionToEmpty());
         final boolean immutable = !"AUTO".equals(opts.builtCollectionType());
-        final boolean nullReplacesNonNull = (!Boolean.FALSE.equals(opts.nullReplacesNotNull()));
+        final boolean nullReplacesNotNull = (!Boolean.FALSE.equals(opts.nullReplacesNotNull()));
 
         if (nonNull && immutable) {
-            return new NonNullImmutableNullCollectionHandler(ac, handler, nullReplacesNonNull);
+            return new NonNullImmutableNullCollectionHandler(ac, handler, nullReplacesNotNull);
         } else if (nonNull) {
-            return new NonNullAutoCollectionHandler(ac, handler, nullReplacesNonNull);
+            return new NonNullAutoCollectionHandler(ac, handler, nullReplacesNotNull);
         } else if (immutable) {
-            return new NullableImmutableCollectionHandler(ac, handler, nullReplacesNonNull);
+            return new NullableImmutableCollectionHandler(ac, handler, nullReplacesNotNull);
         } else {
-            return new NullableAutoCollectionHandler(ac, handler, nullReplacesNonNull);
+            return new NullableAutoCollectionHandler(ac, handler, nullReplacesNotNull);
         }
     }
 }
