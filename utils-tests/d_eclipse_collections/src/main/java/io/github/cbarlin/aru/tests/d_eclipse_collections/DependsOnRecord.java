@@ -6,7 +6,10 @@ import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.ImmutableSet;
 
-@AdvancedRecordUtils(attemptToFindExistingUtils = true)
+@AdvancedRecordUtils(
+    attemptToFindExistingUtils = true,
+    merger = true
+)
 public record DependsOnRecord(
     ImmutableList<MyRecordA> immutableListOfA,
     MutableList<MyRecordA> mutableListOfA,
