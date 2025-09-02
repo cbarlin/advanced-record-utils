@@ -18,6 +18,7 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
@@ -120,5 +121,37 @@ public sealed abstract class EclipseCollectionHandler extends StandardCollection
                 .endControlFlow()
                 .addStatement("return this");
         AnnotationSupplier.addGeneratedAnnotation(method, visitor);
+    }
+
+    @Override
+    public void writeMergerMethod(TypeName innerType, MethodSpec.Builder methodBuilder) {
+        final ParameterizedTypeName paramTypeName = ParameterizedTypeName.get(classNameOnComponent, innerType);
+        final ParameterSpec paramA = ParameterSpec.builder(paramTypeName, "elA", Modifier.FINAL)
+            .addAnnotation(NULLABLE)
+            .addJavadoc("The preferred input")
+            .build();
+
+        final ParameterSpec paramB = ParameterSpec.builder(paramTypeName, "elB", Modifier.FINAL)
+            .addAnnotation(NULLABLE)
+            .addJavadoc("The non-preferred input")
+            .build();
+        methodBuilder.addAnnotation(NULLABLE)
+            .addParameter(paramA)
+            .addParameter(paramB)
+            .returns(paramTypeName)
+            .addJavadoc("Merger for fields of class {@link $T}", paramTypeName)
+            .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+            .addStatement("return elB")
+            .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+            .addStatement("return elA")
+            .endControlFlow()
+            .addStatement("final $T<$T> combined = $T.mutable.empty()", mutableClassName, innerType, factoryClassName)
+            .addStatement("combined.addAllIterable(elA)")
+            .addStatement("combined.addAllIterable(elB)");
+        if (mutableClassName.equals(classNameOnComponent)) {
+            methodBuilder.addStatement("return combined");
+        } else {
+            methodBuilder.addStatement("return combined.toImmutable()");
+        }
     }
 }
