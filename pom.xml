@@ -96,7 +96,7 @@
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
-        <versions-plugin.version>2.18.0</versions-plugin.version>
+        <versions-plugin.version>2.19.0</versions-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
