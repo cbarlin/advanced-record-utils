@@ -46,11 +46,18 @@ class CollectionsTests {
 
         // OK, lets try and do a diff
         final NonNullableImmutableCollectionBag c = NonNullableImmutableCollectionBagUtils.builder()
+            // Perform remove operations first, which will end up working on empty/null collections...
+            .removeEnumSetOfEnum(AnEnum.TWO)
+            .removeEnumSetOfEnum(en -> !AnEnum.TWO.equals(en))
             .addEnumSetOfEnum(AnEnum.TWO)
+            .removeHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addTreeSetOfString("This is a string!")
+            .removeLinkedListOfString(Stream.of("A").iterator())
+            .removeLinkedListOfString(Stream.of("A").spliterator())
             .addLinkedListOfString(Stream.of("A").iterator())
             .addLinkedListOfString(Stream.of("A").spliterator())
+            .removeStackOfString(List.of("A"))
             .addStackOfString(List.of("A"))
             .build();
         final var diff = NonNullableImmutableCollectionBagUtils.diff(b, c);
@@ -110,6 +117,12 @@ class CollectionsTests {
             NonNullableImmutableCollectionBagUtils.builder()
                 .addSetOfEnum(AnEnum.ONE)
                 .addLinkedListOfString("B")
+                .addLinkedListOfString("C")
+                .removeLinkedListOfString("D")
+                // Test that the predicate is working
+                .removeLinkedListOfString("C"::equals)
+                .addLinkedListOfString("E")
+                .retainAllLinkedListOfString(List.of("A", "A", "B"))
                 .build()
         );
 
@@ -166,11 +179,18 @@ class CollectionsTests {
 
         // OK, lets try and do a diff
         final NonNullableAutoCollectionBag c = NonNullableAutoCollectionBagUtils.builder()
+            // Perform remove operations first, which will end up working on empty/null collections...
+            .removeEnumSetOfEnum(AnEnum.TWO)
+            .removeEnumSetOfEnum(en -> !AnEnum.TWO.equals(en))
             .addEnumSetOfEnum(AnEnum.TWO)
+            .removeHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addTreeSetOfString("This is a string!")
+            .removeLinkedListOfString(Stream.of("A").iterator())
+            .removeLinkedListOfString(Stream.of("A").spliterator())
             .addLinkedListOfString(Stream.of("A").iterator())
             .addLinkedListOfString(Stream.of("A").spliterator())
+            .removeStackOfString(List.of("A"))
             .addStackOfString(List.of("A"))
             .build();
         final var diff = NonNullableAutoCollectionBagUtils.diff(b, c);
@@ -230,6 +250,12 @@ class CollectionsTests {
             NonNullableAutoCollectionBagUtils.builder()
                 .addSetOfEnum(AnEnum.ONE)
                 .addLinkedListOfString("B")
+                .addLinkedListOfString("C")
+                .removeLinkedListOfString("D")
+                // Test that the predicate is working
+                .removeLinkedListOfString("C"::equals)
+                .addLinkedListOfString("E")
+                .retainAllLinkedListOfString(List.of("A", "A", "B"))
                 .build()
         );
 
@@ -281,11 +307,18 @@ class CollectionsTests {
 
         // OK, lets try and do a diff
         final NullableImmutableCollectionBag c = NullableImmutableCollectionBagUtils.builder()
+            // Perform remove operations first, which will end up working on empty/null collections...
+            .removeEnumSetOfEnum(AnEnum.TWO)
+            .removeEnumSetOfEnum(en -> !AnEnum.TWO.equals(en))
             .addEnumSetOfEnum(AnEnum.TWO)
+            .removeHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addTreeSetOfString("This is a string!")
+            .removeLinkedListOfString(Stream.of("A").iterator())
+            .removeLinkedListOfString(Stream.of("A").spliterator())
             .addLinkedListOfString(Stream.of("A").iterator())
             .addLinkedListOfString(Stream.of("A").spliterator())
+            .removeStackOfString(List.of("A"))
             .addStackOfString(List.of("A"))
             .build();
         final var diff = NullableImmutableCollectionBagUtils.diff(a, c);
@@ -345,6 +378,12 @@ class CollectionsTests {
             NullableImmutableCollectionBagUtils.builder()
                 .addSetOfEnum(AnEnum.ONE)
                 .addLinkedListOfString("B")
+                .addLinkedListOfString("C")
+                .removeLinkedListOfString("D")
+                // Test that the predicate is working
+                .removeLinkedListOfString("C"::equals)
+                .addLinkedListOfString("E")
+                .retainAllLinkedListOfString(List.of("A", "A", "B"))
                 .build()
         );
 
@@ -395,11 +434,18 @@ class CollectionsTests {
 
         // OK, lets try and do a diff
         final NullableAutoCollectionBag c = NullableAutoCollectionBagUtils.builder()
+            // Perform remove operations first, which will end up working on empty/null collections...
+            .removeEnumSetOfEnum(AnEnum.TWO)
+            .removeEnumSetOfEnum(en -> !AnEnum.TWO.equals(en))
             .addEnumSetOfEnum(AnEnum.TWO)
+            .removeHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addHashSetOfEnum(Set.of(AnEnum.ONE, AnEnum.THREE))
             .addTreeSetOfString("This is a string!")
+            .removeLinkedListOfString(Stream.of("A").iterator())
+            .removeLinkedListOfString(Stream.of("A").spliterator())
             .addLinkedListOfString(Stream.of("A").iterator())
             .addLinkedListOfString(Stream.of("A").spliterator())
+            .removeStackOfString(List.of("A"))
             .addStackOfString(List.of("A"))
             .build();
         final var diff = NullableAutoCollectionBagUtils.diff(a, c);
@@ -459,6 +505,12 @@ class CollectionsTests {
             NullableAutoCollectionBagUtils.builder()
                 .addSetOfEnum(AnEnum.ONE)
                 .addLinkedListOfString("B")
+                .addLinkedListOfString("C")
+                .removeLinkedListOfString("D")
+                // Test that the predicate is working
+                .removeLinkedListOfString("C"::equals)
+                .addLinkedListOfString("E")
+                .retainAllLinkedListOfString(List.of("A", "A", "B"))
                 .build()
         );
 

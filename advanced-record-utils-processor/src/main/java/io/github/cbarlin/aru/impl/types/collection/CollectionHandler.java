@@ -79,8 +79,43 @@ public abstract class CollectionHandler {
         final String addAllMethodName,
         final AruVisitor<?> visitor
     ) {
-        writeBasicAdders(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
     }
+
+    /**
+     * Write "removeAll" methods to the builder that is nullable and inherits the type passed to it
+     */
+    public void writeNullableAutoRemoveManyToBuilder(
+        final AnalysedComponent component,
+        final ToBeBuilt builder,
+        final TypeName innerType,
+        final String singleRemoveMethodName,
+        final String addAllMethodName,
+        final AruVisitor<?> visitor
+    ) {
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleRemoveMethodName, addAllMethodName, visitor);
+    }
+
+    /**
+     * Write a "remove" method in the builder that is nullable and inherits the type passed to it
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write a "removeIf" method in the builder that is nullable and inherits the type passed to it
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write a "retainAll" method in the builder that is nullable and inherits the type passed to it
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
 
     //#endregion
     //#region Nullable, Immutable
@@ -112,6 +147,27 @@ public abstract class CollectionHandler {
     public abstract void writeNullableImmutableAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
 
     /**
+     * Write a "remove" method in the builder that is nullable and results in an immutable result
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNullableImmutableRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write a "removeIf" method in the builder that is nullable and results in an immutable result
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNullableImmutableRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write a "retainAll" method in the builder that is nullable and results in an immutable result
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNullableImmutableRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
      * Write "addAll" methods to the builder that is nullable and inherits the type passed to it
      */
     public void writeNullableImmutableAddManyToBuilder(
@@ -122,7 +178,21 @@ public abstract class CollectionHandler {
         final String addAllMethodName,
         final AruVisitor<?> visitor
     ) {
-        writeBasicAdders(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+    }
+
+    /**
+     * Write "removeAll" methods to the builder that is nullable and inherits the type passed to it
+     */
+    public void writeNullableImmutableRemoveManyToBuilder(
+        final AnalysedComponent component,
+        final ToBeBuilt builder,
+        final TypeName innerType,
+        final String singleRemoveMethodName,
+        final String addAllMethodName,
+        final AruVisitor<?> visitor
+    ) {
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleRemoveMethodName, addAllMethodName, visitor);
     }
 
     //#endregion
@@ -155,6 +225,27 @@ public abstract class CollectionHandler {
     public abstract void writeNonNullAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
 
     /**
+     * Write the "remove" method in the builder that is never nullable, but inherits the type passed to it
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNonNullAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write the "removeIf" method in the builder that is never nullable, but inherits the type passed to it
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNonNullAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write the "retainAll" method in the builder that is never nullable, but inherits the type passed to it
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNonNullAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
      * Write "addAll" methods to the builder that is nullable and inherits the type passed to it
      */
     public void writeNonNullAutoAddManyToBuilder(
@@ -166,7 +257,22 @@ public abstract class CollectionHandler {
         final AruVisitor<?> visitor
     ) {
         writeNonNullCollectionAdder(component, builder, innerType, addAllMethodName, visitor);
-        writeBasicAdders(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+    }
+
+    /**
+     * Write "removeAll" methods to the builder that is nullable and inherits the type passed to it
+     */
+    public void writeNonNullAutoRemoveManyToBuilder(
+        final AnalysedComponent component,
+        final ToBeBuilt builder,
+        final TypeName innerType,
+        final String singleRemoveMethodName,
+        final String addAllMethodName,
+        final AruVisitor<?> visitor
+    ) {
+        writeNonNullCollectionRemoveAll(component, builder, innerType, addAllMethodName, visitor);
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleRemoveMethodName, addAllMethodName, visitor);
     }
 
     //#endregion
@@ -199,6 +305,27 @@ public abstract class CollectionHandler {
     public abstract void writeNonNullImmutableAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
 
     /**
+     * Write the "remove" method in the builder that is never nullable and results in an immutable result
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNonNullImmutableRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write the "removeIf" method in the builder that is never nullable and results in an immutable result
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNonNullImmutableRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
+     * Write the "retainAll" method in the builder that is never nullable and results in an immutable result
+     * <p>
+     * Does not write returns or params
+     */
+    public abstract void writeNonNullImmutableRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType);
+
+    /**
      * Write "addAll" methods to the builder that is nullable and inherits the type passed to it
      */
     public void writeNonNullImmutableAddManyToBuilder(
@@ -210,7 +337,22 @@ public abstract class CollectionHandler {
         final AruVisitor<?> visitor
     ) {
         writeNonNullCollectionAdder(component, builder, innerType, addAllMethodName, visitor);
-        writeBasicAdders(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+    }
+
+    /**
+     * Write "removeAll" methods to the builder that is nullable and inherits the type passed to it
+     */
+    public void writeNonNullImmutableRemoveManyToBuilder(
+        final AnalysedComponent component,
+        final ToBeBuilt builder,
+        final TypeName innerType,
+        final String singleRemoveMethodName,
+        final String addAllMethodName,
+        final AruVisitor<?> visitor
+    ) {
+        writeNonNullCollectionRemoveAll(component, builder, innerType, addAllMethodName, visitor);
+        writeLoopDelegatingMultipleOperators(component, builder, innerType, singleRemoveMethodName, addAllMethodName, visitor);
     }
 
     //#endregion
@@ -239,22 +381,9 @@ public abstract class CollectionHandler {
 
     //#region Internal defaults that defer to the single adder
 
-    protected static void writeBasicAdders(
+    protected static void writeNonNullCollectionAdder (
         final AnalysedComponent component,
         final ToBeBuilt builder,
-        final TypeName innerType,
-        final String singleAddMethodName,
-        final String addAllMethodName,
-        final AruVisitor<?> visitor
-    ) {
-        writeBasicIterableAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
-        writeBasicIteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
-        writeBasicSpliteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
-    }
-
-    protected static void writeNonNullCollectionAdder (
-        final AnalysedComponent component, 
-        final ToBeBuilt builder, 
         final TypeName innerType,
         final String addAllMethodName,
         final AruVisitor<?> visitor
@@ -266,98 +395,137 @@ public abstract class CollectionHandler {
             .addAnnotation(NOT_NULL)
             .build();
         final MethodSpec.Builder method = builder
-                .createMethod(addAllMethodName, visitor.claimableOperation(), COLLECTION)
-                .addJavadoc("Adds all elements of the provided collection to {@code $L}", fieldName)
-                .addParameter(param)
-                .returns(builder.className())
-                .addAnnotation(NOT_NULL)
-                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
-                .addStatement("this.$L.addAll($L)", fieldName, fieldName)
-                .endControlFlow()
-                .addStatement("return this");
+            .createMethod(addAllMethodName, visitor.claimableOperation(), COLLECTION)
+            .addJavadoc("Adds all elements of the provided collection to {@code $L}", fieldName)
+            .addParameter(param)
+            .returns(builder.className())
+            .addAnnotation(NOT_NULL)
+            .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+            .addStatement("this.$L.addAll($L)", fieldName, fieldName)
+            .endControlFlow()
+            .addStatement("return this");
         AnnotationSupplier.addGeneratedAnnotation(method, visitor);
     }
 
-    protected static void writeBasicIterableAdder(
+    protected static void writeNonNullCollectionRemoveAll (
+        final AnalysedComponent component,
+        final ToBeBuilt builder,
+        final TypeName innerType,
+        final String addAllMethodName,
+        final AruVisitor<?> visitor
+    ) {
+        final String fieldName = component.name();
+        final ParameterizedTypeName paramTn = ParameterizedTypeName.get(COLLECTION, innerType);
+        final ParameterSpec param = ParameterSpec.builder(paramTn, fieldName, Modifier.FINAL)
+            .addJavadoc("A collection to be merged into the collection")
+            .addAnnotation(NOT_NULL)
+            .build();
+        final MethodSpec.Builder method = builder
+            .createMethod(addAllMethodName, visitor.claimableOperation(), COLLECTION)
+            .addJavadoc("Adds all elements of the provided collection to {@code $L}", fieldName)
+            .addParameter(param)
+            .returns(builder.className())
+            .addAnnotation(NOT_NULL)
+            .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+            .addStatement("this.$L.removeAll($L)", fieldName, fieldName)
+            .endControlFlow()
+            .addStatement("return this");
+        AnnotationSupplier.addGeneratedAnnotation(method, visitor);
+    }
+
+    protected static void writeLoopDelegatingMultipleOperators(
+        final AnalysedComponent component,
+        final ToBeBuilt builder,
+        final TypeName innerType,
+        final String singleOperatorMethodName,
+        final String methodName,
+        final AruVisitor<?> visitor
+    ) {
+        writeBasicIterableOperator(component, builder, innerType, singleOperatorMethodName, methodName, visitor);
+        writeBasicIteratorOperator(component, builder, innerType, singleOperatorMethodName, methodName, visitor);
+        writeBasicSpliteratorOperator(component, builder, innerType, singleOperatorMethodName, methodName, visitor);
+    }
+
+    protected static void writeBasicIterableOperator(
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
         final TypeName innerType, 
-        final String singleAddMethodName, 
-        final String addAllMethodName,
+        final String singleOperatorMethodName,
+        final String methodName,
         final AruVisitor<?> visitor
     ) {
         final String fieldName = component.name();
         final ParameterizedTypeName paramTn = ParameterizedTypeName.get(ITERABLE, innerType);
         final ParameterSpec param = ParameterSpec.builder(paramTn, fieldName, Modifier.FINAL)
-            .addJavadoc("An iterable to be merged into the collection")
+            .addJavadoc("An iterable to be operated on with the collection")
             .addAnnotation(NOT_NULL)
             .build();
         final MethodSpec.Builder method = builder
-                .createMethod(addAllMethodName, visitor.claimableOperation(), ITERABLE)
-                .addJavadoc("Adds all elements of the provided iterable to {@code $L}", fieldName)
+                .createMethod(methodName, visitor.claimableOperation(), ITERABLE)
+                .addJavadoc("Operates on all elements of the provided iterable with {@code $L}", fieldName)
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
                 .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
-                .beginControlFlow("for (final $T __addable : $L)", innerType, fieldName)
-                .addStatement("this.$L(__addable)", singleAddMethodName)
+                .beginControlFlow("for (final $T __single : $L)", innerType, fieldName)
+                .addStatement("this.$L(__single)", singleOperatorMethodName)
                 .endControlFlow()
                 .endControlFlow()
                 .addStatement("return this");
         AnnotationSupplier.addGeneratedAnnotation(method, visitor);
     }
 
-    protected static void writeBasicIteratorAdder(
+    protected static void writeBasicIteratorOperator(
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
         final TypeName innerType, 
-        final String singleAddMethodName, 
-        final String addAllMethodName,
+        final String singleOperatorMethodName,
+        final String methodName,
         final AruVisitor<?> visitor
     ) {
         final String fieldName = component.name();
         final ParameterizedTypeName paramTn = ParameterizedTypeName.get(ITERATOR, innerType);
         final ParameterSpec param = ParameterSpec.builder(paramTn, fieldName, Modifier.FINAL)
-            .addJavadoc("An iterator to be merged into the collection")
+            .addJavadoc("An iterator to be operated on with the collection")
             .addAnnotation(NOT_NULL)
             .build();
         final MethodSpec.Builder method = builder
-                .createMethod(addAllMethodName, visitor.claimableOperation(), ITERATOR)
-                .addJavadoc("Adds all elements of the provided iterator to {@code $L}", fieldName)
+                .createMethod(methodName, visitor.claimableOperation(), ITERATOR)
+                .addJavadoc("Operates on all elements of the provided iterator with {@code $L}", fieldName)
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
                 .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
                 .beginControlFlow("while($L.hasNext())", fieldName)
-                .addStatement("this.$L($L.next())", singleAddMethodName, fieldName)
+                .addStatement("this.$L($L.next())", singleOperatorMethodName, fieldName)
                 .endControlFlow()
                 .endControlFlow()
                 .addStatement("return this");
         AnnotationSupplier.addGeneratedAnnotation(method, visitor);
     }
 
-    protected static void writeBasicSpliteratorAdder(
+    protected static void writeBasicSpliteratorOperator(
         final AnalysedComponent component, 
         final ToBeBuilt builder, 
         final TypeName innerType, 
-        final String singleAddMethodName, 
-        final String addAllMethodName,
+        final String singleOperatorMethodName,
+        final String methodName,
         final AruVisitor<?> visitor
     ) {
         final String fieldName = component.name();
         final ParameterizedTypeName paramTn = ParameterizedTypeName.get(SPLITERATOR, innerType);
         final ParameterSpec param = ParameterSpec.builder(paramTn, fieldName, Modifier.FINAL)
-            .addJavadoc("A spliterator to be merged into the collection")
+            .addJavadoc("A spliterator to be operated on with the collection")
             .addAnnotation(NOT_NULL)
             .build();
         final MethodSpec.Builder method = builder
-                .createMethod(addAllMethodName, visitor.claimableOperation(), SPLITERATOR)
-                .addJavadoc("Adds all elements of the provided spliterator to {@code $L}", fieldName)
+                .createMethod(methodName, visitor.claimableOperation(), SPLITERATOR)
+                .addJavadoc("Operates on all elements of the provided spliterator with {@code $L}", fieldName)
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
                 .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
-                .addStatement("$L.forEachRemaining(this::$L)", fieldName, singleAddMethodName)
+                .addStatement("$L.forEachRemaining(this::$L)", fieldName, singleOperatorMethodName)
                 .endControlFlow()
                 .addStatement("return this");
         AnnotationSupplier.addGeneratedAnnotation(method, visitor);

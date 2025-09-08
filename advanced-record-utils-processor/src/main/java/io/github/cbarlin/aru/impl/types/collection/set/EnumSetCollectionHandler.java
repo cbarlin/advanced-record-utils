@@ -42,6 +42,36 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
             .addStatement("this.$L.add($L)", component.name(), component.name());
     }
 
+    public static void nullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        methodBuilder.addStatement("$T.requireNonNull($L, $S)", OBJECTS, component.name(), "Cannot add a null item to a set of enums")
+            .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = $T.noneOf($T.class)", component.name(), ENUM_SET, innerType)
+            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), ENUM_SET)
+            .addStatement("this.$L = $T.copyOf(this.$L)", component.name(), ENUM_SET, component.name())
+            .endControlFlow()
+            .addStatement("this.$L.remove($L)", component.name(), component.name());
+    }
+
+    public static void nullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        methodBuilder.addStatement("$T.requireNonNull($L, $S)", OBJECTS, component.name(), "Cannot add a null item to a set of enums")
+            .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = $T.noneOf($T.class)", component.name(), ENUM_SET, innerType)
+            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), ENUM_SET)
+            .addStatement("this.$L = $T.copyOf(this.$L)", component.name(), ENUM_SET, component.name())
+            .endControlFlow()
+            .addStatement("this.$L.removeIf($L)", component.name(), component.name());
+    }
+
+    public static void nullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        methodBuilder.addStatement("$T.requireNonNull($L, $S)", OBJECTS, component.name(), "Cannot add a null item to a set of enums")
+            .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = $T.noneOf($T.class)", component.name(), ENUM_SET, innerType)
+            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), ENUM_SET)
+            .addStatement("this.$L = $T.copyOf(this.$L)", component.name(), ENUM_SET, component.name())
+            .endControlFlow()
+            .addStatement("this.$L.retainAll($L)", component.name(), component.name());
+    }
+
     public static void mergerMethod(final TypeName innerType, final MethodSpec.Builder methodBuilder, final ClassName classNameOnComponent) {
         final ParameterizedTypeName paramTypeName = ParameterizedTypeName.get(classNameOnComponent, innerType);
         final ParameterSpec paramA = ParameterSpec.builder(paramTypeName, "elA", Modifier.FINAL)
@@ -105,6 +135,21 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
     @Override
     public void writeNullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         EnumSetCollectionHandler.nullableAutoAddSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nullableAutoRemoveSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nullableAutoRemovePredicate(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nullableAutoRetainAll(component, methodBuilder, innerType);
     }
 
     @Override

@@ -93,6 +93,36 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     }
 
     @Override
+    public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
+            .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
+            .endControlFlow()
+            .addStatement("this.$L.remove($L)", component.name(), component.name());
+    }
+
+    @Override
+    public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
+            .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
+            .endControlFlow()
+            .addStatement("this.$L.removeIf($L)", component.name(), component.name());
+    }
+
+    @Override
+    public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
+            .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
+            .endControlFlow()
+            .addStatement("this.$L.retainAll($L)", component.name(), component.name());
+    }
+
+    @Override
     public void writeNullableImmutableGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         if (classNameOnComponent.equals(immutableClassName)) {
             methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
@@ -110,6 +140,21 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNullableImmutableAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         writeNullableAutoAddSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableImmutableRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        writeNullableAutoRemoveSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableImmutableRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        writeNullableAutoRemovePredicate(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableImmutableRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        writeNullableAutoRetainAll(component, methodBuilder, innerType);
     }
 
     @Override
@@ -142,6 +187,24 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     }
 
     @Override
+    public void writeNonNullAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        final String name = component.name();
+        methodBuilder.addStatement("this.$L.remove($L)", name, name);
+    }
+
+    @Override
+    public void writeNonNullAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        final String name = component.name();
+        methodBuilder.addStatement("this.$L.removeIf($L)", name, name);
+    }
+
+    @Override
+    public void writeNonNullAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        final String name = component.name();
+        methodBuilder.addStatement("this.$L.retainAll($L)", name, name);
+    }
+
+    @Override
     public void writeNonNullImmutableGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         // The field in the builder is also NonNull in this case, so no need for null check
         convertToImmutable(methodBuilder, "this." + component.name(), "___immutable", innerType);
@@ -158,6 +221,21 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNonNullImmutableAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         writeNonNullAutoAddSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNonNullImmutableRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        writeNonNullAutoRemoveSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNonNullImmutableRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        writeNonNullAutoRemovePredicate(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNonNullImmutableRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        writeNonNullAutoRetainAll(component, methodBuilder, innerType);
     }
 
     @Override
