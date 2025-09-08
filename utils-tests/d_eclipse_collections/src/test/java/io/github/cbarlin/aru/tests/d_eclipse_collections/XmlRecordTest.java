@@ -6,13 +6,21 @@ import org.junit.jupiter.api.Test;
 
 import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
 
+import java.util.List;
+
 class XmlRecordTest {
     @Test
     void serialTest() {
         final CanXmlTheRecord someRecord = CanXmlTheRecordUtils.builder()
             .someString("ItemA")
+            .addSomeItemsAsElements("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            .removeSomeItemsAsElements("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            .addSomeItemsAsElements("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            .removeSomeItemsAsElements(a -> true)
+            .addSomeItemsAsElements("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
             .addSomeItemsAsElements("ThisIsAnElement")
             .addSomeItemsAsElements("AndThisIsTheSecond")
+            .retainAllSomeItemsAsElements(List.of("AndThisIsTheSecond", "ThisIsAnElement", "I'm not in the collection and I shouldn't end up in it!"))
             .addAnotherObject(
                 b -> b.addSomeItemsAsElements("ThisIsAThirdButItsInside")
                     .someString("ItemB")

@@ -45,6 +45,12 @@ public abstract class CollectionRecordVisitor extends RecordVisitor {
             analysedCollectionComponent.settings().prism().builderOptions().adderMethodSuffix();
     }
 
+    protected String removeNameMethodName() {
+        return analysedCollectionComponent.settings().prism().builderOptions().removeMethodPrefix() +
+            capitalise(analysedCollectionComponent.name()) +
+            analysedCollectionComponent.settings().prism().builderOptions().removeMethodSuffix();
+    }
+
     protected String addCnToNameMethodName(final ClassName targetClassName) {
         return analysedCollectionComponent.settings().prism().builderOptions().adderMethodPrefix() + 
             targetClassName.simpleName() + 

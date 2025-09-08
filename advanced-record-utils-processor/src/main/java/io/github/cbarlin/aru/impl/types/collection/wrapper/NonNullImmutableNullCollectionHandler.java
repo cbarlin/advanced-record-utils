@@ -3,7 +3,6 @@ package io.github.cbarlin.aru.impl.types.collection.wrapper;
 import io.github.cbarlin.aru.core.artifacts.BuilderClass;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
-import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.visitors.AruVisitor;
 import io.github.cbarlin.aru.impl.types.collection.CollectionHandler;
@@ -38,8 +37,28 @@ public record NonNullImmutableNullCollectionHandler(
     }
 
     @Override
+    public void writeRemoveSingle(Builder methodBuilder) {
+        handler.writeNonNullImmutableRemoveSingle(component, methodBuilder, component.unNestedPrimaryTypeName());
+    }
+
+    @Override
+    public void writeRemovePredicate(Builder methodBuilder) {
+        handler.writeNonNullImmutableRemovePredicate(component, methodBuilder, component.unNestedPrimaryTypeName());
+    }
+
+    @Override
+    public void writeRetainAll(Builder methodBuilder) {
+        handler.writeNonNullImmutableRetainAll(component, methodBuilder, component.unNestedPrimaryTypeName());
+    }
+
+    @Override
     public void writeAddMany(BuilderClass builderClass, String singleAdderName, String addAllMethodName, AruVisitor<?> visitor) {
         handler.writeNonNullImmutableAddManyToBuilder(component, builderClass.delegate(), component.unNestedPrimaryTypeName(), singleAdderName, addAllMethodName, visitor);
+    }
+
+    @Override
+    public void writeRemoveMany(BuilderClass builderClass, String singleAdderName, String addAllMethodName, AruVisitor<?> visitor) {
+        handler.writeNonNullImmutableRemoveManyToBuilder(component, builderClass.delegate(), component.unNestedPrimaryTypeName(), singleAdderName, addAllMethodName, visitor);
     }
 
     @Override

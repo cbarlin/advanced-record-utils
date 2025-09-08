@@ -51,6 +51,21 @@ public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
     }
 
     @Override
+    public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nullableAutoRemoveSingle(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nullableAutoRemovePredicate(component, methodBuilder, innerType);
+    }
+
+    @Override
+    public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
+        EnumSetCollectionHandler.nullableAutoRetainAll(component, methodBuilder, innerType);
+    }
+
+    @Override
     public void writeMergerMethod(final TypeName innerType, final MethodSpec.Builder methodBuilder) {
         EnumSetCollectionHandler.mergerMethod(innerType, methodBuilder, classNameOnComponent);
     }

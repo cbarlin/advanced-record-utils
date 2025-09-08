@@ -11,6 +11,7 @@ public enum Constants {
     ;
     public enum Claims {
         ;
+        // Please keep in alphabetical order
         public static final ClaimableOperation ALL_IFACE = new ClaimableOperation("allIface", CLASS);
         public static final ClaimableOperation BUILDER_ADD_ALL_ITERABLE = new ClaimableOperation("builderAddAllIterable", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_ADD_ALL_VARARGS = new ClaimableOperation("builderAddAllVarargs", FIELD_AND_ACCESSORS);
@@ -18,6 +19,10 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_ALIAS_SETTER = new ClaimableOperation("builderAliasSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_CONCRETE_OPTIONAL = new ClaimableOperation("builderConcreteSetterForOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_REMOVE_ALL_ITERABLE = new ClaimableOperation("builderRemoveAllIterable", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_REMOVE_IF = new ClaimableOperation("builderRemoveIf", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_REMOVE_SINGLE = new ClaimableOperation("builderRemoveSingle", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_RETAIN_ALL = new ClaimableOperation("builderRetainAll", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_SET_TIME_TO_NOW = new ClaimableOperation("builderSetTimeToNow", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_SET_TO_NULL = new ClaimableOperation("builderSetToNull", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_USE_TYPE_CONVERTER = new ClaimableOperation("builderUseTypeConverter", FIELD_AND_ACCESSORS);
@@ -31,12 +36,12 @@ public enum Constants {
         public static final ClaimableOperation DIFFER_UTILS_COMPUTE_CHANGE = new ClaimableOperation("differUtilsComputation", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation DIFFER_VALUE_HOLDING = new ClaimableOperation("differValueHolding", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation INTERNAL_MATCHING_IFACE = new ClaimableOperation("internalMatchingIface", FIELD_AND_ACCESSORS);
-        public static final ClaimableOperation MERGE_IFACE_MERGE = new ClaimableOperation("mergeInterfaceMergeMethod", CLASS);
-        public static final ClaimableOperation MERGE_IFACE_MERGE_OPTIONAL = new ClaimableOperation("mergeInterfaceMergeOptionalMethod", CLASS);
-        public static final ClaimableOperation MERGE_STATIC_MERGE = new ClaimableOperation("mergeStaticMergeMethod", CLASS);
         public static final ClaimableOperation MERGER_ADD_FIELD_MERGER_METHOD = new ClaimableOperation("mergerAddFieldMergerMethod", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation MERGER_IFACE = new ClaimableOperation("mergerInterface", CLASS);
         public static final ClaimableOperation MERGER_STATIC_CLASS = new ClaimableOperation("mergerStaticClass", CLASS);
+        public static final ClaimableOperation MERGE_IFACE_MERGE = new ClaimableOperation("mergeInterfaceMergeMethod", CLASS);
+        public static final ClaimableOperation MERGE_IFACE_MERGE_OPTIONAL = new ClaimableOperation("mergeInterfaceMergeOptionalMethod", CLASS);
+        public static final ClaimableOperation MERGE_STATIC_MERGE = new ClaimableOperation("mergeStaticMergeMethod", CLASS);
         public static final ClaimableOperation MISC_AVAJE_JSONB_IMPORT = new ClaimableOperation("miscAvajeJsonbImport", CLASS);
         public static final ClaimableOperation WITHER_FLUENT_BUILDER = new ClaimableOperation("witherFluentBuilder", CLASS);
         public static final ClaimableOperation WITHER_IFACE = new ClaimableOperation("wither", CLASS);
@@ -47,11 +52,13 @@ public enum Constants {
         public static final ClaimableOperation WITHER_WITH_ALIAS = new ClaimableOperation("witherWithAlias", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_FLUENT = new ClaimableOperation("witherWithFluent", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation WITHER_WITH_OPTIONAL = new ClaimableOperation("witherWithOptional", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation WITHER_WITH_REMOVE = new ClaimableOperation("witherWithRemove", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation WITHER_WITH_RETAIN = new ClaimableOperation("witherWithRetain", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation XML_IFACE = new ClaimableOperation("xmlInterface", CLASS);
         public static final ClaimableOperation XML_IFACE_TO_XML = new ClaimableOperation("xmlInterfaceToXml", CLASS);
+        public static final ClaimableOperation XML_IFACE_TO_XML_NOT_TAG = new ClaimableOperation("xmlInterfaceToXmlNoTag", CLASS);
         public static final ClaimableOperation XML_IFACE_TO_XML_NO_DEF_NAMESPACE = new ClaimableOperation("xmlInterfaceToXmlNoDefNs", CLASS);
         public static final ClaimableOperation XML_IFACE_TO_XML_NO_NAMESPACE = new ClaimableOperation("xmlInterfaceToXmlNoNs", CLASS);
-        public static final ClaimableOperation XML_IFACE_TO_XML_NOT_TAG = new ClaimableOperation("xmlInterfaceToXmlNoTag", CLASS);
         public static final ClaimableOperation XML_STATIC_CLASS = new ClaimableOperation("xmlStaticClass", CLASS);
         public static final ClaimableOperation XML_STATIC_CLASS_TO_XML = new ClaimableOperation("xmlStaticClassToXml", CLASS);
         public static final ClaimableOperation XML_STATIC_CLASS_TO_XML_NO_DEF_NAMESPACE = new ClaimableOperation("xmlStaticClassToXmlNoDefNS", CLASS);

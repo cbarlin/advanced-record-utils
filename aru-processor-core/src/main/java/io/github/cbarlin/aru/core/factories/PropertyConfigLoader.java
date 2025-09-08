@@ -52,6 +52,8 @@ public final class PropertyConfigLoader implements ConfigPropertyPlugin {
             prism -> switch (property) {
                 // Default of true means `null` is true, so compare against false
                 case "createAdderMethods" -> Boolean.FALSE.equals(prism.builderOptions().createAdderMethods()) ? FALSE : TRUE;
+                case "createRemoveMethods" -> Boolean.FALSE.equals(prism.builderOptions().createRemoveMethods()) ? FALSE : TRUE;
+                case "createRetainAllMethod" -> Boolean.FALSE.equals(prism.builderOptions().createRetainAllMethod()) ? FALSE : TRUE;
                 case "createAllInterface" -> Boolean.FALSE.equals(prism.createAllInterface()) ? FALSE : TRUE;
                 case "fluent" -> Boolean.FALSE.equals(prism.builderOptions().fluent()) ? FALSE : TRUE;
                 case "concreteSettersForOptional" -> Boolean.FALSE.equals(prism.builderOptions().concreteSettersForOptional()) ? FALSE : TRUE;

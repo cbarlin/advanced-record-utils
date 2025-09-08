@@ -93,8 +93,8 @@ public sealed abstract class EclipseCollectionHandler extends StandardCollection
             final AruVisitor<?> visitor
     ) {
         writeEclipseIterableAdder(component, builder, innerType, singleAddMethodName, visitor);
-        CollectionHandler.writeBasicIteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
-        CollectionHandler.writeBasicSpliteratorAdder(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+        CollectionHandler.writeBasicIteratorOperator(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
+        CollectionHandler.writeBasicSpliteratorOperator(component, builder, innerType, singleAddMethodName, addAllMethodName, visitor);
     }
 
     protected void writeEclipseIterableAdder(

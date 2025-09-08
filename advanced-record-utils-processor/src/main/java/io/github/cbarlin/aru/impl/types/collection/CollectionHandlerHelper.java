@@ -58,9 +58,40 @@ public sealed interface CollectionHandlerHelper permits
     void writeAddSingle(final MethodSpec.Builder methodBuilder);
 
     /**
+     * Write the "remove single"
+     * <p>
+     * Does not write the returns or the params
+     */
+    void writeRemoveSingle(final MethodSpec.Builder methodBuilder);
+
+    /**
+     * Write the "removeIf"
+     * <p>
+     * Does not write the returns or the params
+     */
+    void writeRemovePredicate(final MethodSpec.Builder methodBuilder);
+
+    /**
+     * Write the "retainAll"
+     * <p>
+     * Does not write the returns or the params
+     */
+    void writeRetainAll(final MethodSpec.Builder methodBuilder);
+
+    /**
      * Write "addAll" methods to the builder
      */
     void writeAddMany(
+        final BuilderClass builderClass,
+        final String singleAdderName,
+        final String addAllMethodName,
+        final AruVisitor<?> visitor
+    );
+
+    /**
+     * Write "removeAll" methods to the builder
+     */
+    void writeRemoveMany(
         final BuilderClass builderClass,
         final String singleAdderName,
         final String addAllMethodName,

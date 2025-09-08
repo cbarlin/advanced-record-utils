@@ -23,4 +23,28 @@ public final class StackCollectionHandler extends ListCollectionHandler {
             .endControlFlow()
             .addStatement("this.$L.add($L)", component.name(), component.name());
     }
+
+    @Override
+    public void writeNullableAutoRemoveSingle(AnalysedComponent component, Builder methodBuilder, TypeName innerType) {
+        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+            .endControlFlow()
+            .addStatement("this.$L.remove($L)", component.name(), component.name());
+    }
+
+    @Override
+    public void writeNullableAutoRemovePredicate(AnalysedComponent component, Builder methodBuilder, TypeName innerType) {
+        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+            .endControlFlow()
+            .addStatement("this.$L.removeIf($L)", component.name(), component.name());
+    }
+
+    @Override
+    public void writeNullableAutoRetainAll(AnalysedComponent component, Builder methodBuilder, TypeName innerType) {
+        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+            .endControlFlow()
+            .addStatement("this.$L.retainAll($L)", component.name(), component.name());
+    }
 }
