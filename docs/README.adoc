@@ -18,6 +18,8 @@ Advanced Record Utils is an annotation-processor based source code generator tha
 
 It works recursively through a structure to create a "tree" of records, can import all records/interfaces in a package, or import specific records/interfaces from libraries or previously compiled modules.
 
+Feel free to <<get-started-quick-start,jump to the quick start>> if you are in a hurry, or use the navigation options on the left to find a specific documentation item.
+
 ////
 
 Style guide
@@ -33,7 +35,9 @@ We should also:
 
 * refer to the generated top-level classes as `+*Utils+` classes
 * be funny in small doses - nobody like reading dry documentation, and nobody wants comedy when looking for information (thanks Jdbi for the wording of this!)
-* write external that have a caret at the end of the link title, e.g. link:path/to/doc[the title^], so they open in separate tabs
+* address the reader directly using 'you' - it's more personable
+* refer to the maintainers as 'we'
+* write external links that have a caret at the end of the link title, e.g. link:path/to/doc[the title^], so they open in separate tabs
 * write a lead-in title for code blocks like ".Method body" or ".MyRecordA.java", unless it is generated code inside a collapsible
 * use the `+All+` interface unless we are demonstrating e.g. renaming an interface
 * keep titles as sentence case unless we are talking about:
@@ -41,10 +45,12 @@ We should also:
 ** an external project, in which case we follow their branding (e.g. "Reproducible Builds")
 * be inclusive: prefer neutral language and keep usage of male and female names equal in code examples.
 
-Other rules:
+Other preferences:
 
 * Defining multiple classes/records in one code block should be avoided.
-* There is no limit to line length.
+* Always refer to the project by its full name, 'Advanced Record Utils,' on first mention in a major section. Thereafter, 'the library' can be used as a substitute. 'The project' should be reserved for contexts discussing the development process or build.
+* Prefer the active voice to make instructions clear and direct. The passive voice may be used sparingly when the object of the action is the main focus of the sentence.
+* There is no limit to line length in the `adoc` source code.
 * Items in a list need a full stop only if all items in the list are complete sentences. A full stop is used only on the last list item:
 ** if all list items could be separated by commas and/or semicolons; or
 ** if each list item makes a complete, independent sentence with the list's lead-in.

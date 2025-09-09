@@ -1,4 +1,4 @@
-= Usage
+= Detailed Usage
 
 == Record usage
 

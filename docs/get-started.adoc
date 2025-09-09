@@ -2,6 +2,11 @@
 
 We recommend the approach of adding the annotations as a dependency and the processor to your Maven Compiler Plugin configuration. This is so that dependencies that the processor has don't end up in your project, and because the default in Java 23+ is to not automatically scan dependencies for annotation processors (which could be a security risk!)
 
+[#get-started-quick-start]
+== Quick Start
+
+include::usage/rapid-start.adoc[leveloffset=+1]
+
 == Configuring your build tooling
 
 === Maven

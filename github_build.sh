@@ -7,7 +7,7 @@ export JAVA_HOME=/usr/lib64/jvm/temurin-21-jdk
 #  since I keep forgetting to check the javadoc builds...
 rm -rf ~/.m2/io/github/cbarlin && \
     mvn clean install -T4 && \
-    mvn clean verify artifact:compare -T4 && \
+    mvn clean verify artifact:compare -T4 -DskipTests && \
     rm -rf ~/.m2/io/github/cbarlin
 
 # Generate JaCoCo coverage report if jacococli.jar is available
