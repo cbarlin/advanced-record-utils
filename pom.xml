@@ -67,7 +67,7 @@
         <jackson-annotations.version>2.20.0</jackson-annotations.version>
         <jacoco.version>0.8.13</jacoco.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
-        <jakarta-xml-bind-api.version>4.0.2</jakarta-xml-bind-api.version>
+        <jakarta-xml-bind-api.version>4.0.4</jakarta-xml-bind-api.version>
         <jspecify.version>1.0.0</jspecify.version>
         <junit-bom.version>5.13.4</junit-bom.version>
         <mapstruct.version>1.6.3</mapstruct.version>
@@ -75,7 +75,7 @@
         <stax2-api.version>4.2.2</stax2-api.version>
         <vavr.version>0.10.7</vavr.version>
         <woodstox.version>7.1.1</woodstox.version>
-        <xmlunit.version>2.10.3</xmlunit.version>
+        <xmlunit.version>2.10.4</xmlunit.version>
         <rainbowgum.version>0.8.2</rainbowgum.version>
 
         <!-- Maven versions -->
@@ -96,7 +96,7 @@
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <versions-plugin.version>2.19.0</versions-plugin.version>
     </properties>
     <dependencyManagement>
