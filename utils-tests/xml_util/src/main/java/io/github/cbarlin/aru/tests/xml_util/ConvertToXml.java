@@ -13,6 +13,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 
+import io.github.cbarlin.aru.annotations.Generated;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.xmlunit.assertj3.XmlAssert;
@@ -20,6 +21,7 @@ import org.xmlunit.builder.Input;
 
 public final class ConvertToXml {
 
+    @Generated("CONSTRUCTOR_STATIC_CLASS")
     private ConvertToXml() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }

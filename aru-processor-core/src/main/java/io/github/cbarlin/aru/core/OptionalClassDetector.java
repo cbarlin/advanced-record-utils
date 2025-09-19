@@ -1,5 +1,6 @@
 package io.github.cbarlin.aru.core;
 
+import io.github.cbarlin.aru.annotations.Generated;
 import io.micronaut.sourcegen.javapoet.ArrayTypeName;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
@@ -26,6 +27,7 @@ public final class OptionalClassDetector {
     private static final Map<TypeName, Optional<TypeElement>> DETECTED_MAP = new HashMap<>();
     private static final Map<TypeName, Optional<TypeElement>> LOADED_ANNOTATIONS = new HashMap<>();
 
+    @Generated("CONSTRUCTOR_STATIC_CLASS")
     private OptionalClassDetector() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }

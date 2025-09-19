@@ -29,4 +29,13 @@ class BasicTests {
             .hasSize(1)
             .hasOnlyElementsOfType(MyRecordFOptionA.class);
     }
+
+    @Test
+    void optionBFound() {
+        final MyRecordFOptionB optionB = MyRecordFOptionBUtils.builder()
+            .myRecordE(eBuilder -> eBuilder.someOtherValue("woot"))
+            .build();
+        assertThat(optionB.myRecordE())
+            .isNotNull();
+    }
 }

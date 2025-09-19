@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        java_version: [21, 24]
+        java_version: [21, 25]
     steps:
     - uses: actions/checkout@v5.0.0
     - name: Set up Java
@@ -31,11 +31,11 @@ jobs:
       run: rm -rf ~/.m2/io/github/cbarlin && mvn clean install -B -T4 && mvn clean verify artifact:compare -T4 -B && rm -rf ~/.m2/io/github/cbarlin
     - name: Upload coverage reports to Codecov with GitHub Action
       uses: codecov/codecov-action@v5
-      if: matrix.java_version == 21
+      if: matrix.java_version == 25
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     - name: Upload test results
       uses: codecov/test-results-action@v1
-      if: matrix.java_version == 21
+      if: matrix.java_version == 25
       with:
         token: ${{ secrets.CODECOV_TOKEN }}

@@ -56,14 +56,14 @@
         <avaje-jsonb.version>3.7</avaje-jsonb.version>
         <avaje-prism.version>1.43</avaje-prism.version>
         <avaje-spi.version>2.13</avaje-spi.version>
-        <avaje-validator.version>2.13</avaje-validator.version>
+        <avaje-validator.version>2.14</avaje-validator.version>
         <avaje-inject.version>12.0-RC4</avaje-inject.version>
         <caffeine.version>3.2.2</caffeine.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-io.version>2.20.0</commons-io.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
-        <guava.version>33.4.8-jre</guava.version>
+        <guava.version>33.5.0-jre</guava.version>
         <jackson-annotations.version>2.20.0</jackson-annotations.version>
         <jacoco.version>0.8.13</jacoco.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>

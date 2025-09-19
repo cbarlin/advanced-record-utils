@@ -11,7 +11,7 @@ REMOTE_NAME="origin"
 ARTIFACT_DIR="target/central-staging"
 
 # Force Java 21 for release builds
-export JAVA_HOME=/usr/lib64/jvm/temurin-21-jdk
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 
 # --- Input Validation ---
 if [ -z "$RELEASE_VERSION" ] || [ -z "$NEXT_DEV_VERSION" ]; then

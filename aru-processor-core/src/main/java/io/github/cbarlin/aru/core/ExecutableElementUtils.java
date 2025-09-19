@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.core;
 
 import com.github.benmanes.caffeine.cache.AsyncCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.github.cbarlin.aru.annotations.Generated;
 import org.jspecify.annotations.Nullable;
 
 import javax.lang.model.element.Element;
@@ -20,6 +21,7 @@ public final class ExecutableElementUtils {
         .initialCapacity(100)
         .buildAsync();
 
+    @Generated("CONSTRUCTOR_STATIC_CLASS")
     private ExecutableElementUtils() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }

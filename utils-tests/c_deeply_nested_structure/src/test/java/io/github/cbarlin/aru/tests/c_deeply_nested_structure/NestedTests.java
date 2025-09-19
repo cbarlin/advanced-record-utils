@@ -133,4 +133,12 @@ class NestedTests {
         
         ConvertToXml.convertToXml(out -> assertThrows(IllegalArgumentException.class, () -> someRecord.writeSelfTo(out)));
     }
+
+    @Test
+    void useTypeConverter() {
+        final FirstLevel fl = assertDoesNotThrow(() -> FirstLevelUtils.builder()
+                .recurringReference("AAA", "BBB")
+                .make());
+        assertNotNull(fl.recurringReference().recurisveItems());
+    }
 }

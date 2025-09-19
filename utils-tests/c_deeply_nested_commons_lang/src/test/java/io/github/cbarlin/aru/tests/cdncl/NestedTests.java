@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -125,5 +126,13 @@ class NestedTests {
             .build();
         
         ConvertToXml.convertToXml(out -> assertThrows(NullPointerException.class, () -> someRecord.writeSelfTo(out)));
+    }
+
+    @Test
+    void useTypeConverter() {
+        final FirstLevel fl = assertDoesNotThrow(() -> FirstLevelUtils.builder()
+            .recurringReference("AAA", "BBB")
+            .build());
+        assertNotNull(fl.recurringReference().recurisveItems());
     }
 }
