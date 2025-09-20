@@ -62,7 +62,7 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
             return TargetAnalysisResult.EMPTY_RESULT;
         }
         // Let's get some needed properties!
-        return processResult(typeElement, settings, presentSettingsOptional.isPresent());
+        return processResult(typeElement, settings, AdvancedRecordUtilsPrism.isPresent(typeElement));
     }
 
     private TargetAnalysisResult processResult(
@@ -199,8 +199,8 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
         }
         // Only continue searching if there are two options otherwise it'd be too confusing
         if (constructors.size() == 2) {
-            if (isSubsetConstructor(constructors.get(0), canonicalConstructor)) {
-                return constructors.get(0);
+            if (isSubsetConstructor(constructors.getFirst(), canonicalConstructor)) {
+                return constructors.getFirst();
             }
             if(isSubsetConstructor(constructors.get(1), canonicalConstructor)) {
                 return constructors.get(1);

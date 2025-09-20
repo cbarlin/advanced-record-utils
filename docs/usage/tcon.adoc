@@ -2,7 +2,7 @@
 
 By annotating a `+public static+` method with `+@TypeConverter+`, then any time that the return type of that method is a field of a record, the generated builder will also include a method that invokes the `TypeConverter` annotated method. This applies globally across all builders.
 
-WARNING: Because `+@TypeConverter+` applies globally, using the same permutation of return type and parameters more than once will cause compilation to fail. This includes `+@TypeConverter+` methods discovered via imports (see below for details on imports).
+WARNING: Because `+@TypeConverter+` applies globally, using the same permutation of return type and parameters more than once will cause compilation to fail. This includes `+@TypeConverter+` methods from libraries loaded via imports (see below for details on imports).
 
 A good example of this is for enums. Given the following enum using the common pattern of having a `+label+` that we would like to be able to use:
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -96,7 +97,7 @@ class NestedTests {
         // OK, time to convert to XML
         ConvertToXml.compareXml(out -> assertDoesNotThrow(() -> merged.writeSelfTo(out)), "expected_b.xml");
 
-        Jsonb jsonb = Jsonb.builder().build();
+        final Jsonb jsonb = Jsonb.builder().build();
         final String result = assertDoesNotThrow(() -> jsonb.toJson(merged));
         assertThat(result)
             .isNotNull()
@@ -105,7 +106,7 @@ class NestedTests {
 
     @Test
     void setXToNullMethodDetection() {
-        var m = assertDoesNotThrow(
+        final Method m = assertDoesNotThrow(
             () -> SeventhLevelAUtils.Builder.class.getDeclaredMethod("setAndImDoneToNull")
         );
         assertNotNull(m);

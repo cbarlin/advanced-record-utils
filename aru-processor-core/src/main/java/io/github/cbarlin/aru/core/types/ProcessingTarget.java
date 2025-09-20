@@ -40,7 +40,11 @@ public sealed interface ProcessingTarget extends Comparable<ProcessingTarget> pe
     public GenerationArtifact<?> builderArtifact();
 
     @Override
-    default int compareTo(ProcessingTarget o) {
+    default int compareTo(final ProcessingTarget o) {
         return utilsClassName().compareTo(o.utilsClassName());
+    }
+
+    public default TypeElement intentedTypeElement() {
+        return typeElement();
     }
 }
