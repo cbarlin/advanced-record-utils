@@ -46,7 +46,7 @@ public final class AnalysedRecord extends AnalysedType {
     }
 
     @Override
-    public TypeElement intentedTypeElement() {
+    public TypeElement intendedTypeElement() {
         return intendedTypeElement;
     }
 

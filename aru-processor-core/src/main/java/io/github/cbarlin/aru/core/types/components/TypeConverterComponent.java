@@ -3,10 +3,10 @@ package io.github.cbarlin.aru.core.types.components;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 
-import java.util.Set;
+import java.util.List;
 
 public record TypeConverterComponent(
         AnalysedComponent delegate,
-        Set<AnalysedTypeConverter> analysedTypeConverters
+        List<AnalysedTypeConverter> analysedTypeConverters
 ) implements DelegatingComponent {
 }

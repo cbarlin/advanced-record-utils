@@ -78,12 +78,21 @@ public final class UtilsProcessingContext {
             .map(this::analysedType);
     }
 
-    public Optional<Set<AnalysedTypeConverter>> obtainConverters(final TypeName typeName) {
+    public Optional<List<AnalysedTypeConverter>> obtainConverters(final TypeName typeName) {
         return Optional.of(typeName)
                 .filter(analysedConverters::containsKey)
                 .map(analysedConverters::get)
-                .map(Set::copyOf)
-                .filter(Predicate.not(Set::isEmpty));
+                .map(queue -> {
+                    final List<AnalysedTypeConverter> converters = new ArrayList<>(queue.size());
+                    final Set<AnalysedTypeConverter> seen = HashSet.newHashSet(queue.size());
+                    for (final AnalysedTypeConverter analysedTypeConverter : queue) {
+                        if (seen.add(analysedTypeConverter)) {
+                            converters.add(analysedTypeConverter);
+                        }
+                    }
+                    return List.copyOf(converters);
+                })
+                .filter(Predicate.not(List::isEmpty));
     }
 
     /**
@@ -135,10 +144,6 @@ public final class UtilsProcessingContext {
                 .ifPresent(processingTarget -> {
                     if (processingTarget instanceof final AnalysedType analysedType) {
                         analysedType.addRootElement(rootElement, true);
-                        analysedConverters.values()
-                          .stream()
-                          .flatMap(Queue::stream)
-                          .forEach(analysedType::addTypeConverter);
                     }
                 });
         }
@@ -281,7 +286,7 @@ public final class UtilsProcessingContext {
             utilsFile.writeTo(APContext.filer());
             APContext.messager().printMessage(Diagnostic.Kind.NOTE, "Wrote out utils file " + utilsClassName.simpleName());
         } catch (final IOException e) {
-            APContext.messager().printError("Issue writing to file", analysedType.typeElement());
+            APContext.messager().printError("Issue writing to file: " + e.getMessage(), analysedType.typeElement());
         }
         analysedType.utilsClass().cleanup();
     }

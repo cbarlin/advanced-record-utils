@@ -48,7 +48,7 @@ public final class LibraryLoadedTarget implements ProcessingTarget {
     }
 
     @Override
-    public TypeElement intentedTypeElement() {
+    public TypeElement intendedTypeElement() {
         return intendedTypeElement;
     }
 

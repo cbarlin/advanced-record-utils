@@ -57,7 +57,7 @@ public final class ToPrettierAnnotationSpec {
             switch (value) {
                 case final Class<?> clz -> builder.addMember(s, "$T.class", clz);
                 case final ClassName clz -> builder.addMember(s, "$T.class", clz);
-                case final Enum<?> enm -> builder.addMember(s, "$T.class", value.getClass(), enm.name());
+                case final Enum<?> enm -> builder.addMember(s, "$T.$L", value.getClass(), enm.name());
                 case final String str -> builder.addMember(s, "$S", str);
                 case final Float fl -> builder.addMember(s, "$Lf", fl);
                 case final Character chr -> builder.addMember(s, "'$L'", Util.characterLiteralWithoutSingleQuotes(chr));

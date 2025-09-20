@@ -111,6 +111,8 @@ public @interface AdvancedRecordUtilsGenerated {
      *
      * @since 0.6.6
      */
+    @Retention(RetentionPolicy.CLASS)
+    @Target({})
     public @interface RootElementInformation {
 
         /**
@@ -237,7 +239,7 @@ public @interface AdvancedRecordUtilsGenerated {
     }
 
     /**
-     * Information about the version of the builder that was used
+     * Information about the version of the processor that was used
      */
     @Retention(RetentionPolicy.CLASS)
     @Target({})

@@ -99,6 +99,9 @@ public final class AdvRecUtilsSettings {
                 }
             } else {
                 final Element nxtLevel = env.getTypeUtils().asElement(inspect.getAnnotationType());
+                if (Objects.isNull(nxtLevel)) {
+                    continue;
+                }
                 env.getElementUtils().getAllAnnotationMirrors(nxtLevel)
                    .stream()
                    .filter(m -> seen.add(m.getAnnotationType().toString()))
@@ -128,7 +131,7 @@ public final class AdvRecUtilsSettings {
             .map(mirr -> new AdvRecUtilsSettings(mirr, element));
     }
 
-    public static boolean isAnnotatated(final Element element, final ProcessingEnvironment env) {
+    public static boolean isAnnotated(final Element element, final ProcessingEnvironment env) {
         return obtainMirrorOnElement(element, env).isPresent();
     }
 

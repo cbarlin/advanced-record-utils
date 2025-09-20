@@ -110,6 +110,7 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
     }
 
     private void processRecordElement(final RecordComponentElement recordComponentElement, final String packageName, final Set<TypeElement> references, final boolean attemptToFindLibrary) {
+        // Load the record component element into the cache
         OptionalClassDetector.optionalDependencyTypeElement(recordComponentElement.asType());
         final TypeMirror target = recordComponentElement.asType();
         final TypeName name = TypeName.get(target);

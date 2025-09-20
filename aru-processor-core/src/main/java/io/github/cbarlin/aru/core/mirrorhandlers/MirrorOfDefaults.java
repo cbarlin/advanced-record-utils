@@ -12,6 +12,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.SimpleAnnotationValueVisitor9;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MirrorOfDefaults
 implements AnnotationMirror, AnnotationValue {
@@ -21,20 +22,24 @@ implements AnnotationMirror, AnnotationValue {
 
     public MirrorOfDefaults(final TypeElement element) {
         this.annotationType = (DeclaredType) element.asType();
-        final Map<ExecutableElement, AnnotationValue> defaults = new HashMap<>(10);
+        final Map<ExecutableElement, AnnotationValue> defaults = HashMap.newHashMap(10);
         for (final ExecutableElement member : ElementFilter.methodsIn(element.getEnclosedElements())) {
             final AnnotationValue annotationValue = member.getDefaultValue();
-            (new NestedVisitor(member, annotationValue)).visit(annotationValue, defaults);
+            if (Objects.nonNull(annotationValue)) {
+                (new NestedVisitor(member, annotationValue)).visit(annotationValue, defaults);
+            }
         }
         this.elementValues = Map.copyOf(defaults);
     }
 
     public MirrorOfDefaults(final AnnotationMirror mirror) {
         annotationType = mirror.getAnnotationType();
-        final Map<ExecutableElement, AnnotationValue> defaults = new HashMap<>(10);
+        final Map<ExecutableElement, AnnotationValue> defaults = HashMap.newHashMap(10);
         for (final ExecutableElement member : ElementFilter.methodsIn(mirror.getAnnotationType().asElement().getEnclosedElements())) {
             final AnnotationValue annotationValue = member.getDefaultValue();
-            (new NestedVisitor(member, annotationValue)).visit(annotationValue, defaults);
+            if (Objects.nonNull(annotationValue)) {
+                (new NestedVisitor(member, annotationValue)).visit(annotationValue, defaults);
+            }
         }
         this.elementValues = Map.copyOf(defaults);
     }
@@ -71,7 +76,9 @@ implements AnnotationMirror, AnnotationValue {
 
         @Override
         protected Object defaultAction(final Object o, final Map<ExecutableElement, AnnotationValue> map) {
-            map.putIfAbsent(executableElement, annotationValue);
+            if (Objects.nonNull(o)) {
+                map.putIfAbsent(executableElement, annotationValue);
+            }
             return map;
         }
 

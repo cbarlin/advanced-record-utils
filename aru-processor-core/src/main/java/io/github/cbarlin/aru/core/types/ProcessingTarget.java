@@ -44,7 +44,7 @@ public sealed interface ProcessingTarget extends Comparable<ProcessingTarget> pe
         return utilsClassName().compareTo(o.utilsClassName());
     }
 
-    public default TypeElement intentedTypeElement() {
+    public default TypeElement intendedTypeElement() {
         return typeElement();
     }
 }

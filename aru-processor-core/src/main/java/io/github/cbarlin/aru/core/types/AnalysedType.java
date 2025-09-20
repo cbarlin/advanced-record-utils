@@ -53,8 +53,10 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTA
 public abstract sealed class AnalysedType implements ProcessingTarget permits AnalysedInterface, AnalysedRecord {
 
     private static final String CLASS_REFERENCE_FORMAT = "$T.class";
-    // This is safe because if the `get` fails then the annotation the processor is based on doesn't exist... which shouldn't be possible.
-    private static final MirrorOfDefaults DEFAULTS = new MirrorOfDefaults(OptionalClassDetector.optionalDependencyTypeElement(ARU_MAIN_ANNOTATION).get());
+    private static final MirrorOfDefaults DEFAULTS = new MirrorOfDefaults(
+        OptionalClassDetector.optionalDependencyTypeElement(ARU_MAIN_ANNOTATION)
+             .orElseThrow(() -> new IllegalStateException("Required annotation not found: " + ARU_MAIN_ANNOTATION))
+    );
 
     protected final UtilsProcessingContext utilsProcessingContext;
     protected final TypeElement typeElement;
@@ -143,6 +145,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         }
         if (references || (rootElement instanceof final PackageElement pkg && typeElement.getEnclosingElement().equals(pkg))) {
             referencingRootElements.add(rootElement);
+            nonReferencingRootElements.remove(rootElement);
         } else if (!referencingRootElements.contains(rootElement)) {
             nonReferencingRootElements.add(rootElement);
         }
@@ -334,13 +337,13 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     }
 
     private void addRootElementInformation(final AnnotationSpec.Builder utilsGeneratorAnnotation) {
-        addTypeRootElementInformation(referencingRootElements, utilsGeneratorAnnotation, "true");
-        addPackageRootElementInformation(referencingRootElements, utilsGeneratorAnnotation, "true");
-        addTypeRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, "false");
-        addPackageRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, "false");
+        addTypeRootElementInformation(referencingRootElements, utilsGeneratorAnnotation, true);
+        addPackageRootElementInformation(referencingRootElements, utilsGeneratorAnnotation, true);
+        addTypeRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, false);
+        addPackageRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, false);
     }
 
-    private void addPackageRootElementInformation(final Set<Element> elements, final AnnotationSpec.Builder generatorAnnotation, final String references) {
+    private void addPackageRootElementInformation(final Set<Element> elements, final AnnotationSpec.Builder generatorAnnotation, final boolean references) {
         elements.stream()
             .filter(PackageElement.class::isInstance)
             .map(PackageElement.class::cast)
@@ -350,13 +353,13 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
             .forEach((final String name) -> {
                 final AnnotationSpec rootElementInformation = AnnotationSpec.builder(ARU_ROOT_ELEMENT_INFORMATION)
                     .addMember("rootPackage", "$S", name)
-                    .addMember("referencesCurrentItem", "$L", references)
+                    .addMember("referencesCurrentItem", "$L", String.valueOf(references))
                     .build();
                 generatorAnnotation.addMember("rootElements", rootElementInformation);
             });
     }
 
-    private void addTypeRootElementInformation(final Set<Element> elements, final AnnotationSpec.Builder generatorAnnotation, final String references) {
+    private void addTypeRootElementInformation(final Set<Element> elements, final AnnotationSpec.Builder generatorAnnotation, final boolean references) {
         elements.stream()
             .filter(TypeElement.class::isInstance)
             .map(TypeElement.class::cast)
@@ -368,7 +371,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
                 final AnnotationSpec rootElementInformation = AnnotationSpec.builder(ARU_ROOT_ELEMENT_INFORMATION)
                     .addMember("rootType", CLASS_REFERENCE_FORMAT, ClassName.get(target.typeElement()))
                     .addMember("utilsClass", CLASS_REFERENCE_FORMAT, target.utilsClassName())
-                    .addMember("referencesCurrentItem", "$L", references)
+                    .addMember("referencesCurrentItem", "$L", String.valueOf(references))
                     .build();
                 generatorAnnotation.addMember("rootElements", rootElementInformation);
             });

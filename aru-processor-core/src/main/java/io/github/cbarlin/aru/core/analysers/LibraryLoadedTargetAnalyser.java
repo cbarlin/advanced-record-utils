@@ -21,7 +21,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
-import javax.tools.Diagnostic;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -64,7 +63,6 @@ public final class LibraryLoadedTargetAnalyser implements TargetAnalyser {
                 .forEach(meta -> this.supportedAnnotations.annotations().add(meta));
             // Oof!
             final Set<AnalysedTypeConverter> foundConverter = findConverters(prism);
-            APContext.messager().printMessage(Diagnostic.Kind.NOTE, "Loading library target", element);
             return new TargetAnalysisResult(Optional.of(libraryLoadedTarget), references, true, foundConverter);
         }
 
