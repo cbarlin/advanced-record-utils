@@ -18,7 +18,7 @@ public enum AnEnumInDep {
 
     @TypeConverter
     public static AnEnumInDep fromLabel(final String label) {
-        if ("Monday".equals(label)) {
+        if (MONDAY.label().equals(label)) {
             return MONDAY;
         }
         return TUESDAY;

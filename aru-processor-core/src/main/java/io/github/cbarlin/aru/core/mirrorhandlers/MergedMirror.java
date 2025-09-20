@@ -5,12 +5,15 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public final class MergedMirror implements AnnotationMirror, AnnotationValue {
+public final class MergedMirror implements StackingAnnotationMirror {
     private final DeclaredType annotationType;
     private final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues;
+    private final List<AnnotationMirror> mergedMirrors;
 
     private static Map<ExecutableElement, AnnotationValue> basicMerge(final AnnotationMirror preferred, final AnnotationMirror secondary) {
         final Map<? extends ExecutableElement, ? extends AnnotationValue> pref = preferred.getElementValues();
@@ -36,6 +39,21 @@ public final class MergedMirror implements AnnotationMirror, AnnotationValue {
         }
         annotationType = preferred.getAnnotationType();
         this.elementValues = basicMerge(preferred, secondary);
+        final ArrayList<AnnotationMirror> mirrors = new ArrayList<>(2);
+
+        if (preferred instanceof final MergedMirror mergedMirror) {
+            mirrors.addAll(mergedMirror.mergedMirrors());
+        } else {
+            mirrors.add(preferred);
+        }
+
+        if (secondary instanceof final MergedMirror mergedMirror) {
+            mirrors.addAll(mergedMirror.mergedMirrors());
+        } else {
+            mirrors.add(secondary);
+        }
+
+        this.mergedMirrors = List.copyOf(mirrors);
     }
 
     @Override
@@ -53,7 +71,22 @@ public final class MergedMirror implements AnnotationMirror, AnnotationValue {
     }
 
     @Override
-    public <R, P> R accept(AnnotationValueVisitor<R, P> v, P p) {
+    public <R, P> R accept(final AnnotationValueVisitor<R, P> v, final P p) {
         return v.visitAnnotation(this, p);
+    }
+
+    public List<AnnotationMirror> mergedMirrors() {
+        return this.mergedMirrors;
+    }
+
+    @Override
+    public List<SourceTrackingAnnotationMirror> trackingMirrors() {
+        final ArrayList<SourceTrackingAnnotationMirror> mirrors = new ArrayList<>(mergedMirrors.size());
+        for (final AnnotationMirror originalMirror : mergedMirrors) {
+            if (originalMirror instanceof final StackingAnnotationMirror stam) {
+                mirrors.addAll(stam.trackingMirrors());
+            }
+        }
+        return List.copyOf(mirrors);
     }
 }

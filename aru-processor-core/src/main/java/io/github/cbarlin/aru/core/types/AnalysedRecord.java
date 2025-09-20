@@ -45,6 +45,11 @@ public final class AnalysedRecord extends AnalysedType {
         return ClassName.get(intendedTypeElement);
     }
 
+    @Override
+    public TypeElement intendedTypeElement() {
+        return intendedTypeElement;
+    }
+
     public ExecutableElement intendedConstructor() {
         return this.intendedConstructor;
     }

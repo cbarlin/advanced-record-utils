@@ -6,26 +6,32 @@ import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
+import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltClass;
+import io.github.cbarlin.aru.core.mirrorhandlers.MergedMirror;
+import io.github.cbarlin.aru.core.mirrorhandlers.MirrorOfDefaults;
+import io.github.cbarlin.aru.core.mirrorhandlers.SourceTrackingAnnotationMirror;
+import io.github.cbarlin.aru.core.mirrorhandlers.StackingAnnotationMirror;
+import io.github.cbarlin.aru.core.mirrorhandlers.ToPrettierAnnotationSpec;
 import io.github.cbarlin.aru.core.visitors.AruVisitor;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.jspecify.annotations.NonNull;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,13 +45,18 @@ import static io.github.cbarlin.aru.core.CommonsConstants.JDOC_PARA;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_INTERNAL_UTILS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_MAIN_ANNOTATION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_ROOT_ELEMENT_INFORMATION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_SETTINGS_SOURCE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
 
 public abstract sealed class AnalysedType implements ProcessingTarget permits AnalysedInterface, AnalysedRecord {
-    
-    private static final String INTERNAL_UTILS_ANNOTATION_FORMAT = "@$T(type = $S, implementation = $T.class)";
+
     private static final String CLASS_REFERENCE_FORMAT = "$T.class";
+    private static final MirrorOfDefaults DEFAULTS = new MirrorOfDefaults(
+        OptionalClassDetector.optionalDependencyTypeElement(ARU_MAIN_ANNOTATION)
+             .orElseThrow(() -> new IllegalStateException("Required annotation not found: " + ARU_MAIN_ANNOTATION))
+    );
 
     protected final UtilsProcessingContext utilsProcessingContext;
     protected final TypeElement typeElement;
@@ -56,12 +67,10 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     protected final Set<ClassName> referencedUtilsClasses = new HashSet<>();
     protected final Set<ClassName> referencedTypeConverters = new HashSet<>();
     protected final Map<ClaimableOperation, AruVisitor<?>> claimedOperations = new HashMap<>();
-    /**
-     * Annotations that are not on the Element but are "projected"
-     *   into it that may be relevent (e.g. `NotNull` which is implied from a package annotation)
-     */
-    protected final Map<ClassName, List<AnnotationMirror>> projectedRelevantAnnotations = new HashMap<>();
-    
+    protected final Set<Element> referencingRootElements = new HashSet<>();
+    protected final Set<Element> nonReferencingRootElements = new HashSet<>();
+    protected final Set<TypeElement> knownMetaAnnotations = new HashSet<>();
+
     //#region Construction
     protected AnalysedType(final TypeElement element, final UtilsProcessingContext context, final AdvRecUtilsSettings settings) {
         this.typeElement = element;
@@ -97,7 +106,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
                 () -> Optional.of(ClassName.get(element).packageName())
                     .filter(str -> Strings.CS.startsWith(str, settings.packageName()))
             )
-            .orElseGet(() -> settings.packageName());
+            .orElseGet(settings::packageName);
         final String utilsCn = settings.prism().typeNameOptions().utilsImplementationPrefix() + originalClassName + settings.prism().typeNameOptions().utilsImplementationSuffix();
         return ClassName.get(targetPackage, utilsCn);
     }
@@ -108,19 +117,17 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     /**
      * Obtain an existing or create a new generation artifact.
      * <p>
-     * Note: if creating a generation artiface, there must be something that places the `@Generated` annotation on it
+     * Note: if creating a generation artifact, there must be something that places the `@Generated` annotation on it
      * @param generatedName The name to actually call the class when the source code is written out. Will automatically be a subclass of `Utils` so do not include the prefix
      * @param operation The operation creating the artifact
      * 
      * @return The artifact requested
      */
 
-    @NonNull
     public ToBeBuilt utilsClassChildClass(final String generatedName, final ClaimableOperation operation) {
         return addLogger(utilsClass.childClassArtifact(generatedName, operation));
     }
 
-    @NonNull
     public ToBeBuilt utilsClassChildInterface(final String generatedName, final ClaimableOperation operation) {
         return addLogger(utilsClass.childInterfaceArtifact(generatedName, operation));
     }
@@ -132,6 +139,22 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         return item;
     }
 
+    public void addRootElement(final Element rootElement, final boolean references) {
+        if (rootElement == typeElement) {
+            return;
+        }
+        if (references || (rootElement instanceof final PackageElement pkg && typeElement.getEnclosingElement().equals(pkg))) {
+            referencingRootElements.add(rootElement);
+            nonReferencingRootElements.remove(rootElement);
+        } else if (!referencingRootElements.contains(rootElement)) {
+            nonReferencingRootElements.add(rootElement);
+        }
+    }
+
+    public void addKnownMetaAnnotation(final TypeElement typeElement) {
+        this.knownMetaAnnotations.add(typeElement);
+    }
+
     /**
      * Add a cross-reference with another {@link AnalysedType} that is relevant to the current one
      * <p>
@@ -141,6 +164,9 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     public void addCrossReference(final ProcessingTarget other) {
         if (this != other) {
             this.referencedUtilsClasses.add(other.utilsClassName());
+            if (other instanceof final AnalysedType at) {
+                this.referencingRootElements.addAll(at.referencingRootElements);
+            }
         }
     }
 
@@ -238,46 +264,42 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
             .build();
         final AnnotationSpec.Builder utilsGeneratorAnnotation = AnnotationSpec.builder(ARU_GENERATED)
             .addMember("generatedFor", CLASS_REFERENCE_FORMAT, className())
-            .addMember("version", versionAnnotation)
-            .addMember("settings", AnnotationSpec.get(settings().prism().mirror));
+            .addMember("version", versionAnnotation);
 
-        
+        final AnnotationMirror userSettings = settings().prism().mirror;
+
+        utilsGeneratorAnnotation.addMember("settings", ToPrettierAnnotationSpec.convertToAnnotationSpec(userSettings));
+
         final List<ToBeBuilt> childArtifacts = new ArrayList<>();
         utilsClass.visitChildArtifacts(childArtifacts::add);
         // Sort in ClassName order
-        Collections.sort(childArtifacts, Comparator.comparing(ToBeBuilt::className));
-        final List<String> internalUtilsFormat = new ArrayList<>();
-        final List<Object> internalUtilsArgs = new ArrayList<>();
+        childArtifacts.sort(Comparator.comparing(ToBeBuilt::className));
         childArtifacts.forEach(toBeBuilt -> {
-            internalUtilsFormat.add(INTERNAL_UTILS_ANNOTATION_FORMAT);
-            internalUtilsArgs.add(ARU_INTERNAL_UTILS);
-            internalUtilsArgs.add(StringUtils.join(toBeBuilt.className().simpleNames(), ".").replace(utilsClass().className().simpleName() + ".", ""));
-            internalUtilsArgs.add(toBeBuilt.className());
+            final AnnotationSpec childArtifact = AnnotationSpec.builder(ARU_INTERNAL_UTILS)
+               .addMember("type", "$S", toBeBuilt.className())
+               .addMember("implementation", CLASS_REFERENCE_FORMAT, toBeBuilt.className())
+               .build();
+            utilsGeneratorAnnotation.addMember("internalUtils", childArtifact);
         });
 
-        utilsGeneratorAnnotation.addMember("internalUtils", "{\n    " + StringUtils.join(internalUtilsFormat, ",\n    ") + "\n}", internalUtilsArgs.toArray());
-        
-        final List<String> referenceFormat = new ArrayList<>(referencedUtilsClasses.size());
-        final List<ClassName> sortedRefs = referencedUtilsClasses.stream()
+        referencedUtilsClasses.stream()
             .sorted(Comparator.comparing(ClassName::canonicalName))
-            .toList();
-        sortedRefs.forEach(ignored -> referenceFormat.add(CLASS_REFERENCE_FORMAT));
-        utilsGeneratorAnnotation.addMember(
-            "references",
-            "{\n    " + StringUtils.join(referenceFormat, ",\n    ") + "\n}",
-            sortedRefs.toArray()
-        );
+            .forEach(cn -> utilsGeneratorAnnotation.addMember("references", CLASS_REFERENCE_FORMAT, cn));
 
-        final List<String> convertFormat = new ArrayList<>(referencedTypeConverters.size());
-        final List<ClassName> sortedConverters = referencedTypeConverters.stream()
+        referencedTypeConverters.stream()
             .sorted(Comparator.comparing(ClassName::canonicalName))
-            .toList();
-        sortedConverters.forEach(ignored -> convertFormat.add(CLASS_REFERENCE_FORMAT));
-        utilsGeneratorAnnotation.addMember(
-            "usedTypeConverters",
-            "{\n    " + StringUtils.join(convertFormat, ",\n    ") + "\n}",
-            sortedConverters.toArray()
-        );
+            .forEach(cn -> utilsGeneratorAnnotation.addMember("usedTypeConverters", CLASS_REFERENCE_FORMAT, cn));
+
+        addRootElementInformation(utilsGeneratorAnnotation);
+        knownMetaAnnotations.stream()
+            .map(ClassName::get)
+            .sorted(Comparator.comparing(ClassName::canonicalName))
+            .forEach(cn -> utilsGeneratorAnnotation.addMember("knownMetaAnnotations", CLASS_REFERENCE_FORMAT, cn));
+
+        addSettingSources(utilsGeneratorAnnotation);
+
+        final AnnotationMirror withDefaults = new MergedMirror(userSettings, DEFAULTS);
+        utilsGeneratorAnnotation.addMember("fullyComputedSettings", ToPrettierAnnotationSpec.convertToAnnotationSpec(withDefaults));
 
         utilsBuilder.addAnnotation(utilsGeneratorAnnotation.build())
             .addJavadoc("An auto-generated utility class to work with {@link $T} objects", className())
@@ -285,5 +307,73 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
             .addJavadoc("This includes a builder, as well as other generated utilities based on the values provided to the {@link $T} annotation", ARU_MAIN_ANNOTATION)
             .addJavadoc(JDOC_PARA);
         utilsBuilder.addJavadoc("For more details, see the GitHub page for cbarlin/advanced-record-utils");
+    }
+
+    private void addSettingSources(final AnnotationSpec.Builder utilsGeneratorAnnotation) {
+        if (settings.prism().mirror instanceof final StackingAnnotationMirror sam) {
+            Element previousElement = null;
+            final List<SourceTrackingAnnotationMirror> mirrors = sam.trackingMirrors();
+            for (int i = 0; i < mirrors.size(); i++) {
+                final SourceTrackingAnnotationMirror stam = mirrors.get(i);
+                if (Objects.equals(stam.annotatedElement(), previousElement)) {
+                    continue;
+                }
+                final AnnotationSpec settings = ToPrettierAnnotationSpec.convertToAnnotationSpec(stam);
+                final AnnotationSpec.Builder sourceDetails = AnnotationSpec.builder(ARU_SETTINGS_SOURCE)
+                    .addMember("settings", settings)
+                    .addMember("distance", "$L", i);
+                switch (stam.annotatedElement()) {
+                    case final TypeElement te -> sourceDetails.addMember("annotatedType", "$T.class", ClassName.get(te));
+                    case final PackageElement pe -> sourceDetails.addMember("annotatedPackage", "$S", pe.getQualifiedName().toString());
+                    case final ModuleElement me -> sourceDetails.addMember("annotatedModule", "$S", me.getQualifiedName().toString());
+                    default -> {
+                        continue;
+                    }
+                }
+                utilsGeneratorAnnotation.addMember("settingSources", sourceDetails.build());
+                previousElement = stam.annotatedElement();
+            }
+        }
+    }
+
+    private void addRootElementInformation(final AnnotationSpec.Builder utilsGeneratorAnnotation) {
+        addTypeRootElementInformation(referencingRootElements, utilsGeneratorAnnotation, true);
+        addPackageRootElementInformation(referencingRootElements, utilsGeneratorAnnotation, true);
+        addTypeRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, false);
+        addPackageRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, false);
+    }
+
+    private void addPackageRootElementInformation(final Set<Element> elements, final AnnotationSpec.Builder generatorAnnotation, final boolean references) {
+        elements.stream()
+            .filter(PackageElement.class::isInstance)
+            .map(PackageElement.class::cast)
+            .map(PackageElement::getQualifiedName)
+            .map(Name::toString)
+            .sorted()
+            .forEach((final String name) -> {
+                final AnnotationSpec rootElementInformation = AnnotationSpec.builder(ARU_ROOT_ELEMENT_INFORMATION)
+                    .addMember("rootPackage", "$S", name)
+                    .addMember("referencesCurrentItem", "$L", String.valueOf(references))
+                    .build();
+                generatorAnnotation.addMember("rootElements", rootElementInformation);
+            });
+    }
+
+    private void addTypeRootElementInformation(final Set<Element> elements, final AnnotationSpec.Builder generatorAnnotation, final boolean references) {
+        elements.stream()
+            .filter(TypeElement.class::isInstance)
+            .map(TypeElement.class::cast)
+            .map(ClassName::get)
+            .sorted(Comparator.comparing(ClassName::canonicalName))
+            .map(utilsProcessingContext::analysedType)
+            .flatMap(Optional::stream)
+            .forEach((final ProcessingTarget target) -> {
+                final AnnotationSpec rootElementInformation = AnnotationSpec.builder(ARU_ROOT_ELEMENT_INFORMATION)
+                    .addMember("rootType", CLASS_REFERENCE_FORMAT, ClassName.get(target.typeElement()))
+                    .addMember("utilsClass", CLASS_REFERENCE_FORMAT, target.utilsClassName())
+                    .addMember("referencesCurrentItem", "$L", String.valueOf(references))
+                    .build();
+                generatorAnnotation.addMember("rootElements", rootElementInformation);
+            });
     }
 }

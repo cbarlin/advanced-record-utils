@@ -60,7 +60,7 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         if (currentEnv != processingEnvironment) {
             try {
                 globalBeanScope.close();
-            } catch (Exception ignored) { }
+            } catch (final Exception ignored) { }
             globalBeanScope = BeanScopeFactory.loadGlobalScope(processingEnvironment);
         }
         return globalBeanScope;
@@ -76,12 +76,12 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         findMetaAnnotations(roundEnv, supportedAnnotations.annotations());
 
         // OK, now loop through all those and analyse them!
-        findAndProcessTargets(beanScope, roundEnv, supportedAnnotations.annotations());
+        findAndProcessTargets(beanScope, roundEnv, supportedAnnotations);
 
         if (roundEnv.processingOver()) {
             try {
                 Optional.ofNullable(globalBeanScope).ifPresent(BeanScope::close);
-            } catch (Exception ignored) { }
+            } catch (final Exception ignored) { }
             globalBeanScope = null;
             APContext.clear();
         }
@@ -89,22 +89,33 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void findAndProcessTargets(final BeanScope scope, final RoundEnvironment roundEnv, final Set<TypeElement> supportedAnnotations) {
+    private void findAndProcessTargets(final BeanScope scope, final RoundEnvironment roundEnv, final SupportedAnnotations supportedAnnotations) {
         final UtilsProcessingContext context = scope.get(UtilsProcessingContext.class);
         final List<TargetAnalyser> analysers = scope.list(TargetAnalyser.class);
-        for (final TypeElement typeElement : Set.copyOf(supportedAnnotations)) {
+        final Set<TypeElement> firstLoop = Set.copyOf(supportedAnnotations.annotations());
+        for (final TypeElement typeElement : firstLoop) {
+            for (final Element annotatedElement : roundEnv.getElementsAnnotatedWith(typeElement)) {
+                context.analyseRootElement(annotatedElement, analysers);
+            }
+        }
+        // In case it got added to during the analysis
+        for (final TypeElement typeElement : Set.copyOf(supportedAnnotations.annotations())) {
+            if (firstLoop.contains(typeElement)) {
+                continue;
+            }
             for (final Element annotatedElement : roundEnv.getElementsAnnotatedWith(typeElement)) {
                 context.analyseRootElement(annotatedElement, analysers);
             }
         }
         context.matchInterfaces();
+        context.injectAllRootElements(Set.copyOf(supportedAnnotations.annotations()), getSupportedAnnotationTypes());
         context.processElements(scope);
     }
 
     private void findMetaAnnotations(final RoundEnvironment roundEnv, final Set<TypeElement> supportedAnnotations) {
         for(final TypeElement annoType : Set.copyOf(supportedAnnotations)) {
             for(final Element annotatedElement : roundEnv.getElementsAnnotatedWith(annoType)) {
-                if (annotatedElement instanceof TypeElement typeAnnoElement && ElementKind.ANNOTATION_TYPE.equals(typeAnnoElement.getKind())) {
+                if (annotatedElement instanceof final TypeElement typeAnnoElement && ElementKind.ANNOTATION_TYPE.equals(typeAnnoElement.getKind())) {
                     supportedAnnotations.add(typeAnnoElement);
                 }
             }
@@ -148,6 +159,8 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsFull.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.Version.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.InternalUtil.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.RootElementInformation.class));
+        OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.SettingsSource.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(AdvancedRecordUtilsGenerated.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(TypeConverter.class));
         OptionalClassDetector.loadAnnotation(ClassName.get(Generated.class));

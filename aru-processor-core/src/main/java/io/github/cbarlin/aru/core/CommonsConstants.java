@@ -36,10 +36,13 @@ public enum CommonsConstants {
         private static final String ORG_JSPECIFY_ANNOTATIONS = "org.jspecify.annotations";
         public static final ClassName ARRAY_LIST = ClassName.get(JAVA_UTIL, "ArrayList");
         public static final ClassName ARU_GENERATED = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED);
+        public static final ClassName ARU_GENERATED_UTIL = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "GeneratedUtil");
         public static final ClassName ARU_INTERNAL_UTILS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "InternalUtil");
         public static final ClassName ARU_LOGGING_CONSTANTS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "LoggingConstants");
         public static final ClassName ARU_MAIN_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "AdvancedRecordUtils");
         public static final ClassName ARU_IMPORT_LIBRARY = ARU_MAIN_ANNOTATION.nestedClass("ImportLibraryUtils");
+        public static final ClassName ARU_ROOT_ELEMENT_INFORMATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "RootElementInformation");
+        public static final ClassName ARU_SETTINGS_SOURCE = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "SettingsSource");
         public static final ClassName ARU_VERSION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "Version");
         public static final ClassName COLLECTION = ClassName.get(JAVA_UTIL, "Collection");
         public static final ClassName COLLECTORS = ClassName.get(JAVA_UTIL + ".stream", "Collectors");

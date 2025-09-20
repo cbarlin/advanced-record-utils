@@ -7,7 +7,7 @@ You can also use meta-annotations to define a group of settings to apply to a nu
 . Settings inherited from the package
 . Settings inherited from the meta-annotation's package
 
-IMPORTANT: Meta-annotations only apply within one compilation unit (e.g. Maven module). They do not work across compilation boundaries.
+IMPORTANT: As of 0.6.6, meta-annotations will work across compilation boundaries provided that at least one `+Utils+` class from the library that defines the meta-annotation is loaded. See <<Importing items,Importing items>> for more details.
 
 With the following example:
 

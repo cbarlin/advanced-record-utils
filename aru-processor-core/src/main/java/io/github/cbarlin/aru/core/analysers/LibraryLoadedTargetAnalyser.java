@@ -7,10 +7,13 @@ import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.artifacts.PreBuilt;
+import io.github.cbarlin.aru.core.factories.SupportedAnnotations;
 import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.wiring.CoreGlobalScope;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsGeneratedPrism;
+import io.github.cbarlin.aru.prism.prison.RootElementInformationPrism;
+import io.micronaut.sourcegen.javapoet.ClassName;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -22,7 +25,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @Priority(1)
@@ -30,9 +32,11 @@ import java.util.stream.Collectors;
 public final class LibraryLoadedTargetAnalyser implements TargetAnalyser {
 
     private final TypeConverterAnalyser typeConverterAnalyser;
+    private final SupportedAnnotations supportedAnnotations;
 
-    public LibraryLoadedTargetAnalyser(TypeConverterAnalyser typeConverterAnalyser) {
+    public LibraryLoadedTargetAnalyser(final TypeConverterAnalyser typeConverterAnalyser, final SupportedAnnotations supportedAnnotations) {
         this.typeConverterAnalyser = typeConverterAnalyser;
+        this.supportedAnnotations = supportedAnnotations;
     }
 
     @Override
@@ -51,21 +55,38 @@ public final class LibraryLoadedTargetAnalyser implements TargetAnalyser {
             if (!(targetEl instanceof final TypeElement target)) {
                 return TargetAnalysisResult.EMPTY_RESULT;
             }
-            final Set<TypeElement> references = prism.references()
-                .stream()
-                .map(APContext.types()::asElement)
-                .filter(Objects::nonNull)
-                .filter(TypeElement.class::isInstance)
-                .map(TypeElement.class::cast)
-                .collect(Collectors.toUnmodifiableSet());
+            final Set<TypeElement> references = extractReferences(prism);
             final LibraryLoadedTarget libraryLoadedTarget = new LibraryLoadedTarget(preBuilt, target);
+            prism.knownMetaAnnotations().stream()
+                .map(OptionalClassDetector::optionalDependencyTypeElement)
+                .flatMap(Optional::stream)
+                .forEach(meta -> this.supportedAnnotations.annotations().add(meta));
             // Oof!
             final Set<AnalysedTypeConverter> foundConverter = findConverters(prism);
-
             return new TargetAnalysisResult(Optional.of(libraryLoadedTarget), references, true, foundConverter);
         }
 
         return TargetAnalysisResult.EMPTY_RESULT;
+    }
+
+    private static Set<TypeElement> extractReferences(final AdvancedRecordUtilsGeneratedPrism prism) {
+        final Set<TypeElement> references = HashSet.newHashSet(prism.references().size());
+        prism.references()
+             .stream()
+             .map(APContext.types()::asElement)
+             .filter(Objects::nonNull)
+             .filter(TypeElement.class::isInstance)
+             .map(TypeElement.class::cast)
+             .forEach(references::add);
+        prism.rootElements()
+             .stream()
+             .map(RootElementInformationPrism::utilsClass)
+             .filter(Objects::nonNull)
+             .map(OptionalClassDetector::optionalDependencyTypeElement)
+             .flatMap(Optional::stream)
+             .filter((final TypeElement te) -> !CommonsConstants.Names.ARU_GENERATED_UTIL.equals(ClassName.get(te)))
+             .forEach(references::add);
+        return Set.copyOf(references);
     }
 
     private Set<AnalysedTypeConverter> findConverters(final AdvancedRecordUtilsGeneratedPrism prism) {

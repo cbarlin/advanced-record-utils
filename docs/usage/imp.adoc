@@ -38,7 +38,7 @@ Importing existing `+*Utils+` classes allows the following:
 * Use of a `+TypeConverter+` defined in that library and used by a `+*Utils+` class
 * Fluent methods when using the associated record in your records
 
-TIP: When importing trees of records, you only need to import the "root" of each tree. This is because the `+*Utils+` classes include a metadata annotation that the processor can read back in to recreate the tree. That includes `+*Utils+` classes that it imported too!
+TIP: TIP: When importing a library that has multiple `+Utils+` classes, import any one of them. The processor reads the metadata annotation to discover every `+Utils+` class in that library, as well as any it has loaded transitively from other libraries, so dependency trees are picked up.
 
 NOTE: A `+*Utils+` class can be imported multiple times in multiple ways without any negative effects. It can also only be imported in one place and used everywhere - their context, like `+@TypeConverter+`, is global.
 

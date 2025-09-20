@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.core;
 
 import io.github.cbarlin.aru.core.mirrorhandlers.MergedMirror;
+import io.github.cbarlin.aru.core.mirrorhandlers.SourceTrackingAnnotationMirror;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import org.jspecify.annotations.NullMarked;
@@ -30,7 +31,7 @@ public final class AdvRecUtilsSettings {
     private final AdvancedRecordUtilsPrism prism;
     private final Element originalElement;
 
-    public AdvRecUtilsSettings(AnnotationMirror originalMirror, Element element) {
+    public AdvRecUtilsSettings(final AnnotationMirror originalMirror, final Element element) {
         if ((!(element instanceof TypeElement)) && (!(element instanceof PackageElement))) {
             throw new IllegalArgumentException("Element must be either Type or Package");
         }
@@ -38,7 +39,7 @@ public final class AdvRecUtilsSettings {
         this.originalElement = element;
     }
 
-    public AdvRecUtilsSettings(AnnotationMirror originalMirror) {
+    public AdvRecUtilsSettings(final AnnotationMirror originalMirror) {
         this(originalMirror, null);
     }
 
@@ -59,9 +60,9 @@ public final class AdvRecUtilsSettings {
     }
 
     public String packageName() {
-        if (originalElement instanceof TypeElement te) {
+        if (originalElement instanceof final TypeElement te) {
             return ClassName.get(te).packageName();
-        } else if (originalElement instanceof PackageElement pe) {
+        } else if (originalElement instanceof final PackageElement pe) {
             return pe.getQualifiedName().toString();
         }
         throw new IllegalStateException("Internal element is not a TypeElement or PackageElement");
@@ -69,21 +70,23 @@ public final class AdvRecUtilsSettings {
 
     private static final Map<PackageElement, Optional<AnnotationMirror>> PACKAGE_MIRRORS = new HashMap<>();
 
-    private static Optional<AnnotationMirror> obtainMirrorOnPackageElement(PackageElement pkgEl, ProcessingEnvironment env) {
+    private static Optional<AnnotationMirror> obtainMirrorOnPackageElement(final PackageElement pkgEl, final ProcessingEnvironment env) {
         return PACKAGE_MIRRORS.computeIfAbsent(pkgEl, ignored -> obtainMirrorOnElement(pkgEl, env));
     } 
 
-    private static Optional<AnnotationMirror> obtainMirrorOnElement(Element element, ProcessingEnvironment env) {
+    private static Optional<AnnotationMirror> obtainMirrorOnElement(final Element element, final ProcessingEnvironment env) {
         AnnotationMirror foundMirror = null;
         final Set<String> seen = new HashSet<>();
         final LinkedList<AnnotationMirror> mirrors = new LinkedList<>();
         element.getAnnotationMirrors()
             .stream()
             .filter(m -> seen.add(m.getAnnotationType().toString()))
+            .map(mirror -> new SourceTrackingAnnotationMirror(mirror, element))
             .forEach(mirrors::add);
         env.getElementUtils().getAllAnnotationMirrors(element)
             .stream()
             .filter(m -> seen.add(m.getAnnotationType().toString()))
+            .map(mirror -> new SourceTrackingAnnotationMirror(mirror, element))
             .forEach(mirrors::add);
         while (!mirrors.isEmpty()) {
             final AnnotationMirror inspect = mirrors.removeFirst();
@@ -95,10 +98,15 @@ public final class AdvRecUtilsSettings {
                     foundMirror = new MergedMirror(foundMirror, inspect);
                 }
             } else {
-                env.getElementUtils().getAllAnnotationMirrors(env.getTypeUtils().asElement(inspect.getAnnotationType()))
-                    .stream()
-                    .filter(m -> seen.add(m.getAnnotationType().toString()))
-                    .forEach(mirrors::add);
+                final Element nxtLevel = env.getTypeUtils().asElement(inspect.getAnnotationType());
+                if (Objects.isNull(nxtLevel)) {
+                    continue;
+                }
+                env.getElementUtils().getAllAnnotationMirrors(nxtLevel)
+                   .stream()
+                   .filter(m -> seen.add(m.getAnnotationType().toString()))
+                   .map(mirror -> new SourceTrackingAnnotationMirror(mirror, nxtLevel))
+                   .forEach(mirrors::add);
             }
         }
         final var elMirror = Optional.ofNullable(foundMirror);
@@ -118,16 +126,16 @@ public final class AdvRecUtilsSettings {
         }
     }
 
-    public static Optional<AdvRecUtilsSettings> wrapOptional(Element element, ProcessingEnvironment env) {
+    public static Optional<AdvRecUtilsSettings> wrapOptional(final Element element, final ProcessingEnvironment env) {
         return obtainMirrorOnElement(element, env)
             .map(mirr -> new AdvRecUtilsSettings(mirr, element));
     }
 
-    public static boolean isAnnotatated(Element element, ProcessingEnvironment env) {
+    public static boolean isAnnotated(final Element element, final ProcessingEnvironment env) {
         return obtainMirrorOnElement(element, env).isPresent();
     }
 
-    public static AdvRecUtilsSettings wrap(Element element, ProcessingEnvironment env) {
+    public static AdvRecUtilsSettings wrap(final Element element, final ProcessingEnvironment env) {
         final var opt = wrapOptional(element, env);
         if (opt.isEmpty()) {
             env.getMessager()
@@ -136,7 +144,7 @@ public final class AdvRecUtilsSettings {
         return opt.orElseThrow();
     }
 
-    public static AdvRecUtilsSettings merge(AdvRecUtilsSettings preferred, AdvRecUtilsSettings secondary) {
+    public static AdvRecUtilsSettings merge(final AdvRecUtilsSettings preferred, final AdvRecUtilsSettings secondary) {
         final AnnotationMirror merged = new MergedMirror(preferred.mirror(), secondary.mirror());
         return new AdvRecUtilsSettings(merged, preferred.originalElement());
     }
