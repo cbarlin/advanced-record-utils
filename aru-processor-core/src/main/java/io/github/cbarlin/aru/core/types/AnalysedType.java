@@ -341,6 +341,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         addPackageRootElementInformation(referencingRootElements, utilsGeneratorAnnotation, true);
         addTypeRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, false);
         addPackageRootElementInformation(nonReferencingRootElements, utilsGeneratorAnnotation, false);
+        referencingRootElements.forEach(element -> utilsClass.builder().addOriginatingElement(element));
     }
 
     private void addPackageRootElementInformation(final Set<Element> elements, final AnnotationSpec.Builder generatorAnnotation, final boolean references) {
