@@ -37,7 +37,7 @@ public final class GetterOptional extends RecordVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final String name = component.name();
         final MethodSpec.Builder method = builderClass
             .createMethod(name, claimableOperation, component.element())

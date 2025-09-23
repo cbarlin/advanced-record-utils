@@ -40,6 +40,7 @@ public enum CommonsConstants {
         public static final ClassName ARU_INTERNAL_UTILS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "InternalUtil");
         public static final ClassName ARU_LOGGING_CONSTANTS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "LoggingConstants");
         public static final ClassName ARU_MAIN_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "AdvancedRecordUtils");
+        public static final ClassName ARU_DEFAULT = ARU_MAIN_ANNOTATION.nestedClass("DEFAULT");
         public static final ClassName ARU_IMPORT_LIBRARY = ARU_MAIN_ANNOTATION.nestedClass("ImportLibraryUtils");
         public static final ClassName ARU_ROOT_ELEMENT_INFORMATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "RootElementInformation");
         public static final ClassName ARU_SETTINGS_SOURCE = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "SettingsSource");

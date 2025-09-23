@@ -15,6 +15,7 @@ public enum Constants {
         public static final ClaimableOperation ALL_IFACE = new ClaimableOperation("allIface", CLASS);
         public static final ClaimableOperation BUILDER_ADD_ALL_ITERABLE = new ClaimableOperation("builderAddAllIterable", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_ADD_ALL_VARARGS = new ClaimableOperation("builderAddAllVarargs", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_ADD_EXTENSION_METHOD = new ClaimableOperation("builderAddExtensionMethods", CLASS);
         public static final ClaimableOperation BUILDER_ADD_VALIDATED_BUILD_METHOD = new ClaimableOperation("builderAddValidatedBuildMethod", CLASS);
         public static final ClaimableOperation BUILDER_ALIAS_SETTER = new ClaimableOperation("builderAliasSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_CONCRETE_OPTIONAL = new ClaimableOperation("builderConcreteSetterForOptional", FIELD_AND_ACCESSORS);

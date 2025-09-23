@@ -12,7 +12,7 @@ import io.github.cbarlin.aru.impl.BasePerRecordModule;
 import io.github.cbarlin.aru.impl.GlobalModule;
 import io.github.cbarlin.aru.impl.builder.BuilderPerComponentModule;
 import io.github.cbarlin.aru.impl.builder.BuilderPerInterfaceModule;
-import io.github.cbarlin.aru.impl.builder.validation.BuilderPerRecordModule;
+import io.github.cbarlin.aru.impl.builder.BuilderPerRecordModule;
 import io.github.cbarlin.aru.impl.diff.DiffPerComponentModule;
 import io.github.cbarlin.aru.impl.diff.DiffPerRecordModule;
 import io.github.cbarlin.aru.impl.merger.MergerPerRecordModule;
