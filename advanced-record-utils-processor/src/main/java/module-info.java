@@ -11,7 +11,7 @@
  * <li>Quite small</li>
  * </ul>
  * <p>
- * This package is sub-divided into the different things that the processor can
+ * This package is subdivided into the different things that the processor can
  * do, and a "Constants" file.
  */
 
@@ -25,6 +25,8 @@ module io.github.cbarlin.aru.worker {
     requires static io.avaje.spi;
     requires static org.jspecify;
     requires static org.mapstruct.processor;
+    requires io.avaje.inject;
+    requires io.micronaut.sourcegen.sourcegen_generator_java;
 
     provides io.github.cbarlin.aru.core.wiring.InjectModuleFinder with
         io.github.cbarlin.aru.impl.wiring.InjectModuleProvider;

@@ -21,26 +21,26 @@ public final class PropertyConfigLoader implements ConfigPropertyPlugin {
 
     private final Optional<AdvancedRecordUtilsPrism> optionalPrism;
 
-    public PropertyConfigLoader(@Nullable AdvancedRecordUtilsPrism prism) {
+    public PropertyConfigLoader(@Nullable final AdvancedRecordUtilsPrism prism) {
         this(Optional.ofNullable(prism));
     }
 
-    public PropertyConfigLoader(Optional<AdvancedRecordUtilsPrism> prism) {
+    public PropertyConfigLoader(final Optional<AdvancedRecordUtilsPrism> prism) {
         this.optionalPrism = prism;
     }
 
     @Override
-    public Optional<String> get(String property) {
+    public Optional<String> get(final String property) {
         return obtainProperty(property);
     }
 
     @Override
-    public boolean contains(String property) {
+    public boolean contains(final String property) {
         return obtainProperty(property).isPresent();
     }
 
     @Override
-    public boolean equalTo(String property, String value) {
+    public boolean equalTo(final String property, final String value) {
         return obtainProperty(property).filter(s -> Strings.CS.equals(s, value)).isPresent();
     }
 

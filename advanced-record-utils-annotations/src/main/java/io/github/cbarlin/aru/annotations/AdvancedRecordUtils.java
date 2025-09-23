@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.MODULE;
 import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.ElementType.TYPE;
@@ -49,6 +50,8 @@ public @interface AdvancedRecordUtils {
      * Do we attempt to find a pre-made instance of a *Utils class?
      * <p>
      * Note: enabling this may take some time to find possible classes
+     *
+     * @since 0.6.0
      */
     boolean attemptToFindExistingUtils() default false;
 
@@ -79,6 +82,8 @@ public @interface AdvancedRecordUtils {
 
     /**
      * Should the creator generate a diff interface?
+     *
+     * @since 0.3.0
      */
     boolean diffable() default false;
 
@@ -376,31 +381,43 @@ public @interface AdvancedRecordUtils {
 
         /**
          * For elements that are collections, do we create "remove" methods?
+         *
+         * @since 0.6.5
          */
         boolean createRemoveMethods() default true;
 
         /**
          * If creating remover methods, what is the prefix of the method name?
+         *
+         * @since 0.6.5
          */
         String removeMethodPrefix() default "remove";
 
         /**
          * If creating remover methods, what is the suffix of the method name?
+         *
+         * @since 0.6.5
          */
         String removeMethodSuffix() default "";
 
         /**
          * For elements that are collections, do we create "retainAll" methods?
+         *
+         * @since 0.6.5
          */
         boolean createRetainAllMethod() default true;
 
         /**
          * If creating retain methods, what is the prefix of the method name?
+         *
+         * @since 0.6.5
          */
         String retainMethodPrefix() default "retainAll";
 
         /**
          * If creating retain methods, what is the suffix of the method name?
+         *
+         * @since 0.6.5
          */
         String retainMethodSuffix() default "";
 
@@ -421,6 +438,8 @@ public @interface AdvancedRecordUtils {
          *   <li>Generation is **gated** by {@link #nullReplacesNotNull()}: when that option is {@code false},
          *       {@code setXToNull()} methods are not generated.</li>
          * </ul>
+         *
+         * @since 0.6.2
          */
         boolean setToNullMethods() default false;
 
@@ -467,6 +486,8 @@ public @interface AdvancedRecordUtils {
 
         /**
          * Should we generate an overload for optional types that accepts the concrete one?
+         *
+         * @since 0.1.3
          */
         boolean concreteSettersForOptional() default true;
 
@@ -567,27 +588,37 @@ public @interface AdvancedRecordUtils {
     
     /**
      * Options for the diff interface and utility generation
+     *
+     * @since 0.3.0
      */
     @Retention(RetentionPolicy.SOURCE)
     @Target({})
     public @interface DiffOptions {
         /**
          * Name of the interface generated
+         *
+         * @since 0.3.0
          */
         String differName() default "Diffable";
 
         /**
          * Name of the method to create a diff of two instances
+         *
+         * @since 0.3.0
          */
         String differMethodName() default "diff";
 
         /**
          * Prefix to use for the class name of the result of the diff
+         *
+         * @since 0.3.0
          */
         String diffResultPrefix() default "DiffOf";
 
         /**
          * Suffix to use for the class name of the result of the diff
+         *
+         * @since 0.3.0
          */
         String diffResultSuffix() default "";
 
@@ -595,6 +626,8 @@ public @interface AdvancedRecordUtils {
          * The name given to the originating element.
          * <p>
          * Examples could be "original", "left"
+         *
+         * @since 0.3.0
          */
         String originatingElementName() default "original";
 
@@ -602,26 +635,36 @@ public @interface AdvancedRecordUtils {
          * The name given to the other element.
          * <p>
          * Examples could be "updated", "right"
+         *
+         * @since 0.3.0
          */
         String comparedToElementName() default "updated";
 
         /**
          * The method name that will inform you if any field has changed at all
+         *
+         * @since 0.3.0
          */
         String changedAnyMethodName() default "hasChanged";
 
         /**
          * The prefix to a field when checking if there was a change
+         *
+         * @since 0.3.0
          */
         String changedCheckPrefix() default "has";
 
         /**
          * The suffix to a field when checking if there was a change
+         *
+         * @since 0.3.0
          */
         String changedCheckSuffix() default "Changed";
 
         /**
          * Should diffs be evaluated immediately or lazily?
+         *
+         * @since 0.3.0
          */
         DiffEvaluationMode evaluationMode() default DiffEvaluationMode.EAGER;
 
@@ -629,6 +672,8 @@ public @interface AdvancedRecordUtils {
          * Should static methods (if generated) be added to the root {@code Utils} class?
          * <p>
          * e.g. {@code PersonUtils.diff(preferredPerson, secondaryPerson)}
+         *
+         * @since 0.3.0
          */
         boolean staticMethodsAddedToUtils() default false;
     }
@@ -640,15 +685,74 @@ public @interface AdvancedRecordUtils {
     public static class DEFAULT {}
 
     /**
-     * An interface that requests the processor import "*Utils" classes from
-     *   an existing library.
+     * Request that the processor import "*Utils" classes from an existing library.
      * <p>
      * While this has the same functionality as the {@link AdvancedRecordUtils#importTargets()}
      *   the semantic naming makes the intent clearer
+     *
+     * @since 0.6.1
      */
     @Target({MODULE, PACKAGE, TYPE, ANNOTATION_TYPE})
     @Retention(RetentionPolicy.CLASS)
     public @interface ImportLibraryUtils {
+        /**
+         * The utils to import
+         *
+         * @return The utils instances to import
+         * @since 0.6.1
+         */
         Class<? extends GeneratedUtil>[] value();
+    }
+
+    /**
+     * Request that the target method be called when the {@code build} method is built,
+     *   but before the record is constructed.
+     * <p>
+     * The method must meet the contract of {@code static void methodName(Builder builder)}. That is:
+     * <ul>
+     *     <li>It must be static</li>
+     *     <li>It must have a return type of {@code void}</li>
+     *     <li>It must have only one argument, which is the builder</li>
+     * </ul>
+     * You cannot call {@code build} from within this method, but you may call other methods such as getters and setters.
+     * <p>
+     * Must be placed within the record.
+     *
+     * @since 0.6.7
+     */
+    @Target({METHOD})
+    @Retention(RetentionPolicy.CLASS)
+    public @interface BeforeBuild {
+
+    }
+
+    /**
+     * Add a setter method to the builder.
+     * <p>
+     * The method must meet the contract of {@code static void methodName(Builder builder, X otherParam)}. That is:
+     * <ul>
+     *     <li>It must be static</li>
+     *     <li>It must have a return type of {@code void}</li>
+     *     <li>It must have two arguments, the first of which is the builder</li>
+     * </ul>
+     * The method name and the second parameter are placed on the builder.
+     * <p>
+     * Must be placed within the record.
+     *
+     * @since 0.6.7
+     */
+    @Target({METHOD})
+    @Retention(RetentionPolicy.CLASS)
+    public @interface BuilderExtension {
+        /**
+         * Request that the builder extend the given interface for the additional method.
+         * <p>
+         * Note: there may be a risk that the builder doesn't fully implement all methods from this interface if the interface contains other methods. If this
+         *   is the case, you may get compilation errors that are not the fault of the processor
+         *
+         * @return The interface to request the builder extend from
+         * @since 0.6.7
+         */
+        Class<?> fromInterface() default DEFAULT.class;
     }
 }

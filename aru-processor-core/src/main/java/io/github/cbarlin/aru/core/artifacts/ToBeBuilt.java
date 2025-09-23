@@ -5,8 +5,10 @@ import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants.InternalReferenceNames;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.core.artifacts.sorting.AnnotationSpecComparator;
 import io.github.cbarlin.aru.core.artifacts.sorting.FieldSpecComparator;
 import io.github.cbarlin.aru.core.artifacts.sorting.MethodSpecComparator;
+import io.github.cbarlin.aru.core.artifacts.sorting.TypeNameComparator;
 import io.github.cbarlin.aru.core.artifacts.sorting.TypeSpecComparator;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedType;
@@ -78,17 +80,19 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
         }
 
         // Sort the fields (kinda)
-        Collections.sort(classBuilder.fieldSpecs, FieldSpecComparator.INSTANCE);
+        classBuilder.fieldSpecs.sort(FieldSpecComparator.INSTANCE);
         // Add all the methods (and then sort them)
         for (final MethodSpec.Builder methodSpec : unfinishedMethods.values()) {
-            Collections.sort(methodSpec.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
+            methodSpec.annotations.sort(AnnotationSpecComparator.INSTANCE);
         }
         unfinishedMethods.values().stream().map(MethodSpec.Builder::build).forEach(classBuilder::addMethod);
-        Collections.sort(classBuilder.methodSpecs, MethodSpecComparator.INSTANCE);
+        classBuilder.methodSpecs.sort(MethodSpecComparator.INSTANCE);
         // And of course, the nested classes
         childArtifacts.values().stream().map(ToBeBuilt::finishClass).forEach(classBuilder::addType);
-        Collections.sort(classBuilder.typeSpecs, TypeSpecComparator.INSTANCE);
-        Collections.sort(classBuilder.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
+        classBuilder.typeSpecs.sort(TypeSpecComparator.INSTANCE);
+        classBuilder.permittedSubclasses.sort(TypeNameComparator.INSTANCE);
+        classBuilder.superinterfaces.sort(TypeNameComparator.INSTANCE);
+        classBuilder.annotations.sort(AnnotationSpecComparator.INSTANCE);
         try {
             return classBuilder.build();
         } catch (Exception e) {
@@ -116,7 +120,7 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
     @Override
     public ToBeBuilt addField(final FieldSpec fieldSpec) {
         final FieldSpec.Builder b = fieldSpec.toBuilder();
-        Collections.sort(b.annotations, Comparator.comparingInt((final AnnotationSpec a) -> a.toString().length()));
+        b.annotations.sort(AnnotationSpecComparator.INSTANCE);
         classBuilder.addField(b.build());
         return this;
     }
@@ -254,7 +258,7 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
     }
     //#endregion
 
-    private static String extractTypeAsNameString(final Element element) {
+    private static String extractTypeAsNameString(final @Nullable Element element) {
         return switch (element) {
             case final VariableElement ve -> ve.getSimpleName().toString() + "ve";
             case final ExecutableElement ee -> APContext.types().asElement(ee.getReturnType()).getSimpleName().toString() + "ee";
