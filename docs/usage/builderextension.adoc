@@ -7,7 +7,7 @@ This method must:
 . be static
 . have exactly two arguments:
 .. The first must be the builder
-.. The second must be the parameter on the resulting `+Builder+`
+.. The second is the value that the generated `+Builder+` method will accept as its parameter
 
 The following is an example of how it can be used:
 
@@ -27,7 +27,7 @@ public record SomeRecord (
 }
 ----
 
-You can also use it this to implement an interface on the builder. As an example, the following files can be used:
+You can also use this to have the builder implement an interface. For example, the following files can be used:
 
 .SomeIface.java
 [source,java]
