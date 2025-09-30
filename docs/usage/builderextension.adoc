@@ -1,0 +1,78 @@
+= `+@BuilderExtension+`
+
+In the event you want to add your own methods to the builder, you can use an `+@AdvancedRecordUtils.BuilderExtension+` annotation on a method.
+
+This method must:
+
+. be static
+. have exactly two arguments:
+.. The first must be the builder
+.. The second is the value that the generated `+Builder+` method will accept as its parameter
+
+The following is an example of how it can be used:
+
+.SomeRecord.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record SomeRecord (
+    String a,
+    String b
+) {
+    @AdvancedRecordUtils.BuilderExtension
+    public static void bothStrs(SomeRecordUtils.Builder builder, int someNumber) {
+        builder.a(String.valueOf(someNumber % 3))
+            .b(String.valueOf(someNumber / 3));
+    }
+}
+----
+
+You can also use this to have the builder implement an interface. For example, the following files can be used:
+
+.SomeIface.java
+[source,java]
+----
+public interface SomeIface
+{
+    SomeIface bothStrs(int someNumber);
+}
+----
+
+.SomeRecord.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record SomeRecord (
+    String a,
+    String b
+) {
+    @AdvancedRecordUtils.BuilderExtension(fromInterface = SomeIface.class)
+    public static void bothStrs(SomeRecordUtils.Builder builder, int someNumber) {
+        builder.a(String.valueOf(someNumber % 3))
+            .b(String.valueOf(someNumber / 3));
+    }
+}
+----
+
+You can also customise the return type of the method on the builder. If you return something other than `+void+`, then the method on the `+Builder+` will return the result to the caller like so:
+
+.SomeRecord.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record SomeRecord (
+    String a,
+    String b
+) {
+    @AdvancedRecordUtils.BuilderExtension
+    public static boolean bothStrs(SomeRecordUtils.Builder builder, int someNumber) {
+        builder.a(String.valueOf(someNumber % 3))
+            .b(String.valueOf(someNumber / 3));
+        return (someNumber % 3) == 0;
+    }
+}
+----
+
+// All three options are included in this generated block
+
+include::../generated-code/usage/builderextension.adoc[]

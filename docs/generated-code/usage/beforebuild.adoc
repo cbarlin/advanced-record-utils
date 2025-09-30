@@ -1,0 +1,20 @@
+.Generated Builder
+[%collapsible]
+====
+[source,java]
+----
+public final class SomeRecordUtils implements GeneratedUtil {
+    public static final class Builder {
+        public SomeRecord build() {
+            // "Calling pre-build method"
+            SomeRecord.fizzBuzz(this);
+            // "Creating new instance"
+            return new SomeRecord(
+                        this.a(),
+                    	this.b()
+                    );
+        }
+    }
+}
+----
+====

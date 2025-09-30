@@ -1,0 +1,34 @@
+= `+@BeforeBuild+`
+
+In the event you want to perform some operations on a builder before every build, you can use an `+@AdvancedRecordUtils.BeforeBuild+` annotation on a method.
+
+CAUTION: `+@BeforeBuild+` runs on every build invocation. Keep work minimal, deterministic, and side‑effect free, otherwise you may degrade build performance or observe surprising behaviour.
+
+This method must:
+
+. be static
+. return void
+. have exactly one argument - the builder.
+
+WARNING: The processor cannot validate whether you call `+build+` within the method, but doing so can lead to infinite recursion and a `+StackOverflowError+`.
+
+The following is an example of how it can be used:
+
+.SomeRecord.java
+[source,java]
+----
+@AdvancedRecordUtils
+public record SomeRecord (
+    String a,
+    String b
+) {
+    @AdvancedRecordUtils.BeforeBuild
+    public static void fizzBuzz(SomeRecordUtils.Builder builder) {
+        if ("fizz".equals(builder.a())) {
+            builder.a("buzz");
+        }
+    }
+}
+----
+
+include::../generated-code/usage/beforebuild.adoc[]

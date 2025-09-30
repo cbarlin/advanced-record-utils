@@ -8,6 +8,12 @@ include::basic-usage.adoc[leveloffset=+2]
 [#use-record-intended-constructor]
 include::targetcon.adoc[leveloffset=+2]
 
+[#use-record-beforebuild]
+include::beforebuild.adoc[leveloffset=+2]
+
+[#use-record-builderextension]
+include::builderextension.adoc[leveloffset=+2]
+
 [#use-record-wither]
 include::wither.adoc[leveloffset=+2]
 
