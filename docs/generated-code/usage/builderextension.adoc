@@ -1,0 +1,46 @@
+.Generated Builders (all three options)
+[%collapsible]
+====
+
+Version 1:
+
+[source,java]
+----
+public final class SomeRecordUtils implements GeneratedUtil {
+    public static final class Builder {
+        public Builder bothStrs(int someNumber) {
+            SomeRecord.bothStrs(this, someNumber);
+            return this;
+        }
+    }
+}
+----
+
+Version 2:
+
+[source,java]
+----
+public final class SomeRecordUtils implements GeneratedUtil {
+    public static final class Builder implements SomeIface {
+        @Override
+        public Builder bothStrs(int someNumber) {
+            SomeRecord.bothStrs(this, someNumber);
+            return this;
+        }
+    }
+}
+----
+
+Version 3:
+
+[source,java]
+----
+public final class SomeRecordUtils implements GeneratedUtil {
+    public static final class Builder {
+        public boolean bothStrs(int someNumber) {
+            return SomeRecord.bothStrs(this, someNumber);
+        }
+    }
+}
+----
+====
