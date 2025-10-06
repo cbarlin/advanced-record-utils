@@ -502,6 +502,12 @@ public @interface AdvancedRecordUtils {
          *   validate the mapped object
          */
         boolean mapStructValidatesWithAvaje() default false;
+
+        /**
+         * Should a nested record only be built when this record is built?
+         * @since 0.6.8
+         */
+        boolean delayNestedBuild() default false;
     }
 
     /**

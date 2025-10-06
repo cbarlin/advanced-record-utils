@@ -46,7 +46,7 @@ public final class AddFluentAdderFromRecord extends CollectionRecordVisitor {
 
     @Override
     public int collectionSpecificity() {
-        return 3;
+        return 6;
     }
 
     @Override

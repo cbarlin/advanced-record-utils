@@ -9,7 +9,9 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.components.BasicAnalysedComponent;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.core.wiring.CorePerComponentScope;
+import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 @Component
 @CorePerComponentScope
@@ -30,8 +32,10 @@ public final class AddField extends RecordVisitor {
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent ignored) {
         if(analysedComponent.isIntendedConstructorParam()) {
-            final FieldSpec spec = FieldSpec.builder(analysedComponent.typeName(), analysedComponent.name(), Modifier.PRIVATE)
-                .addAnnotation(CommonsConstants.Names.NULLABLE)
+            // This was changed as part of #121 when making the delayed version of the setter because
+            //   it was discovered that annotating the field doesn't work 100% of the time...
+            final TypeName annotatedType = analysedComponent.typeName().annotated(AnnotationSpec.builder(CommonsConstants.Names.NULLABLE).build());
+            final FieldSpec spec = FieldSpec.builder(annotatedType, analysedComponent.name(), Modifier.PRIVATE)
                 .build();
             analysedRecord.builderArtifact().addField(spec);
             return true;
