@@ -19,7 +19,8 @@ import java.util.List;
     // Test that the items are merged between this and the package
     builderOptions = @BuilderOptions(
         builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE,
-        setTimeNowMethodSuffix = "ToCurrent"
+        setTimeNowMethodSuffix = "ToCurrent",
+        delayNestedBuild = true
     ),
     createAllInterface = true,
     diffable = true,

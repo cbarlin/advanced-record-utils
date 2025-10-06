@@ -431,3 +431,78 @@ public record Person(
 When set to `+true+` and the "buildAndValidate" method has been created then the MapStruct integration will call that method. If false, or if there's no "buildAndValidate" method, then it will use the default "build" method.
 
 ====
+
+.`+delayNestedBuild+`
+[%collapsible]
+====
+Determine if nested records should be built immediately/eagerly (default), or built as part of the getter/building methods on the outer builder.
+
+*Type*:: `+boolean+`
+*Default*:: `+"false"+`
+
+// This would be difficult to convey in multiple blocks, so we'll leave it in one
+
+.Usage
+[source,java]
+----
+@AdvancedRecordUtils(
+    builderOptions = @BuilderOptions(
+        delayNestedBuild = true
+    )
+)
+public record Person(Address address) {}
+
+public record Address(String country, String state, String postCode) {}
+----
+
+If you were to do the following:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .address(addressBuilder -> addressBuilder.country("Australia"))
+    .address(addressBuilder -> addressBuilder.state("QLD"))
+    .address(addressBuilder -> addressBuilder.state("ACT"))
+    .address(addressBuilder -> addressBuilder.state("NT"))
+    .address(addressBuilder -> addressBuilder.state("NSW"));
+----
+
+With the default value of `+false+`, the above code leads to (approximately) the equivalent of this:
+
+.Sample method body
+[source,java]
+----
+var ab1 = AddressUtils.builder();
+ab1.country("Australia");
+var a1 = ab1.build();
+var ab2 = AddressUtils.builder(a1);
+ab2.state("QLD");
+var a2 = ab2.build();
+var ab3 = AddressUtils.builder(a2);
+ab3.state("ACT");
+var a3 = ab3.build();
+var ab4 = AddressUtils.builder(a3);
+ab4.state("NT");
+var a4 = ab4.build()
+var ab5 = AddressUtils.builder(a4);
+ab5.state("NSW");
+var a5 = ab5.build();
+----
+
+Which isn't overly efficient. When setting the value to `+true+`, the above code would be the same as:
+
+.Sample method body
+[source,java]
+----
+PersonUtils.builder()
+    .address(addressBuilder -> addressBuilder.country("Australia")
+                                             .state("QLD")
+                                             .state("ACT")
+                                             .state("NT")
+                                             .state("NSW"));
+----
+
+Which is much more efficient. However, this does come with the negative that taking the "root" element of a deeply nested structure and converting back to the builder will convert all non-collection elements in the tree back into builders, which can also be an expensive operation. Depending on your usage of withers and mergers, this can occur quite often.
+
+====

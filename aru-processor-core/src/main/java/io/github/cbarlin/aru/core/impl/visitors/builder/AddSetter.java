@@ -34,7 +34,7 @@ public final class AddSetter extends RecordVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         if(analysedComponent.isIntendedConstructorParam()) {
             final String name = analysedComponent.name();
             final ParameterSpec param = ParameterSpec.builder(analysedComponent.typeName(), name, Modifier.FINAL)
