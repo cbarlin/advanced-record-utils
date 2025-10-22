@@ -15,9 +15,9 @@ import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_SET;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__SETS_FACTORY;
 
-public abstract sealed class EclipseSetCollectionHandler extends EclipseCollectionHandler permits EclipseImmutableSet, EclipseMutableSet, EclipseMultiReaderSet {
+public abstract sealed class EclipseSetCollectionHandler extends EclipseCollectionHandler permits EclipseImmutableSet, EclipseMutableSet {
 
-    protected EclipseSetCollectionHandler(ClassName classNameOnComponent) {
+    protected EclipseSetCollectionHandler(final ClassName classNameOnComponent) {
         super(classNameOnComponent, ECLIPSE_COLLECTIONS__MUTABLE_SET, ECLIPSE_COLLECTIONS__IMMUTABLE_SET, ECLIPSE_COLLECTIONS__SETS_FACTORY);
     }
 
@@ -50,13 +50,13 @@ public abstract sealed class EclipseSetCollectionHandler extends EclipseCollecti
                         "return new $T(upd.difference(og), og.intersect(upd), og.difference(upd))",
                         collectionResultRecord
                 )
-                .nextControlFlow("else if ($T.nonNull(original))", OBJECTS, OBJECTS)
+                .nextControlFlow("else if ($T.nonNull(original))", OBJECTS)
                 .addStatement(
                         "return new $T(original.toImmutableSet(), $T.immutable.of(), $T.immutable.of())",
                         collectionResultRecord,
                         factoryClassName, factoryClassName
                 )
-                .nextControlFlow("else if ($T.nonNull(updated))", OBJECTS, OBJECTS)
+                .nextControlFlow("else if ($T.nonNull(updated))", OBJECTS)
                 .addStatement(
                         "return new $T(updated.toImmutableSet(), $T.immutable.of(), $T.immutable.of())",
                         collectionResultRecord,

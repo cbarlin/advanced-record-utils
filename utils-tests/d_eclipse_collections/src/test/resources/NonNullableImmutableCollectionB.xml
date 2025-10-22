@@ -1,0 +1,71 @@
+<NonNullableImmutableCollectionBag>
+    <immutableSetOfEnum>MONDAY</immutableSetOfEnum>
+    <immutableSetOfEnum>TUESDAY</immutableSetOfEnum>
+    <immutableSetOfString>A</immutableSetOfString>
+    <immutableSetOfString>B</immutableSetOfString>
+    <immutableSetOfString>C</immutableSetOfString>
+    <immutableSetOfRecord randomAttribute="0">
+        <iShouldBeAnElement>A</iShouldBeAnElement>
+    </immutableSetOfRecord>
+    <immutableSetOfRecord randomAttribute="0">
+        <iShouldBeAnElement>B</iShouldBeAnElement>
+    </immutableSetOfRecord>
+    <immutableSetOfRecord randomAttribute="0">
+        <iShouldBeAnElement>C</iShouldBeAnElement>
+    </immutableSetOfRecord>
+    <immutableListOfEnum>TUESDAY</immutableListOfEnum>
+    <immutableListOfEnum>MONDAY</immutableListOfEnum>
+    <immutableListOfEnum>TUESDAY</immutableListOfEnum>
+    <immutableListOfEnum>MONDAY</immutableListOfEnum>
+    <immutableListOfEnum>TUESDAY</immutableListOfEnum>
+    <immutableListOfString>B</immutableListOfString>
+    <immutableListOfString>A</immutableListOfString>
+    <immutableListOfString>A</immutableListOfString>
+    <immutableListOfString>A</immutableListOfString>
+    <immutableListOfString>B</immutableListOfString>
+    <immutableListOfString>C</immutableListOfString>
+    <immutableListOfRecord randomAttribute="0">
+        <iShouldBeAnElement>A</iShouldBeAnElement>
+    </immutableListOfRecord>
+    <immutableListOfRecord randomAttribute="0">
+        <iShouldBeAnElement>B</iShouldBeAnElement>
+    </immutableListOfRecord>
+    <immutableListOfRecord randomAttribute="0">
+        <iShouldBeAnElement>C</iShouldBeAnElement>
+    </immutableListOfRecord>
+    <mutableSetOfEnum>MONDAY</mutableSetOfEnum>
+    <mutableSetOfEnum>TUESDAY</mutableSetOfEnum>
+    <mutableSetOfString>A</mutableSetOfString>
+    <mutableSetOfString>B</mutableSetOfString>
+    <mutableSetOfString>C</mutableSetOfString>
+    <mutableSetOfRecord randomAttribute="0">
+        <iShouldBeAnElement>B</iShouldBeAnElement>
+    </mutableSetOfRecord>
+    <mutableSetOfRecord randomAttribute="0">
+        <iShouldBeAnElement>C</iShouldBeAnElement>
+    </mutableSetOfRecord>
+    <mutableListOfEnum>MONDAY</mutableListOfEnum>
+    <mutableListOfEnum>TUESDAY</mutableListOfEnum>
+    <mutableListOfEnum>MONDAY</mutableListOfEnum>
+    <mutableListOfEnum>TUESDAY</mutableListOfEnum>
+    <mutableListOfString>A</mutableListOfString>
+    <mutableListOfString>A</mutableListOfString>
+    <mutableListOfString>A</mutableListOfString>
+    <mutableListOfString>B</mutableListOfString>
+    <mutableListOfString>C</mutableListOfString>
+    <mutableListOfRecord randomAttribute="0">
+        <iShouldBeAnElement>B</iShouldBeAnElement>
+    </mutableListOfRecord>
+    <mutableListOfRecord randomAttribute="0">
+        <iShouldBeAnElement>C</iShouldBeAnElement>
+    </mutableListOfRecord>
+    <mutableDoubleList>5.0</mutableDoubleList>
+    <immutableBooleanList>true</immutableBooleanList>
+    <immutableBooleanList>true</immutableBooleanList>
+    <immutableBooleanList>true</immutableBooleanList>
+    <mutableBooleanList>false</mutableBooleanList>
+    <mutableBooleanList>true</mutableBooleanList>
+    <immutableBooleanSet>true</immutableBooleanSet>
+    <mutableBooleanSet>false</mutableBooleanSet>
+    <mutableBooleanSet>true</mutableBooleanSet>
+</NonNullableImmutableCollectionBag>

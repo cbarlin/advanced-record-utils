@@ -33,7 +33,7 @@ public abstract class CollectionRecordVisitor extends RecordVisitor {
     protected abstract int collectionSpecificity();
 
     @Override
-    protected final boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected final boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         return visitCollectionComponent();
     }
 

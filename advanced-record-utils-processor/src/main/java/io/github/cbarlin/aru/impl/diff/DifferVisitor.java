@@ -1,7 +1,5 @@
 package io.github.cbarlin.aru.impl.diff;
 
-import java.util.Locale;
-
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffEvaluationMode;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
@@ -19,6 +17,8 @@ import io.github.cbarlin.aru.prism.prison.BuilderOptionsPrism;
 import io.github.cbarlin.aru.prism.prison.DiffOptionsPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+
+import java.util.Locale;
 
 public abstract class DifferVisitor extends RecordVisitor {
 
@@ -66,7 +66,7 @@ public abstract class DifferVisitor extends RecordVisitor {
     }
 
     protected ToBeBuiltRecord collectionDiffRecord(final AnalysedComponent acc) {
-        final String innerClassName = typeNameToPartialMethodName(acc.typeName());
+        final String innerClassName = "DiffOf" + typeNameToPartialMethodName(acc.typeName());
         return (ToBeBuiltRecord) differResult.childRecordArtifact(innerClassName, Claims.DIFFER_COLLECTION_RESULT);
     }
 

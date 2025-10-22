@@ -92,6 +92,7 @@ public enum Constants {
         public static final ClassName CONSTRAINT_VIOLATION = ClassName.get("jakarta.validation", "ConstraintViolation");
         public static final ClassName CONSUMER = ClassName.get(JAVA_UTIL_FUNCTION, "Consumer");
         public static final ClassName DATE_TIME_FORMATTER = ClassName.get(JAVA_TIME + ".format","DateTimeFormatter");
+        public static final ClassName DEQUE = ClassName.get(JAVA_UTIL, "Deque");
         public static final ClassName ENUM = ClassName.get(JAVA_LANG, "Enum");
         public static final ClassName ENUM_SET = ClassName.get(JAVA_UTIL, "EnumSet");
         public static final ClassName FUNCTION = ClassName.get(JAVA_UTIL_FUNCTION, "Function");

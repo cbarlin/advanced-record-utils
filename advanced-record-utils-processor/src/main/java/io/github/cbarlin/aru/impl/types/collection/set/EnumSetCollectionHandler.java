@@ -119,6 +119,7 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
+        methodBuilder.addComment("Created in $L", this.getClass().getCanonicalName());
         EnumSetCollectionHandler.convertImmutable(methodBuilder, fieldName, assignmentName, innerTypeName);
     }
 

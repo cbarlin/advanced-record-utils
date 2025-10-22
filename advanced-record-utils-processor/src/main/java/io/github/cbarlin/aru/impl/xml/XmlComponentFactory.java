@@ -4,8 +4,10 @@ import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
 import io.avaje.inject.Secondary;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
+import io.github.cbarlin.aru.core.artifacts.PreBuilt;
 import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
+import io.github.cbarlin.aru.impl.types.ComponentTargetingLibraryLoaded;
 import io.github.cbarlin.aru.impl.types.dependencies.EclipseAnalysedCollectionComponent;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
 import io.github.cbarlin.aru.impl.xml.inferencer.XmlAttributeMapper;
@@ -25,9 +27,12 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import java.util.Objects;
 import java.util.Optional;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTION;
+import static io.github.cbarlin.aru.impl.Constants.Claims.XML_STATIC_CLASS;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__RICH_ITERABLE;
 
 @Factory
@@ -78,6 +83,17 @@ public final class XmlComponentFactory {
     }
 
     @Bean
+    Optional<LibraryLoadedXmlStaticHelper> findLibraryLoadedXmlStaticHelper(final Optional<ComponentTargetingLibraryLoaded> ctll) {
+        return ctll.map(componentTargetingLibraryLoaded -> {
+           final PreBuilt xmlChild = componentTargetingLibraryLoaded.target().utilsClassChild(XML_UTILS_CLASS, XML_STATIC_CLASS);
+           if (Objects.nonNull(xmlChild)){
+               return new LibraryLoadedXmlStaticHelper(xmlChild.className(), componentTargetingLibraryLoaded.target());
+           }
+           return null;
+        });
+    }
+
+    @Bean
     @Secondary
     Optional<AnalysedCollectionComponent> unwrapOptional(final Optional<AnalysedOptionalComponent> opt) {
         if (opt.isEmpty()) {
@@ -86,9 +102,9 @@ public final class XmlComponentFactory {
         final AnalysedOptionalComponent component = opt.get();
 
         if (
-            component.unNestedPrimaryTypeName() instanceof ParameterizedTypeName ptn &&
+            component.unNestedPrimaryTypeName() instanceof final ParameterizedTypeName ptn &&
             ptn.typeArguments.size() == 1 &&
-            component.innerType() instanceof DeclaredType declaredType &&
+            component.innerType() instanceof final DeclaredType declaredType &&
             declaredType.getTypeArguments().size() == 1
         ) {
             final TypeMirror innerType = declaredType.getTypeArguments().getFirst();

@@ -1,9 +1,5 @@
 package io.github.cbarlin.aru.impl.diff.utils;
 
-import java.util.Set;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
@@ -15,6 +11,9 @@ import io.github.cbarlin.aru.impl.types.collection.CollectionHandlerHelper;
 import io.github.cbarlin.aru.impl.wiring.DiffPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+import java.util.Set;
 
 @Singleton
 @DiffPerComponentScope
@@ -36,7 +35,7 @@ public final class CollectionDiffCreation extends DifferVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent acc) {
+    protected boolean visitComponentImpl(final AnalysedComponent acc) {
         final String methodName = hasChangedStaticMethodName(acc.typeName());
         if (!processedSpecs.add(methodName)) {
             return true;

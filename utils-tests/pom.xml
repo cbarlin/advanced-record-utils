@@ -18,10 +18,10 @@
         <module>a_core_dependent</module>
         <module>c_deeply_nested_commons_lang</module>
         <module>c_deeply_nested_structure</module>
-        <module>d_eclipse_collections</module>
         <module>b_type_alias</module>
         <module>b_infer_xml</module>
         <module>c_odd_types</module>
+        <module>d_eclipse_collections</module>
     </modules>
     <name>Advanced Record Utils - Tests</name>
 

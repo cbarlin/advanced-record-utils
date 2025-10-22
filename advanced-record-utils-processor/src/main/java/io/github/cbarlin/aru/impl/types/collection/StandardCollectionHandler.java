@@ -84,42 +84,70 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void writeNullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
-            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
-            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
-            .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
-            .endControlFlow()
-            .addStatement("this.$L.add($L)", component.name(), component.name());
+        if (mutableClassName != classNameOnComponent) {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                 .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                 .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
+                 .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
+                 .endControlFlow()
+                 .addStatement("this.$L.add($L)", component.name(), component.name());
+        } else {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                 .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                 .endControlFlow()
+                 .addStatement("this.$L.add($L)", component.name(), component.name());
+        }
     }
 
     @Override
     public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
-            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
-            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
-            .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
-            .endControlFlow()
-            .addStatement("this.$L.remove($L)", component.name(), component.name());
+        if (mutableClassName != classNameOnComponent) {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                         .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                         .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
+                         .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
+                         .endControlFlow()
+                         .addStatement("this.$L.remove($L)", component.name(), component.name());
+        } else {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                         .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                         .endControlFlow()
+                         .addStatement("this.$L.remove($L)", component.name(), component.name());
+        }
     }
 
     @Override
     public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
-            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
-            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
-            .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
-            .endControlFlow()
-            .addStatement("this.$L.removeIf($L)", component.name(), component.name());
+        if (mutableClassName != classNameOnComponent) {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                         .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                         .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
+                         .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
+                         .endControlFlow()
+                         .addStatement("this.$L.removeIf($L)", component.name(), component.name());
+        } else {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                         .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                         .endControlFlow()
+                         .addStatement("this.$L.removeIf($L)", component.name(), component.name());
+        }
     }
 
     @Override
     public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
-            .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
-            .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
-            .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
-            .endControlFlow()
-            .addStatement("this.$L.retainAll($L)", component.name(), component.name());
+        if (mutableClassName != classNameOnComponent) {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                 .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                 .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
+                 .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
+                 .endControlFlow()
+                 .addStatement("this.$L.retainAll($L)", component.name(), component.name());
+        } else {
+            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+                 .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
+                 .endControlFlow()
+                 .addStatement("this.$L.retainAll($L)", component.name(), component.name());
+        }
     }
 
     @Override
@@ -210,7 +238,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
         convertToImmutable(methodBuilder, "this." + component.name(), "___immutable", innerType);
         methodBuilder.addStatement("return ___immutable")
             .returns(component.typeName())
-            .addJavadoc("Returns the current value of {@code $L}", component.name());;
+            .addJavadoc("Returns the current value of {@code $L}", component.name());
     }
 
     @Override

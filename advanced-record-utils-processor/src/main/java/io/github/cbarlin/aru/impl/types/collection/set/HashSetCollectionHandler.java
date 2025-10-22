@@ -17,6 +17,8 @@ public final class HashSetCollectionHandler extends SetCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
-        methodBuilder.addStatement("final $T<$T> $L = $L", classNameOnComponent, innerTypeName, assignmentName, fieldName);
+        methodBuilder
+            .addComment("Created in $L", this.getClass().getCanonicalName())
+            .addStatement("final $T<$T> $L = $L", classNameOnComponent, innerTypeName, assignmentName, fieldName);
     }
 }

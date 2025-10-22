@@ -54,7 +54,7 @@ public final class AddRetainAll extends CollectionRecordVisitor {
         final MethodSpec.Builder method = builderClass.createMethod(methodName, claimableOperation, analysedCollectionComponent.element());
         final String name = analysedCollectionComponent.name();
         final TypeName innerType = analysedCollectionComponent.unNestedPrimaryTypeName();
-        final ParameterizedTypeName ptn = ParameterizedTypeName.get(CommonsConstants.Names.COLLECTION, innerType);
+        final TypeName ptn = (!innerType.isPrimitive()) ? ParameterizedTypeName.get(CommonsConstants.Names.COLLECTION, innerType) : analysedCollectionComponent.typeNameWithoutAnnotations();
 
         final ParameterSpec param = ParameterSpec.builder(ptn, name, Modifier.FINAL)
             .addJavadoc("The collection of items to be retained in the collection")
