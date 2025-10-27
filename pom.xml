@@ -75,7 +75,7 @@
         <stax2-api.version>4.2.2</stax2-api.version>
         <vavr.version>0.10.7</vavr.version>
         <woodstox.version>7.1.1</woodstox.version>
-        <xmlunit.version>2.10.4</xmlunit.version>
+        <xmlunit.version>2.11.0</xmlunit.version>
         <rainbowgum.version>0.8.2</rainbowgum.version>
 
         <!-- Maven versions -->
