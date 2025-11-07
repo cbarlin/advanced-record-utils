@@ -34,7 +34,7 @@ public final class PrimitiveHelper {
         final TypeName paramTn = ECLIPSE_COLLECTIONS_EXCHANGE__PRIMITIVE_ITERABLE.get(innerType);
         final ParameterSpec param = ParameterSpec.builder(paramTn, fieldName, Modifier.FINAL)
                 .addJavadoc("A collection to be removed from the current state")
-                .addAnnotation(NOT_NULL)
+                .addAnnotation(NULLABLE)
                 .build();
         final MethodSpec.Builder method = builder
                 .createMethod(addAllMethodName, visitor.claimableOperation(), COLLECTION)
@@ -107,7 +107,7 @@ public final class PrimitiveHelper {
         Objects.requireNonNull(paramTn, () -> "Cannot find an iterable for " + innerType);
         final ParameterSpec param = ParameterSpec.builder(paramTn, fieldName, Modifier.FINAL)
              .addJavadoc("An iterable to be merged into the collection")
-             .addAnnotation(NOT_NULL)
+             .addAnnotation(NULLABLE)
              .build();
         final MethodSpec.Builder method = builder
                 .createMethod(addAllMethodName, visitor.claimableOperation(), ITERABLE)

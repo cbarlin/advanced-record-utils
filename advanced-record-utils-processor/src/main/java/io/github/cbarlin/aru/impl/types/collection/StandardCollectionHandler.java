@@ -84,7 +84,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void writeNullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        if (mutableClassName != classNameOnComponent) {
+        if (!mutableClassName.equals(classNameOnComponent)) {
             methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
                  .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                  .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
@@ -101,7 +101,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        if (mutableClassName != classNameOnComponent) {
+        if (!mutableClassName.equals(classNameOnComponent)) {
             methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
                          .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                          .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
@@ -118,7 +118,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        if (mutableClassName != classNameOnComponent) {
+        if (!mutableClassName.equals(classNameOnComponent)) {
             methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
                          .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                          .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
@@ -135,7 +135,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
 
     @Override
     public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        if (mutableClassName != classNameOnComponent) {
+        if (!mutableClassName.equals(classNameOnComponent)) {
             methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
                  .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                  .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)

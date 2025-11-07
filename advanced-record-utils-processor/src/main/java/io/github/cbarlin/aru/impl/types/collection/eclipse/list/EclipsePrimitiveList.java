@@ -173,7 +173,7 @@ public final class EclipsePrimitiveList extends EclipseCollectionHandler {
     @Override
     public void addNullableAutoField(final AnalysedComponent ecc, final ToBeBuilt addFieldTo, final TypeName innerType) {
         final FieldSpec fSpec = FieldSpec.builder(mutableClassName, ecc.name(), Modifier.PRIVATE)
-                .addAnnotation(NON_NULL)
+                .addAnnotation(NULLABLE)
                 .build();
         addFieldTo.addField(fSpec);
     }
@@ -224,7 +224,7 @@ public final class EclipsePrimitiveList extends EclipseCollectionHandler {
             .addStatement("final $T added = $T.mutable.empty()", mutableClassName, factoryClassName)
             .addStatement("final $T removed = $T.mutable.empty()", mutableClassName, factoryClassName)
             .addStatement("final $T o = $T.requireNonNullElse(original, $T.immutable.empty())", genericList, OBJECTS, factoryClassName)
-            .addStatement("final $T u = $T.requireNonNullElse(original, $T.immutable.empty())", genericList, OBJECTS, factoryClassName)
+            .addStatement("final $T u = $T.requireNonNullElse(updated, $T.immutable.empty())", genericList, OBJECTS, factoryClassName)
             .addCode(BOOLEAN_DIFF_BLOCK + "\n")
             .addStatement("return new $T(added.toImmutable(), common.toImmutable(), removed.toImmutable())", collectionResultRecord);
     }

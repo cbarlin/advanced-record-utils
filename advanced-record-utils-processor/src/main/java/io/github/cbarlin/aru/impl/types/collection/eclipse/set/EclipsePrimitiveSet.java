@@ -110,7 +110,7 @@ public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
     @Override
     public void addNullableAutoField(final AnalysedComponent ecc, final ToBeBuilt addFieldTo, final TypeName innerType) {
         final FieldSpec fSpec = FieldSpec.builder(mutableClassName, ecc.name(), Modifier.PRIVATE)
-                .addAnnotation(NON_NULL)
+                .addAnnotation(NULLABLE)
                 .build();
         addFieldTo.addField(fSpec);
     }

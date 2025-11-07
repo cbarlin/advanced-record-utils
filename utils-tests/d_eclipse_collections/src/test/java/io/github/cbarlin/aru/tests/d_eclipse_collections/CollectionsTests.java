@@ -57,7 +57,7 @@ class CollectionsTests {
                 .build();
         // Merge
         final NonNullableImmutableCollectionBag f = d.merge(e);
-        assertThat(c.immutableSetOfEnum())
+        assertThat(f.immutableSetOfEnum())
                 .singleElement()
                 .isEqualTo(AnEnumInDep.TUESDAY);
         // XML

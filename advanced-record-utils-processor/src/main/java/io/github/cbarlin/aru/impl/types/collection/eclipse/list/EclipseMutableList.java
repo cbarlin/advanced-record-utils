@@ -14,7 +14,6 @@ public final class EclipseMutableList extends EclipseListCollectionHandler {
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
         methodBuilder
-            .addComment("Created in $L", this.getClass().getCanonicalName())
             .addStatement("final $T<$T> $L = $L.clone()", mutableClassName, innerTypeName, assignmentName, fieldName);
     }
 }
