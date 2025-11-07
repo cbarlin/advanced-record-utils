@@ -66,7 +66,7 @@ public final class PrimitiveHelper {
                                                  .build();
         final MethodSpec.Builder method = builder
             .createMethod(addAllMethodName, visitor.claimableOperation(), COLLECTION)
-            .addJavadoc("Adds all elements of the provided collection to {@code $L}", fieldName)
+            .addJavadoc("Removes all elements of the provided collection from {@code $L}", fieldName)
             .addParameter(param)
             .returns(builder.className())
             .addAnnotation(NOT_NULL)

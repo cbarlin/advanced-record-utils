@@ -171,7 +171,7 @@ public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
             )
             .nextControlFlow("else if ($T.nonNull(original))", OBJECTS)
             .addStatement(
-                "return new $T(original.toImmutable(), $T.immutable.of(), $T.immutable.of())",
+                "return new $T($T.immutable.of(), $T.immutable.of(), original.toImmutable())",
                 collectionResultRecord,
                 factoryClassName, factoryClassName
             )
