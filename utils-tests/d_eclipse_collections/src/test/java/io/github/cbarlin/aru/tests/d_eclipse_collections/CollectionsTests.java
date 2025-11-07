@@ -5,7 +5,7 @@ import io.github.cbarlin.aru.tests.b_infer_xml.InferMatchingNameUtils;
 import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
 import org.junit.jupiter.api.Test;
 
-import java.util.EnumSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,9 +62,10 @@ class CollectionsTests {
                 .isEqualTo(AnEnumInDep.TUESDAY);
         // XML
         ConvertToXml.compareXml(out -> assertDoesNotThrow(() -> f.writeSelfTo(out)), "NonNullableImmutableCollectionA.xml");
+        final List<AnEnumInDep> enums = List.of(AnEnumInDep.MONDAY, AnEnumInDep.TUESDAY);
         final NonNullableImmutableCollectionBag g = f.with()
-                .addImmutableSetOfEnum(EnumSet.allOf(AnEnumInDep.class))
-                .addImmutableSetOfEnum(EnumSet.allOf(AnEnumInDep.class))
+                .addImmutableSetOfEnum(enums)
+                .addImmutableSetOfEnum(enums)
                 .addImmutableSetOfString("A")
                 .addImmutableSetOfString("A")
                 .addImmutableSetOfString("A")
@@ -72,8 +73,8 @@ class CollectionsTests {
                 .addImmutableSetOfString("C")
                 .addImmutableSetOfRecord(bu -> bu.iShouldBeAnElement("B"))
                 .addImmutableSetOfRecord(bu -> bu.iShouldBeAnElement("C"))
-                .addImmutableListOfEnum(EnumSet.allOf(AnEnumInDep.class))
-                .addImmutableListOfEnum(EnumSet.allOf(AnEnumInDep.class))
+                .addImmutableListOfEnum(enums)
+                .addImmutableListOfEnum(enums)
                 .addImmutableListOfString("A")
                 .addImmutableListOfString("A")
                 .addImmutableListOfString("A")
@@ -81,8 +82,8 @@ class CollectionsTests {
                 .addImmutableListOfString("C")
                 .addImmutableListOfRecord(bu -> bu.iShouldBeAnElement("B"))
                 .addImmutableListOfRecord(bu -> bu.iShouldBeAnElement("C"))
-                .addMutableSetOfEnum(EnumSet.allOf(AnEnumInDep.class))
-                .addMutableSetOfEnum(EnumSet.allOf(AnEnumInDep.class))
+                .addMutableSetOfEnum(enums)
+                .addMutableSetOfEnum(enums)
                 .addMutableSetOfString("A")
                 .addMutableSetOfString("A")
                 .addMutableSetOfString("A")
@@ -90,8 +91,8 @@ class CollectionsTests {
                 .addMutableSetOfString("C")
                 .addMutableSetOfRecord(bu -> bu.iShouldBeAnElement("B"))
                 .addMutableSetOfRecord(bu -> bu.iShouldBeAnElement("C"))
-                .addMutableListOfEnum(EnumSet.allOf(AnEnumInDep.class))
-                .addMutableListOfEnum(EnumSet.allOf(AnEnumInDep.class))
+                .addMutableListOfEnum(enums)
+                .addMutableListOfEnum(enums)
                 .addMutableListOfString("A")
                 .addMutableListOfString("A")
                 .addMutableListOfString("A")
