@@ -1,17 +1,8 @@
 <NonNullableImmutableCollectionBag>
-    <immutableSetOfEnum>MONDAY</immutableSetOfEnum>
     <immutableSetOfEnum>TUESDAY</immutableSetOfEnum>
-    <immutableSetOfString>A</immutableSetOfString>
     <immutableSetOfString>B</immutableSetOfString>
-    <immutableSetOfString>C</immutableSetOfString>
     <immutableSetOfRecord randomAttribute="0">
         <iShouldBeAnElement>A</iShouldBeAnElement>
-    </immutableSetOfRecord>
-    <immutableSetOfRecord randomAttribute="0">
-        <iShouldBeAnElement>B</iShouldBeAnElement>
-    </immutableSetOfRecord>
-    <immutableSetOfRecord randomAttribute="0">
-        <iShouldBeAnElement>C</iShouldBeAnElement>
     </immutableSetOfRecord>
     <immutableListOfEnum>TUESDAY</immutableListOfEnum>
     <immutableListOfEnum>MONDAY</immutableListOfEnum>
@@ -33,17 +24,7 @@
     <immutableListOfRecord randomAttribute="0">
         <iShouldBeAnElement>C</iShouldBeAnElement>
     </immutableListOfRecord>
-    <mutableSetOfEnum>MONDAY</mutableSetOfEnum>
-    <mutableSetOfEnum>TUESDAY</mutableSetOfEnum>
-    <mutableSetOfString>A</mutableSetOfString>
     <mutableSetOfString>B</mutableSetOfString>
-    <mutableSetOfString>C</mutableSetOfString>
-    <mutableSetOfRecord randomAttribute="0">
-        <iShouldBeAnElement>B</iShouldBeAnElement>
-    </mutableSetOfRecord>
-    <mutableSetOfRecord randomAttribute="0">
-        <iShouldBeAnElement>C</iShouldBeAnElement>
-    </mutableSetOfRecord>
     <mutableListOfEnum>MONDAY</mutableListOfEnum>
     <mutableListOfEnum>TUESDAY</mutableListOfEnum>
     <mutableListOfEnum>MONDAY</mutableListOfEnum>
