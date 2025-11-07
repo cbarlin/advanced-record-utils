@@ -42,6 +42,8 @@ public final class BasicAnalysedComponent implements AnalysedComponent {
     private final TypeName typeName;
     private final Map<ClaimableOperation, RecordVisitor> claimedOperations = new HashMap<>();
     private final Optional<ProcessingTarget> targetAnalysedType;
+    private final TypeName typeNameWithoutAnnotations;
+    private final Optional<ClassName> className;
 
     /**
      * Construction of the Analysed component. This construction does handle detecting
@@ -63,6 +65,11 @@ public final class BasicAnalysedComponent implements AnalysedComponent {
         this.componentType = element.asType();
         this.typeName = TypeName.get(componentType);
         this.targetAnalysedType = targetAnalysedType;
+        this.typeNameWithoutAnnotations = this.typeName.withoutAnnotations();
+        className = targetAnalysedType
+                .map(ProcessingTarget::typeElement)
+                .map(ClassName::get)
+                .map(ClassName::withoutAnnotations);
     }
 
     @Override
@@ -151,6 +158,11 @@ public final class BasicAnalysedComponent implements AnalysedComponent {
     }
 
     @Override
+    public Optional<ClassName> className() {
+        return className;
+    }
+
+    @Override
     public Optional<ProcessingTarget> targetAnalysedType() {
         return targetAnalysedType;
     }
@@ -159,5 +171,10 @@ public final class BasicAnalysedComponent implements AnalysedComponent {
     public String toString() {
         return className().map(ClassName::canonicalName)
             .orElse(typeName().toString());
-    }    
+    }
+
+    @Override
+    public TypeName typeNameWithoutAnnotations() {
+        return typeNameWithoutAnnotations;
+    }
 }

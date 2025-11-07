@@ -29,7 +29,9 @@ public abstract class ListCollectionHandler extends StandardCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String targetVariableName, final TypeName innerTypeName) {
-        methodBuilder.addStatement("final $T<$T> $L = $L", classNameOnComponent, innerTypeName, targetVariableName, fieldName);
+        methodBuilder
+            .addComment("No immutable version exists - returning original object")
+            .addStatement("final $T<$T> $L = $L", classNameOnComponent, innerTypeName, targetVariableName, fieldName);
     }
 
     @Override

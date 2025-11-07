@@ -51,9 +51,12 @@ public final class AddRemovePredicate extends CollectionRecordVisitor {
         final MethodSpec.Builder method = builderClass.createMethod(methodName, claimableOperation, analysedCollectionComponent.element());
         final String name = analysedCollectionComponent.name();
         final TypeName innerType = analysedCollectionComponent.unNestedPrimaryTypeName();
-        final ParameterizedTypeName ptn = ParameterizedTypeName.get(Constants.Names.PREDICATE, innerType);
+        if (innerType.isPrimitive()) {
+            return false;
+        }
+        final TypeName paramTypeName = ParameterizedTypeName.get(Constants.Names.PREDICATE, innerType);
 
-        final ParameterSpec param = ParameterSpec.builder(ptn, name, Modifier.FINAL)
+        final ParameterSpec param = ParameterSpec.builder(paramTypeName, name, Modifier.FINAL)
             .addJavadoc("A predicate to use to evaluate if an item should be removed from a collection")
             .addAnnotation(NON_NULL)
             .build();

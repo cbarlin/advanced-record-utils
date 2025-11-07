@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.xml;
 
-import java.util.Optional;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
-
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
@@ -17,6 +11,11 @@ import io.github.cbarlin.aru.prism.prison.XmlOptionsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import java.util.Optional;
 
 @Factory
 @XmlPerRecordScope
@@ -62,8 +61,8 @@ public final class XmlRecordFactory {
     private static Optional<PackageElement> findPackageElement(final TypeElement typeElement) {
         final Element el = typeElement.getEnclosingElement();
         return switch (el) {
-          case PackageElement packageElement -> Optional.of(packageElement);
-          case TypeElement te -> findPackageElement(te);
+          case final PackageElement packageElement -> Optional.of(packageElement);
+          case final TypeElement te -> findPackageElement(te);
           default -> Optional.empty();
         };
     }

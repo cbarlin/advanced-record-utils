@@ -33,6 +33,21 @@ class CollectionsTests {
         assertNotNull(a.linkedListOfString());
         assertNotNull(a.vectorOfString());
         assertNotNull(a.stackOfString());
+        assertNotNull(a.queueOfEnum());
+        assertNotNull(a.dequeOfEnum());
+        assertNotNull(a.arrayDeque());
+        assertNotNull(a.concurrentLinkedQueue());
+        assertNotNull(a.concurrentLinkedDeque());
+        assertNotNull(a.linkedBlockingDeque());
+        assertNotNull(a.linkedBlockingQueue());
+        assertNotNull(a.linkedTransferQueue());
+        assertNotNull(a.priorityBlockingQueue());
+        assertNotNull(a.synchronousQueue());
+        assertNotNull(a.priorityQueue());
+        assertNotNull(a.linkedHashSet());
+        assertNotNull(a.concurrentSkipListSet());
+        assertNotNull(a.copyOnWriteArraySet());
+        assertNotNull(a.copyOnWriteArrayList());
         // And the "generic" ("Set", "List") ones should not permit me to add to them
         assertThrows(UnsupportedOperationException.class, () -> a.setOfEnum().add(AnEnum.ONE));
         assertThrows(UnsupportedOperationException.class, () -> a.setOfString().add("A"));
@@ -163,6 +178,21 @@ class CollectionsTests {
         assertNotNull(a.linkedListOfString());
         assertNotNull(a.vectorOfString());
         assertNotNull(a.stackOfString());
+        assertNotNull(a.queueOfEnum());
+        assertNotNull(a.dequeOfEnum());
+        assertNotNull(a.arrayDeque());
+        assertNotNull(a.concurrentLinkedQueue());
+        assertNotNull(a.concurrentLinkedDeque());
+        assertNotNull(a.linkedBlockingDeque());
+        assertNotNull(a.linkedBlockingQueue());
+        assertNotNull(a.linkedTransferQueue());
+        assertNotNull(a.priorityBlockingQueue());
+        assertNotNull(a.synchronousQueue());
+        assertNotNull(a.priorityQueue());
+        assertNotNull(a.linkedHashSet());
+        assertNotNull(a.concurrentSkipListSet());
+        assertNotNull(a.copyOnWriteArraySet());
+        assertNotNull(a.copyOnWriteArrayList());
         // And the "generic" ("Set", "List") ones should not permit me to add to them
         assertThat(a.setOfEnum())
             .isInstanceOf(EnumSet.class);
@@ -295,6 +325,21 @@ class CollectionsTests {
         assertNull(a.linkedListOfString());
         assertNull(a.vectorOfString());
         assertNull(a.stackOfString());
+        assertNull(a.queueOfEnum());
+        assertNull(a.dequeOfEnum());
+        assertNull(a.arrayDeque());
+        assertNull(a.concurrentLinkedQueue());
+        assertNull(a.concurrentLinkedDeque());
+        assertNull(a.linkedBlockingDeque());
+        assertNull(a.linkedBlockingQueue());
+        assertNull(a.linkedTransferQueue());
+        assertNull(a.priorityBlockingQueue());
+        assertNull(a.synchronousQueue());
+        assertNull(a.priorityQueue());
+        assertNull(a.linkedHashSet());
+        assertNull(a.concurrentSkipListSet());
+        assertNull(a.copyOnWriteArraySet());
+        assertNull(a.copyOnWriteArrayList());
         // If I try and add something though, it should be non-modifiable
         final NullableImmutableCollectionBag b = NullableImmutableCollectionBagUtils.builder()
             .addSetOfEnum(AnEnum.ONE)
@@ -423,6 +468,21 @@ class CollectionsTests {
         assertNull(a.linkedListOfString());
         assertNull(a.vectorOfString());
         assertNull(a.stackOfString());
+        assertNull(a.queueOfEnum());
+        assertNull(a.dequeOfEnum());
+        assertNull(a.arrayDeque());
+        assertNull(a.concurrentLinkedQueue());
+        assertNull(a.concurrentLinkedDeque());
+        assertNull(a.linkedBlockingDeque());
+        assertNull(a.linkedBlockingQueue());
+        assertNull(a.linkedTransferQueue());
+        assertNull(a.priorityBlockingQueue());
+        assertNull(a.synchronousQueue());
+        assertNull(a.priorityQueue());
+        assertNull(a.linkedHashSet());
+        assertNull(a.concurrentSkipListSet());
+        assertNull(a.copyOnWriteArraySet());
+        assertNull(a.copyOnWriteArrayList());
         // If I try and add something though it should be an EnumSet!
         final NullableAutoCollectionBag b = NullableAutoCollectionBagUtils.builder()
             .addSetOfEnum(AnEnum.ONE)

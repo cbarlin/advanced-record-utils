@@ -5,20 +5,20 @@ import java.util.Objects;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
-import org.jspecify.annotations.NonNull;
-
 import io.github.cbarlin.aru.core.APContext;
+import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.artifacts.GenerationArtifact;
 import io.github.cbarlin.aru.core.artifacts.PreBuilt;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a target that was referenced that already has a *Utils generated (e.g. it came from a library)
  */
 public final class LibraryLoadedTarget implements ProcessingTarget {
 
-    private static TypeElement useInterfaceDefaultClass;
+    private static @Nullable TypeElement useInterfaceDefaultClass;
     private final PreBuilt preBuilt;
     private final TypeElement typeElement;
     private final TypeElement intendedTypeElement;
@@ -37,9 +37,13 @@ public final class LibraryLoadedTarget implements ProcessingTarget {
     }
 
     @Override
-    @NonNull
     public PreBuilt utilsClass() {
         return this.preBuilt;
+    }
+
+    @Override
+    public @Nullable PreBuilt utilsClassChild(final String generatedName, final ClaimableOperation operation) {
+        return utilsClass().childArtifact(generatedName, operation);
     }
 
     @Override

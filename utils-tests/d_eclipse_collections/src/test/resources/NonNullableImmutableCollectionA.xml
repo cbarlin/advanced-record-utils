@@ -1,0 +1,13 @@
+<NonNullableImmutableCollectionBag>
+    <immutableSetOfEnum>TUESDAY</immutableSetOfEnum>
+    <immutableSetOfString>B</immutableSetOfString>
+    <immutableSetOfRecord randomAttribute="0">
+        <iShouldBeAnElement>A</iShouldBeAnElement>
+    </immutableSetOfRecord>
+    <immutableListOfEnum>TUESDAY</immutableListOfEnum>
+    <immutableListOfString>B</immutableListOfString>
+    <immutableListOfRecord randomAttribute="0">
+        <iShouldBeAnElement>A</iShouldBeAnElement>
+    </immutableListOfRecord>
+    <mutableDoubleList>5.0</mutableDoubleList>
+</NonNullableImmutableCollectionBag>

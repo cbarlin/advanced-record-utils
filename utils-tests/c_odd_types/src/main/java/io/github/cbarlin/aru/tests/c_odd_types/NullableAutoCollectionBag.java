@@ -1,15 +1,30 @@
 package io.github.cbarlin.aru.tests.c_odd_types;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuilderOptions;
@@ -52,7 +67,23 @@ public record NullableAutoCollectionBag(
     ArrayList<String> arrayListOfString,
     LinkedList<String> linkedListOfString,
     Vector<String> vectorOfString,
-    Stack<String> stackOfString
+    Stack<String> stackOfString,
+
+    Queue<AnEnum> queueOfEnum,
+    Deque<AnEnum> dequeOfEnum,
+    ArrayDeque<String> arrayDeque,
+    ConcurrentLinkedQueue<String> concurrentLinkedQueue,
+    ConcurrentLinkedDeque<String> concurrentLinkedDeque,
+    LinkedBlockingDeque<String> linkedBlockingDeque,
+    LinkedBlockingQueue<String> linkedBlockingQueue,
+    LinkedTransferQueue<String> linkedTransferQueue,
+    PriorityBlockingQueue<String> priorityBlockingQueue,
+    SynchronousQueue<String> synchronousQueue,
+    PriorityQueue<String> priorityQueue,
+    LinkedHashSet<String> linkedHashSet,
+    ConcurrentSkipListSet<String> concurrentSkipListSet,
+    CopyOnWriteArraySet<String> copyOnWriteArraySet,
+    CopyOnWriteArrayList<String> copyOnWriteArrayList
 ) {
 
 }

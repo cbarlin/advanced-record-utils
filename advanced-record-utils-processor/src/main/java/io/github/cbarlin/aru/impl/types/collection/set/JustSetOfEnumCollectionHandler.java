@@ -27,7 +27,7 @@ public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
     @Override
     public boolean canHandle(final AnalysedComponent component) {
         if (component.typeName() instanceof final ParameterizedTypeName ptn && ptn.rawType.equals(SET) && !ptn.typeArguments.isEmpty()) {
-            final TypeName innerTypeName = ptn.typeArguments.get(0);
+            final TypeName innerTypeName = ptn.typeArguments.getFirst();
             return innerTypeName instanceof final ClassName innerClassName && 
                 APContext.elements().getTypeElement(innerClassName.toString()).getKind().equals(ElementKind.ENUM);
         }
@@ -42,6 +42,7 @@ public final class JustSetOfEnumCollectionHandler extends SetCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
+        methodBuilder.addComment("Created in $L", this.getClass().getCanonicalName());
         EnumSetCollectionHandler.convertImmutable(methodBuilder, fieldName, assignmentName, innerTypeName);
     }
 

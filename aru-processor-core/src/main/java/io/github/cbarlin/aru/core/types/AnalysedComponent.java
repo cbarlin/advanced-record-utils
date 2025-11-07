@@ -115,6 +115,15 @@ public sealed interface AnalysedComponent permits BasicAnalysedComponent, Delega
 
     TypeName typeName();
 
+    Optional<ClassName> className();
+
+    /**
+     * The {@link TypeName} but without any annotations
+     */
+    default TypeName typeNameWithoutAnnotations() {
+        return typeName().withoutAnnotations();
+    }
+
     Optional<ProcessingTarget> targetAnalysedType();
 
     // Defaults
@@ -177,12 +186,6 @@ public sealed interface AnalysedComponent permits BasicAnalysedComponent, Delega
      */
     default TypeName unNestedSecondaryTypeName() {
         return unNestedPrimaryTypeName();
-    }
-
-    default Optional<ClassName> className() {
-        return targetAnalysedType()
-            .map(ProcessingTarget::typeElement)
-            .map(ClassName::get);
     }
 
     default Optional<ClassName> erasedWrapperTypeName() {

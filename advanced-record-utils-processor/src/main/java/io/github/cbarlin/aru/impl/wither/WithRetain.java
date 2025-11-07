@@ -41,6 +41,9 @@ public final class WithRetain extends WitherVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
+        if (!analysedRecord.isClaimed(Constants.Claims.BUILDER_RETAIN_ALL)) {
+            return false;
+        }
         final String name = analysedComponent.name();
         final String withMethodName = witherOptionsPrism.withMethodPrefix() + capitalise(builderOptionsPrism.retainMethodPrefix()) + capitalise(name) + builderOptionsPrism.retainMethodSuffix() + witherOptionsPrism.withMethodSuffix();
         final String builderMethodName = builderOptionsPrism.retainMethodPrefix() + capitalise(name) + builderOptionsPrism.retainMethodSuffix();

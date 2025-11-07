@@ -1,16 +1,5 @@
 package io.github.cbarlin.aru.impl.xml;
 
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-
-import javax.lang.model.element.TypeElement;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
@@ -28,6 +17,15 @@ import io.github.cbarlin.aru.prism.prison.XmlOptionsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.lang.model.element.TypeElement;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
 
 @Factory
 @XmlPerRecordScope
@@ -113,6 +111,6 @@ public final class XmlClassFactory {
                     .filter(StringUtils::isNotBlank)
                     .filter(Predicate.not(XML_DEFAULT_STRING::equals))
             )
-            .orElseGet(() -> analysedRecord.typeSimpleName());
+            .orElseGet(analysedRecord::typeSimpleName);
     }
 }

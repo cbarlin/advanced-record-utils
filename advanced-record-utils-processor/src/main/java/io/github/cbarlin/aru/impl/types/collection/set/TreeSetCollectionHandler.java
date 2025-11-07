@@ -16,6 +16,8 @@ public final class TreeSetCollectionHandler extends SetCollectionHandler {
 
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
-        methodBuilder.addStatement("final $T<$T> $L = $L", classNameOnComponent, innerTypeName, assignmentName, fieldName);
+        methodBuilder
+            .addComment("No immutable version exists - returning original object")
+            .addStatement("final $T<$T> $L = $L", classNameOnComponent, innerTypeName, assignmentName, fieldName);
     }
 }
