@@ -27,7 +27,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.AVAJE_VALIDATOR;
 public final class AvajeValidatedBuild extends RecordVisitor {
 
     private static final ParameterizedTypeName CLAZZ_PARAM = ParameterizedTypeName.get(ClassName.get(Class.class), WildcardTypeName.subtypeOf(TypeName.OBJECT));
-    private static final TypeName CLAZZ_ANY = ArrayTypeName.of(CLAZZ_PARAM).annotated(CommonsConstants.NULLABLE_ANNOTATION);
+    private static final TypeName CLAZZ_ANY = ArrayTypeName.of(CLAZZ_PARAM);
 
     public AvajeValidatedBuild(final AnalysedRecord analysedRecord) {
         super(Claims.BUILDER_ADD_VALIDATED_BUILD_METHOD, analysedRecord);
