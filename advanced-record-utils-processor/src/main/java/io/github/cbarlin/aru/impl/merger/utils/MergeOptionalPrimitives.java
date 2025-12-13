@@ -64,7 +64,7 @@ public final class MergeOptionalPrimitives extends MergerVisitor {
                 .nextControlFlow("else if($T.nonNull(elB) && elB.isPresent())", OBJECTS)
                 .addStatement("return elB")
                 .endControlFlow()
-                .addStatement("return $T.empty()", targetTn);
+                .addStatement("return $T.empty()", targetTn.withoutAnnotations());
 
             AnnotationSupplier.addGeneratedAnnotation(method, this);
         }
