@@ -1,17 +1,7 @@
 package io.github.cbarlin.aru.impl.merger.utils;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
@@ -20,6 +10,15 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @Singleton
 @MergerPerRecordScope
@@ -38,21 +37,19 @@ public final class MergeMethod extends MergerVisitor {
     protected boolean visitStartOfClassImpl() {
         createStaticMethod();
         if (Boolean.TRUE.equals(mergerOptionsPrism.staticMethodsAddedToUtils())) {
-            final ParameterSpec paramA = ParameterSpec.builder(analysedRecord.intendedType(), "preferred", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
+            final TypeName targetType = analysedRecord.intendedType().annotated(CommonsConstants.NULLABLE_ANNOTATION);
+            final ParameterSpec paramA = ParameterSpec.builder(targetType, "preferred", Modifier.FINAL)
                 .addJavadoc("The preferred element")
                 .build();
-            final ParameterSpec paramB = ParameterSpec.builder(analysedRecord.intendedType(), "other", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
+            final ParameterSpec paramB = ParameterSpec.builder(targetType, "other", Modifier.FINAL)
                 .addJavadoc("The non-preferred element")
                 .build();
             final var method = analysedRecord.utilsClass().createMethod(mergerOptionsPrism.mergerMethodName(), claimableOperation)
                 .addModifiers(Modifier.STATIC, Modifier.FINAL)
-                .addAnnotation(NULLABLE)
                 .addParameter(paramA)
                 .addParameter(paramB)
                 .addJavadoc("Merge two instances of {@link $T} together", analysedRecord.intendedType())
-                .returns(analysedRecord.intendedType())
+                .returns(targetType)
                 .addStatement(
                     "return $T.$L(preferred, other)",
                     mergerStaticClass.className(),

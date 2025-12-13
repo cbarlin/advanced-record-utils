@@ -17,7 +17,6 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @Component
@@ -45,16 +44,14 @@ public final class AddSetter extends RecordVisitor {
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final String name = analysedComponent.name();
-        final ParameterSpec param = ParameterSpec.builder(analysedComponent.typeName(), name, Modifier.FINAL)
+        final ParameterSpec param = ParameterSpec.builder(analysedComponent.typeNameNullable(), name, Modifier.FINAL)
                                                  .addJavadoc("The replacement value")
-                                                 .addAnnotation(NULLABLE)
                                                  .build();
 
         final var method = builderClass.createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
                                        .addJavadoc("Updates the value of {@code $L}", name)
                                        .returns(builderClassName)
                                        .addParameter(param)
-                                       .addAnnotation(CommonsConstants.Names.NON_NULL)
                                        .addModifiers(Modifier.PUBLIC);
 
         if (!Boolean.FALSE.equals(settings.prism().builderOptions().nullReplacesNotNull())) {

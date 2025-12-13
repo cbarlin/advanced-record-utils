@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.impl.xml.utils;
 
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -19,8 +20,6 @@ import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import java.util.Optional;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPERATION_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
@@ -69,19 +68,16 @@ public final class WriteFallback extends XmlVisitor {
         methodBuilder.modifiers.clear();
         methodBuilder.addParameter(
                 ParameterSpec.builder(XML_STREAM_WRITER, "output", Modifier.FINAL)
-                    .addAnnotation(NON_NULL)
                     .addJavadoc("The output to write to")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(accepterTypeName, "val", Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
+                ParameterSpec.builder(accepterTypeName.annotated(CommonsConstants.NULLABLE_ANNOTATION), "val", Modifier.FINAL)
                     .addJavadoc("The item to write")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
+                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "currentDefaultNamespace", Modifier.FINAL)
                     .addJavadoc("The current default namespace")
                     .build()
             )

@@ -1,20 +1,18 @@
 package io.github.cbarlin.aru.core.impl.visitors.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
-import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @CorePerRecordScope
@@ -34,12 +32,11 @@ public final class AddPlainBuild extends RecordVisitor {
     @Override
     protected void visitEndOfClassImpl() {
         final String methodName = analysedRecord.settings().prism().builderOptions().buildMethodName();
-        final var methodBuilder = analysedRecord.builderArtifact()
+        final MethodSpec.Builder methodBuilder = analysedRecord.builderArtifact()
             .createMethod(methodName, claimableOperation)
             .returns(analysedRecord.intendedType())
             .addJavadoc("Creates a new instance of {@link $T} from the fields set on this builder", analysedRecord.intendedType())
-            .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Names.NON_NULL);
+            .addModifiers(Modifier.PUBLIC);
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
         logTrace(methodBuilder, "Creating new instance");
         final List<String> constructorArgs = new ArrayList<>();

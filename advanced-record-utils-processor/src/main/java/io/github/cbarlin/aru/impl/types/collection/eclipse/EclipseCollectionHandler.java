@@ -23,7 +23,7 @@ import javax.lang.model.element.Modifier;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.*;
+import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 
 public sealed abstract class EclipseCollectionHandler
     extends StandardCollectionHandler
@@ -221,7 +221,6 @@ public sealed abstract class EclipseCollectionHandler
     public void addNonNullAutoField(final AnalysedComponent ecc, final ToBeBuilt addFieldTo, final TypeName innerType) {
         final ParameterizedTypeName ptn = ParameterizedTypeName.get(mutableClassName, innerType);
         final FieldSpec fSpec = FieldSpec.builder(ptn, ecc.name(), Modifier.PRIVATE)
-            .addAnnotation(NON_NULL)
             .initializer("$T.mutable.empty()", factoryClassName)
             .build();
         addFieldTo.addField(fSpec);

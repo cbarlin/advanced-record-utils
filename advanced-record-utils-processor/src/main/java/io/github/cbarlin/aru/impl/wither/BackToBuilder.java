@@ -1,13 +1,5 @@
 package io.github.cbarlin.aru.impl.wither;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -15,6 +7,11 @@ import io.github.cbarlin.aru.impl.wiring.WitherPerRecordScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 @WitherPerRecordScope
@@ -36,8 +33,7 @@ public final class BackToBuilder extends WitherVisitor {
         final MethodSpec.Builder backBuilder = witherInterface.createMethod(backToBuilderMethodName, claimableOperation)
             .addModifiers(Modifier.DEFAULT)
             .returns(builderClassName)
-            .addJavadoc("Creates a builder with the current fields")
-            .addAnnotation(NON_NULL);
+            .addJavadoc("Creates a builder with the current fields");
         AnnotationSupplier.addGeneratedAnnotation(backBuilder, this);
         final List<Object> methodArgs = new ArrayList<>();
         final StringBuilder methodFormat = new StringBuilder().append("return $T.$L()\n");

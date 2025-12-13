@@ -1,18 +1,15 @@
 package io.github.cbarlin.aru.core.types;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
+import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
+import io.github.cbarlin.aru.core.UtilsProcessingContext;
+import io.github.cbarlin.aru.core.artifacts.GenerationArtifact;
 
+import javax.lang.model.element.TypeElement;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import javax.lang.model.element.TypeElement;
-
-import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
-import io.github.cbarlin.aru.core.UtilsProcessingContext;
-import io.github.cbarlin.aru.core.artifacts.GenerationArtifact;
 
 public final class AnalysedInterface extends AnalysedType {
     private final SortedSet<ProcessingTarget> implementingTypes = new TreeSet<>();
@@ -24,7 +21,6 @@ public final class AnalysedInterface extends AnalysedType {
         final AdvRecUtilsSettings parentSettings
     ) {
         super(element, context, parentSettings);
-        utilsClass().builder().addAnnotation(NULL_MARKED);
     }
 
     public void addUnprocessedImplementingType(final TypeElement type) {
@@ -41,10 +37,10 @@ public final class AnalysedInterface extends AnalysedType {
     }
     
     @Override
-    public void addCrossReference(ProcessingTarget other) {
+    public void addCrossReference(final ProcessingTarget other) {
         super.addCrossReference(other);
         this.implementingTypes.forEach(pt -> {
-            if (pt instanceof AnalysedType ty) {
+            if (pt instanceof final AnalysedType ty) {
                 ty.addCrossReference(other);
             }
         });

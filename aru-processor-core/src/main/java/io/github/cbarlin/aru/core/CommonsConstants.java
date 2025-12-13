@@ -1,5 +1,6 @@
 package io.github.cbarlin.aru.core;
 
+import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
 import static io.github.cbarlin.aru.core.types.OperationType.CLASS;
@@ -11,6 +12,9 @@ import static io.github.cbarlin.aru.core.types.OperationType.FIELD_AND_ACCESSORS
 public enum CommonsConstants {
     ;
     public static final String JDOC_PARA = "\n<p>\n";
+    public static final AnnotationSpec NULLABLE_ANNOTATION = AnnotationSpec.builder(Names.NULLABLE).build();
+    public static final AnnotationSpec NON_NULL_ANNOTATION = AnnotationSpec.builder(Names.NON_NULL).build();
+
     public enum Claims {
         ;
         // "Core" components everything should decorate or delegate to
@@ -70,7 +74,7 @@ public enum CommonsConstants {
         public static final ClassName XML_SEE_ALSO = ClassName.get(JAKARTA_XML_BIND, "XmlSeeAlso");
 
 
-        // Cross references the above. Used to resolve confusion
+        // Cross-references the above. Used to resolve confusion
         public static final ClassName NOT_NULL = NON_NULL;
     }
 

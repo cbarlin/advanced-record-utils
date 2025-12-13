@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.core.impl.visitors.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
-
 import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
@@ -15,6 +9,11 @@ import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @CorePerRecordScope
@@ -45,7 +44,6 @@ public final class AddCopyConstruction extends RecordVisitor {
     private void createOnBuilder(final AnalysedRecord analysedRecord, final String methodName, final ClassName builderClassName, final ParameterSpec parameterSpec) {
         final var builder = analysedRecord.builderArtifact().createMethod(methodName, claimableOperation);
         builder.addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .addAnnotation(Names.NON_NULL)
             .addParameter(parameterSpec)
             .addJavadoc("Creates a new builder of {@link $T} by copying an existing instance", analysedRecord.intendedType())
             .returns(builderClassName)
@@ -71,7 +69,6 @@ public final class AddCopyConstruction extends RecordVisitor {
     private void createOnUtils(final AnalysedRecord analysedRecord, final String methodName, final ClassName builderClassName, final ParameterSpec parameterSpec) {
         final var builder = analysedRecord.utilsClass().createMethod(methodName, claimableOperation);
         builder.addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .addAnnotation(Names.NON_NULL)
             .addParameter(parameterSpec)
             .addJavadoc("Creates a new builder of {@link $T} by copying an existing instance", analysedRecord.intendedType())
             .addStatement("return $T.$L(original)", builderClassName, methodName)

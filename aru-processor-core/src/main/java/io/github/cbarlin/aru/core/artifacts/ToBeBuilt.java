@@ -13,13 +13,11 @@ import io.github.cbarlin.aru.core.artifacts.sorting.TypeSpecComparator;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedType;
 import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
-import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import javax.lang.model.element.Element;
@@ -31,8 +29,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -40,8 +36,6 @@ import java.util.function.Function;
 
 public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>, IToBeBuilt<ToBeBuilt> permits ToBeBuiltClass, ToBeBuiltInterface, ToBeBuiltRecord {
     private static final String LOGGER_INITIALISER = "$T.getLogger($T.class)";
-    // We have our two generated annotations, and sometimes the `NullMarked`/`NullUnmarked`
-    private static final int GENERATED_ANNOTATIONS = 3;
     private final ClassName className;
     protected final TypeSpec.Builder classBuilder;
     private final UtilsProcessingContext utilsProcessingContext;
@@ -95,9 +89,9 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
         classBuilder.annotations.sort(AnnotationSpecComparator.INSTANCE);
         try {
             return classBuilder.build();
-        } catch (Exception e) {
-            APContext.messager().printError("Oops!");
-            throw new RuntimeException(e);
+        } catch (final Exception e) {
+            APContext.messager().printError("Failed to build TypeSpec for " + className.canonicalName() + ": " + e.getMessage());
+            throw new IllegalStateException("Failed to build TypeSpec for " + className.canonicalName(), e);
         }
     }
 
@@ -146,19 +140,16 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
     //#region child artifact
 
     @Override
-    @NonNull
     public ToBeBuilt childRecordArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return childArtifacts.computeIfAbsent(generatedCodeName + "#" + claimableOperation.operationName(), ignored -> new ToBeBuiltRecord(className.nestedClass(generatedCodeName), utilsProcessingContext));
     }
 
     @Override
-    @NonNull
     public ToBeBuilt childClassArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return childArtifacts.computeIfAbsent(generatedCodeName + "#" + claimableOperation.operationName(), ignored -> new ToBeBuiltClass(className.nestedClass(generatedCodeName), utilsProcessingContext));
     }
 
     @Override
-    @NonNull
     public ToBeBuilt childInterfaceArtifact(final String generatedCodeName, final ClaimableOperation claimableOperation) {
         return childArtifacts.computeIfAbsent(generatedCodeName + "#" + claimableOperation.operationName(), ignored -> new ToBeBuiltInterface(className.nestedClass(generatedCodeName), utilsProcessingContext));
     }
@@ -228,7 +219,7 @@ public abstract sealed class ToBeBuilt implements GenerationArtifact<ToBeBuilt>,
             claimableOperation.operationName() + "$$" + 
             element.getSimpleName().toString() + "$$" +
             extractTypeAsNameString(element) + "$$$" +
-            ptn.toString()
+            ptn
         );
     }
 

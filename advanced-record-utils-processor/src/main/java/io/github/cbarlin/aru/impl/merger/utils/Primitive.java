@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.merger.utils;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-
-import java.util.Set;
-
-import javax.lang.model.element.Modifier;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -16,6 +10,9 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+import java.util.Set;
 
 @Singleton
 @MergerPerRecordScope
@@ -38,7 +35,7 @@ public final class Primitive extends MergerVisitor {
         if (!analysedComponent.typeName().isPrimitive()) {
             return false;
         }
-        final TypeName targetTn = analysedComponent.typeName();
+        final TypeName targetTn = analysedComponent.typeNameNullable();
         final String methodName = mergeStaticMethodName(targetTn);
 
         if (processedSpecs.add(methodName)) {
@@ -52,7 +49,6 @@ public final class Primitive extends MergerVisitor {
             final MethodSpec.Builder method = mergerStaticClass.createMethod(methodName, claimableOperation);
             method.modifiers.clear();
             method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                .addAnnotation(NULLABLE)
                 .addParameter(paramA)
                 .addParameter(paramB)
                 .returns(targetTn)

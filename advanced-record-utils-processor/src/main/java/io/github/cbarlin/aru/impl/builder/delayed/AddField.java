@@ -10,13 +10,11 @@ import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.types.ComponentTargetingRecord;
 import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
-import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
-import java.util.List;
 
 @Component
 @BuilderPerComponentScope
@@ -42,7 +40,7 @@ public final class AddField extends RecordVisitor {
         //   of if the Utils class part is "null" or the builder part - which doesn't make sense in our context,
         //   but I can see it make sense in other contexts.
         final ClassName builderClassName = componentTargetingRecord.target().builderArtifact().className();
-        final ClassName nullable = builderClassName.annotated(List.of(AnnotationSpec.builder(CommonsConstants.Names.NULLABLE).build()));
+        final TypeName nullable = builderClassName.annotated(CommonsConstants.NULLABLE_ANNOTATION);
         final FieldSpec spec = FieldSpec.builder(
                                             nullable,
                                             componentTargetingRecord.name(),

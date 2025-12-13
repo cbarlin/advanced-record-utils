@@ -1,8 +1,5 @@
 package io.github.cbarlin.aru.impl.builder;
 
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-
 import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
@@ -14,6 +11,9 @@ import io.github.cbarlin.aru.impl.wiring.BuilderPerInterfaceScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 
 @Component
 @BuilderPerInterfaceScope
@@ -32,7 +32,7 @@ public final class IfaceAddBuilderEmpty extends InterfaceVisitor {
                 continue;
             }
             final TypeElement typeElement = target.typeElement();
-            final TypeName retType = (target instanceof AnalysedRecord analysedRecord) ? analysedRecord.intendedType() : TypeName.get(typeElement.asType());
+            final TypeName retType = (target instanceof final AnalysedRecord analysedRecord) ? analysedRecord.intendedType() : TypeName.get(typeElement.asType());
             final String name = typeElement.getSimpleName().toString();
 
             final String builderMethodName = builderName + bridge + name;

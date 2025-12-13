@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.xml.iface;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
-
-import javax.lang.model.element.Modifier;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.wiring.XmlPerRecordScope;
@@ -14,6 +8,11 @@ import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 
 @Singleton
 @XmlPerRecordScope
@@ -39,7 +38,6 @@ public final class ToXmlMethodNoTag extends XmlVisitor {
             .addParameter(
                 ParameterSpec.builder(XML_STREAM_WRITER, "output", Modifier.FINAL)
                     .addJavadoc("The output to write to")
-                    .addAnnotation(NON_NULL)
                     .build()
             )
             .addStatement(

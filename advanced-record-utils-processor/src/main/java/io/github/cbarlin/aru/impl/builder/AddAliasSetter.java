@@ -1,15 +1,9 @@
 package io.github.cbarlin.aru.impl.builder;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Component;
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.BuilderClass;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
@@ -19,6 +13,10 @@ import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @Component
 @BuilderPerComponentScope
@@ -51,12 +49,8 @@ public final class AddAliasSetter extends RecordVisitor {
 
         methodBuilder.returns(builderClass.className())
             .addJavadoc("Updates the value of {@code $L}", name)
-            .addAnnotation(NON_NULL)
             .addParameter(
-                ParameterSpec.builder(tAliasComponent.serialisedTypeName(), name, Modifier.FINAL)
-                    .addAnnotation(
-                        nullReplacingNonNull ? NULLABLE : NOT_NULL
-                    )
+                ParameterSpec.builder(tAliasComponent.serialisedTypeName().annotated(CommonsConstants.NULLABLE_ANNOTATION), name, Modifier.FINAL)
                     .addJavadoc("The replacement value")
                     .build()
             );

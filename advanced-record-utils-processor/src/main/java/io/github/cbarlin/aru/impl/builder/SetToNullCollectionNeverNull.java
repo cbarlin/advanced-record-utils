@@ -42,7 +42,6 @@ public final class SetToNullCollectionNeverNull extends RecordVisitor {
                 analysedComponent.name()
             )
             .addStatement("return this")
-            .addAnnotation(Constants.Names.NON_NULL)
             .addJavadoc(
                 "Sets the value of $L to an empty collection.\nThis is because {@code null} collections become empty.\n",
                 analysedComponent.name()

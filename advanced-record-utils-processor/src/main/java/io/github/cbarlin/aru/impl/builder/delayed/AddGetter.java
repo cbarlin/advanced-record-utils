@@ -15,7 +15,6 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @Component
@@ -41,8 +40,7 @@ public final class AddGetter extends RecordVisitor {
         final String name = analysedComponent.name();
         final MethodSpec.Builder method = analysedRecord.builderArtifact()
             .createMethod(name, claimableOperation, analysedComponent.element())
-            .returns(analysedComponent.typeName())
-            .addAnnotation(NULLABLE)
+            .returns(analysedComponent.typeNameNullable())
             .addModifiers(Modifier.PUBLIC)
             .addJavadoc("Returns the current value of {@code $L}\n", name)
             .addStatement(

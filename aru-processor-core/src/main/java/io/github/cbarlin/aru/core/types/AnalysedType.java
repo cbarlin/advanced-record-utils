@@ -5,6 +5,7 @@ import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AdvRecUtilsProcessor;
 import io.github.cbarlin.aru.core.AdvRecUtilsSettings;
 import io.github.cbarlin.aru.core.ClaimableOperation;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
@@ -19,6 +20,7 @@ import io.github.cbarlin.aru.core.visitors.AruVisitor;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.TypeName;
 import io.micronaut.sourcegen.javapoet.TypeSpec;
 import org.apache.commons.lang3.Strings;
 
@@ -49,6 +51,7 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_ROOT_ELEMENT
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_SETTINGS_SOURCE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_VERSION;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.GENERATED_ANNOTATION;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
 
 public abstract sealed class AnalysedType implements ProcessingTarget permits AnalysedInterface, AnalysedRecord {
 
@@ -225,6 +228,14 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         return ClassName.get(typeElement);
     }
 
+    public TypeName classNameNullable() {
+        return className().annotated(CommonsConstants.NULLABLE_ANNOTATION);
+    }
+
+    public TypeName classNameNonNull() {
+        return className().annotated(CommonsConstants.NON_NULL_ANNOTATION);
+    }
+
     public TypeElement typeElement() {
         return typeElement;
     }
@@ -256,7 +267,8 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
     //#endregion
 
     public void addFullGeneratedAnnotation() {
-        final TypeSpec.Builder utilsBuilder = utilsClassBuilder();
+        final TypeSpec.Builder utilsBuilder = utilsClassBuilder()
+                .addAnnotation(NULL_MARKED);
         final AnnotationSpec versionAnnotation = AnnotationSpec.builder(ARU_VERSION)
             .addMember("major", "$L", AdvancedRecordUtilsGenerated.Version.MAJOR_VERSION)
             .addMember("minor", "$L", AdvancedRecordUtilsGenerated.Version.MINOR_VERSION)

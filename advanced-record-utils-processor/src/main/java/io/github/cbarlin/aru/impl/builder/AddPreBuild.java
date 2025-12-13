@@ -4,12 +4,8 @@ import io.avaje.inject.Component;
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants.Claims;
-import io.github.cbarlin.aru.core.CommonsConstants.Names;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
-import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
-import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
-import io.github.cbarlin.aru.impl.types.AnalysedOptionalPrimitiveComponent;
 import io.github.cbarlin.aru.impl.types.RecordWithBeforeBuild;
 import io.github.cbarlin.aru.impl.wiring.BuilderPerRecordScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
@@ -47,8 +43,7 @@ public final class AddPreBuild extends RecordVisitor {
             .createMethod(methodName, claimableOperation)
             .returns(analysedRecord.intendedType())
             .addJavadoc("Creates a new instance of {@link $T} from the fields set on this builder\n<p>\nWill call the requested method before continuing with the build", analysedRecord.intendedType())
-            .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Names.NON_NULL);
+            .addModifiers(Modifier.PUBLIC);
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
         writePreBuildCall(methodBuilder);
         writeStandardBuild(methodBuilder);

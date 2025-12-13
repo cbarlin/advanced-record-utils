@@ -1,18 +1,7 @@
 package io.github.cbarlin.aru.impl.merger.iface;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.merger.MergerHolder;
 import io.github.cbarlin.aru.impl.merger.MergerVisitor;
@@ -21,6 +10,14 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 
 @Singleton
 @MergerPerRecordScope
@@ -37,13 +34,11 @@ public final class MergeMethod extends MergerVisitor {
 
     @Override
     protected boolean visitStartOfClassImpl() {
-        final ParameterSpec paramA = ParameterSpec.builder(analysedRecord.intendedType(), "other", Modifier.FINAL)
-            .addAnnotation(NULLABLE)
+        final ParameterSpec paramA = ParameterSpec.builder(analysedRecord.intendedType().annotated(CommonsConstants.NULLABLE_ANNOTATION), "other", Modifier.FINAL)
             .addJavadoc("The element to merge into this one")
             .build();
         final MethodSpec.Builder method = mergerInterface.createMethod(mergerOptionsPrism.mergerMethodName(), claimableOperation)
             .addModifiers(Modifier.DEFAULT)
-            .addAnnotation(NON_NULL)
             .addParameter(paramA)
             .returns(analysedRecord.intendedType())
             .addJavadoc("Merge the current instance into the other instance.")

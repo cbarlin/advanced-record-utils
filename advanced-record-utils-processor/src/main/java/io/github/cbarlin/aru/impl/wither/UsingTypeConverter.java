@@ -17,8 +17,6 @@ import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-
 @Singleton
 @WitherPerComponentScope
 @RequiresBean({TypeConverterComponent.class})
@@ -37,12 +35,11 @@ public final class UsingTypeConverter extends WitherVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final String withMethodName = witherOptionsPrism.withMethodPrefix() + capitalise(analysedComponent.name()) + witherOptionsPrism.withMethodSuffix();
         
         for (final AnalysedTypeConverter converter : component.analysedTypeConverters()) {
             final MethodSpec.Builder methodBuilder = witherInterface.createMethod(withMethodName, claimableOperation, converter.executableElement())
-                .addAnnotation(NON_NULL)
                 .returns(analysedComponent.parentRecord().intendedType())
                 .addModifiers(Modifier.DEFAULT)
                 .addJavadoc("Return a new instance with a different {@code $L} field", analysedComponent.name());

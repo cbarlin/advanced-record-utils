@@ -1,18 +1,23 @@
 package io.github.cbarlin.aru.impl.types.collection.eclipse.set;
 
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.visitors.AruVisitor;
 import io.github.cbarlin.aru.impl.types.collection.eclipse.EclipseCollectionHandler;
 import io.github.cbarlin.aru.impl.types.collection.eclipse.PrimitiveHelper;
-import io.micronaut.sourcegen.javapoet.*;
+import io.micronaut.sourcegen.javapoet.AnnotationSpec;
+import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.FieldSpec;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
 
 public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
 
@@ -101,7 +106,6 @@ public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
     @Override
     public void addNonNullAutoField(final AnalysedComponent ecc, final ToBeBuilt addFieldTo, final TypeName innerType) {
         final FieldSpec fSpec = FieldSpec.builder(mutableClassName, ecc.name(), Modifier.PRIVATE)
-                                         .addAnnotation(NON_NULL)
                                          .initializer("$T.mutable.empty()", factoryClassName)
                                          .build();
         addFieldTo.addField(fSpec);
@@ -109,8 +113,7 @@ public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
 
     @Override
     public void addNullableAutoField(final AnalysedComponent ecc, final ToBeBuilt addFieldTo, final TypeName innerType) {
-        final FieldSpec fSpec = FieldSpec.builder(mutableClassName, ecc.name(), Modifier.PRIVATE)
-                .addAnnotation(NULLABLE)
+        final FieldSpec fSpec = FieldSpec.builder(mutableClassName.annotated(CommonsConstants.NULLABLE_ANNOTATION), ecc.name(), Modifier.PRIVATE)
                 .build();
         addFieldTo.addField(fSpec);
     }

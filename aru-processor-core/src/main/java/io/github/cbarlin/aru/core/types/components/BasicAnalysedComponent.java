@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.core.types.components;
 
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.ClaimableOperation;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.UtilsProcessingContext;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -10,14 +11,17 @@ import io.github.cbarlin.aru.core.types.AnalysedTypeConverter;
 import io.github.cbarlin.aru.core.types.OperationType;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,6 +47,8 @@ public final class BasicAnalysedComponent implements AnalysedComponent {
     private final Map<ClaimableOperation, RecordVisitor> claimedOperations = new HashMap<>();
     private final Optional<ProcessingTarget> targetAnalysedType;
     private final TypeName typeNameWithoutAnnotations;
+    private final TypeName typeNameNullable;
+    private final TypeName typeNameNonNullable;
     private final Optional<ClassName> className;
 
     /**
@@ -66,10 +72,27 @@ public final class BasicAnalysedComponent implements AnalysedComponent {
         this.typeName = TypeName.get(componentType);
         this.targetAnalysedType = targetAnalysedType;
         this.typeNameWithoutAnnotations = this.typeName.withoutAnnotations();
+        this.typeNameNullable = deepAnnotate(typeName, CommonsConstants.NULLABLE_ANNOTATION);
+        this.typeNameNonNullable = deepAnnotate(typeName, CommonsConstants.NON_NULL_ANNOTATION);
         className = targetAnalysedType
                 .map(ProcessingTarget::typeElement)
                 .map(ClassName::get)
                 .map(ClassName::withoutAnnotations);
+    }
+
+    private static TypeName deepAnnotate(final TypeName incoming, final AnnotationSpec toAdd) {
+        if (incoming.isAnnotated()) {
+            return deepAnnotate(incoming.withoutAnnotations(), toAdd);
+        } else if (incoming.isPrimitive()) {
+            return incoming;
+        } else if (incoming instanceof final ParameterizedTypeName ptn) {
+            final TypeName[] typeArguments = ptn.typeArguments.stream()
+                .map(ta -> deepAnnotate(ta, toAdd))
+                .toArray(TypeName[]::new);
+            return ParameterizedTypeName.get(ptn.rawType.annotated(List.of(toAdd)), typeArguments);
+        } else {
+            return incoming.annotated(toAdd);
+        }
     }
 
     @Override
@@ -176,5 +199,15 @@ public final class BasicAnalysedComponent implements AnalysedComponent {
     @Override
     public TypeName typeNameWithoutAnnotations() {
         return typeNameWithoutAnnotations;
+    }
+
+    @Override
+    public TypeName typeNameNullable() {
+        return typeNameNullable;
+    }
+
+    @Override
+    public TypeName typeNameNonNull() {
+        return typeNameNonNullable;
     }
 }

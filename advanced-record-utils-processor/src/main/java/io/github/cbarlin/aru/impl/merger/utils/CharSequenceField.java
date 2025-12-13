@@ -15,7 +15,6 @@ import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import java.util.Set;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 
@@ -38,22 +37,18 @@ public final class CharSequenceField extends MergerVisitor {
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {        
         if (OptionalClassDetector.checkSameOrSubType(analysedComponent.typeName(), Constants.Names.CHAR_SEQUENCE)) {
-            final var targetTn = analysedComponent.typeName();
+            final var targetTn = analysedComponent.typeNameNullable();
             final String methodName = mergeStaticMethodName(targetTn);
             if (processedSpecs.add(methodName)) {
                 final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
-                .addJavadoc("The preferred input")
-                .build();
+                    .addJavadoc("The preferred input")
+                    .build();
                 final ParameterSpec paramB = ParameterSpec.builder(targetTn, "elB", Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
                     .addJavadoc("The non-preferred input")
                     .build();
-                
                 final MethodSpec.Builder method = mergerStaticClass.createMethod(methodName, claimableOperation);
                 method.modifiers.clear();
                 method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
                     .addParameter(paramA)
                     .addParameter(paramB)
                     .returns(targetTn)

@@ -133,4 +133,14 @@ public non-sealed interface DelegatingComponent extends AnalysedComponent {
     default Optional<ClassName> erasedWrapperTypeName() {
         return delegate().erasedWrapperTypeName();
     }
+
+    @Override
+    default TypeName typeNameNonNull() {
+        return delegate().typeNameNonNull();
+    }
+
+    @Override
+    default TypeName typeNameNullable() {
+        return delegate().typeNameNullable();
+    }
 }

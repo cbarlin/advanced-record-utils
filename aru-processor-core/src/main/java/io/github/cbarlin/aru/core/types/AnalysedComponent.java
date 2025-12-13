@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.core.types;
 
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.ClaimableOperation;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.components.BasicAnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.DelegatingComponent;
@@ -122,6 +123,14 @@ public sealed interface AnalysedComponent permits BasicAnalysedComponent, Delega
      */
     default TypeName typeNameWithoutAnnotations() {
         return typeName().withoutAnnotations();
+    }
+
+    default TypeName typeNameNullable() {
+        return typeName().isPrimitive() ? typeNameWithoutAnnotations() : typeNameWithoutAnnotations().annotated(CommonsConstants.NULLABLE_ANNOTATION);
+    }
+
+    default TypeName typeNameNonNull() {
+        return typeName().isPrimitive() ? typeNameWithoutAnnotations() : typeNameWithoutAnnotations().annotated(CommonsConstants.NON_NULL_ANNOTATION);
     }
 
     Optional<ProcessingTarget> targetAnalysedType();

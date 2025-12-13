@@ -27,7 +27,6 @@ import io.micronaut.sourcegen.javapoet.TypeSpec;
 import javax.lang.model.element.Modifier;
 import java.util.HashSet;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPERATION_EXCEPTION;
@@ -74,11 +73,9 @@ public final class DiffFactory {
             .addSuperinterface(matchingInterface.className());
 
         final MethodSpec.Builder builder = differInterface.createMethod(diffOptionsPrism.differMethodName(), DiffInterfaceClass.claimableOperation())
-            .addAnnotation(NON_NULL)
             .addModifiers(Modifier.DEFAULT)
             .addParameter(
                 ParameterSpec.builder(differInterface.className(), diffOptionsPrism.comparedToElementName(), Modifier.FINAL)
-                    .addAnnotation(NON_NULL)
                     .build()
             )
             .returns(differResultClassName)
