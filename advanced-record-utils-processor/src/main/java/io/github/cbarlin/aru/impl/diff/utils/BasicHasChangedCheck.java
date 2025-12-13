@@ -1,13 +1,5 @@
 package io.github.cbarlin.aru.impl.diff.utils;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.lang.model.element.Modifier;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -18,6 +10,12 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+import java.util.HashSet;
+import java.util.Set;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @Singleton
 @DiffPerRecordScope
@@ -45,13 +43,11 @@ public final class BasicHasChangedCheck extends DifferVisitor {
                 .returns(TypeName.BOOLEAN)
                 .addStatement("return !$T.equals(original, updated)", OBJECTS)
                 .addParameter(
-                    ParameterSpec.builder(analysedComponent.typeName(), "original", Modifier.FINAL)
-                        .addAnnotation(NULLABLE)
+                    ParameterSpec.builder(analysedComponent.typeNameNullable(), "original", Modifier.FINAL)
                         .build()   
                 )
                 .addParameter(
-                    ParameterSpec.builder(analysedComponent.typeName(), "updated", Modifier.FINAL)
-                        .addAnnotation(NULLABLE)
+                    ParameterSpec.builder(analysedComponent.typeNameNullable(), "updated", Modifier.FINAL)
                         .build()   
                 );
         }

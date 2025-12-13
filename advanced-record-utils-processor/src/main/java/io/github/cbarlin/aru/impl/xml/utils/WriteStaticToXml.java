@@ -1,30 +1,7 @@
 package io.github.cbarlin.aru.impl.xml.utils;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_NAMESPACE_VAR_NAME;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_TAG_NAME_VAR_NAME;
-import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_PACKAGE_NAMESPACE_VAR_NAME;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.PREDICATE;
-import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
-import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import javax.lang.model.element.Modifier;
-
-import org.apache.commons.lang3.StringUtils;
-
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -41,17 +18,36 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import jakarta.inject.Singleton;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_NAMESPACE_VAR_NAME;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_TAG_NAME_VAR_NAME;
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_PACKAGE_NAMESPACE_VAR_NAME;
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.Constants.Names.PREDICATE;
+import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
+import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 
 @Singleton
 @XmlPerRecordScope
 public final class WriteStaticToXml extends ToXmlMethod {
 
-    private static final ParameterSpec CURR_DEF_NS_PARAM = ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
-        .addAnnotation(NULLABLE)
+    private static final ParameterSpec CURR_DEF_NS_PARAM = ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "currentDefaultNamespace", Modifier.FINAL)
         .addJavadoc("The currently available namespace")
         .build();
-    private static final ParameterSpec REQ_NS_PARAM = ParameterSpec.builder(STRING, "requestedNamespace", Modifier.FINAL)
-        .addAnnotation(NULLABLE)
+    private static final ParameterSpec REQ_NS_PARAM = ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "requestedNamespace", Modifier.FINAL)
         .addJavadoc("The requested namespace when called")
         .build();
     private static final ParameterizedTypeName OPTIONAL_STRING = ParameterizedTypeName.get(OPTIONAL, STRING);
@@ -314,34 +310,32 @@ public final class WriteStaticToXml extends ToXmlMethod {
     private MethodSpec.Builder createMethod(final AnalysedRecord analysedRecord) {
         return xmlStaticClass.createMethod(STATIC_WRITE_XML_NAME, claimableOperation)
             .addModifiers(Modifier.STATIC)
-            .addJavadoc("Write out the provided instance to the requested {@link $T}, referring to itself with the reqested tag name", XML_STREAM_WRITER)
+            .addJavadoc("Write out the provided instance to the requested {@link $T}, referring to itself with the requested tag name", XML_STREAM_WRITER)
             .addJavadoc("\n<p>\n")
             .addJavadoc("This method will close any tags it opens. It is not expected that it will start or end the document.")
             .addException(XML_STREAM_EXCEPTION)
             .addParameter(
                 ParameterSpec.builder(analysedRecord.intendedType(), "el", Modifier.FINAL)
                     .addJavadoc("The item to write to XML")
-                    .addAnnotation(NON_NULL)
                     .build()
             )
             .addParameter(
                 ParameterSpec.builder(XML_STREAM_WRITER, "output", Modifier.FINAL)
                     .addJavadoc("The output to write to")
-                    .addAnnotation(NON_NULL)
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING, "requestedTagName", Modifier.FINAL)
+                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "requestedTagName", Modifier.FINAL)
                     .addJavadoc("The tag name requested for this element. If null, will use the default tag name")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING, "requestedNamespace", Modifier.FINAL)
+                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "requestedNamespace", Modifier.FINAL)
                     .addJavadoc("The namespace requested for this element. If null, will use the default namespace (NOT the one on the element)")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
+                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "currentDefaultNamespace", Modifier.FINAL)
                     .addJavadoc("The current default namespace")
                     .build()
             )

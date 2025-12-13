@@ -1,14 +1,5 @@
 package io.github.cbarlin.aru.impl.builder.validation;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.impl.Constants.Names.AVAJE_CONSTRAINT_VIOLATION;
-import static io.github.cbarlin.aru.impl.Constants.Names.AVAJE_VALIDATOR;
-import static io.github.cbarlin.aru.impl.Constants.Names.JAKARTA_VALIDATOR;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Component;
 import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
@@ -24,6 +15,11 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import io.micronaut.sourcegen.javapoet.WildcardTypeName;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.AVAJE_CONSTRAINT_VIOLATION;
+import static io.github.cbarlin.aru.impl.Constants.Names.AVAJE_VALIDATOR;
 
 @Component
 @BuilderPerRecordScope
@@ -58,12 +54,10 @@ public final class AvajeValidatedBuild extends RecordVisitor {
             .addParameter(
                 ParameterSpec.builder(CLAZZ_ANY, "groups", Modifier.FINAL)
                     .addJavadoc("The groups targeted for validation")
-                    .addAnnotation(NULLABLE)
                     .build()
             )
             .varargs(true)
             .addJavadoc("Creates a new instance of {@link $T} from the fields set on this builder, validating the result.\n<p>\nUses the default validator", analysedRecord.intendedType())
-            .addAnnotation(NON_NULL)
             .addStatement("return this.$L($T.builder().build(), groups)", methodName, AVAJE_VALIDATOR);
 
         AnnotationSupplier.addGeneratedAnnotation(nArgsBuilder, this);
@@ -75,17 +69,14 @@ public final class AvajeValidatedBuild extends RecordVisitor {
             .addException(AVAJE_CONSTRAINT_VIOLATION)
             .returns(analysedRecord.intendedType())
             .addJavadoc("Creates a new instance of {@link $T} from the fields set on this builder, validating the result", analysedRecord.intendedType())
-            .addAnnotation(NON_NULL)
             .addParameter(
                 ParameterSpec.builder(AVAJE_VALIDATOR, "validator", Modifier.FINAL)
                     .addJavadoc("The validator to use")
-                    .addAnnotation(NON_NULL)
                     .build()
             )
             .addParameter(
                 ParameterSpec.builder(CLAZZ_ANY, "groups", Modifier.FINAL)
                     .addJavadoc("The groups targeted for validation")
-                    .addAnnotation(NULLABLE)
                     .build()
             )
             .varargs(true)

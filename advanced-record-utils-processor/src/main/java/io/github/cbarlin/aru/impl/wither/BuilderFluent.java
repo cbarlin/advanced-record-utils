@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.wither;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -16,6 +10,11 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 @Singleton
 @WitherPerRecordScope
@@ -36,7 +35,6 @@ public final class BuilderFluent extends WitherVisitor {
         final ClassName builderClassName = analysedRecord.builderArtifact().className();
         final ParameterizedTypeName paramTypeName = ParameterizedTypeName.get(CONSUMER, builderClassName);
         final ParameterSpec paramSpec = ParameterSpec.builder(paramTypeName, "subBuilder", Modifier.FINAL)
-                .addAnnotation(NON_NULL)
                 .addJavadoc("A function to modify a new copy of the object")
                 .build();
 
@@ -44,7 +42,6 @@ public final class BuilderFluent extends WitherVisitor {
             .addParameter(paramSpec)
             .returns(analysedRecord.intendedType())
             .addJavadoc("Allows creation of a copy of this instance with some tweaks via a builder")
-            .addAnnotation(NON_NULL)
             .addModifiers(Modifier.DEFAULT)
             .addStatement("$T.requireNonNull(subBuilder, $S)", OBJECTS, "Cannot supply a null function argument")
             .addStatement("final $T ___builder = this.$L()", builderClassName, witherOptionsPrism.convertToBuilder())

@@ -21,8 +21,6 @@ import javax.lang.model.element.VariableElement;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
-
 @Component
 @BuilderPerRecordScope
 @RequiresBean({RecordWithExtensions.class})
@@ -66,8 +64,7 @@ public final class AddExtensionMethods extends RecordVisitor {
         if (methodReturn.equals(TypeName.VOID)) {
             builder.returns(analysedRecord.builderArtifact().className())
                 .addStatement("$T.$L(this, $L)", location, name, param.name)
-                .addStatement("return this")
-                .addAnnotation(NOT_NULL);
+                .addStatement("return this");
         } else {
             builder.returns(methodReturn)
                 .addStatement("return $T.$L(this, $L)", location, name, param.name);

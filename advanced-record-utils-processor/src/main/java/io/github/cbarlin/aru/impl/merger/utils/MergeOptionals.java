@@ -1,14 +1,5 @@
 package io.github.cbarlin.aru.impl.merger.utils;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
-
-import java.util.Set;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -19,8 +10,13 @@ import io.github.cbarlin.aru.impl.merger.MergerVisitor;
 import io.github.cbarlin.aru.impl.wiring.MergerPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
-import io.micronaut.sourcegen.javapoet.TypeName;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+import java.util.Set;
+
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 
 @Singleton
 @MergerPerComponentScope
@@ -43,26 +39,22 @@ public final class MergeOptionals extends MergerVisitor {
 
     @Override
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final TypeName targetTn = analysedComponent.typeName();
-        final String methodName = mergeStaticMethodName(targetTn);
+        final String methodName = mergeStaticMethodName(analysedComponent.typeName());
         if (processedSpecs.add(methodName)) {
-            final ParameterSpec paramA = ParameterSpec.builder(targetTn, "elA", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
+            final ParameterSpec paramA = ParameterSpec.builder(analysedComponent.typeNameNullable(), "elA", Modifier.FINAL)
                 .addJavadoc("The preferred input")
                 .build();
-            final ParameterSpec paramB = ParameterSpec.builder(targetTn, "elB", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
+            final ParameterSpec paramB = ParameterSpec.builder(analysedComponent.typeNameNullable(), "elB", Modifier.FINAL)
                 .addJavadoc("The non-preferred input")
                 .build();
             final var innerTn = aoc.unNestedPrimaryTypeName();
             final MethodSpec.Builder method = mergerStaticClass.createMethod(methodName, claimableOperation);
             method.modifiers.clear();
             method.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                .addAnnotation(NOT_NULL)
                 .addParameter(paramA)
                 .addParameter(paramB)
-                .returns(targetTn)
-                .addJavadoc("Merger for fields of class {@link $T}", targetTn)
+                .returns(analysedComponent.typeNameNonNull())
+                .addJavadoc("Merger for fields of class {@link $T}", analysedComponent.typeName())
                 .addStatement(
                     """
                 return $T.requireNonNullElse(elA, $T.<$T>empty())

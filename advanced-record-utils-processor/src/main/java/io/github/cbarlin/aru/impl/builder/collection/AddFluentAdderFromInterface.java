@@ -25,7 +25,6 @@ import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 @Component
@@ -72,7 +71,6 @@ public final class AddFluentAdderFromInterface extends CollectionRecordVisitor {
             final ClassName otherBuilderClassName = asTarget.builderArtifact().className();
             final ParameterizedTypeName paramTypeName = ParameterizedTypeName.get(CONSUMER, otherBuilderClassName);
             final ParameterSpec paramSpec = ParameterSpec.builder(paramTypeName, "subBuilder", Modifier.FINAL)
-                    .addAnnotation(NON_NULL)
                     .addJavadoc("Builder used to invoke {@code $L}", addMethodName)
                     .build();
 
@@ -80,7 +78,6 @@ public final class AddFluentAdderFromInterface extends CollectionRecordVisitor {
             final String methodName = addCnToNameMethodName(targetCN);
 
             final MethodSpec.Builder methodBuilder = builder.createMethod(methodName, claimableOperation, asTarget.typeElement(), paramTypeName)
-                .addAnnotation(NON_NULL)
                 .returns(builder.className())
                 .addParameter(paramSpec)
                 .addJavadoc("Uses a supplied builder to build an instance of {@link $T} and add to the value of {@link $L}", targetCN, addMethodName)

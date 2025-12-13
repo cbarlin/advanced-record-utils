@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.impl.xml.utils;
 
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.impl.Constants;
 import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
@@ -16,8 +17,6 @@ import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import java.util.Optional;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
@@ -40,7 +39,7 @@ public final class WriteTypeAlias extends XmlVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final Optional<ClassName> className = typeAliasComponent.className();
         if (className.isEmpty()) {
             return false;
@@ -49,19 +48,16 @@ public final class WriteTypeAlias extends XmlVisitor {
         methodBuilder.modifiers.clear();
         methodBuilder.addParameter(
                     ParameterSpec.builder(XML_STREAM_WRITER, "output", Modifier.FINAL)
-                            .addAnnotation(NON_NULL)
                             .addJavadoc("The output to write to")
                             .build()
             )
             .addParameter(
-                    ParameterSpec.builder(analysedComponent.typeName(), "val", Modifier.FINAL)
-                            .addAnnotation(NULLABLE)
+                    ParameterSpec.builder(analysedComponent.typeNameNullable(), "val", Modifier.FINAL)
                             .addJavadoc("The item to write")
                             .build()
             )
             .addParameter(
-                    ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
-                            .addAnnotation(NULLABLE)
+                    ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "currentDefaultNamespace", Modifier.FINAL)
                             .addJavadoc("The current default namespace")
                             .build()
             )

@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.impl.xml;
 
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.UtilsClass;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -50,7 +51,9 @@ public final class XmlClassFactory {
         final XmlOptionsPrism xmlOptionsPrism = analysedRecord.settings().prism().xmlOptions();
         final String xmlInterfaceName = xmlOptionsPrism.xmlName();
         final ToBeBuilt xmlInterface = utilsClass.childInterfaceArtifact(xmlInterfaceName, Claims.XML_IFACE);
+        xmlInterface.builder().addAnnotation(CommonsConstants.Names.NULL_MARKED);
         final ToBeBuilt xmlStaticClass = utilsClass.childClassArtifact(XML_UTILS_CLASS, Claims.XML_STATIC_CLASS);
+        xmlStaticClass.builder().addAnnotation(CommonsConstants.Names.NULL_MARKED);
 
         return new XmlRecordHolder(
             xmlInterface,

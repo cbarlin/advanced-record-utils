@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.impl.xml;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.ClaimableOperation;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -12,20 +13,21 @@ import io.github.cbarlin.aru.prism.prison.XmlOptionsPrism;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
+import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
@@ -154,24 +156,38 @@ public abstract class XmlVisitor extends RecordVisitor {
             .orElseGet(() -> recordElement.getSimpleName().toString());
     }
 
+    private static TypeName deepAnnotate(final TypeName incoming, final AnnotationSpec toAdd) {
+        if (incoming.isAnnotated()) {
+            // Remove all existing annotations since they would all be irrelevant to the serialisation to XML of the field
+            return deepAnnotate(incoming.withoutAnnotations(), toAdd);
+        } else if (incoming.isPrimitive()) {
+            return incoming;
+        } else if (incoming instanceof final ParameterizedTypeName ptn) {
+            final TypeName[] typeArguments = ptn.typeArguments.stream()
+                    .map(ta -> deepAnnotate(ta, toAdd))
+                    .toArray(TypeName[]::new);
+            return ParameterizedTypeName.get(ptn.rawType.annotated(List.of(toAdd)), typeArguments);
+        } else {
+            return incoming.annotated(toAdd);
+        }
+    }
+
     protected final MethodSpec.Builder createMethod(final AnalysedComponent analysedComponent, final TypeName acceptedTypeName) {
         final MethodSpec.Builder methodBuilder = xmlStaticClass.createMethod(analysedComponent.name(), claimableOperation);
         methodBuilder.modifiers.clear();
+        final TypeName fullAtn = deepAnnotate(acceptedTypeName, CommonsConstants.NULLABLE_ANNOTATION);
         methodBuilder.addParameter(
                 ParameterSpec.builder(XML_STREAM_WRITER, "output", Modifier.FINAL)
-                    .addAnnotation(NON_NULL)
                     .addJavadoc("The output to write to")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(acceptedTypeName, "val", Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
+                ParameterSpec.builder(fullAtn, "val", Modifier.FINAL)
                     .addJavadoc("The item to write")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING, "currentDefaultNamespace", Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
+                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "currentDefaultNamespace", Modifier.FINAL)
                     .addJavadoc("The current default namespace")
                     .build()
             )

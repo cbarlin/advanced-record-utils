@@ -1,9 +1,5 @@
 package io.github.cbarlin.aru.impl.builder.collection;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Component;
 import io.avaje.inject.RequiresBean;
 import io.avaje.inject.RequiresProperty;
@@ -19,6 +15,8 @@ import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
+
+import javax.lang.model.element.Modifier;
 
 @Component
 @BuilderPerComponentScope
@@ -49,17 +47,15 @@ public final class AddAdder extends CollectionRecordVisitor {
         final String methodName = addNameMethodName();
         final MethodSpec.Builder method = builderClass.createMethod(methodName, claimableOperation, analysedCollectionComponent.element());
         final String name = analysedCollectionComponent.name();
-        final TypeName innerType = analysedCollectionComponent.unNestedPrimaryTypeName();
+        final TypeName innerType = analysedCollectionComponent.unNestedPrimaryTypeName().annotated(CommonsConstants.NULLABLE_ANNOTATION);
 
         final ParameterSpec param = ParameterSpec.builder(innerType, name, Modifier.FINAL)
             .addJavadoc("A singular instance to be added to the collection")
-            .addAnnotation(NULLABLE)
             .build();
 
         method.addJavadoc("Add a singular {@link $T} to the collection for the field {@code $L}", innerType, name)
             .returns(builderClass.className())
             .addParameter(param)
-            .addAnnotation(CommonsConstants.Names.NON_NULL)
             .addModifiers(Modifier.PUBLIC);
 
         if (minimalCollectionHandler.nullReplacesNotNull()) {

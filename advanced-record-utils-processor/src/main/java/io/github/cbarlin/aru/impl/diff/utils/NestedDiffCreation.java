@@ -1,11 +1,5 @@
 package io.github.cbarlin.aru.impl.diff.utils;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-
-import java.util.Set;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -19,6 +13,9 @@ import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
+import java.util.Set;
 
 @Singleton
 @DiffPerComponentScope
@@ -60,13 +57,11 @@ public final class NestedDiffCreation extends DifferVisitor {
             .returns(otherResultClass)
             .addStatement("return new $T(original, updated)", otherResultClass)
             .addParameter(
-                ParameterSpec.builder(analysedComponent.typeName(), "original", Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
+                ParameterSpec.builder(analysedComponent.typeNameNullable(), "original", Modifier.FINAL)
                     .build()   
             )
             .addParameter(
-                ParameterSpec.builder(analysedComponent.typeName(), "updated", Modifier.FINAL)
-                    .addAnnotation(NULLABLE)
+                ParameterSpec.builder(analysedComponent.typeNameNullable(), "updated", Modifier.FINAL)
                     .build()   
             );
     }

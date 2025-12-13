@@ -1,9 +1,5 @@
 package io.github.cbarlin.aru.core.impl.visitors.builder;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
@@ -13,7 +9,10 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
+
+import javax.lang.model.element.Modifier;
 
 @Component
 @CorePerRecordScope
@@ -37,16 +36,14 @@ public final class AddSetter extends RecordVisitor {
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         if(analysedComponent.isIntendedConstructorParam()) {
             final String name = analysedComponent.name();
-            final ParameterSpec param = ParameterSpec.builder(analysedComponent.typeName(), name, Modifier.FINAL)
+            final ParameterSpec param = ParameterSpec.builder(analysedComponent.typeNameNullable(), name, Modifier.FINAL)
                 .addJavadoc("The replacement value")
-                .addAnnotation(NULLABLE)
                 .build();
             
-            final var method = builderClass.createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
+            final MethodSpec.Builder method = builderClass.createMethod(analysedComponent.name(), claimableOperation, analysedComponent)
                 .addJavadoc("Updates the value of {@code $L}", name)
                 .returns(builderClassName)
                 .addParameter(param)
-                .addAnnotation(CommonsConstants.Names.NON_NULL)
                 .addModifiers(Modifier.PUBLIC);
 
             if (!Boolean.FALSE.equals(settings.prism().builderOptions().nullReplacesNotNull())) {

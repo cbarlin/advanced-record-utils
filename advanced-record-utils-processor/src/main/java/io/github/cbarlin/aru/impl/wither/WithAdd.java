@@ -16,8 +16,6 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-
 @Component
 @WitherPerComponentScope
 @RequiresProperty(value = "createAdderMethods", equalTo = "true")
@@ -39,12 +37,11 @@ public final class WithAdd extends WitherVisitor {
         final String withMethodName = witherOptionsPrism.withMethodPrefix() + capitalise(builderOptionsPrism.adderMethodPrefix()) + capitalise(name) + builderOptionsPrism.adderMethodSuffix() + witherOptionsPrism.withMethodSuffix();
         final String builderMethodName = builderOptionsPrism.adderMethodPrefix() + capitalise(name) + builderOptionsPrism.adderMethodSuffix();
         final MethodSpec.Builder methodBuilder = witherInterface.createMethod(withMethodName, claimableOperation, analysedComponent)
-                .addAnnotation(NON_NULL)
                 .returns(analysedComponent.parentRecord().intendedType())
                 .addModifiers(Modifier.DEFAULT)
                 .addJavadoc("Return a new instance with a different {@code $L} field", name)
                 .addParameter(
-                        ParameterSpec.builder(analysedComponent.typeName(), name, Modifier.FINAL)
+                        ParameterSpec.builder(analysedComponent.typeNameNullable(), name, Modifier.FINAL)
                                 .addJavadoc("Replacement value")
                                 .build()
                 )

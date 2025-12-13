@@ -1,11 +1,8 @@
 package io.github.cbarlin.aru.impl.wither;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NON_NULL;
-
-import javax.lang.model.element.Modifier;
-
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
@@ -15,6 +12,8 @@ import io.github.cbarlin.aru.impl.wiring.WitherPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
 
 @Singleton
 @WitherPerComponentScope
@@ -34,16 +33,15 @@ public final class WithAlias extends WitherVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
+    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final String name = typeAliasComponent.name();
         final String withMethodName = witherOptionsPrism.withMethodPrefix() + capitalise(name) + witherOptionsPrism.withMethodSuffix();
         final MethodSpec.Builder methodBuilder = witherInterface.createMethod(withMethodName, claimableOperation, analysedComponent)
-            .addAnnotation(NON_NULL)
             .returns(analysedComponent.parentRecord().intendedType())
             .addModifiers(Modifier.DEFAULT)
             .addJavadoc("Return a new instance with a different {@code $L} field", name)
             .addParameter(
-                ParameterSpec.builder(typeAliasComponent.serialisedTypeName(), name, Modifier.FINAL)
+                ParameterSpec.builder(typeAliasComponent.serialisedTypeName().annotated(CommonsConstants.NULLABLE_ANNOTATION), name, Modifier.FINAL)
                     .addJavadoc("Replacement value")
                     .build()
             )

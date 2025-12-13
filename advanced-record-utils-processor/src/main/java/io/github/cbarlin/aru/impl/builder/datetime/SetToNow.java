@@ -1,7 +1,6 @@
 package io.github.cbarlin.aru.impl.builder.datetime;
 
 import io.github.cbarlin.aru.core.AnnotationSupplier;
-import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.BuilderClass;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
@@ -45,7 +44,6 @@ permits AddSetLocalDateTimeToNow,
             
             methodBuilder.returns(builder.className())
                 .addJavadoc("Sets the value of the {@code $L} to the current time", analysedComponent.name())
-                .addAnnotation(CommonsConstants.Names.NON_NULL)
                 .addStatement("return this.$L($T.now())", analysedComponent.name(), dateTimeClassName);
         }
         return false;

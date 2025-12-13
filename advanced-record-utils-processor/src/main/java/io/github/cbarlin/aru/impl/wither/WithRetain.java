@@ -19,8 +19,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
-
 @Component
 @WitherPerComponentScope
 @RequiresProperty(value = "createRetainAllMethod", equalTo = "true")
@@ -50,7 +48,6 @@ public final class WithRetain extends WitherVisitor {
         final TypeName innerType = acc.unNestedPrimaryTypeName();
         final ParameterizedTypeName ptn = ParameterizedTypeName.get(CommonsConstants.Names.COLLECTION, innerType);
         final MethodSpec.Builder methodBuilder = witherInterface.createMethod(withMethodName, claimableOperation, analysedComponent)
-                .addAnnotation(NON_NULL)
                 .returns(analysedComponent.parentRecord().intendedType())
                 .addModifiers(Modifier.DEFAULT)
                 .addJavadoc("Return a new instance with a different {@code $L} field", name)

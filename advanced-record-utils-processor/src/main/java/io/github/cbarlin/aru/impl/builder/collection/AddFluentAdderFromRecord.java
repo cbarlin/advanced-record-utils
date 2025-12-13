@@ -20,7 +20,6 @@ import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.impl.Constants.Names.CONSUMER;
-import static io.github.cbarlin.aru.impl.Constants.Names.NON_NULL;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 @Component
@@ -60,11 +59,9 @@ public final class AddFluentAdderFromRecord extends CollectionRecordVisitor {
         final ClassName otherBuilderClassName = target.builderArtifact().className();
         final ParameterizedTypeName paramTypeName = ParameterizedTypeName.get(CONSUMER, otherBuilderClassName);
         final ParameterSpec paramSpec = ParameterSpec.builder(paramTypeName, "subBuilder", Modifier.FINAL)
-                .addAnnotation(NON_NULL)
                 .addJavadoc("Builder that can be used to replace {@code $L}", name)
                 .build();
         final var methodBuilder = builder.createMethod(addNameMethodName(), claimableOperation, analysedCollectionComponent, CONSUMER)
-            .addAnnotation(NON_NULL)
             .returns(builder.className())
             .addParameter(paramSpec)
             .addJavadoc("Uses a supplied builder to replace the value at {@code $L}", name)

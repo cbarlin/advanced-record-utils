@@ -43,7 +43,6 @@ public final class SetToNull extends RecordVisitor {
                 analysedComponent.name()
             )
             .addStatement("return this")
-            .addAnnotation(Constants.Names.NON_NULL)
             .addJavadoc(
                 "Sets the value of $L to null.\n",
                 analysedComponent.name()
