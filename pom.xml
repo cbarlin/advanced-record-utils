@@ -57,7 +57,7 @@
         <avaje-prism.version>2.0</avaje-prism.version>
         <avaje-spi.version>2.14</avaje-spi.version>
         <avaje-validator.version>2.15</avaje-validator.version>
-        <avaje-inject.version>12.1</avaje-inject.version>
+        <avaje-inject.version>12.2</avaje-inject.version>
         <caffeine.version>3.2.3</caffeine.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-io.version>2.21.0</commons-io.version>
@@ -83,7 +83,7 @@
         <maven-artifact-plugin.version>3.6.1</maven-artifact-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-        <maven-core.version>3.9.11</maven-core.version>
+        <maven-core.version>3.9.12</maven-core.version>
         <maven-dependency-plugin.version>3.9.0</maven-dependency-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
