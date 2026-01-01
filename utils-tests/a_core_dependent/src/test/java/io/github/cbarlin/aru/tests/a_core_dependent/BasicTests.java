@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.assertj.core.api.Condition;
 
+import java.util.Optional;
+
 class BasicTests {
 
     @Test
@@ -58,6 +60,17 @@ class BasicTests {
         assertThat(versionB.appendMe())
             .isNotNull()
             .isEqualTo("lol and me!");
+    }
+
+    @Test
+    void fromAcceptsThings(){
+        final MyRecordE myRecordE = MyRecordEUtils.builder()
+                .someOtherValue("AAAA")
+                .build();
+        final MyRecordE second = MyRecordEUtils.from(myRecordE).build();
+        final MyRecordE third = MyRecordEUtils.from(Optional.of(myRecordE)).build();
+        assertEquals(myRecordE, second);
+        assertEquals(myRecordE, third);
     }
 
     @Test
