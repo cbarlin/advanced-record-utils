@@ -10,7 +10,8 @@ import java.util.Optional;
 public record TypeAliasComponent(
     AnalysedComponent delegate,
     TypeName aliasFor,
-    ClassName aliasClassName
+    ClassName aliasClassName,
+    String valueMethodName
 ) implements DelegatingComponent {
 
     @Override

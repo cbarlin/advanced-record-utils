@@ -5,6 +5,7 @@ import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
 import io.github.cbarlin.aru.impl.xml.LibraryLoadedXmlStaticHelper;
 import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
@@ -29,9 +30,10 @@ public final class WriteLibraryLoaded extends NonCollectionXmlVisitor {
         final XmlRecordHolder xmlRecordHolder,
         final XmlElementPrism prism,
         final LibraryLoadedXmlStaticHelper component,
-        final Optional<AnalysedOptionalComponent> analysedOptionalComponent
+        final Optional<AnalysedOptionalComponent> analysedOptionalComponent,
+        final Optional<TypeAliasComponent> typeAliasComponent
     ) {
-        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent);
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent, typeAliasComponent);
         this.prism = prism;
         this.other = component;
     }

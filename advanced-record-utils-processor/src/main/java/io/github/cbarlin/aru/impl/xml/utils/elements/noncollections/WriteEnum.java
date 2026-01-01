@@ -5,6 +5,7 @@ import io.github.cbarlin.aru.core.OptionalClassDetector;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
 import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
@@ -24,8 +25,13 @@ public final class WriteEnum extends NonCollectionXmlVisitor {
     private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
     private final XmlElementPrism prism;
 
-    public WriteEnum(final XmlRecordHolder xmlHolder, final Optional<AnalysedOptionalComponent> analysedOptionalComponent, final XmlElementPrism prism) {
-        super(Constants.Claims.XML_WRITE_FIELD, xmlHolder, analysedOptionalComponent);
+    public WriteEnum(
+        final XmlRecordHolder xmlRecordHolder,
+        final XmlElementPrism prism,
+        final Optional<AnalysedOptionalComponent> analysedOptionalComponent,
+        final Optional<TypeAliasComponent> typeAliasComponent
+    ) {
+        super(Constants.Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent, typeAliasComponent);
         this.prism = prism;
     }
 

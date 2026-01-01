@@ -96,6 +96,7 @@ public enum Constants {
         public static final ClassName ENUM = ClassName.get(JAVA_LANG, "Enum");
         public static final ClassName ENUM_SET = ClassName.get(JAVA_UTIL, "EnumSet");
         public static final ClassName FUNCTION = ClassName.get(JAVA_UTIL_FUNCTION, "Function");
+        public static final ClassName HAS_VALUE = ClassName.get("com.tguzik.traits", "HasValue");
         public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(JAVA_LANG, "IllegalArgumentException");
         public static final ClassName ITERABLE = ClassName.get(JAVA_LANG, "Iterable");
         public static final ClassName ITERATOR = ClassName.get(JAVA_UTIL, "Iterator");
@@ -118,7 +119,7 @@ public enum Constants {
         public static final ClassName STRING = ClassName.get(JAVA_LANG, "String");
         public static final ClassName STRINGUTILS = ClassName.get("org.apache.commons.lang3", "StringUtils");
         public static final ClassName TREE_SET = ClassName.get(JAVA_UTIL, "TreeSet");
-        public static final ClassName TYPE_ALIAS = ClassName.get("io.github.cbarlin.aru.annotations", "TypeAlias");
+        public static final ClassName TYPE_ALIAS = CommonsConstants.Names.TYPE_ALIAS;
         public static final ClassName UNARY_OPERATOR = ClassName.get(JAVA_UTIL_FUNCTION, "UnaryOperator");
         public static final ClassName UUID = ClassName.get(JAVA_UTIL, "UUID");
         public static final ClassName VALIDATE = ClassName.get("org.apache.commons.lang3", "Validate");

@@ -65,9 +65,10 @@ public final class WriteTypeAlias extends XmlVisitor {
             .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .addJavadoc("Add the {@code $L} field to the XML output", analysedComponent.name())
             .addStatement(
-                    "$T.$L(output, val.value(), currentDefaultNamespace)",
+                    "$T.$L(output, val.$L(), currentDefaultNamespace)",
                     xmlStaticClass.className(),
-                    analysedComponent.name()
+                    analysedComponent.name(),
+                    typeAliasComponent.valueMethodName()
             );
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
         return true;
