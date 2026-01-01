@@ -36,6 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.HAS_VALUE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.TYPE_ALIAS;
 
 @Component
@@ -52,7 +53,7 @@ public final class RecordTargetAnalyser extends ConcreteTargetAnalyser {
         if (!(ElementKind.RECORD.equals(element.getKind()) && element instanceof final TypeElement typeElement)) {
             return TargetAnalysisResult.EMPTY_RESULT;
         }
-        if (OptionalClassDetector.checkSameOrSubType(TypeName.get(element.asType()), TYPE_ALIAS)) {
+        if (OptionalClassDetector.checkSameOrSubType(TypeName.get(element.asType()), TYPE_ALIAS) || OptionalClassDetector.checkSameOrSubType(TypeName.get(element.asType()), HAS_VALUE)) {
             return TargetAnalysisResult.EMPTY_RESULT;
         }
         final Optional<AdvRecUtilsSettings> presentSettingsOptional = AdvRecUtilsSettings.wrapOptional(typeElement, context.processingEnv());

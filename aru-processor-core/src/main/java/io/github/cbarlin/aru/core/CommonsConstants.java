@@ -54,6 +54,7 @@ public enum CommonsConstants {
         public static final ClassName GENERATED_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "Generated");
         public static final ClassName GENERATED_UTIL = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "GeneratedUtil");
         public static final ClassName HASH_SET = ClassName.get(JAVA_UTIL, "HashSet");
+        public static final ClassName HAS_VALUE = ClassName.get("com.tguzik.traits", "HasValue");
         public static final ClassName LIST = ClassName.get(JAVA_UTIL, "List");
         public static final ClassName LOGGER = ClassName.get("org.slf4j", "Logger");
         public static final ClassName LOGGER_FACTORY = ClassName.get("org.slf4j", "LoggerFactory");

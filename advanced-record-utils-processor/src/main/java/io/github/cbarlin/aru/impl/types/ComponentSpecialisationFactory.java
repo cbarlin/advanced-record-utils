@@ -9,6 +9,7 @@ import io.github.cbarlin.aru.core.types.AnalysedInterface;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.components.BasicAnalysedComponent;
+import io.github.cbarlin.aru.impl.Constants;
 import io.github.cbarlin.aru.impl.wiring.BasePerComponentScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
@@ -32,7 +33,6 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_DOUBLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_INT;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_LONG;
-import static io.github.cbarlin.aru.impl.Constants.Names.TYPE_ALIAS;
 
 @Factory
 @BasePerComponentScope
@@ -97,11 +97,11 @@ public final class ComponentSpecialisationFactory {
     @BeanTypes(AnalysedOptionalCollection.class)
     Optional<AnalysedOptionalCollection> analyse() {
         if (
-                basicAnalysedComponent.typeName() instanceof ParameterizedTypeName optPtn &&
+                basicAnalysedComponent.typeName() instanceof final ParameterizedTypeName optPtn &&
                 optPtn.typeArguments.size() == 1 &&
                 basicAnalysedComponent.componentType() instanceof final DeclaredType declaredType &&
                 OptionalClassDetector.checkSameOrSubType(basicAnalysedComponent.element(), OPTIONAL) &&
-                optPtn.typeArguments.getFirst() instanceof ParameterizedTypeName colPtn &&
+                optPtn.typeArguments.getFirst() instanceof final ParameterizedTypeName colPtn &&
                 colPtn.typeArguments.size() == 1 &&
                 OptionalClassDetector.checkSameOrSubType(colPtn.rawType, COLLECTION)
         ) {
@@ -120,11 +120,8 @@ public final class ComponentSpecialisationFactory {
         return Optional.empty();
     }
 
-    @Bean
-    @BeanTypes(TypeAliasComponent.class)
-    Optional<TypeAliasComponent> typeAliasComponent() {
-        final RecordComponentElement element = basicAnalysedComponent.element();
-        if (OptionalClassDetector.checkSameOrSubType(element, TYPE_ALIAS)) {
+    private Optional<TypeAliasComponent> taFromParamTypeName(final RecordComponentElement element, final ClassName originalType, final String valueMethodName) {
+        if (OptionalClassDetector.checkSameOrSubType(element, originalType)) {
             final Types typeUtils = APContext.types();
 
             final Set<TypeName> seen = new HashSet<>();
@@ -139,15 +136,16 @@ public final class ComponentSpecialisationFactory {
                 }
                 final TypeName name = TypeName.get(currentIfaceMirror);
                 if (
-                        name instanceof ParameterizedTypeName ptn &&
-                        TYPE_ALIAS.equals(ptn.rawType)
+                        name instanceof final ParameterizedTypeName ptn &&
+                                originalType.equals(ptn.rawType)
                 ) {
                     if (ptn.typeArguments.size() == 1) {
                         return Optional.of(
                                 new TypeAliasComponent(
                                         basicAnalysedComponent,
                                         ptn.typeArguments.getFirst(),
-                                        aliasName
+                                        aliasName,
+                                        valueMethodName
                                 )
                         );
                     } else {
@@ -158,16 +156,24 @@ public final class ComponentSpecialisationFactory {
 
                 // Add super-interfaces of the current interface to the queue for further exploration
                 if (typeUtils.asElement(currentIfaceMirror) instanceof final TypeElement ifaceElement) {
-                     interfaceQueue.addAll(ifaceElement.getInterfaces());
+                    interfaceQueue.addAll(ifaceElement.getInterfaces());
                 }
             }
 
             // If we reach here, TypeAlias was not found correctly in the hierarchy
             APContext.messager().printWarning(
-                "Read type as a subtype of TypeAlias, but could not extract the aliased type from the hierarchy. Ignoring the aliasing for this element",
-                element
+                    "Read type as a subtype of TypeAlias, but could not extract the aliased type from the hierarchy. Ignoring the aliasing for this element",
+                    element
             );
         }
         return Optional.empty();
+    }
+
+    @Bean
+    @BeanTypes(TypeAliasComponent.class)
+    Optional<TypeAliasComponent> typeAliasComponent() {
+        final RecordComponentElement element = basicAnalysedComponent.element();
+        return taFromParamTypeName(element, Constants.Names.TYPE_ALIAS, "value")
+                .or(() -> taFromParamTypeName(element, Constants.Names.HAS_VALUE, "get"));
     }
 }

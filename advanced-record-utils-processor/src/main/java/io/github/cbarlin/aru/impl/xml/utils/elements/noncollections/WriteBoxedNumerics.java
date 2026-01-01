@@ -4,6 +4,7 @@ import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
 import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
@@ -37,8 +38,13 @@ public final class WriteBoxedNumerics extends NonCollectionXmlVisitor {
 
     private final XmlElementPrism prism;
 
-    public WriteBoxedNumerics(final XmlRecordHolder xmlRecordHolder, final XmlElementPrism prism, final Optional<AnalysedOptionalComponent> analysedOptionalComponent) {
-        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent);
+    public WriteBoxedNumerics(
+            final XmlRecordHolder xmlRecordHolder,
+            final XmlElementPrism prism,
+            final Optional<AnalysedOptionalComponent> analysedOptionalComponent,
+            final Optional<TypeAliasComponent> typeAliasComponent
+    ) {
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent, typeAliasComponent);
         this.prism = prism;
     }
 

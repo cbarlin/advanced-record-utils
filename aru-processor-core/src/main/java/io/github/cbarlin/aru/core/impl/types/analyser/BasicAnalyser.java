@@ -52,8 +52,8 @@ public final class BasicAnalyser {
             final UtilsProcessingContext utilsProcessingContext
     ) {
         return switch (typeName) {
-            case ParameterizedTypeName ptn when ptn.typeArguments.size() == 1 -> extractFromClassName(ptn.typeArguments.getFirst(), utilsProcessingContext);
-            case ClassName className -> extractFromClassName(className, utilsProcessingContext);
+            case final ParameterizedTypeName ptn when ptn.typeArguments.size() == 1 -> extractFromClassName(ptn.typeArguments.getFirst(), utilsProcessingContext);
+            case final ClassName className -> extractFromClassName(className, utilsProcessingContext);
             default -> Optional.empty();
         };
     }

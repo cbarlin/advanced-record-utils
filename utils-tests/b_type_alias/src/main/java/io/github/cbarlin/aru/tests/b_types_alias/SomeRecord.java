@@ -23,18 +23,24 @@ public record SomeRecord(
     @XmlTransient
     AnEnumInDep anEnumInDep,
     @XmlTransient
-    String another
+    String another,
+    @XmlElement(name = "vCsL")
+    ValueClsLong valueClsLong,
+    @XmlElement(name = "vCsInt")
+    ValueClsInt valueClsInt,
+    @XmlElement(name = "vCsStr")
+    ValueClsString valueClsString
 ) implements SomeRecordUtils.All {
 
     // Test to ensure that inferring intended constructor without annotation works
     public SomeRecord (
-        BookName bookName,
-        AuthorName authorName,
-        RandomIntA randomIntA,
-        RandomIntB randomIntB,
-        RandomIntC randomIntC,
-        AnEnumInDep anEnumInDep
+        final BookName bookName,
+        final AuthorName authorName,
+        final RandomIntA randomIntA,
+        final RandomIntB randomIntB,
+        final RandomIntC randomIntC,
+        final AnEnumInDep anEnumInDep
     ) {
-        this(bookName, authorName, randomIntA, randomIntB, randomIntC, anEnumInDep, "Some string");
+        this(bookName, authorName, randomIntA, randomIntB, randomIntC, anEnumInDep, "Some string", new ValueClsLong(5L), new ValueClsInt(69), new ValueClsString("Can this work?"));
     }
 }

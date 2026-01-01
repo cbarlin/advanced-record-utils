@@ -85,5 +85,11 @@
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.tguzik</groupId>
+            <artifactId>valueclasses</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

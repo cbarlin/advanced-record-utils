@@ -11,6 +11,7 @@ import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.ComponentTargetingInterface;
+import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
 import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
@@ -45,9 +46,10 @@ public final class Branching extends NonCollectionXmlVisitor {
         final XmlRecordHolder xmlRecordHolder,
         final XmlElementsPrism prism,
         final ComponentTargetingInterface component,
-        final Optional<AnalysedOptionalComponent> analysedOptionalComponent
+        final Optional<AnalysedOptionalComponent> analysedOptionalComponent,
+        final Optional<TypeAliasComponent> typeAliasComponent
     ) {
-        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent);
+        super(Claims.XML_WRITE_FIELD, xmlRecordHolder, analysedOptionalComponent, typeAliasComponent);
         this.outerPrism = prism;
         this.other = component.target();
     }
@@ -107,8 +109,8 @@ public final class Branching extends NonCollectionXmlVisitor {
 
     @Nullable
     final ClassName getOtherXmlUtils(final ProcessingTarget target) {
-        if (target instanceof final AnalysedRecord analysedRecord) {
-            return analysedRecord.utilsClass().childClassArtifact(XML_UTILS_CLASS, Claims.XML_STATIC_CLASS).className();
+        if (target instanceof final AnalysedRecord othAnalysedRecord) {
+            return othAnalysedRecord.utilsClass().childClassArtifact(XML_UTILS_CLASS, Claims.XML_STATIC_CLASS).className();
         } else if (target instanceof final LibraryLoadedTarget libraryLoadedTarget) {
             return Optional.ofNullable(libraryLoadedTarget.utilsClass().childArtifact(XML_UTILS_CLASS, Claims.XML_STATIC_CLASS))
                 .map(PreBuilt::className)
