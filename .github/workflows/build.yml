@@ -17,9 +17,9 @@ jobs:
       matrix:
         java_version: [21, 25]
     steps:
-    - uses: actions/checkout@v5.0.0
+    - uses: actions/checkout@v6.0.1
     - name: Set up Java
-      uses: actions/setup-java@v5.0.0
+      uses: actions/setup-java@v5.1.0
       with:
         java-version: ${{ matrix.java_version }}
         distribution: 'zulu'
@@ -30,12 +30,12 @@ jobs:
     - name: Build with Maven
       run: rm -rf ~/.m2/io/github/cbarlin && mvn clean install -B -T4 && mvn clean verify artifact:compare -T4 -B && rm -rf ~/.m2/io/github/cbarlin
     - name: Upload coverage reports to Codecov with GitHub Action
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v5.5.2
       if: matrix.java_version == 25
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     - name: Upload test results
-      uses: codecov/test-results-action@v1
+      uses: codecov/test-results-action@v1.2.1
       if: matrix.java_version == 25
       with:
         token: ${{ secrets.CODECOV_TOKEN }}

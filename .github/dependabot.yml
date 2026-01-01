@@ -12,3 +12,9 @@ updates:
     labels:
       - "dependencies"
     target-branch: "main"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "main"
+    schedule:
+      # Check for updates to GitHub Actions every week
+      interval: "weekly"
