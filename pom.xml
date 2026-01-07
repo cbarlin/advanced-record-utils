@@ -55,7 +55,7 @@
         <!-- Dependencies -->
         <avaje-jsonb.version>3.9</avaje-jsonb.version>
         <avaje-prism.version>2.0</avaje-prism.version>
-        <avaje-spi.version>2.14</avaje-spi.version>
+        <avaje-spi.version>2.15</avaje-spi.version>
         <avaje-validator.version>2.15</avaje-validator.version>
         <avaje-inject.version>12.2</avaje-inject.version>
         <caffeine.version>3.2.3</caffeine.version>
@@ -69,7 +69,7 @@
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.4</jakarta-xml-bind-api.version>
         <jspecify.version>1.0.0</jspecify.version>
-        <junit-bom.version>6.0.1</junit-bom.version>
+        <junit-bom.version>6.0.2</junit-bom.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <mockito.version>5.21.0</mockito.version>
         <stax2-api.version>4.2.2</stax2-api.version>
