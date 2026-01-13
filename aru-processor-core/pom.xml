@@ -20,7 +20,7 @@
     </scm>
 
     <properties>
-        <micronaut-javapoet.version>1.8.3</micronaut-javapoet.version>
+        <micronaut-javapoet.version>1.8.4</micronaut-javapoet.version>
     </properties>
 
     <dependencies>
