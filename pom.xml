@@ -55,7 +55,7 @@
         <!-- Dependencies -->
         <avaje-jsonb.version>3.9</avaje-jsonb.version>
         <avaje-prism.version>2.0</avaje-prism.version>
-        <avaje-spi.version>2.15</avaje-spi.version>
+        <avaje-spi.version>2.16</avaje-spi.version>
         <avaje-validator.version>2.16</avaje-validator.version>
         <avaje-inject.version>12.2</avaje-inject.version>
         <caffeine.version>3.2.3</caffeine.version>
@@ -64,7 +64,7 @@
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <guava.version>33.5.0-jre</guava.version>
-        <jackson-annotations.version>2.20.1</jackson-annotations.version>
+        <jackson-annotations.version>2.21.0</jackson-annotations.version>
         <jacoco.version>0.8.14</jacoco.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.4</jakarta-xml-bind-api.version>
@@ -77,7 +77,7 @@
         <woodstox.version>7.1.1</woodstox.version>
         <xmlunit.version>2.11.0</xmlunit.version>
         <rainbowgum.version>0.8.2</rainbowgum.version>
-        <valueclasses.version>2.0.0</valueclasses.version>
+        <valueclasses.version>2.0.1</valueclasses.version>
 
         <!-- Maven versions -->
         <central-publishing.version>0.10.0</central-publishing.version>
@@ -98,7 +98,7 @@
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-        <versions-plugin.version>2.20.1</versions-plugin.version>
+        <versions-plugin.version>2.21.0</versions-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
