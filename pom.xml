@@ -53,11 +53,11 @@
         <project.build.outputTimestamp>2026-01-01T22:34:02Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
-        <avaje-jsonb.version>3.10</avaje-jsonb.version>
+        <avaje-jsonb.version>3.11</avaje-jsonb.version>
         <avaje-prism.version>2.0</avaje-prism.version>
         <avaje-spi.version>2.16</avaje-spi.version>
         <avaje-validator.version>2.16</avaje-validator.version>
-        <avaje-inject.version>12.3</avaje-inject.version>
+        <avaje-inject.version>12.4</avaje-inject.version>
         <caffeine.version>3.2.3</caffeine.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-io.version>2.21.0</commons-io.version>
