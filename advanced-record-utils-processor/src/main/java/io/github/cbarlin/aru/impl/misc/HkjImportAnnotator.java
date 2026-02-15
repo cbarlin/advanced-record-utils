@@ -26,23 +26,13 @@ public final class HkjImportAnnotator extends RecordVisitor {
 
     @Override
     protected boolean visitStartOfClassImpl() {
-        if (!analysedRecord.intendedType().equals(analysedRecord.className())) {
-            analysedRecord.utilsClass()
+        analysedRecord.utilsClass()
                 .builder()
                 .addAnnotation(
-                    AnnotationSpec.builder(Names.HKJ_IMPORT)
-                        .addMember("value", "{$T.class, $T.class}", analysedRecord.className(), analysedRecord.intendedType())
-                        .build()
+                        AnnotationSpec.builder(Names.HKJ_IMPORT)
+                                .addMember("value", "{$T.class}", analysedRecord.intendedType())
+                                .build()
                 );
-        } else {
-            analysedRecord.utilsClass()
-                .builder()
-                .addAnnotation(
-                    AnnotationSpec.builder(Names.HKJ_IMPORT)
-                        .addMember("value", "{$T.class}", analysedRecord.className())
-                        .build()
-                );
-        }
         return true;
     }
 }
