@@ -82,6 +82,23 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>jdk25plus</id>
+            <activation>
+                <jdk>[25,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.github.cbarlin.aru.tests</groupId>
+                    <artifactId>c_hkj</artifactId>
+                    <version>${project.version}</version>
+                    <scope>compile</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
