@@ -167,6 +167,18 @@
                                     </includes>
                                 </fileSet>
                                 <fileSet>
+                                    <directory>${project.basedir}/../utils-tests/c_hkj/target</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet>
+                                    <directory>${project.basedir}/../utils-tests/xml_util/target</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                                <fileSet>
                                     <directory>${project.basedir}/../utils-tests/d_eclipse_collections/target</directory>
                                     <includes>
                                         <include>*.exec</include>
