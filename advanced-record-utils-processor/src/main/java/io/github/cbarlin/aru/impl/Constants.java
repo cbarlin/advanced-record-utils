@@ -45,6 +45,7 @@ public enum Constants {
         public static final ClaimableOperation MERGE_IFACE_MERGE_OPTIONAL = new ClaimableOperation("mergeInterfaceMergeOptionalMethod", CLASS);
         public static final ClaimableOperation MERGE_STATIC_MERGE = new ClaimableOperation("mergeStaticMergeMethod", CLASS);
         public static final ClaimableOperation MISC_AVAJE_JSONB_IMPORT = new ClaimableOperation("miscAvajeJsonbImport", CLASS);
+        public static final ClaimableOperation MISC_HKJ_IMPORT = new ClaimableOperation("miscHkjImport", CLASS);
         public static final ClaimableOperation WITHER_FLUENT_BUILDER = new ClaimableOperation("witherFluentBuilder", CLASS);
         public static final ClaimableOperation WITHER_IFACE = new ClaimableOperation("wither", CLASS);
         public static final ClaimableOperation WITHER_TO_BUILDER = new ClaimableOperation("witherToBuilder", CLASS);
@@ -98,6 +99,7 @@ public enum Constants {
         public static final ClassName ENUM_SET = ClassName.get(JAVA_UTIL, "EnumSet");
         public static final ClassName FUNCTION = ClassName.get(JAVA_UTIL_FUNCTION, "Function");
         public static final ClassName HAS_VALUE = ClassName.get("com.tguzik.traits", "HasValue");
+        public static final ClassName HKJ_IMPORT = ClassName.get("org.higherkindedj.optics.annotations", "ImportOptics");
         public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(JAVA_LANG, "IllegalArgumentException");
         public static final ClassName ITERABLE = ClassName.get(JAVA_LANG, "Iterable");
         public static final ClassName ITERATOR = ClassName.get(JAVA_UTIL, "Iterator");

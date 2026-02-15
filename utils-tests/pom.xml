@@ -141,4 +141,42 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>jdk25plus</id>
+            <activation>
+                <jdk>[25,)</jdk>
+            </activation>
+            <modules>
+                <module>c_hkj</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>io.github.cbarlin</groupId>
+                                    <artifactId>advanced-record-utils-processor</artifactId>
+                                    <version>${project.version}</version>
+                                </path>
+                                <path>
+                                    <groupId>io.avaje</groupId>
+                                    <artifactId>avaje-jsonb-generator</artifactId>
+                                    <version>${avaje-jsonb.version}</version>
+                                </path>
+                                <path>
+                                    <groupId>io.github.higher-kinded-j</groupId>
+                                    <artifactId>hkj-processor-plugins</artifactId>
+                                    <version>${higher-kinded-j.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

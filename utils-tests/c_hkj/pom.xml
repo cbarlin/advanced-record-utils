@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.cbarlin.aru.tests</groupId>
+        <artifactId>utils-tests</artifactId>
+        <version>0.7.4-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>io.github.cbarlin.aru.tests</groupId>
+    <artifactId>c_hkj</artifactId>
+    <name>Advanced Record Utils - Tests - Higher Kinded J integration</name>
+
+    <properties>
+        <maven.compiler.release>25</maven.compiler.release>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>xml_util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cbarlin.aru.tests</groupId>
+            <artifactId>a_core_dependency</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.higher-kinded-j</groupId>
+            <artifactId>hkj-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>
