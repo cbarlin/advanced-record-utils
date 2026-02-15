@@ -135,4 +135,17 @@ class NestedTests {
             .build());
         assertNotNull(fl.recurringReference().recurisveItems());
     }
+
+    @Test
+    void testAddFluentSetterFromOptionalInterface() {
+        final SecondLevelA result = SecondLevelAUtils.builder()
+                .optIfaceAsThirdLevelAFromA(b -> b.thirdString("A"))
+                .optIfaceAsThirdLevelAFromA(b -> b.thirdString("AAAA"))
+                .build();
+        assertThat(result.optIface())
+                .isPresent()
+                .containsInstanceOf(ThirdLevelAFromA.class)
+                .get()
+                .hasFieldOrPropertyWithValue("thirdString", "AAAA");
+    }
 }
