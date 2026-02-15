@@ -39,7 +39,7 @@ runs:
         elif [ "$RUNNER_OS" == "Windows" ]; then
           MVND_PLATFORM="windows"
         else
-          "echo Unknown platform: $RUNNER_OS"
+          echo "Unknown platform: $RUNNER_OS"
           exit 1
         fi
         MVND_ARCHITECTURE="amd64"
