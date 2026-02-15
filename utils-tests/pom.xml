@@ -141,4 +141,57 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>jdk25plus</id>
+            <activation>
+                <jdk>[25,)</jdk>
+            </activation>
+            <modules>
+                <module>xml_util</module>
+                <module>a_core_dependency</module>
+                <module>a_core_dependent</module>
+                <module>c_deeply_nested_commons_lang</module>
+                <module>c_deeply_nested_structure</module>
+                <module>b_type_alias</module>
+                <module>b_infer_xml</module>
+                <module>c_odd_types</module>
+                <module>d_eclipse_collections</module>
+                <module>c_hkj</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>io.github.cbarlin</groupId>
+                                    <artifactId>advanced-record-utils-processor</artifactId>
+                                    <version>${project.version}</version>
+                                </path>
+                                <path>
+                                    <groupId>io.avaje</groupId>
+                                    <artifactId>avaje-jsonb-generator</artifactId>
+                                    <version>${avaje-jsonb.version}</version>
+                                </path>
+                                <path>
+                                    <groupId>io.github.higher-kinded-j</groupId>
+                                    <artifactId>hkj-processor-plugins</artifactId>
+                                    <version>${higher-kinded-j.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                            <fork>true</fork>
+                            <compilerArgs>
+                                <arg>-J${jacoco.agent.argLine}</arg>
+                                <!--                        <arg>-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005</arg>-->
+                                <!--                        <arg>-J-agentpath:/home/conrad/bin/async-profiler-4.1-linux-x64/lib/libasyncProfiler.so=start,file=${project.basedir}/target/profile.html</arg>-->
+                            </compilerArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

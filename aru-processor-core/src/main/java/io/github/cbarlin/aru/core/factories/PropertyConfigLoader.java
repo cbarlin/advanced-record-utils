@@ -60,6 +60,7 @@ public final class PropertyConfigLoader implements ConfigPropertyPlugin {
                 case "nullReplacesNotNull" -> Boolean.FALSE.equals(prism.builderOptions().nullReplacesNotNull()) ? FALSE : TRUE;
                 case "buildNullCollectionToEmpty" -> Boolean.FALSE.equals(prism.builderOptions().buildNullCollectionToEmpty()) ? FALSE : TRUE;
                 // Default of false means `null` is false, so compare against true
+                case "addHigherKindedJImportAnnotation" -> Boolean.TRUE.equals(prism.addHigherKindedJImportAnnotation()) ? TRUE : FALSE;
                 case "delayNestedBuild" -> Boolean.TRUE.equals(prism.builderOptions().delayNestedBuild()) ? TRUE : FALSE;
                 case "setTimeNowMethods" -> Boolean.TRUE.equals(prism.builderOptions().setTimeNowMethods()) ? TRUE : FALSE;
                 case "setToNullMethods" -> Boolean.TRUE.equals(prism.builderOptions().setToNullMethods()) ? TRUE : FALSE;
