@@ -124,7 +124,7 @@ public @interface AdvancedRecordUtils {
      * <p>
      * Useful if you want to avoid annotating every type in a hierarchy or an entire package.
      * <p>
-     * Note: Enabling this requires Higher Kinded J is on the compilation classpath (optional dependency).
+     * Note: Enabling this requires Higher Kinded J to be on the compilation classpath (optional dependency).
      * @since 0.7.8
      */
     boolean addHigherKindedJImportAnnotation() default false;
