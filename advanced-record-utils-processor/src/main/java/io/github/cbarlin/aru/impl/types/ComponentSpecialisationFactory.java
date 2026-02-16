@@ -208,8 +208,8 @@ public final class ComponentSpecialisationFactory {
             case "SortedMap", "TreeMap", "NavigableMap", "SequencedMap" -> Constants.Names.TREE_MAP;
             case "HashMap", "Map", "AbstractMap" -> Constants.Names.HASH_MAP;
             // This will rarely come up, so we won't bother putting them in constants...
-            case "ConcurrentMap" -> ClassName.get("java.util", "ConcurrentHashMap");
-            case "ConcurrentNavigableMap" -> ClassName.get("java.util", "ConcurrentSkipListMap");
+            case "ConcurrentMap" -> ClassName.get("java.util.concurrent", "ConcurrentHashMap");
+            case "ConcurrentNavigableMap" -> ClassName.get("java.util.concurrent", "ConcurrentSkipListMap");
             default -> mapTypeName;
         };
     }
