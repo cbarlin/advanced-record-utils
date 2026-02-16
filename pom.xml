@@ -6,7 +6,7 @@
 
     <groupId>io.github.cbarlin</groupId>
     <artifactId>aru-parent</artifactId>
-    <version>0.7.4-SNAPSHOT</version>
+    <version>0.7.4</version>
 
     <name>Advanced Record Utils - Parent</name>
     <description>A collection of record utilities, covering quite a wide variety of use-cases.</description>
@@ -50,7 +50,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.proc>full</maven.compiler.proc>
-        <project.build.outputTimestamp>2026-01-01T22:34:02Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-02-16T02:10:47Z</project.build.outputTimestamp>
 
         <!-- Dependencies -->
         <avaje-jsonb.version>3.11</avaje-jsonb.version>

@@ -255,7 +255,7 @@ public @interface AdvancedRecordUtilsGenerated {
         /**
          * The patch version of the library
          */
-        public static final int PATCH_VERSION = 3;
+        public static final int PATCH_VERSION = 4;
 
         /**
          * The major version of the generator used
