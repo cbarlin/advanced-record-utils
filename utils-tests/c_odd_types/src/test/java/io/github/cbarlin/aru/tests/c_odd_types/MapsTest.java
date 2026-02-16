@@ -4,9 +4,21 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MapsTest {
+
+    @Test
+    void detectsSubRecords() {
+        final MapKeyRecord a = MapKeyRecordUtils.builder()
+                .value(42)
+                .build();
+        final MapValueRecord b = MapValueRecordUtils.builder()
+                .otherValue(42)
+                .build();
+        assertEquals(a.value(), b.otherValue());
+    }
 
     @Test
     void nonNullImmutable() {
