@@ -6,8 +6,8 @@ export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
 #  to run the the build locally similarly to how the github action does it
 #  since I keep forgetting to check the javadoc builds...
 rm -rf ~/.m2/io/github/cbarlin && \
-    mvnd clean install -T4 && \
-    mvnd clean verify artifact:compare -T4 -DskipTests && \
+    mvnd clean install && \
+    mvnd clean verify artifact:compare -DskipTests && \
     rm -rf ~/.m2/io/github/cbarlin
 
 export JAVA_HOME=/usr/lib/jvm/java-25-openjdk
@@ -15,8 +15,8 @@ export JAVA_HOME=/usr/lib/jvm/java-25-openjdk
 #  to run the the build locally similarly to how the github action does it
 #  since I keep forgetting to check the javadoc builds...
 rm -rf ~/.m2/io/github/cbarlin && \
-    mvnd clean install -T4 && \
-    mvnd clean verify artifact:compare -T4 -DskipTests && \
+    mvnd clean install && \
+    mvnd clean verify artifact:compare -DskipTests && \
     rm -rf ~/.m2/io/github/cbarlin
 
 # Generate JaCoCo coverage report if jacococli.jar is available
