@@ -45,6 +45,32 @@ public final class ComponentSpecialisationFactory {
     }
 
     @Bean
+    @BeanTypes(AnalysedMapComponent.class)
+    Optional<AnalysedMapComponent> analysedMap() {
+        if (
+                basicAnalysedComponent.typeName() instanceof final ParameterizedTypeName optPtn &&
+                optPtn.typeArguments.size() == 2 &&
+                basicAnalysedComponent.componentType() instanceof final DeclaredType declaredType &&
+                OptionalClassDetector.checkSameOrSubType(basicAnalysedComponent.element(), Constants.Names.MAP) &&
+                declaredType.getTypeArguments() instanceof final List<? extends TypeMirror> typeArguments &&
+                typeArguments.size() == 2
+        ) {
+            return Optional.of(new AnalysedMapComponent(
+                basicAnalysedComponent,
+                declaredType,
+                optPtn,
+                optPtn.rawType,
+                typeArguments.getFirst(),
+                optPtn.typeArguments.getFirst(),
+                typeArguments.getLast(),
+                optPtn.typeArguments.getLast(),
+                "Map".equals(optPtn.rawType.simpleName()) ? Constants.Names.HASH_MAP : optPtn.rawType
+            ));
+        }
+        return Optional.empty();
+    }
+
+    @Bean
     @BeanTypes(ComponentTargetingLibraryLoaded.class)
     Optional<ComponentTargetingLibraryLoaded> targetingLibraryLoaded() {
         return Optional.of(basicAnalysedComponent)

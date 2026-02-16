@@ -99,6 +99,7 @@ public enum Constants {
         public static final ClassName ENUM_SET = ClassName.get(JAVA_UTIL, "EnumSet");
         public static final ClassName FUNCTION = ClassName.get(JAVA_UTIL_FUNCTION, "Function");
         public static final ClassName HAS_VALUE = ClassName.get("com.tguzik.traits", "HasValue");
+        public static final ClassName HASH_MAP = ClassName.get(JAVA_UTIL, "HashMap");
         public static final ClassName HKJ_IMPORT = ClassName.get("org.higherkindedj.optics.annotations", "ImportOptics");
         public static final ClassName ILLEGAL_ARGUMENT_EXCEPTION = ClassName.get(JAVA_LANG, "IllegalArgumentException");
         public static final ClassName ITERABLE = ClassName.get(JAVA_LANG, "Iterable");
@@ -109,6 +110,7 @@ public enum Constants {
         public static final ClassName LOCAL_DATE_TIME = ClassName.get(JAVA_TIME, "LocalDateTime");
         public static final ClassName LONG = ClassName.get(JAVA_LANG, "Long");
         public static final ClassName MAP = ClassName.get(JAVA_UTIL, "Map");
+        public static final ClassName MAP_ENTRY = ClassName.get(JAVA_UTIL, "Map", "Entry");
         public static final ClassName MATH = ClassName.get(JAVA_LANG, "Math");
         public static final ClassName NON_NULL = CommonsConstants.Names.NON_NULL;
         public static final ClassName NOT_NULL = CommonsConstants.Names.NOT_NULL;
