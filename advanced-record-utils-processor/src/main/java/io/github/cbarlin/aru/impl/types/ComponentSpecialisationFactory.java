@@ -64,7 +64,7 @@ public final class ComponentSpecialisationFactory {
                 optPtn.typeArguments.getFirst(),
                 typeArguments.getLast(),
                 optPtn.typeArguments.getLast(),
-                "Map".equals(optPtn.rawType.simpleName()) ? Constants.Names.HASH_MAP : optPtn.rawType
+                mutableVersionOfMap(optPtn.rawType)
             ));
         }
         return Optional.empty();
@@ -201,5 +201,16 @@ public final class ComponentSpecialisationFactory {
         final RecordComponentElement element = basicAnalysedComponent.element();
         return taFromParamTypeName(element, Constants.Names.TYPE_ALIAS, "value")
                 .or(() -> taFromParamTypeName(element, Constants.Names.HAS_VALUE, "get"));
+    }
+
+    private static ClassName mutableVersionOfMap(final ClassName mapTypeName) {
+        return switch (mapTypeName.simpleName()) {
+            case "SortedMap", "TreeMap", "NavigableMap", "SequencedMap" -> Constants.Names.TREE_MAP;
+            case "HashMap", "Map", "AbstractMap" -> Constants.Names.HASH_MAP;
+            // This will rarely come up, so we won't bother putting them in constants...
+            case "ConcurrentMap" -> ClassName.get("java.util", "ConcurrentHashMap");
+            case "ConcurrentNavigableMap" -> ClassName.get("java.util", "ConcurrentNavigableMap");
+            default -> mapTypeName;
+        };
     }
 }

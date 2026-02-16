@@ -18,7 +18,6 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 import javax.lang.model.element.Modifier;
-import java.util.HashMap;
 
 @Component
 @BuilderPerComponentScope

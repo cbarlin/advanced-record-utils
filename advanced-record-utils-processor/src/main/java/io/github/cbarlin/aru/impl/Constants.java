@@ -123,6 +123,7 @@ public enum Constants {
         public static final ClassName STACK = ClassName.get(JAVA_UTIL, "Stack");
         public static final ClassName STRING = ClassName.get(JAVA_LANG, "String");
         public static final ClassName STRINGUTILS = ClassName.get("org.apache.commons.lang3", "StringUtils");
+        public static final ClassName TREE_MAP = ClassName.get(JAVA_UTIL, "TreeMap");
         public static final ClassName TREE_SET = ClassName.get(JAVA_UTIL, "TreeSet");
         public static final ClassName TYPE_ALIAS = CommonsConstants.Names.TYPE_ALIAS;
         public static final ClassName UNARY_OPERATOR = ClassName.get(JAVA_UTIL_FUNCTION, "UnaryOperator");
