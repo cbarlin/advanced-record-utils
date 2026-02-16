@@ -209,7 +209,7 @@ public final class ComponentSpecialisationFactory {
             case "HashMap", "Map", "AbstractMap" -> Constants.Names.HASH_MAP;
             // This will rarely come up, so we won't bother putting them in constants...
             case "ConcurrentMap" -> ClassName.get("java.util", "ConcurrentHashMap");
-            case "ConcurrentNavigableMap" -> ClassName.get("java.util", "ConcurrentNavigableMap");
+            case "ConcurrentNavigableMap" -> ClassName.get("java.util", "ConcurrentSkipListMap");
             default -> mapTypeName;
         };
     }

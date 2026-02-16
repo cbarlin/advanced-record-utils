@@ -51,7 +51,7 @@ public record AnalysedMapComponent(
 
     @Override
     public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTypeName) {
-        final ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(Constants.Names.MAP.nestedClass("Entry"), unNestedPrimaryTypeName, unNestedSecondaryTypeName);
+        final ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(Constants.Names.MAP_ENTRY, unNestedPrimaryTypeName, unNestedSecondaryTypeName);
         methodBuilder.beginControlFlow("for (final $T $L : $L.entrySet())", parameterizedTypeName, MAP_ELEMENT, incomingName);
         withUnwrappedName.accept(MAP_ELEMENT);
         methodBuilder.endControlFlow();
