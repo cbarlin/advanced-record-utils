@@ -175,7 +175,7 @@ You can read more about Higher-Kinded-J on their https://higher-kinded-j.github.
 public record Person(String name, int age) {}
 ----
 
-Particularly useful on large trees of records, as the <<#use-cascading,cascading>> effect means you do not have to annotate each record. The processor also automatically handles interfaces.
+Particularly useful on large trees of records, as the <<#use-cascading,cascading>> effect means you do not have to annotate each record. The processor also adds the import annotation on the `+*Utils+` classes for sealed interfaces.
 
 include::../generated-code/options/aru-top-hkj.adoc[]
 

@@ -2,14 +2,10 @@ package io.github.cbarlin.aru.impl.misc;
 
 import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
-import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.InterfaceVisitor;
-import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.Constants.Names;
 import io.github.cbarlin.aru.impl.wiring.BasePerInterfaceScope;
-import io.github.cbarlin.aru.impl.wiring.BasePerRecordScope;
-import io.github.cbarlin.aru.prism.prison.JsonBPrism;
 import io.micronaut.sourcegen.javapoet.AnnotationSpec;
 import jakarta.inject.Singleton;
 
