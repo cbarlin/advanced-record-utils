@@ -138,6 +138,8 @@ include::../generated-code/options/aru-top-logging.adoc[]
 ====
 Enables or disables the generation of an https://javadoc.io/doc/io.avaje/avaje-jsonb/latest/io.avaje.jsonb/io/avaje/jsonb/Json.Import.html[Avaje `+@Json.Import+`] annotation on the `+*Utils+` classes.
 
+You can read more about Avaje jsonb on their https://avaje.io/jsonb/[documentation page].
+
 *Type*:: `+boolean+`
 *Default*:: `+false+`
 
@@ -153,5 +155,28 @@ Particularly useful on large trees of records, as the <<#use-cascading,cascading
 IMPORTANT: When generating for interfaces, the annotation uses Avaje's default convention for type determination.
 
 include::../generated-code/options/aru-top-general.adoc[]
+
+====
+
+.`+addHigherKindedJImportAnnotation+`
+[%collapsible]
+====
+Enables or disables the generation of an https://javadoc.io/doc/io.github.higher-kinded-j/hkj-annotations/latest/org.higherkindedj.annotations/org/higherkindedj/optics/annotations/ImportOptics.html[Higher-Kinded-J `+@ImportOptics+`] annotation on the `+*Utils+` classes.
+
+You can read more about Higher-Kinded-J on their https://higher-kinded-j.github.io/latest/[documentation page].
+
+*Type*:: `+boolean+`
+*Default*:: `+false+`
+
+.Usage: Add to any place you can add the annotation
+[source,java]
+----
+@AdvancedRecordUtils(addHigherKindedJImportAnnotation = true)
+public record Person(String name, int age) {}
+----
+
+Particularly useful on large trees of records, as the <<#use-cascading,cascading>> effect means you do not have to annotate each record. The processor also automatically handles interfaces.
+
+include::../generated-code/options/aru-top-hkj.adoc[]
 
 ====
