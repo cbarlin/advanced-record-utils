@@ -1,0 +1,15 @@
+****
+
+.Generated annotation for `+*Utils+` classes
+[%collapsible]
+=====
+[source,java]
+----
+@ImportOptics({RootItem.class})
+public final class RootItemUtils implements GeneratedUtil {
+
+}
+----
+=====
+
+****
