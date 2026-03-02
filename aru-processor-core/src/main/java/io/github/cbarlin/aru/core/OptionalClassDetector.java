@@ -1,5 +1,8 @@
 package io.github.cbarlin.aru.core;
 
+import com.sun.source.tree.Scope;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
 import io.github.cbarlin.aru.annotations.Generated;
 import io.micronaut.sourcegen.javapoet.ArrayTypeName;
 import io.micronaut.sourcegen.javapoet.ClassName;
@@ -16,6 +19,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -54,6 +58,27 @@ public final class OptionalClassDetector {
         // No-op, but the side effect is that the item is loaded
         ret.ifPresent(typeElement -> ElementFilter.methodsIn(typeElement.getEnclosedElements()));
         return ret.filter(te -> ElementKind.ANNOTATION_TYPE.equals(te.getKind()));
+    }
+
+    /**
+     * Check if a type is accessible (visible) from another type's location
+     *
+     * @param from The type from which visibility is being checked
+     * @param to The type whose accessibility is being tested
+     * @return True if {@code to} is accessible from {@code from}
+     */
+    public static boolean isVisibleFrom(final TypeElement from, final TypeElement to) {
+        return isVisibleFromViaTrees(from, to);
+    }
+
+    private static boolean isVisibleFromViaTrees(final TypeElement from, final TypeElement to) {
+        final Trees trees = Trees.instance(APContext.processingEnv());
+        final TreePath pathFrom = trees.getPath(from);
+        if (Objects.nonNull(pathFrom)) {
+            final Scope scope = trees.getScope(pathFrom);
+            return trees.isAccessible(scope, to);
+        }
+        return false;
     }
 
     /**

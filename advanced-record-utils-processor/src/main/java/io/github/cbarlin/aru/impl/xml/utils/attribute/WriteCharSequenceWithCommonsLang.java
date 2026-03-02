@@ -36,7 +36,12 @@ public final class WriteCharSequenceWithCommonsLang extends XmlVisitor {
     @Override
     protected boolean visitComponentImpl(AnalysedComponent analysedComponent) {
         final boolean isApplicable = OptionalClassDetector.checkSameOrSubType(analysedComponent.serialisedTypeName(), CHAR_SEQUENCE);
-        if (isApplicable && OptionalClassDetector.doesDependencyExist(STRINGUTILS)) {
+        if (
+                isApplicable &&
+                OptionalClassDetector.optionalDependencyTypeElement(STRINGUTILS)
+                        .filter(te -> OptionalClassDetector.isVisibleFrom(analysedRecord.typeElement(), te))
+                        .isPresent()
+        ) {
             visitAttributeComponent(analysedComponent, xmlAttributePrism);
             return Boolean.TRUE;
         }

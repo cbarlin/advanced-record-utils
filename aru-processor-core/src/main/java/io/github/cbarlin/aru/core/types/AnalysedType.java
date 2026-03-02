@@ -304,6 +304,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
 
         addRootElementInformation(utilsGeneratorAnnotation);
         knownMetaAnnotations.stream()
+            .filter(te -> OptionalClassDetector.isVisibleFrom(typeElement, te))
             .map(ClassName::get)
             .sorted(Comparator.comparing(ClassName::canonicalName))
             .forEach(cn -> utilsGeneratorAnnotation.addMember("knownMetaAnnotations", CLASS_REFERENCE_FORMAT, cn));
@@ -376,6 +377,7 @@ public abstract sealed class AnalysedType implements ProcessingTarget permits An
         elements.stream()
             .filter(TypeElement.class::isInstance)
             .map(TypeElement.class::cast)
+            .filter(te -> OptionalClassDetector.isVisibleFrom(typeElement, te))
             .map(ClassName::get)
             .sorted(Comparator.comparing(ClassName::canonicalName))
             .map(utilsProcessingContext::analysedType)

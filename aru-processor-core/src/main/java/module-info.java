@@ -29,6 +29,7 @@ module io.github.cbarlin.aru.core {
     requires static org.jspecify;
     requires java.logging;
     requires com.github.benmanes.caffeine;
+    requires jdk.compiler;
 
     uses io.github.cbarlin.aru.core.wiring.InjectModuleFinder;
 
