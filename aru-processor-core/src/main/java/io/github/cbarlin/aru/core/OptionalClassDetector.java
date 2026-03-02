@@ -11,8 +11,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import org.jspecify.annotations.Nullable;
 
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ModuleElement;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
@@ -62,6 +60,13 @@ public final class OptionalClassDetector {
         return ret.filter(te -> ElementKind.ANNOTATION_TYPE.equals(te.getKind()));
     }
 
+    /**
+     * Check if a type is accessible (visible) from another type's location
+     *
+     * @param from The type from which visibility is being checked
+     * @param to The type whose accessibility is being tested
+     * @return True if {@code to} is accessible from {@code from}
+     */
     public static boolean isVisibleFrom(final TypeElement from, final TypeElement to) {
         return isVisibleFromViaTrees(from, to);
     }

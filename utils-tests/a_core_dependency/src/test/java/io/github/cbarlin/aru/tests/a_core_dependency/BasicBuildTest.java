@@ -61,9 +61,9 @@ class BasicBuildTest {
 
     @Test
     void nonExportedItem() {
-        final SomeHiddenRecord somRecord = SomeHiddenRecordUtils.builder()
+        final SomeHiddenRecord someRecord = SomeHiddenRecordUtils.builder()
                 .value("Woot")
                 .build();
-        assertEquals("Woot", somRecord.value());
+        assertEquals("Woot", someRecord.value());
     }
 }

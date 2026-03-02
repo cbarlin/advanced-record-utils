@@ -11,7 +11,6 @@ import io.github.cbarlin.aru.prism.prison.XmlAttributePrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import jakarta.inject.Singleton;
 
-import javax.lang.model.element.TypeElement;
 import java.util.Optional;
 
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
