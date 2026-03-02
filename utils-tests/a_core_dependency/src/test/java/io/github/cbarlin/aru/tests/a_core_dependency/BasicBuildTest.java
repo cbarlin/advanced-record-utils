@@ -1,5 +1,7 @@
 package io.github.cbarlin.aru.tests.a_core_dependency;
 
+import io.github.cbarlin.aru.tests.a_core_dependency.hidden.SomeHiddenRecord;
+import io.github.cbarlin.aru.tests.a_core_dependency.hidden.SomeHiddenRecordUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,5 +57,13 @@ class BasicBuildTest {
             .build();
         assertEquals(AnEnumInDep.MONDAY, myB.andImAnEnum());
         assertEquals(AnEnumInDep.TUESDAY, myOther.andImAnEnum());
+    }
+
+    @Test
+    void nonExportedItem() {
+        final SomeHiddenRecord somRecord = SomeHiddenRecordUtils.builder()
+                .value("Woot")
+                .build();
+        assertEquals("Woot", somRecord.value());
     }
 }

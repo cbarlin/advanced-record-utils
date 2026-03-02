@@ -45,7 +45,10 @@ public final class WriteCharSequenceWithCommonsLang extends NonCollectionXmlVisi
     
     @Override
     protected boolean writeElementMethod(final AnalysedComponent analysedComponent) {
-        if (OptionalClassDetector.doesDependencyExist(STRINGUTILS) && OptionalClassDetector.checkSameOrSubType(analysedComponent.serialisedTypeName(), CHAR_SEQUENCE)) {
+        if (OptionalClassDetector.checkSameOrSubType(analysedComponent.serialisedTypeName(), CHAR_SEQUENCE) && OptionalClassDetector.optionalDependencyTypeElement(STRINGUTILS)
+                .filter(te -> OptionalClassDetector.isVisibleFrom(analysedRecord.typeElement(), te))
+                .isPresent()
+        ) {
             // Nice!
             final String elementName = findElementName(analysedComponent, prism);
             final boolean required = Boolean.TRUE.equals(prism.required());
