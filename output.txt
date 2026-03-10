@@ -1,0 +1,342 @@
+[[34;1mINFO[0m] Maven Upgrade Tool - Check
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m] Discovering POM files...
+[[34;1mINFO[0m] Found 17 POM file(s)
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m] Maven Upgrade Tool
+[[34;1mINFO[0m] → Upgrade options:
+[[34;1mINFO[0m]   • --all (enables all upgrade options)
+[[34;1mINFO[0m]   
+[[34;1mINFO[0m]   → Executing strategy: Upgrading POM model version
+[[34;1mINFO[0m]     Upgrading POM model version
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-processor/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependent/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/d_eclipse_collections/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-annotations/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_type_alias/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/xml_util/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_hkj/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Converted <modules> to <subprojects>
+[[34;1mINFO[0m]           • Converted 9 <module> elements to <subproject>
+[[34;1mINFO[0m]           • Converted 1 <module> elements to <subproject> in profiles
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-processor-core/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_infer_xml/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/z_report_module/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Converted 6 <module> elements to <subproject> in profiles
+[[34;1mINFO[0m]           • Converted 4 <module> elements to <subproject> in profiles
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_commons_lang/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_odd_types/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-prism-prison/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependency/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_structure/pom.xml (current: 4.0.0)
+[[34;1mINFO[0m]         → Upgrading from 4.0.0 to 4.1.0
+[[34;1mINFO[0m]           • Updated namespace to http://maven.apache.org/POM/4.1.0
+[[34;1mINFO[0m]           • Updated xsi:schemaLocation
+[[34;1mINFO[0m]           • Updated modelVersion to 4.1.0
+[[34;1mINFO[0m]         ✓ Model upgrade completed
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m]       Upgrading POM model version Summary:
+[[34;1mINFO[0m]         17 POM(s) modified
+[[34;1mINFO[0m]         0 POM(s) needed no changes
+[[34;1mINFO[0m]     ✓ Strategy completed successfully
+[[34;1mINFO[0m]   
+[[34;1mINFO[0m]   → Executing strategy: Applying Maven inference optimizations
+[[34;1mINFO[0m]     Applying Maven inference optimizations
+[[34;1mINFO[0m]       Computing GAVs for inference from 17 POM(s)...
+[[34;1mINFO[0m]       Computed 17 unique GAV(s) for inference
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-processor/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependent/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/d_eclipse_collections/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-annotations/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_type_alias/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/xml_util/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_hkj/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: child groupId (matches parent)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: managed dependency io.github.cbarlin.aru.tests:a_core_dependency from dependencyManagement (project artifact)
+[[34;1mINFO[0m]         • Removed: managed dependency io.github.cbarlin.aru.tests:xml_util from dependencyManagement (project artifact)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-processor-core/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_infer_xml/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/z_report_module/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: redundant subprojects list from profile (matches direct children)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_commons_lang/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: child groupId (matches parent)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_odd_types/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-prism-prison/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: child groupId (matches parent)
+[[34;1mINFO[0m]         • Removed: parent groupId (child has no explicit groupId)
+[[34;1mINFO[0m]         • Removed: parent version (child has no explicit version)
+[[34;1mINFO[0m]         • Removed: parent artifactId (can be inferred from relativePath)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependency/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: child groupId (matches parent)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_structure/pom.xml (current: 4.1.0)
+[[34;1mINFO[0m]         • Removed: child groupId (matches parent)
+[[34;1mINFO[0m]         • Removed: dependency groupId io.github.cbarlin.aru.tests from dependencies (can be inferred from project)
+[[34;1mINFO[0m]         • Removed: modelVersion element (can be inferred from namespace)
+[[34;1mINFO[0m]         ✓ Full inference optimizations applied
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m]       Applying Maven inference optimizations Summary:
+[[34;1mINFO[0m]         17 POM(s) modified
+[[34;1mINFO[0m]         0 POM(s) needed no changes
+[[34;1mINFO[0m]     ✓ Strategy completed successfully
+[[34;1mINFO[0m]   
+[[34;1mINFO[0m]   → Executing strategy: Applying Maven 4 compatibility fixes
+[[34;1mINFO[0m]     Applying Maven 4 compatibility fixes
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-processor/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependent/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/d_eclipse_collections/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-annotations/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_type_alias/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/xml_util/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_hkj/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-processor-core/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_infer_xml/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/z_report_module/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_commons_lang/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_odd_types/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-prism-prison/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependency/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_structure/pom.xml (checking for Maven 4 compatibility issues)
+[[34;1mINFO[0m]         ✓ No Maven 4 compatibility issues found
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m]       Applying Maven 4 compatibility fixes Summary:
+[[34;1mINFO[0m]         0 POM(s) modified
+[[34;1mINFO[0m]         17 POM(s) needed no changes
+[[34;1mINFO[0m]     ✓ Strategy completed successfully
+[[34;1mINFO[0m]   
+[[34;1mINFO[0m]   → Executing strategy: Upgrading Maven plugins to recommended versions
+[[34;1mINFO[0m]     Upgrading Maven plugins to recommended versions
+[[34;1mINFO[0m] Loaded 22283 auto-discovered prefixes for remote repository central (prefixes-central-712eba337df3388713842a42e637118344ff358b.txt)
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-processor/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependent/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/d_eclipse_collections/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/advanced-record-utils-annotations/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_type_alias/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/xml_util/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_hkj/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-processor-core/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/b_infer_xml/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/z_report_module/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_commons_lang/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_odd_types/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/aru-prism-prison/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/a_core_dependency/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m]       /home/conrad/code/advanced-record-utils/utils-tests/c_deeply_nested_structure/pom.xml (checking for plugin upgrades)
+[[34;1mINFO[0m]         ✓ No plugin upgrades needed
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m]       Upgrading Maven plugins to recommended versions Summary:
+[[34;1mINFO[0m]         0 POM(s) modified
+[[34;1mINFO[0m]         17 POM(s) needed no changes
+[[34;1mINFO[0m]     ✓ Strategy completed successfully
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m] Overall Upgrade Summary:
+[[34;1mINFO[0m]   17 POM(s) processed
+[[34;1mINFO[0m]   17 POM(s) modified
+[[34;1mINFO[0m]   0 POM(s) needed no changes
+[[34;1mINFO[0m]   0 error(s) encountered
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m] Executed Strategies:
+[[34;1mINFO[0m]   • Upgrading POM model version
+[[34;1mINFO[0m]   • Applying Maven inference optimizations
+[[34;1mINFO[0m]   • Applying Maven 4 compatibility fixes
+[[34;1mINFO[0m]   • Upgrading Maven plugins to recommended versions
+[[34;1mINFO[0m] ✓ All upgrades completed successfully!
+[[34;1mINFO[0m] 
+[[34;1mINFO[0m] Creating .mvn directory if needed to avoid root directory warnings...
+[[34;1mINFO[0m] → Would create .mvn directory at /home/conrad/code/advanced-record-utils/.mvn

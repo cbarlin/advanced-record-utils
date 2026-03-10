@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
+    
     <parent>
-        <groupId>io.github.cbarlin</groupId>
-        <artifactId>aru-parent</artifactId>
-        <version>0.8.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -28,21 +23,25 @@
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
             <scope>provided</scope>
+            <type>modular-jar</type>
         </dependency>
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-annotations</artifactId>
             <version>${project.version}</version>
+            <type>modular-jar</type>
         </dependency>
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>aru-prism-prison</artifactId>
             <version>${project.version}</version>
+            <type>modular-jar</type>
         </dependency>
         <dependency>
             <groupId>io.micronaut.sourcegen</groupId>
             <artifactId>micronaut-sourcegen-generator-java</artifactId>
             <version>${micronaut-javapoet.version}</version>
+            <type>modular-jar</type>
             <exclusions>
                 <exclusion>
                     <artifactId>micronaut-sourcegen-generator</artifactId>
@@ -57,26 +56,35 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+            <type>modular-jar</type>
         </dependency>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.avaje</groupId>
-            <artifactId>avaje-prisms</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.avaje</groupId>
-            <artifactId>avaje-spi-service</artifactId>
-            <optional>true</optional>
-            <scope>provided</scope>
+            <type>modular-jar</type>
         </dependency>
         <dependency>
             <groupId>io.avaje</groupId>
             <artifactId>avaje-inject</artifactId>
+            <type>modular-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-inject-generator</artifactId>
+            <version>${avaje-inject.version}</version>
+            <type>modular-processor</type>
+        </dependency>
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-prisms</artifactId>
+            <version>${avaje-prism.version}</version>
+            <type>modular-processor</type>
+        </dependency>
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-spi-service</artifactId>
+            <version>${avaje-spi.version}</version>
+            <type>modular-processor</type>
         </dependency>
     </dependencies>
 
@@ -86,23 +94,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <debug>false</debug>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>io.avaje</groupId>
-                            <artifactId>avaje-prisms</artifactId>
-                            <version>${avaje-prism.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.avaje</groupId>
-                            <artifactId>avaje-spi-service</artifactId>
-                            <version>${avaje-spi.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.avaje</groupId>
-                            <artifactId>avaje-inject-generator</artifactId>
-                            <version>${avaje-inject.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

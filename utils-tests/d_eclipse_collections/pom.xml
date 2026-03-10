@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
+    
     <parent>
-        <groupId>io.github.cbarlin.aru.tests</groupId>
-        <artifactId>utils-tests</artifactId>
-        <version>0.8.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -15,6 +12,7 @@
         <dependency>
             <groupId>io.github.cbarlin.aru.tests</groupId>
             <artifactId>a_core_dependency</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.cbarlin.aru.tests</groupId>
@@ -24,6 +22,7 @@
         <dependency>
             <groupId>io.github.cbarlin.aru.tests</groupId>
             <artifactId>xml_util</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.collections</groupId>
@@ -53,35 +52,26 @@
             <groupId>io.avaje</groupId>
             <artifactId>avaje-validator-constraints</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <type>modular-processor</type>
+        </dependency>
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-validator-generator</artifactId>
+            <version>${avaje-validator.version}</version>
+            <type>modular-processor</type>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>io.avaje</groupId>
-                            <artifactId>avaje-jsonb-generator</artifactId>
-                            <version>${avaje-jsonb.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.avaje</groupId>
-                            <artifactId>avaje-validator-generator</artifactId>
-                            <version>${avaje-validator.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.github.cbarlin</groupId>
-                            <artifactId>advanced-record-utils-processor</artifactId>
-                            <version>${project.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
                     <fork>true</fork>
                     <compilerArgs>
                         <arg>-J${jacoco.agent.argLine}</arg>

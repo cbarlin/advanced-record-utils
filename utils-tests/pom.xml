@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd">
+    
     <parent>
         <groupId>io.github.cbarlin</groupId>
-        <artifactId>aru-parent</artifactId>
-        <version>0.8.2-SNAPSHOT</version>
     </parent>
 
     <groupId>io.github.cbarlin.aru.tests</groupId>
     <artifactId>utils-tests</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>xml_util</module>
-        <module>a_core_dependency</module>
-        <module>a_core_dependent</module>
-        <module>c_deeply_nested_commons_lang</module>
-        <module>c_deeply_nested_structure</module>
-        <module>b_type_alias</module>
-        <module>b_infer_xml</module>
-        <module>c_odd_types</module>
-        <module>d_eclipse_collections</module>
-    </modules>
+    <subprojects>
+        <subproject>xml_util</subproject>
+        <subproject>a_core_dependency</subproject>
+        <subproject>a_core_dependent</subproject>
+        <subproject>c_deeply_nested_commons_lang</subproject>
+        <subproject>c_deeply_nested_structure</subproject>
+        <subproject>b_type_alias</subproject>
+        <subproject>b_infer_xml</subproject>
+        <subproject>c_odd_types</subproject>
+        <subproject>d_eclipse_collections</subproject>
+    </subprojects>
     <name>Advanced Record Utils - Tests</name>
 
     <properties>
@@ -42,16 +38,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>io.github.cbarlin.aru.tests</groupId>
-                <artifactId>a_core_dependency</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.cbarlin.aru.tests</groupId>
-                <artifactId>xml_util</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -59,6 +45,7 @@
         <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
+            <type>modular-jar</type>
             <!-- Scope isn't needed here since this module and its children are not published -->
         </dependency>
         <dependency>
@@ -78,58 +65,28 @@
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-annotations</artifactId>
             <version>${project.version}</version>
+            <type>modular-jar</type>
         </dependency>
-        <!--
-            Fake define dependency on the processor itself - that way we force maven to build it first.
-                But exclude the dependencies otherwise they end up on the classpath... which means
-                the processor detects them and tries to build using them...
-        -->
         <dependency>
             <groupId>io.github.cbarlin</groupId>
             <artifactId>advanced-record-utils-processor</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.avaje</groupId>
-                    <artifactId>avaje-inject</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.avaje</groupId>
-                    <artifactId>avaje-spi-service</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.micronaut.sourcegen</groupId>
-                    <artifactId>micronaut-sourcegen-generator-java</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.ben-manes.caffeine</groupId>
-                    <artifactId>caffeine</artifactId>
-                </exclusion>
-            </exclusions>
+            <type>modular-processor</type>
+        </dependency>
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-jsonb-generator</artifactId>
+            <version>${avaje-jsonb.version}</version>
+            <type>modular-processor</type>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>io.github.cbarlin</groupId>
-                            <artifactId>advanced-record-utils-processor</artifactId>
-                            <version>${project.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.avaje</groupId>
-                            <artifactId>avaje-jsonb-generator</artifactId>
-                            <version>${avaje-jsonb.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
                     <fork>true</fork>
                     <compilerArgs>
                         <arg>-J${jacoco.agent.argLine}</arg>
@@ -147,35 +104,17 @@
             <activation>
                 <jdk>[25,)</jdk>
             </activation>
-            <modules>
-                <module>c_hkj</module>
-            </modules>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <annotationProcessorPaths>
-                                <path>
-                                    <groupId>io.github.cbarlin</groupId>
-                                    <artifactId>advanced-record-utils-processor</artifactId>
-                                    <version>${project.version}</version>
-                                </path>
-                                <path>
-                                    <groupId>io.avaje</groupId>
-                                    <artifactId>avaje-jsonb-generator</artifactId>
-                                    <version>${avaje-jsonb.version}</version>
-                                </path>
-                                <path>
-                                    <groupId>io.github.higher-kinded-j</groupId>
-                                    <artifactId>hkj-processor-plugins</artifactId>
-                                    <version>${higher-kinded-j.version}</version>
-                                </path>
-                            </annotationProcessorPaths>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+            <subprojects>
+                <subproject>c_hkj</subproject>
+            </subprojects>
+            <dependencies>
+                <dependency>
+                    <groupId>io.github.higher-kinded-j</groupId>
+                    <artifactId>hkj-processor-plugins</artifactId>
+                    <version>${higher-kinded-j.version}</version>
+                    <type>modular-processor</type>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
