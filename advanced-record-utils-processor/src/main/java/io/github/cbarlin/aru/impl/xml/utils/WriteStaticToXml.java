@@ -276,10 +276,10 @@ public final class WriteStaticToXml extends ToXmlMethod {
         configureNamespaceContext(analysedRecord, methodBuilder);
         writeChangeDefaultNamespace(methodBuilder);
         methodBuilder.beginControlFlow("if (namespace.isPresent())")
-                .addStatement("final $T nms = namespace.get()", STRING)
-                .addStatement("output.writeStartElement(nms, tag)")
-                .beginControlFlow("if (!$T.equals(nms, currentDefaultNamespace))", OBJECTS)
-                .addStatement("output.writeDefaultNamespace(nms)")
+                .addStatement("final $T namespaceValue = namespace.get()", STRING)
+                .addStatement("output.writeStartElement(namespaceValue, tag)")
+                .beginControlFlow("if (!$T.equals(namespaceValue, currentDefaultNamespace))", OBJECTS)
+                .addStatement("output.writeDefaultNamespace(namespaceValue)")
                 .endControlFlow()
                 .nextControlFlow("else")
                 .addStatement("output.writeStartElement(tag)")

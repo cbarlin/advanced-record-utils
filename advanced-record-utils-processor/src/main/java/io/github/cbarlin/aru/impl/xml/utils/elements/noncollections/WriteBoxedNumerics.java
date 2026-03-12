@@ -107,7 +107,7 @@ public final class WriteBoxedNumerics extends NonCollectionXmlVisitor {
     ) {
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+            () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.beginControlFlow("if($T.nonNull(val))", OBJECTS)
             .addStatement("output.writeCharacters(val.toString())")

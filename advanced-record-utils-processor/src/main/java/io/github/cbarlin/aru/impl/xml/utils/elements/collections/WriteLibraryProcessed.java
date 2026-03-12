@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
+import static io.github.cbarlin.aru.impl.xml.utils.elements.noncollections.NonCollectionXmlVisitor.writeStandardStartElement;
 
 @Singleton
 @XmlPerComponentScope
@@ -117,7 +118,7 @@ public final class WriteLibraryProcessed extends XmlVisitor {
             .filter(Predicate.not(XML_DEFAULT_STRING::equals))
             .ifPresentOrElse(
                 namespace1 -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace1, wrapperPrism.name()),
-                () -> methodBuilder.addStatement("output.writeStartElement($S)", wrapperPrism.name())
+                () -> writeStandardStartElement(methodBuilder, wrapperPrism.name())
             );
     }
 }

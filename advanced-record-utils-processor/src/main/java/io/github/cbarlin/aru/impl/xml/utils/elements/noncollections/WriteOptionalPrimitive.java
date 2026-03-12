@@ -80,7 +80,7 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
         }
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+            () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.addStatement("output.writeCharacters($T.valueOf(val.$L()))", STRING, methodName)
             .addStatement("output.writeEndElement()");

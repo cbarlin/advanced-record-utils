@@ -100,7 +100,7 @@ public final class WriteCharSequence extends NonCollectionXmlVisitor {
     ) {
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+            () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS)
             .addStatement("output.writeCharacters(val.toString())")

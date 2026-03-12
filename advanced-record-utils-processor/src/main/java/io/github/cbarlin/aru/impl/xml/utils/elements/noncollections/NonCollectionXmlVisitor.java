@@ -35,7 +35,7 @@ public abstract class NonCollectionXmlVisitor extends XmlVisitor {
         return this.writeElementMethod(analysedOptionalComponent.or(() -> typeAliasComponent).orElse(analysedComponent));
     }
 
-    protected static void writeStandardStartElement(final MethodSpec.Builder methodBuilder, final String elementName) {
+    public static void writeStandardStartElement(final MethodSpec.Builder methodBuilder, final String elementName) {
         methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", OBJECTS)
                 .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
                 .nextControlFlow("else")
