@@ -79,7 +79,7 @@ public final class WriteLocalDatetime extends NonCollectionXmlVisitor {
       
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.addStatement("output.writeCharacters(val.atZone($T.systemDefault()).withZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER)
             .addStatement("output.writeEndElement()");
@@ -98,7 +98,7 @@ public final class WriteLocalDatetime extends NonCollectionXmlVisitor {
     ) {
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+            () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.beginControlFlow(CHK_NON_NULL, OBJECTS)
             .addStatement("output.writeCharacters(val.atZone($T.systemDefault()).withZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_ID, ZONE_OFFSET, DATE_TIME_FORMATTER)

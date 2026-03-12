@@ -1,10 +1,5 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
-import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
-
-import java.util.Optional;
-
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
@@ -15,6 +10,12 @@ import io.github.cbarlin.aru.impl.xml.XmlVisitor;
 import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import jakarta.inject.Singleton;
+
+import java.util.Optional;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
+import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
+import static io.github.cbarlin.aru.impl.xml.utils.elements.noncollections.NonCollectionXmlVisitor.writeStandardStartElement;
 
 @Singleton
 @XmlPerComponentScope
@@ -79,7 +80,7 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
         }
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+            () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.addStatement("output.writeCharacters($T.valueOf(val.$L()))", STRING, methodName)
             .addStatement("output.writeEndElement()");
@@ -94,7 +95,7 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
     ) {
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.beginControlFlow("if (val.isPresent())")
             .addStatement("output.writeCharacters($T.valueOf(val.$L()))", STRING, methodName)

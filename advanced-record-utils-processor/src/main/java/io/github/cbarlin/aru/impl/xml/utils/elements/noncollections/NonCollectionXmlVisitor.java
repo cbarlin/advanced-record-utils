@@ -6,8 +6,11 @@ import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.impl.xml.XmlVisitor;
+import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 import java.util.Optional;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 
 public abstract class NonCollectionXmlVisitor extends XmlVisitor {
 
@@ -30,5 +33,13 @@ public abstract class NonCollectionXmlVisitor extends XmlVisitor {
     @Override
     protected final boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         return this.writeElementMethod(analysedOptionalComponent.or(() -> typeAliasComponent).orElse(analysedComponent));
+    }
+
+    public static void writeStandardStartElement(final MethodSpec.Builder methodBuilder, final String elementName) {
+        methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", OBJECTS)
+                .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
+                .nextControlFlow("else")
+                .addStatement("output.writeStartElement($S)", elementName)
+                .endControlFlow();
     }
 }

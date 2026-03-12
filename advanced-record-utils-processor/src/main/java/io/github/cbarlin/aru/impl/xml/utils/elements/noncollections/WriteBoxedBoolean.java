@@ -74,7 +74,7 @@ public final class WriteBoxedBoolean extends NonCollectionXmlVisitor {
 
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.addStatement("output.writeCharacters($T.valueOf($T.TRUE.equals(val)))", STRING, TypeName.BOOLEAN.box())
             .addStatement("output.writeEndElement()");
@@ -93,7 +93,7 @@ public final class WriteBoxedBoolean extends NonCollectionXmlVisitor {
     ) {
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-            () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+            () -> writeStandardStartElement(methodBuilder, elementName)
         );
         methodBuilder.beginControlFlow("if($T.nonNull(val))", OBJECTS)
             .addStatement("output.writeCharacters($T.valueOf($T.TRUE.equals(val)))", STRING, TypeName.BOOLEAN.box())

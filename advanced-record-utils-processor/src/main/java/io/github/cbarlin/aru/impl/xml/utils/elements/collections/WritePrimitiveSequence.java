@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
+import static io.github.cbarlin.aru.impl.xml.utils.elements.noncollections.NonCollectionXmlVisitor.writeStandardStartElement;
 
 @Singleton
 @XmlPerComponentScope
@@ -71,7 +72,11 @@ public final class WritePrimitiveSequence extends XmlVisitor {
             variableName -> {
                 namespaceName.ifPresentOrElse(
                     namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                    () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                    () -> methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", OBJECTS)
+                            .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
+                            .nextControlFlow("else")
+                            .addStatement("output.writeStartElement($S)", elementName)
+                            .endControlFlow()
                 );
                 methodBuilder.addStatement("output.writeCharacters($T.valueOf($L))", STRING, variableName)
                     .addStatement("output.writeEndElement()");
@@ -112,7 +117,7 @@ public final class WritePrimitiveSequence extends XmlVisitor {
             .filter(Predicate.not(XML_DEFAULT_STRING::equals))
             .ifPresentOrElse(
                 namespace1 -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace1, wrapperPrism.name()),
-                () -> methodBuilder.addStatement("output.writeStartElement($S)", wrapperPrism.name())
+                () -> writeStandardStartElement(methodBuilder, wrapperPrism.name())
             );
     }
 }

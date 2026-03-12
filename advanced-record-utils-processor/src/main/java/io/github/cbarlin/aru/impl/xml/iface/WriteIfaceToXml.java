@@ -91,10 +91,15 @@ public final class WriteIfaceToXml extends ToXmlMethod {
         configureNamespaceContext(analysedRecord, methodBuilder);
         writeChangeDefaultNamespace(methodBuilder);
         methodBuilder.beginControlFlow("if (namespace.isPresent())")
-            .addStatement("output.writeStartElement(namespace.get(), tag)")
+            .addStatement("final $T namespaceValue = namespace.get()", STRING)
+            .addStatement("output.writeStartElement(namespaceValue, tag)")
+            .beginControlFlow("if (!$T.equals(namespaceValue, currentDefaultNamespace))", OBJECTS)
+            .addStatement("output.writeDefaultNamespace(namespaceValue)")
+            .endControlFlow()
             .nextControlFlow("else")
             .addStatement("output.writeStartElement(tag)")
             .endControlFlow();
+
         addWriteOrderComment(methodBuilder);
         // OK, now to write out all the components... attributes first, then elements, then within those in order... booooooo
         final List<String> propOrder = xmlTypePrism.map(XmlTypePrism::propOrder)
