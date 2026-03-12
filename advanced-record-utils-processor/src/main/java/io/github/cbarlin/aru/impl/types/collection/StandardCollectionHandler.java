@@ -52,7 +52,6 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
         } else {
             methodBuilder.addStatement("this.$L = $T.nonNull($L) ? $L : this.$L", component.name(), OBJECTS, component.name(), component.name(), component.name());
         }
-        
     }
 
     @Override
@@ -202,7 +201,6 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
                 .addStatement("this.$L.addAll($L)", component.name(), component.name())
                 .endControlFlow();
         }
-        
     }
 
     @Override

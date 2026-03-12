@@ -3,6 +3,11 @@ package io.github.cbarlin.aru.impl;
 import io.github.cbarlin.aru.core.ClaimableOperation;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.TypeName;
+
+import javax.lang.model.type.TypeKind;
+import java.util.List;
+import java.util.Map;
 
 import static io.github.cbarlin.aru.core.types.OperationType.CLASS;
 import static io.github.cbarlin.aru.core.types.OperationType.FIELD_AND_ACCESSORS;
@@ -74,6 +79,16 @@ public enum Constants {
     
     public enum Names {
         ;
+        public static final List<TypeName> NON_BOOL_PRIMITIVES = List.of(TypeName.BYTE, TypeName.DOUBLE, TypeName.CHAR, TypeName.FLOAT, TypeName.INT, TypeName.LONG, TypeName.SHORT);
+        public static final Map<TypeName, TypeKind> PRIMITIVE_TYPE_NAME_TO_TYPE_KIND = Map.ofEntries(
+                Map.entry(TypeName.BYTE, TypeKind.BYTE),
+                Map.entry(TypeName.DOUBLE, TypeKind.DOUBLE),
+                Map.entry(TypeName.CHAR, TypeKind.CHAR),
+                Map.entry(TypeName.FLOAT, TypeKind.FLOAT),
+                Map.entry(TypeName.INT, TypeKind.INT),
+                Map.entry(TypeName.LONG, TypeKind.LONG),
+                Map.entry(TypeName.SHORT, TypeKind.SHORT)
+        );
         // ClassNames load faster when using the string constructor vs the .class one
         private static final String AVAJE_JSONB = "io.avaje.jsonb";
         private static final String JAVA_LANG = "java.lang";

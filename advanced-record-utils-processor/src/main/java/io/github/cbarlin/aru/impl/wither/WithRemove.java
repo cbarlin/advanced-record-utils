@@ -10,6 +10,7 @@ import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
 import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
 import io.github.cbarlin.aru.impl.Constants;
 import io.github.cbarlin.aru.impl.types.collection.CollectionHandlerHelper;
+import io.github.cbarlin.aru.impl.types.dependencies.HppcPrimitiveCollectionComponent;
 import io.github.cbarlin.aru.impl.wiring.WitherPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
@@ -19,7 +20,7 @@ import javax.lang.model.element.Modifier;
 @Component
 @WitherPerComponentScope
 @RequiresProperty(value = "createRemoveMethods", equalTo = "true")
-@RequiresBean({CollectionHandlerHelper.class, ConstructorComponent.class, AnalysedCollectionComponent.class})
+@RequiresBean(value = {CollectionHandlerHelper.class, ConstructorComponent.class, AnalysedCollectionComponent.class}, missing = {HppcPrimitiveCollectionComponent.class})
 public final class WithRemove extends WitherVisitor {
 
     public WithRemove(final WitherInterface witherInterface, final AnalysedRecord analysedRecord) {

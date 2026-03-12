@@ -21,9 +21,9 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.MATH;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS_EXCHANGE__PRIMITIVE_ITERATOR;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.PRIMITIVE_FACTORY_PACKAGE;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.PRIMITIVE_LIST_PACKAGE;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.PRIMITIVE_MAP_PACKAGE;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__PRIMITIVE_LIST_PACKAGE;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE;
 
 public final class EclipsePrimitiveList extends EclipseCollectionHandler {
 
@@ -195,27 +195,27 @@ public final class EclipsePrimitiveList extends EclipseCollectionHandler {
     }
 
     private static final Map<TypeName, ClassName> MP_LONG_FACTORY = Map.of(
-        TypeName.BYTE, ClassName.get(PRIMITIVE_FACTORY_PACKAGE, "ByteLongMaps"),
-        TypeName.CHAR, ClassName.get(PRIMITIVE_FACTORY_PACKAGE, "CharLongMaps"),
-        TypeName.DOUBLE, ClassName.get(PRIMITIVE_FACTORY_PACKAGE, "DoubleLongMaps"),
-        TypeName.FLOAT, ClassName.get(PRIMITIVE_FACTORY_PACKAGE, "FloatLongMaps"),
-        TypeName.INT, ClassName.get(PRIMITIVE_FACTORY_PACKAGE, "IntLongMaps"),
-        TypeName.LONG, ClassName.get(PRIMITIVE_FACTORY_PACKAGE, "LongLongMaps"),
-        TypeName.SHORT, ClassName.get(PRIMITIVE_FACTORY_PACKAGE, "ShortLongMaps")
+        TypeName.BYTE, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, "ByteLongMaps"),
+        TypeName.CHAR, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, "CharLongMaps"),
+        TypeName.DOUBLE, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, "DoubleLongMaps"),
+        TypeName.FLOAT, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, "FloatLongMaps"),
+        TypeName.INT, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, "IntLongMaps"),
+        TypeName.LONG, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, "LongLongMaps"),
+        TypeName.SHORT, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, "ShortLongMaps")
     );
 
     private static final Map<TypeName, ClassName> MP_LONG_TYPE = Map.of(
-        TypeName.BYTE, ClassName.get(PRIMITIVE_MAP_PACKAGE, "MutableByteLongMap"),
-        TypeName.CHAR, ClassName.get(PRIMITIVE_MAP_PACKAGE, "MutableCharLongMap"),
-        TypeName.DOUBLE, ClassName.get(PRIMITIVE_MAP_PACKAGE, "MutableDoubleLongMap"),
-        TypeName.FLOAT, ClassName.get(PRIMITIVE_MAP_PACKAGE, "MutableFloatLongMap"),
-        TypeName.INT, ClassName.get(PRIMITIVE_MAP_PACKAGE, "MutableIntLongMap"),
-        TypeName.LONG, ClassName.get(PRIMITIVE_MAP_PACKAGE, "MutableLongLongMap"),
-        TypeName.SHORT, ClassName.get(PRIMITIVE_MAP_PACKAGE, "MutableShortLongMap")
+        TypeName.BYTE, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE, "MutableByteLongMap"),
+        TypeName.CHAR, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE, "MutableCharLongMap"),
+        TypeName.DOUBLE, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE, "MutableDoubleLongMap"),
+        TypeName.FLOAT, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE, "MutableFloatLongMap"),
+        TypeName.INT, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE, "MutableIntLongMap"),
+        TypeName.LONG, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE, "MutableLongLongMap"),
+        TypeName.SHORT, ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_MAP_PACKAGE, "MutableShortLongMap")
     );
 
     private static void writeBooleanDifferMethod(final MethodSpec.Builder methodBuilder, final ClassName collectionResultRecord, final ClassName mutableClassName, final ClassName factoryClassName) {
-        final TypeName genericList = ClassName.get(PRIMITIVE_LIST_PACKAGE, "BooleanList");
+        final TypeName genericList = ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_LIST_PACKAGE, "BooleanList");
         methodBuilder.addModifiers(Modifier.FINAL, Modifier.STATIC)
             .returns(collectionResultRecord)
             .addParameter(
