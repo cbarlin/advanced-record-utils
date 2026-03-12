@@ -1,9 +1,5 @@
 package io.github.cbarlin.aru.impl.xml.utils.elements.noncollections;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
-
-import java.util.Optional;
-
 import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
@@ -15,6 +11,11 @@ import io.github.cbarlin.aru.prism.prison.XmlElementPrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import jakarta.inject.Singleton;
+
+import java.util.Optional;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
+import static io.github.cbarlin.aru.impl.xml.utils.elements.noncollections.NonCollectionXmlVisitor.writeStandardStartElement;
 
 @Singleton
 @XmlPerComponentScope
@@ -44,7 +45,7 @@ public final class WritePrimitiveBoolean extends XmlVisitor {
 
             namespaceName.ifPresentOrElse(
                 namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                    () -> writeStandardStartElement(methodBuilder, elementName)
             );
             methodBuilder.addStatement("output.writeCharacters($T.valueOf(val))", STRING)
                 .addStatement("output.writeEndElement()");

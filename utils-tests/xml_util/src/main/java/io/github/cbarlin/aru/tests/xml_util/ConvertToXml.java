@@ -16,10 +16,14 @@ import javax.xml.transform.Source;
 import io.github.cbarlin.aru.annotations.Generated;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.commons.io.output.WriterOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlunit.assertj3.XmlAssert;
 import org.xmlunit.builder.Input;
 
 public final class ConvertToXml {
+
+    private static final Logger log = LoggerFactory.getLogger(ConvertToXml.class);
 
     @Generated("CONSTRUCTOR_STATIC_CLASS")
     private ConvertToXml() {
@@ -43,6 +47,9 @@ public final class ConvertToXml {
      */
     public static final void compareXml(final Consumer<XMLStreamWriter> consumer, final String classPathCompareFile, final Class<?> clazz) {
         final String actual = assertDoesNotThrow(() -> convertToXml(consumer));
+        log.atInfo()
+            .addArgument(actual)
+            .log("Got the following actual:\n\n{}\n\n");
         final Source expected = loadClasspath(classPathCompareFile, clazz);
         XmlAssert.assertThat(actual).and(expected)
             .ignoreWhitespace()

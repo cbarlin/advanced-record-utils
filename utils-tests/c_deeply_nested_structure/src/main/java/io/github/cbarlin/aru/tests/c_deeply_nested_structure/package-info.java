@@ -1,8 +1,8 @@
 @jakarta.xml.bind.annotation.XmlSchema(
-    namespace = "ns://default",
+    namespace = "ns://nxA",
     xmlns = {
         @XmlNs(namespaceURI = "ns://namedA", prefix = "wooo"),
-        @XmlNs(namespaceURI = "ns://namedB", prefix = "yayyyyy")
+        @XmlNs(namespaceURI = "ns://namedB", prefix = "yayyyyy"),
     }
 )
 @AdvancedRecordUtils(

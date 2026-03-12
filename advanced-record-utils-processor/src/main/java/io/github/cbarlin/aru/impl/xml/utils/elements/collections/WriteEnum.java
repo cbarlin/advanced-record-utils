@@ -80,7 +80,11 @@ public final class WriteEnum extends XmlVisitor {
                     .endControlFlow();
                 namespaceName.ifPresentOrElse(
                     namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                    () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                    () -> methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", OBJECTS)
+                            .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
+                            .nextControlFlow("else")
+                            .addStatement("output.writeStartElement($S)", elementName)
+                            .endControlFlow()
                 );
                 methodBuilder.addStatement("output.writeCharacters($L.toString())", variableName)
                     .addStatement("output.writeEndElement()");

@@ -6,4 +6,5 @@ module xml_util {
     requires transitive org.junit.jupiter.api;
     requires org.assertj.core;
     requires io.github.cbarlin.aru.annotations;
+    requires org.slf4j;
 }

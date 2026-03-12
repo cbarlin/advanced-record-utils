@@ -61,7 +61,7 @@ public final class WriteUUID extends NonCollectionXmlVisitor {
           
             namespaceName.ifPresentOrElse(
                 namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                () -> methodBuilder.addStatement("output.writeStartElement($S)", elementName)
+                    () -> writeStandardStartElement(methodBuilder, elementName)
             );
             methodBuilder.addStatement("output.writeCharacters(val.toString())")
                 .addStatement("output.writeEndElement()");
