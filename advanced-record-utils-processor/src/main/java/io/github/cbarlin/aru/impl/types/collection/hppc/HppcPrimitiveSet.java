@@ -41,34 +41,6 @@ public final class HppcPrimitiveSet extends AbstractHppcPrimitiveHandler {
     }
 
     @Override
-    public void writeMergerMethod(final TypeName innerType, final MethodSpec.Builder methodBuilder) {
-        final ParameterSpec paramA = ParameterSpec.builder(concreteClassName, "elA", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
-                .addJavadoc("The preferred input")
-                .build();
-
-        final ParameterSpec paramB = ParameterSpec.builder(concreteClassName, "elB", Modifier.FINAL)
-                .addAnnotation(NULLABLE)
-                .addJavadoc("The non-preferred input")
-                .build();
-        methodBuilder.addAnnotation(NULLABLE)
-                .addParameter(paramA)
-                .addParameter(paramB)
-                .returns(concreteClassName)
-                .addJavadoc("Merger for fields of class {@link $T}", concreteClassName)
-                .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
-                .addStatement("return elB")
-                .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
-                .addStatement("return elA")
-                .endControlFlow()
-                .addStatement("final $T combined = new $T()", concreteClassName, concreteClassName)
-                .addStatement("combined.addAll(elA)")
-                .addStatement("combined.addAll(elB)")
-                // Since this goes via the builder, that will handle things like immutability
-                .addStatement("return combined");
-    }
-
-    @Override
     public void writeDifferMethod(final TypeName innerType, final MethodSpec.Builder methodBuilder, final ClassName collectionResultRecord) {
         methodBuilder
                 .addParameter(
@@ -89,11 +61,11 @@ public final class HppcPrimitiveSet extends AbstractHppcPrimitiveHandler {
                 .addStatement("final $T removed = new $T()", concreteClassName, concreteClassName)
                 .addStatement("final $T common = new $T()", concreteClassName, concreteClassName)
                 .beginControlFlow("for ($T el : nOriginal)", cursorName)
-                .addStatement("(nUpdated.contains(el.value) ? common : added).add(el.value)")
+                .addStatement("(nUpdated.contains(el.value) ? common : removed).add(el.value)")
                 .endControlFlow()
                 .beginControlFlow("for ($T el : nUpdated)", cursorName)
                 .beginControlFlow("if (!nOriginal.contains(el.value))")
-                .addStatement("removed.add(el.value)")
+                .addStatement("added.add(el.value)")
                 .endControlFlow()
                 .endControlFlow();
         // Constructor is added, common, removed

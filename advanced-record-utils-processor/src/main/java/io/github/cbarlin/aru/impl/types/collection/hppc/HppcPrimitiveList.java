@@ -52,6 +52,8 @@ public final class HppcPrimitiveList extends AbstractHppcPrimitiveHandler {
                                 .addAnnotation(NULLABLE)
                                 .build()
                 )
+                .addStatement("final $T nUpdated = $T.requireNonNullElse(updated, new $T())", concreteClassName, OBJECTS, concreteClassName)
+                .addStatement("final $T nOriginal = $T.requireNonNullElse(original, new $T())", concreteClassName, OBJECTS, concreteClassName)
                 .addComment("Create frequency maps to count occurrences")
                 .addStatement(
                         """
@@ -67,10 +69,10 @@ public final class HppcPrimitiveList extends AbstractHppcPrimitiveHandler {
                         mapToLongName,
                         mapToLongName
                 )
-                .beginControlFlow("for (final $T element : original)", cursorName)
+                .beginControlFlow("for (final $T element : nOriginal)", cursorName)
                 .addStatement("originalFreq.addTo(element.value, 1l)")
                 .endControlFlow()
-                .beginControlFlow("for (final $T element : updated)", cursorName)
+                .beginControlFlow("for (final $T element : nUpdated)", cursorName)
                 .addStatement("updatedFreq.addTo(element.value, 1l)")
                 .endControlFlow()
                 .addStatement("final $T added = new $T()", concreteClassName, concreteClassName)
