@@ -65,6 +65,7 @@
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <guava.version>33.5.0-jre</guava.version>
         <higher-kinded-j.version>0.3.6</higher-kinded-j.version>
+        <hppc.version>0.10.0</hppc.version>
         <jackson-annotations.version>2.21.1</jackson-annotations.version>
         <jacoco.version>0.8.14</jacoco.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
@@ -191,6 +192,11 @@
                 <groupId>io.avaje</groupId>
                 <artifactId>avaje-inject</artifactId>
                 <version>${avaje-inject.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.carrotsearch</groupId>
+                <artifactId>hppc</artifactId>
+                <version>${hppc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>

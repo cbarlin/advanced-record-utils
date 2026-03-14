@@ -1,5 +1,8 @@
 package io.github.cbarlin.aru.tests.d_eclipse_collections;
 
+import com.carrotsearch.hppc.CharArrayList;
+import com.carrotsearch.hppc.IntStack;
+import com.carrotsearch.hppc.LongHashSet;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuilderOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.NameGeneration;
@@ -79,7 +82,12 @@ public record NullableImmutableCollectionBag(
     ImmutableBooleanList immutableBooleanList,
     MutableBooleanList mutableBooleanList,
     ImmutableBooleanSet immutableBooleanSet,
-    MutableBooleanSet mutableBooleanSet
+    MutableBooleanSet mutableBooleanSet,
+
+    // Now the HPPC ones
+    CharArrayList charArrayList,
+    IntStack intStack,
+    LongHashSet longHashSet
 ) implements NullableImmutableCollectionBagUtils.All {
 
 }

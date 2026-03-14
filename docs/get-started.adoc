@@ -9,7 +9,7 @@ include::usage/rapid-start.adoc[leveloffset=+1]
 
 == Configuring your build tooling
 
-=== Maven
+=== Maven 3
 
 . {empty}
 +
@@ -82,6 +82,42 @@ If you don't have a `+build+` section of your pom, you can use the below.
 ====
 --
 
+=== Maven 4
+
+CAUTION: At time of writing, Maven 4 has not yet been released and the pre-release version (including the associated version of the compiler plugin) contains a defect which prevents the below from working as it should (https://github.com/apache/maven-compiler-plugin/issues/1039[see this issue]). While it is deprecated, the method described under "Maven 3" above will still work under Maven 4.
+
+. {empty}
++
+--
+Add a property for the version of Advanced Record Utils. The current version is
+
+image::https://img.shields.io/maven-central/v/io.github.cbarlin/advanced-record-utils-processor?style=flat&color=dark-green&link=https%3A%2F%2Fgithub.com%2Fcbarlin%2Fadvanced-record-utils["Maven Central release", link=https://central.sonatype.com/artifact/io.github.cbarlin/advanced-record-utils-annotations]
+
+This guide will assume that the property is named `+aru.version+`.
+--
+. {empty}
++
+--
+Add the annotations and processor as dependencies with the appropriate types:
+
+.pom.xml
+[source,xml]
+----
+<dependency>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>advanced-record-utils-annotations</artifactId>
+    <version>${aru.version}</version>
+    <type>jar</type>
+</dependency>
+<dependency>
+    <groupId>io.github.cbarlin</groupId>
+    <artifactId>advanced-record-utils-processor</artifactId>
+    <version>${aru.version}</version>
+    <type>processor</type>
+</dependency>
+----
+--
+
 === Gradle
 
 Gradle 5.2 added better support for annotation processors, so ensure you are using that version or newer.
@@ -131,6 +167,8 @@ This library has optional integration with several dependencies. Some of these i
 Other integrations are based purely on detecting the dependency in your classpath and using them where it makes sense to do so without you being required to do anything. These integrations are:
 
 * https://github.com/eclipse-collections/eclipse-collections[Eclipse Collections^] - Collections from Eclipse Collections are detected if referenced and handled appropriately (e.g. creating `+ImmutableList+` if requested).
+* https://labs.carrotsearch.com/hppc.html[HPPC: High Performance Primitive Collections for Java^] - List/Set Collections from HPPC are detected if referenced and handled appropriately (e.g. creating `+CharArrayList+` if requested).
+** Note: `+Byte+` type collections are not supported, as there's no HPPC set version of them.
 * https://commons.apache.org/proper/commons-lang/[Apache Commons Lang 3^] - Commons Lang 3, if detected, will be used for `+Validate+` and `+StringUtils+` classes
 * https://mapstruct.org/[MapStruct^] - Integration has been made on our end so that MapStruct will use our builders.
 

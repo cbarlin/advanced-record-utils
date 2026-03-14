@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__PRIMITIVE_LIST_PACKAGE;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__PRIMITIVE_SET_PACKAGE;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__PROPERTY;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.PRIMITIVE_FACTORY_PACKAGE;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.PRIMITIVE_LIST_PACKAGE;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.PRIMITIVE_SET_PACKAGE;
 
 @Factory
 @GlobalScope
@@ -113,20 +113,20 @@ public final class EclipseCollectionHandlerFactory {
 
     private static EclipsePrimitiveSet primitiveSet(final String simpleName, final String typeName) {
         return new EclipsePrimitiveSet(
-                ClassName.get(PRIMITIVE_SET_PACKAGE, simpleName),
-                ClassName.get(PRIMITIVE_SET_PACKAGE, "Mutable" + typeName + "Set"),
-                ClassName.get(PRIMITIVE_SET_PACKAGE, "Immutable" + typeName + "Set"),
-                ClassName.get(PRIMITIVE_FACTORY_PACKAGE, typeName + "Sets")
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_SET_PACKAGE, simpleName),
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_SET_PACKAGE, "Mutable" + typeName + "Set"),
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_SET_PACKAGE, "Immutable" + typeName + "Set"),
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, typeName + "Sets")
         );
     }
 
     private static EclipsePrimitiveList primitiveList(final String simpleName, final String typeName) {
         return new EclipsePrimitiveList(
-                ClassName.get(PRIMITIVE_LIST_PACKAGE, simpleName),
-                ClassName.get(PRIMITIVE_LIST_PACKAGE, "Mutable" + typeName + "List"),
-                ClassName.get(PRIMITIVE_LIST_PACKAGE, "Immutable" + typeName + "List"),
-                ClassName.get(PRIMITIVE_FACTORY_PACKAGE, typeName + "Lists"),
-                ClassName.get(PRIMITIVE_SET_PACKAGE, "Mutable" + typeName + "Set")
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_LIST_PACKAGE, simpleName),
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_LIST_PACKAGE, "Mutable" + typeName + "List"),
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_LIST_PACKAGE, "Immutable" + typeName + "List"),
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_FACTORY_PACKAGE, typeName + "Lists"),
+                ClassName.get(ECLIPSE_COLLECTIONS__PRIMITIVE_SET_PACKAGE, "Mutable" + typeName + "Set")
         );
     }
 }
