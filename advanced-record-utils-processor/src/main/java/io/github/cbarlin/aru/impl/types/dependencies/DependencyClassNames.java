@@ -50,7 +50,7 @@ public enum DependencyClassNames {
     public static final Map<TypeName, Pair<TypeName, TypeMirror>> HPPC__NAME_TO_PRIMITIVE;
 
     static {
-        final Map<TypeName, Pair<TypeName, TypeMirror>> names = HashMap.newHashMap(Constants.Names.NON_BOOL_PRIMITIVES.size() * 6 - 2);
+        final Map<TypeName, Pair<TypeName, TypeMirror>> names = HashMap.newHashMap(Constants.Names.NON_BOOL_PRIMITIVES.size() * 4 - 2);
         for (final TypeName primitive : Constants.Names.NON_BOOL_PRIMITIVES) {
             final String firstCap = capitalise(primitive.toString());
             final Pair<TypeName, TypeMirror> pair = Pair.of(primitive, APContext.types().getPrimitiveType(Constants.Names.PRIMITIVE_TYPE_NAME_TO_TYPE_KIND.get(primitive)));

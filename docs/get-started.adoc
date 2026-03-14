@@ -167,7 +167,7 @@ This library has optional integration with several dependencies. Some of these i
 Other integrations are based purely on detecting the dependency in your classpath and using them where it makes sense to do so without you being required to do anything. These integrations are:
 
 * https://github.com/eclipse-collections/eclipse-collections[Eclipse Collections^] - Collections from Eclipse Collections are detected if referenced and handled appropriately (e.g. creating `+ImmutableList+` if requested).
-* https://labs.carrotsearch.com/hppc.html[https://github.com/eclipse-collections/eclipse-collections][HPPC: High Performance Primitive Collections for Java^] - List/Set Collections from HPPC are detected if referenced and handled appropriately (e.g. creating `+CharArrayList+` if requested).
+* https://labs.carrotsearch.com/hppc.html[HPPC: High Performance Primitive Collections for Java^] - List/Set Collections from HPPC are detected if referenced and handled appropriately (e.g. creating `+CharArrayList+` if requested).
 ** Note: `+Byte+` type collections are not supported, as there's no HPPC set version of them.
 * https://commons.apache.org/proper/commons-lang/[Apache Commons Lang 3^] - Commons Lang 3, if detected, will be used for `+Validate+` and `+StringUtils+` classes
 * https://mapstruct.org/[MapStruct^] - Integration has been made on our end so that MapStruct will use our builders.
