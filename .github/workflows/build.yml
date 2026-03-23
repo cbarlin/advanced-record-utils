@@ -39,7 +39,7 @@ jobs:
         ${{ steps.install-mvnd.outputs.mvnd-dir }}/mvnd -V -B --no-transfer-progress -T 1C clean verify artifact:compare && \
         rm -rf ~/.m2/io/github/cbarlin
     - name: Upload coverage reports to Codecov with GitHub Action
-      uses: codecov/codecov-action@v5.5.2
+      uses: codecov/codecov-action@v5.5.3
       if: matrix.java_version == 25
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
