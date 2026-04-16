@@ -54,7 +54,7 @@ public interface MapHandler {
      * <p>
      * Does not write returns or params
      */
-     void writeNullableAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull);
+    void writeNullableAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull);
 
     /**
      * Write an "add" method in the builder that is nullable and inherits the type passed to it

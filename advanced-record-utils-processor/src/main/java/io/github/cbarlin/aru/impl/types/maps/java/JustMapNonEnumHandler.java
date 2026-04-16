@@ -146,9 +146,10 @@ public class JustMapNonEnumHandler implements MapHandler {
     @Override
     public void addNonNullAutoField(final AnalysedComponent component, final ToBeBuilt addFieldTo, final TypeName keyType, final TypeName valueType) {
         final FieldSpec fieldSpec = FieldSpec.builder(
-                        ParameterizedTypeName.get(Constants.Names.MAP, keyType, valueType).annotated(CommonsConstants.NON_NULL_ANNOTATION),
-                        component.name(),
-                        Modifier.PRIVATE
+                    ParameterizedTypeName.get(Constants.Names.MAP, keyType, valueType).annotated(CommonsConstants.NON_NULL_ANNOTATION),
+                    component.name(),
+                    Modifier.PRIVATE,
+                    Modifier.FINAL
                 )
                 .initializer("new $T<>()", Constants.Names.HASH_MAP)
                 .build();
@@ -325,8 +326,8 @@ public class JustMapNonEnumHandler implements MapHandler {
                 .endControlFlow()
                 .endControlFlow()
                 .addStatement(
-                        // Constructor is added, removed, different, same
-                        "return new $T(addedKeys, removedKeys, $T.unmodifiableSet(keysWithDifferentValues), $T.unmodifiableSet(keysWithSameValues))",
+                        // Constructor is added, different, same, removed
+                        "return new $T(addedKeys, $T.unmodifiableSet(keysWithDifferentValues), $T.unmodifiableSet(keysWithSameValues), removedKeys)",
                         collectionResultRecord,
                         Constants.Names.COLLECTIONS,
                         Constants.Names.COLLECTIONS
@@ -342,11 +343,6 @@ public class JustMapNonEnumHandler implements MapHandler {
                                 .build()
                 )
                 .addParameterSpec(
-                        ParameterSpec.builder(setKey, "removedKeys")
-                                .addJavadoc("The keys that have been removed")
-                                .build()
-                )
-                .addParameterSpec(
                         ParameterSpec.builder(setKey, "keysWithDifferentValues")
                                 .addJavadoc("The keys that exist in both maps, but that have different values (via {@link $T#equals($T, $T)})", Constants.Names.OBJECTS, Constants.Names.OBJECT, Constants.Names.OBJECT)
                                 .build()
@@ -354,6 +350,11 @@ public class JustMapNonEnumHandler implements MapHandler {
                 .addParameterSpec(
                         ParameterSpec.builder(setKey, "keysWithSameValues")
                                 .addJavadoc("The keys that exist in both maps and that have the same values (via {@link $T#equals($T, $T)})", Constants.Names.OBJECTS, Constants.Names.OBJECT, Constants.Names.OBJECT)
+                                .build()
+                )
+                .addParameterSpec(
+                        ParameterSpec.builder(setKey, "removedKeys")
+                                .addJavadoc("The keys that have been removed")
                                 .build()
                 );
     }

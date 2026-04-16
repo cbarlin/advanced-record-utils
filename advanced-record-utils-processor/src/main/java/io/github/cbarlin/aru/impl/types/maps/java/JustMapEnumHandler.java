@@ -219,8 +219,8 @@ public final class JustMapEnumHandler extends JustMapNonEnumHandler {
                 .endControlFlow()
                 .endControlFlow()
                 .addStatement(
-                        // Constructor is added, removed, different, same
-                        "return new $T($T.unmodifiableSet(addedKeys), $T.unmodifiableSet(removedKeys), $T.unmodifiableSet(keysWithDifferentValues), $T.unmodifiableSet(keysWithSameValues))",
+                        // Constructor is added, different, same, removed
+                        "return new $T($T.unmodifiableSet(addedKeys), $T.unmodifiableSet(keysWithDifferentValues), $T.unmodifiableSet(keysWithSameValues), $T.unmodifiableSet(removedKeys))",
                         collectionResultRecord,
                         Constants.Names.COLLECTIONS,
                         Constants.Names.COLLECTIONS,
