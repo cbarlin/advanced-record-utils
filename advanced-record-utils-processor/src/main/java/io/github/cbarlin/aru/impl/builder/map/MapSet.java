@@ -13,20 +13,22 @@ import io.github.cbarlin.aru.impl.types.maps.MapHandlerHelper;
 import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 
+import javax.lang.model.element.Modifier;
+
 @Component
 @BuilderPerComponentScope
 @RequiresBean({ConstructorComponent.class, MapHandlerHelper.class})
-public final class MapGet extends RecordVisitor {
+public final class MapSet extends RecordVisitor {
 
     private final BuilderClass builderClass;
     private final MapHandlerHelper mapHandlerHelper;
 
-    public MapGet(
+    public MapSet(
             final AnalysedRecord analysedRecord,
             final BuilderClass builderClass,
             final MapHandlerHelper mapHandlerHelper
     ) {
-        super(CommonsConstants.Claims.CORE_BUILDER_GETTER, analysedRecord);
+        super(CommonsConstants.Claims.CORE_BUILDER_SETTER, analysedRecord);
         this.builderClass = builderClass;
         this.mapHandlerHelper = mapHandlerHelper;
     }
@@ -40,9 +42,21 @@ public final class MapGet extends RecordVisitor {
     protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
         final MethodSpec.Builder method = builderClass
                 .createMethod(analysedComponent.name(), claimableOperation, analysedComponent.element());
-        method.addJavadoc("Returns the current value of {@code $L}", analysedComponent.name());
-        mapHandlerHelper.writeGetter(method);
+        final String name = analysedComponent.name();
+        method.addJavadoc("Updates the value of {@code $L}", name)
+                .returns(builderClass.className())
+                .addAnnotation(CommonsConstants.Names.NON_NULL)
+                .addModifiers(Modifier.PUBLIC);
+        if (mapHandlerHelper.nullReplacesNotNull()) {
+            method.addJavadoc("\n<p>\n")
+                            .addJavadoc("Supplying a null value will clear the current map");
+        } else {
+            method.addJavadoc("\n<p>\n")
+                            .addJavadoc("Supplying a null value won't replace a set value");
+        }
+        mapHandlerHelper.writeSetter(method);
         AnnotationSupplier.addGeneratedAnnotation(method, this);
+        method.addStatement("return this");
         return true;
     }
 }

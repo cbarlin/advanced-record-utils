@@ -28,12 +28,6 @@ class MapsTest {
         assertThat(built.stringStringMap())
                 .hasSize(1)
                 .containsEntry("AA", "BB");
-        assertThat(built.hashMap())
-                .isNotNull()
-                .isEmpty();
-        assertThat(built.treeMap())
-                .isNotNull()
-                .isEmpty();
         assertThat(built.recordMap())
                 .isNotNull()
                 .isEmpty();
@@ -52,12 +46,6 @@ class MapsTest {
         assertThat(built.stringStringMap())
                 .hasSize(1)
                 .containsEntry("AA", "BB");
-        assertThat(built.hashMap())
-                .isNotNull()
-                .isEmpty();
-        assertThat(built.treeMap())
-                .isNotNull()
-                .isEmpty();
         assertThat(built.recordMap())
                 .isNotNull()
                 .isEmpty();
@@ -65,6 +53,6 @@ class MapsTest {
                 .isNotNull()
                 .isEmpty();
         assertDoesNotThrow(() -> built.stringStringMap().put("A", "B"));
-        assertThrows(UnsupportedOperationException.class, () -> built.stringAnEnumMap().put("A", AnEnum.ONE));
+        assertDoesNotThrow(() -> built.stringAnEnumMap().put("A", AnEnum.ONE));
     }
 }

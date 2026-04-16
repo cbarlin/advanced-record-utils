@@ -6,6 +6,7 @@ import io.avaje.inject.RequiresProperty;
 import io.github.cbarlin.aru.impl.types.collection.CollectionHandler;
 import io.github.cbarlin.aru.impl.types.collection.hppc.HppcPrimitiveList;
 import io.github.cbarlin.aru.impl.types.collection.hppc.HppcPrimitiveSet;
+import io.github.cbarlin.aru.impl.types.maps.hppc.HppcMapHandler;
 import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
@@ -20,10 +21,15 @@ import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames
 @Factory
 @GlobalScope
 @RequiresProperty(value = HPPC__PROPERTY, equalTo = "true")
-public class HppcCollectionHandlerFactory {
+public final class HppcCollectionHandlerFactory {
 
     // Do not handle `Byte` since there's no "set" version of that to do diffs with...
     private static final List<String> NAMES = List.of("Char", "Double", "Float", "Int", "Long", "Short");
+
+    @Bean
+    List<HppcMapHandler> hppcMapHandlers() {
+        return List.of();
+    }
 
     @Bean
     List<CollectionHandler> hppcCollectionHandlers() {

@@ -10,8 +10,14 @@ import io.github.cbarlin.aru.impl.types.collection.eclipse.list.EclipsePrimitive
 import io.github.cbarlin.aru.impl.types.collection.eclipse.set.EclipseImmutableSet;
 import io.github.cbarlin.aru.impl.types.collection.eclipse.set.EclipseMutableSet;
 import io.github.cbarlin.aru.impl.types.collection.eclipse.set.EclipsePrimitiveSet;
+import io.github.cbarlin.aru.impl.types.maps.eclipse.EclipseMapHandler;
+import io.github.cbarlin.aru.impl.types.maps.eclipse.ImmutableNonPrimitiveMapHandler;
+import io.github.cbarlin.aru.impl.types.maps.eclipse.ImmutablePrimitiveMapHandler;
+import io.github.cbarlin.aru.impl.types.maps.eclipse.MutableNonPrimitiveMapHandler;
+import io.github.cbarlin.aru.impl.types.maps.eclipse.MutablePrimitiveMapHandler;
 import io.github.cbarlin.aru.impl.wiring.GlobalScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +32,28 @@ import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames
 @GlobalScope
 @RequiresProperty(value = ECLIPSE_COLLECTIONS__PROPERTY, equalTo = "true")
 public final class EclipseCollectionHandlerFactory {
+
+    // Boolean is not a valid key type in Eclipse primitive collections
+    private static final TypeName[] MAP_PRIMITIVE_KEY_TYPES = {
+        TypeName.BYTE, TypeName.CHAR, TypeName.SHORT, TypeName.INT, TypeName.LONG, TypeName.FLOAT, TypeName.DOUBLE
+    };
+    private static final TypeName[] MAP_PRIMITIVE_VALUE_TYPES = {
+        TypeName.BOOLEAN, TypeName.BYTE, TypeName.CHAR, TypeName.SHORT, TypeName.INT, TypeName.LONG, TypeName.FLOAT, TypeName.DOUBLE
+    };
+
+    @Bean
+    public List<EclipseMapHandler> eclipseMapHandlers() {
+        final List<EclipseMapHandler> result = new ArrayList<>( (MAP_PRIMITIVE_KEY_TYPES.length * MAP_PRIMITIVE_VALUE_TYPES.length * 2) + 2);
+        result.add(new ImmutableNonPrimitiveMapHandler());
+        result.add(new MutableNonPrimitiveMapHandler());
+        for (final TypeName key : MAP_PRIMITIVE_KEY_TYPES) {
+            for (final TypeName value : MAP_PRIMITIVE_VALUE_TYPES) {
+                result.add(new ImmutablePrimitiveMapHandler(key, value));
+                result.add(new MutablePrimitiveMapHandler(key, value));
+            }
+        }
+        return Collections.unmodifiableList(result);
+    }
 
     @Bean
     public List<EclipseCollectionHandler> eclipseHandlers() {

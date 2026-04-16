@@ -8,9 +8,9 @@ import java.util.TreeMap;
 
 @AdvancedRecordUtils(
         builderOptions = @AdvancedRecordUtils.BuilderOptions(
-                buildNullCollectionToEmpty = false
+                buildNullCollectionToEmpty = false,
                 // These should be the defaults
-                // builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE,
+                builtCollectionType = AdvancedRecordUtils.BuiltCollectionType.AUTO
                 // createAdderMethods = true
         ),
         diffable = true,
@@ -31,8 +31,6 @@ public record NullableAutoMapBag(
     Map<String, String> stringStringMap,
     Map<String, AnEnum> stringAnEnumMap,
     Map<MapKeyRecord, MapValueRecord> recordMap,
-    //
-    HashMap<String, String> hashMap,
-    TreeMap<String, String> treeMap
+    Map<AnEnum, String> anEnumStringMap
 ) {
 }

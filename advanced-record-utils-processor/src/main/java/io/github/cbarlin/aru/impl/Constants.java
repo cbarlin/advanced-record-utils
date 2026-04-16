@@ -26,6 +26,7 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_ALIAS_SETTER = new ClaimableOperation("builderAliasSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_CONCRETE_OPTIONAL = new ClaimableOperation("builderConcreteSetterForOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_MAP_SPECIALISATION = new ClaimableOperation("builderMapSpecialisation", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_REMOVE_ALL_ITERABLE = new ClaimableOperation("builderRemoveAllIterable", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_REMOVE_IF = new ClaimableOperation("builderRemoveIf", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_REMOVE_SINGLE = new ClaimableOperation("builderRemoveSingle", FIELD_AND_ACCESSORS);
@@ -111,6 +112,7 @@ public enum Constants {
         public static final ClassName DATE_TIME_FORMATTER = ClassName.get(JAVA_TIME + ".format","DateTimeFormatter");
         public static final ClassName DEQUE = ClassName.get(JAVA_UTIL, "Deque");
         public static final ClassName ENUM = ClassName.get(JAVA_LANG, "Enum");
+        public static final ClassName ENUM_MAP = ClassName.get(JAVA_UTIL, "EnumMap");
         public static final ClassName ENUM_SET = ClassName.get(JAVA_UTIL, "EnumSet");
         public static final ClassName FUNCTION = ClassName.get(JAVA_UTIL_FUNCTION, "Function");
         public static final ClassName HAS_VALUE = ClassName.get("com.tguzik.traits", "HasValue");
@@ -129,6 +131,7 @@ public enum Constants {
         public static final ClassName MATH = ClassName.get(JAVA_LANG, "Math");
         public static final ClassName NON_NULL = CommonsConstants.Names.NON_NULL;
         public static final ClassName NOT_NULL = CommonsConstants.Names.NOT_NULL;
+        public static final ClassName OBJECT = ClassName.get(JAVA_LANG, "Object");
         public static final ClassName OBJECTS = CommonsConstants.Names.OBJECTS;
         public static final ClassName OFFSET_DATE_TIME = ClassName.get(JAVA_TIME, "OffsetDateTime");
         public static final ClassName PREDICATE = ClassName.get(JAVA_UTIL_FUNCTION, "Predicate");

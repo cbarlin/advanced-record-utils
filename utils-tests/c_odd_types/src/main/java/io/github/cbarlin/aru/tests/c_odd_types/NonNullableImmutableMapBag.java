@@ -9,7 +9,7 @@ import java.util.TreeMap;
 @AdvancedRecordUtils(
         builderOptions = @AdvancedRecordUtils.BuilderOptions(
                 // These should all be the defaults
-                // builtCollectionType = BuiltCollectionType.JAVA_IMMUTABLE,
+                builtCollectionType = AdvancedRecordUtils.BuiltCollectionType.JAVA_IMMUTABLE
                 // buildNullCollectionToEmpty = true
                 // createAdderMethods = true
         ),
@@ -31,8 +31,6 @@ public record NonNullableImmutableMapBag(
     Map<String, String> stringStringMap,
     Map<String, AnEnum> stringAnEnumMap,
     Map<MapKeyRecord, MapValueRecord> recordMap,
-    //
-    HashMap<String, String> hashMap,
-    TreeMap<String, String> treeMap
+    Map<AnEnum, String> anEnumStringMap
 ) {
 }
