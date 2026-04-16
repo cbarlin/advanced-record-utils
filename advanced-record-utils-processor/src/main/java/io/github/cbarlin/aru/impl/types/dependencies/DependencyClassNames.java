@@ -128,6 +128,9 @@ public enum DependencyClassNames {
         ECLIPSE_COLLECTIONS_EXCHANGE__PRIMITIVE_ITERABLE = Map.copyOf(iterableMap);
     }
 
+    public static final ClassName ECLIPSE_COLLECTIONS__MAP_ITERABLE = ClassName.get("org.eclipse.collections.api.map", "MapIterable");
+    public static final ClassName ECLIPSE_COLLECTIONS__IMMUTABLE_MAP = ClassName.get("org.eclipse.collections.api.map", "ImmutableMap");
+    public static final ClassName ECLIPSE_COLLECTIONS__MUTABLE_MAP = ClassName.get("org.eclipse.collections.api.map", "MutableMap");
     public static final ClassName ECLIPSE_COLLECTIONS__IMMUTABLE_LIST = ClassName.get("org.eclipse.collections.api.list", "ImmutableList");
     public static final ClassName ECLIPSE_COLLECTIONS__MUTABLE_LIST = ClassName.get("org.eclipse.collections.api.list", "MutableList");
     public static final ClassName ECLIPSE_COLLECTIONS__IMMUTABLE_SET = ClassName.get("org.eclipse.collections.api.set", "ImmutableSet");
@@ -135,6 +138,7 @@ public enum DependencyClassNames {
 
     public static final ClassName ECLIPSE_COLLECTIONS__SETS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Sets");
     public static final ClassName ECLIPSE_COLLECTIONS__LISTS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Lists");
+    public static final ClassName ECLIPSE_COLLECTIONS__MAPS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Maps");
 
     public static final ClassName ECLIPSE_COLLECTIONS_MAP_ITERABLE = ClassName.get("org.eclipse.collections.api.map", "MapIterable");
     // endregion

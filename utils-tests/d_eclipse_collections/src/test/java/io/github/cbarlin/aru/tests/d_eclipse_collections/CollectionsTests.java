@@ -3,6 +3,7 @@ package io.github.cbarlin.aru.tests.d_eclipse_collections;
 import io.github.cbarlin.aru.tests.a_core_dependency.AnEnumInDep;
 import io.github.cbarlin.aru.tests.b_infer_xml.InferMatchingNameUtils;
 import io.github.cbarlin.aru.tests.xml_util.ConvertToXml;
+import org.eclipse.collections.api.factory.Maps;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

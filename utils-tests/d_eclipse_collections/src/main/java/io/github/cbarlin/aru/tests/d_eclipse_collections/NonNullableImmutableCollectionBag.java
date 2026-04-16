@@ -1,12 +1,8 @@
 package io.github.cbarlin.aru.tests.d_eclipse_collections;
 
-import com.carrotsearch.hppc.ByteArrayList;
 import com.carrotsearch.hppc.CharArrayList;
-import com.carrotsearch.hppc.IntArrayList;
-import com.carrotsearch.hppc.IntHashSet;
 import com.carrotsearch.hppc.IntStack;
 import com.carrotsearch.hppc.LongHashSet;
-import com.carrotsearch.hppc.LongSet;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.BuilderOptions;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.NameGeneration;

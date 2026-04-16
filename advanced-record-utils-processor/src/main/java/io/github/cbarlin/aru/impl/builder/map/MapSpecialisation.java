@@ -2,31 +2,30 @@ package io.github.cbarlin.aru.impl.builder.map;
 
 import io.avaje.inject.Component;
 import io.avaje.inject.RequiresBean;
-import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.BuilderClass;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.components.ConstructorComponent;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
+import io.github.cbarlin.aru.impl.Constants;
 import io.github.cbarlin.aru.impl.types.maps.MapHandlerHelper;
 import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
-import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 @Component
 @BuilderPerComponentScope
 @RequiresBean({ConstructorComponent.class, MapHandlerHelper.class})
-public final class MapGet extends RecordVisitor {
+public final class MapSpecialisation extends RecordVisitor {
 
     private final BuilderClass builderClass;
     private final MapHandlerHelper mapHandlerHelper;
 
-    public MapGet(
-            final AnalysedRecord analysedRecord,
-            final BuilderClass builderClass,
-            final MapHandlerHelper mapHandlerHelper
+    public MapSpecialisation(
+        final AnalysedRecord analysedRecord,
+        final BuilderClass builderClass,
+        final MapHandlerHelper mapHandlerHelper
     ) {
-        super(CommonsConstants.Claims.CORE_BUILDER_GETTER, analysedRecord);
+        super(Constants.Claims.BUILDER_MAP_SPECIALISATION, analysedRecord);
         this.builderClass = builderClass;
         this.mapHandlerHelper = mapHandlerHelper;
     }
@@ -37,12 +36,10 @@ public final class MapGet extends RecordVisitor {
     }
 
     @Override
-    protected boolean visitComponentImpl(final AnalysedComponent analysedComponent) {
-        final MethodSpec.Builder method = builderClass
-                .createMethod(analysedComponent.name(), claimableOperation, analysedComponent.element());
-        method.addJavadoc("Returns the current value of {@code $L}", analysedComponent.name());
-        mapHandlerHelper.writeGetter(method);
-        AnnotationSupplier.addGeneratedAnnotation(method, this);
+    protected boolean visitComponentImpl(
+        final AnalysedComponent ignored
+    ) {
+        mapHandlerHelper.writeSpecialisedMethods(builderClass.delegate(), this);
         return true;
     }
 }

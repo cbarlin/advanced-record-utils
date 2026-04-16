@@ -1,17 +1,15 @@
-package io.github.cbarlin.aru.tests.c_odd_types;
+package io.github.cbarlin.aru.tests.d_eclipse_collections;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import io.github.cbarlin.aru.tests.b_infer_xml.InferMatchingNameUtils;
+import org.eclipse.collections.api.map.ImmutableMap;
+import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.map.primitive.ImmutableCharBooleanMap;
+import org.eclipse.collections.api.map.primitive.MutableIntShortMap;
 
 @AdvancedRecordUtils(
         builderOptions = @AdvancedRecordUtils.BuilderOptions(
                 builtCollectionType = AdvancedRecordUtils.BuiltCollectionType.AUTO
-                // These should be the defaults:
-                // buildNullCollectionToEmpty = true
-                // createAdderMethods = true
         ),
         diffable = true,
         diffOptions = @AdvancedRecordUtils.DiffOptions(
@@ -25,12 +23,14 @@ import java.util.TreeMap;
         mergerOptions = @AdvancedRecordUtils.MergerOptions(
                 staticMethodsAddedToUtils = true
         ),
-        wither = true
+        importTargets = {
+                InferMatchingNameUtils.class
+        }
 )
 public record NonNullableAutoMapBag(
-    Map<String, String> stringStringMap,
-    Map<String, AnEnum> stringAnEnumMap,
-    Map<MapKeyRecord, MapValueRecord> recordMap,
-    Map<AnEnum, String> anEnumStringMap
+    ImmutableMap<String, String> immutableMap,
+    MutableMap<String, String> mutableMap,
+    ImmutableCharBooleanMap immutableCharBooleanMap,
+    MutableIntShortMap intShortMap
 ) {
 }
