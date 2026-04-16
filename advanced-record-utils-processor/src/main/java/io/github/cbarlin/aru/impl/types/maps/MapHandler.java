@@ -73,7 +73,7 @@ public interface MapHandler {
     /**
      * Write any other specialisations that are relevant to the current Map implementation
      */
-    default void writeNullableAutoSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType) {
+    default void writeNullableAutoSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
         // No-op
     }
 
@@ -117,7 +117,7 @@ public interface MapHandler {
     /**
      * Write any other specialisations that are relevant to the current Map implementation
      */
-    default void writeNullableImmutableSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType) {
+    default void writeNullableImmutableSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
         // No-op
     }
 
@@ -161,7 +161,7 @@ public interface MapHandler {
     /**
      * Write any other specialisations that are relevant to the current Map implementation
      */
-    default void writeNonNullAutoSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType) {
+    default void writeNonNullAutoSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
         // No-op
     }
 
@@ -205,7 +205,7 @@ public interface MapHandler {
     /**
      * Write any other specialisations that are relevant to the current Map implementation
      */
-    default void writeNonNullImmutableSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType) {
+    default void writeNonNullImmutableSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
         // No-op
     }
 

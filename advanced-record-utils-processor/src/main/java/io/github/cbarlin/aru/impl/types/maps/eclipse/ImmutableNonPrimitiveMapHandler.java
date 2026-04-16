@@ -188,34 +188,41 @@ public final class ImmutableNonPrimitiveMapHandler implements EclipseMapHandler 
     }
 
     @Override
-    public void writeNonNullAutoSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType) {
-        writeSetMap(component, visitor, toBeBuilt, keyType, valueType);
+    public void writeNonNullAutoSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
+        writeSetMap(component, visitor, toBeBuilt, keyType, valueType, nullReplacesNotNull);
     }
 
-    private void writeSetMap(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType) {
+    private void writeSetMap(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
         final MethodSpec.Builder methodBuilder = toBeBuilt.createMethod(component.name(), CommonsConstants.Claims.CORE_BUILDER_SETTER, Constants.Names.MAP)
                 .addAnnotation(CommonsConstants.Names.NON_NULL)
                 .addModifiers(Modifier.PUBLIC);
         final String name = component.name();
         methodBuilder.returns(toBeBuilt.className())
                 .addJavadoc("Updates the value of {@code $L}", name);
-        final TypeName param = ParameterizedTypeName.get(Constants.Names.MAP, keyType, valueType).annotated(CommonsConstants.NON_NULL_ANNOTATION);
+        final TypeName param = ParameterizedTypeName.get(Constants.Names.MAP, keyType, valueType).annotated(CommonsConstants.NULLABLE_ANNOTATION);
         methodBuilder.addParameter(
                 ParameterSpec.builder(param, name)
                         .addJavadoc("Replacement value")
                         .build()
         );
-        methodBuilder.beginControlFlow("if ($L != null)", name)
-                .addStatement("this.$L.clear()", name)
-                .addStatement("this.$L.putAll($L)", name, name)
-                .endControlFlow()
-                .addStatement("return this");
+        if (nullReplacesNotNull) {
+            methodBuilder.addStatement("this.$L.clear()", name)
+                    .beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L.putAll($L)", name, name)
+                    .endControlFlow();
+        } else {
+            methodBuilder.beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L.clear()", name)
+                    .addStatement("this.$L.putAll($L)", name, name)
+                    .endControlFlow();
+        }
+        methodBuilder.addStatement("return this");
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, visitor);
     }
 
     @Override
-    public void writeNonNullImmutableSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType) {
-        writeNonNullAutoSpecialisedMethods(component, visitor, toBeBuilt, keyType, valueType);
+    public void writeNonNullImmutableSpecialisedMethods(final AnalysedComponent component, final AruVisitor<?> visitor, final ToBeBuilt toBeBuilt, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
+        writeNonNullAutoSpecialisedMethods(component, visitor, toBeBuilt, keyType, valueType, nullReplacesNotNull);
     }
 
     @Override

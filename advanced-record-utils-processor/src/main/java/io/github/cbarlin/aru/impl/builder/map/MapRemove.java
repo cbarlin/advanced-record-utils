@@ -48,7 +48,7 @@ public final class MapRemove extends RecordVisitor {
         final MethodSpec.Builder method = builderClass.createMethod(methodName, claimableOperation, mapHandlerHelper.component().element());
         AnnotationSupplier.addGeneratedAnnotation(method, this);
         mapHandlerHelper.writeRemoveSingle(method);
-        method.addJavadoc("Remove a singular key/value from the map of {@code $L}", mapHandlerHelper.component().name())
+        method.addJavadoc("Remove a singular key from the map of {@code $L}", mapHandlerHelper.component().name())
             .returns(builderClass.className())
             .addModifiers(Modifier.PUBLIC);
         method.addStatement("return this");

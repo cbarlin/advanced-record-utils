@@ -52,7 +52,7 @@ public record NonNullImmutableMapHandler(
 
     @Override
     public void writeSpecialisedMethods(final ToBeBuilt toBeBuilt, final AruVisitor<?> visitor) {
-        handler.writeNonNullImmutableSpecialisedMethods(component, visitor, toBeBuilt, keyType, valueType);
+        handler.writeNonNullImmutableSpecialisedMethods(component, visitor, toBeBuilt, keyType, valueType, nullReplacesNotNull);
     }
 
     @Override

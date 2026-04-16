@@ -52,7 +52,7 @@ public record NonNullAutoMapHandler(
 
     @Override
     public void writeSpecialisedMethods(final ToBeBuilt toBeBuilt, final AruVisitor<?> visitor) {
-        handler.writeNonNullAutoSpecialisedMethods(component, visitor, toBeBuilt, keyType, valueType);
+        handler.writeNonNullAutoSpecialisedMethods(component, visitor, toBeBuilt, keyType, valueType, nullReplacesNotNull);
     }
 
     @Override

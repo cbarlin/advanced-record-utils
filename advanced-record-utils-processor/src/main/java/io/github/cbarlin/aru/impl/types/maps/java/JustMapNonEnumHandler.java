@@ -308,12 +308,12 @@ public class JustMapNonEnumHandler implements MapHandler {
                         CommonsConstants.Names.COLLECTORS
                 )
                 .addStatement(
-                        "final $T keysWithDifferentValues = new $T<>()",
+                        "final $T keysWithDifferentValues = $T.newHashSet(commonKeys.size())",
                         setKey,
                         CommonsConstants.Names.HASH_SET
                 )
                 .addStatement(
-                        "final $T keysWithSameValues = new $T<>()",
+                        "final $T keysWithSameValues = $T.newHashSet(commonKeys.size())",
                         setKey,
                         CommonsConstants.Names.HASH_SET
                 )

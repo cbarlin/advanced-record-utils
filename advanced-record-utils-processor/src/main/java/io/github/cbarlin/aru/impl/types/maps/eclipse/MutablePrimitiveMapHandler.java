@@ -231,7 +231,7 @@ public final class MutablePrimitiveMapHandler implements EclipseMapHandler {
 
     @Override
     public void writeNonNullImmutableGetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName keyType, final TypeName valueType) {
-        methodBuilder.returns(mutable.annotated(CommonsConstants.NULLABLE_ANNOTATION))
+        methodBuilder.returns(mutable.annotated(CommonsConstants.NON_NULL_ANNOTATION))
                 .addStatement("return $T.mutable.ofAll(this.$L)", factory, component.name());
     }
 
