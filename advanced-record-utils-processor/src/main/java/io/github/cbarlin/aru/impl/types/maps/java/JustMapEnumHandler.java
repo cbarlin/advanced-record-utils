@@ -70,17 +70,20 @@ public final class JustMapEnumHandler extends JustMapNonEnumHandler {
                 .addJavadoc("Replacement value")
                 .build();
         methodBuilder.addParameter(param);
-        methodBuilder.beginControlFlow("if (this.$L == null)", name)
-                .addStatement("this.$L = new $T<>($T.class)", name, Constants.Names.ENUM_MAP, keyType)
-                .endControlFlow();
         if (nullReplacesNotNull) {
-            methodBuilder.addStatement("this.$L.clear()", name)
-                    .beginControlFlow("if ($L != null)", name)
+            methodBuilder.beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L = new $T<>($T.class)", name, Constants.Names.ENUM_MAP, keyType)
                     .addStatement("this.$L.putAll($L)", name, name)
+                    .nextControlFlow("else")
+                    .addStatement("this.$L = null", name)
                     .endControlFlow();
         } else {
             methodBuilder.beginControlFlow("if ($L != null)", name)
+                    .beginControlFlow("if (this.$L == null)", name)
+                    .addStatement("this.$L = new $T<>($T.class)", name, Constants.Names.ENUM_MAP, keyType)
+                    .nextControlFlow("else")
                     .addStatement("this.$L.clear()", name)
+                    .endControlFlow()
                     .addStatement("this.$L.putAll($L)", name, name)
                     .endControlFlow();
         }
@@ -110,7 +113,8 @@ public final class JustMapEnumHandler extends JustMapNonEnumHandler {
         final FieldSpec fieldSpec = FieldSpec.builder(
                 ParameterizedTypeName.get(Constants.Names.ENUM_MAP, keyType, valueType).annotated(CommonsConstants.NON_NULL_ANNOTATION),
                 component.name(),
-                Modifier.PRIVATE
+                Modifier.PRIVATE,
+                Modifier.FINAL
         )
                 .initializer("new $T<>($T.class)", Constants.Names.ENUM_MAP, keyType)
                 .build();
