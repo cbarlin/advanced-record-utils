@@ -46,7 +46,7 @@ public final class MapDiffCreation extends DifferVisitor {
         innerRecord.builder()
             .addOriginatingElement(acc.parentRecord().typeElement())
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .addJavadoc("A record containing the difference between two collections");
+            .addJavadoc("A record containing the difference between two maps");
         final MethodSpec.Builder builder = differStaticClass.createMethod(methodName, claimableOperation)
             .addModifiers(Modifier.FINAL, Modifier.STATIC);
         AnnotationSupplier.addGeneratedAnnotation(builder, this);

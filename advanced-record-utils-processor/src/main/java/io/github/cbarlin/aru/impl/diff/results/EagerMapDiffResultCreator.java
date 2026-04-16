@@ -7,7 +7,6 @@ import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
 import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
-import io.github.cbarlin.aru.impl.types.collection.CollectionHandlerHelper;
 import io.github.cbarlin.aru.impl.types.maps.MapHandlerHelper;
 import io.github.cbarlin.aru.impl.wiring.DiffPerComponentScope;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
@@ -60,7 +59,7 @@ public final class EagerMapDiffResultCreator extends DifferVisitor {
         AnnotationSupplier.addGeneratedAnnotation(changedMethod, this);
         changedMethod.returns(TypeName.BOOLEAN)
             .addComment("If there are no added elements and no removed elements, nothing has changed")
-            .addStatement("return !(this.$L.addedKeys().isEmpty() && this.$L.removedKeys().isEmpty() && this.$L.keysWithDifferentValues.isEmpty())", acc.name(), acc.name(), acc.name())
+            .addStatement("return !(this.$L.addedKeys().isEmpty() && this.$L.removedKeys().isEmpty() && this.$L.keysWithDifferentValues().isEmpty())", acc.name(), acc.name(), acc.name())
             .addJavadoc("Has the $S field changed between the two versions?", acc.name());
 
         final MethodSpec.Builder diffMethod = differResult.createMethod(

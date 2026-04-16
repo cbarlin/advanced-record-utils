@@ -170,13 +170,13 @@ public final class ImmutablePrimitiveMapHandler implements EclipseMapHandler {
 
     @Override
     public void writeNonNullAutoGetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName keyType, final TypeName valueType) {
-        methodBuilder.returns(immutable.annotated(CommonsConstants.NULLABLE_ANNOTATION))
+        methodBuilder.returns(immutable.annotated(CommonsConstants.NON_NULL_ANNOTATION))
                 .addStatement("return this.$L.toImmutable()", component.name());
     }
 
     @Override
     public void writeNonNullAutoSetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
-        final TypeName param = mapParent.annotated(CommonsConstants.NON_NULL_ANNOTATION);
+        final TypeName param = mapParent.annotated(CommonsConstants.NULLABLE_ANNOTATION);
         final String name = component.name();
         methodBuilder.addParameter(
                 ParameterSpec.builder(param, name)
@@ -301,8 +301,8 @@ public final class ImmutablePrimitiveMapHandler implements EclipseMapHandler {
                         setKey, immutableKeySetFactory
                 )
                 .addStatement(
-                        "final $T keysWithDifferentValues = commonKeys.reject(k -> Objects.equals(nOriginal.get(k), nUpdated.get(k)))",
-                        setKey
+                        "final $T keysWithDifferentValues = commonKeys.reject(k -> $T.equals(nOriginal.get(k), nUpdated.get(k)))",
+                        setKey, CommonsConstants.Names.OBJECTS
                 )
                 .addStatement(
                         "final $T keysWithSameValues = commonKeys.newWithoutAll(keysWithDifferentValues)",

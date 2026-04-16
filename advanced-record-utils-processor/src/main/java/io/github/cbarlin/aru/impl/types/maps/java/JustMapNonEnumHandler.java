@@ -67,8 +67,18 @@ public class JustMapNonEnumHandler implements MapHandler {
                 )
                 .addJavadoc("Replacement value")
                 .build();
-        methodBuilder.addParameter(param)
-                .addStatement("this.$L = $L", name, name);
+        methodBuilder.addParameter(param);
+        if (nullReplacesNotNull) {
+            methodBuilder.beginControlFlow("if ($L == null)", name)
+                    .addStatement("this.$L = null", name)
+                    .nextControlFlow("else")
+                    .addStatement("this.$L = new $T<>($L)", name, Constants.Names.HASH_MAP, name)
+                    .endControlFlow();
+        } else {
+            methodBuilder.beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L = new $T<>($L)", name, Constants.Names.HASH_MAP, name)
+                    .endControlFlow();
+        }
     }
 
     @Override

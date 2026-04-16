@@ -2,9 +2,7 @@ package io.github.cbarlin.aru.tests.c_odd_types;
 
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 @AdvancedRecordUtils(
         builderOptions = @AdvancedRecordUtils.BuilderOptions(

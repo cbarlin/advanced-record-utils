@@ -13,7 +13,7 @@ import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.LONG;
 import static io.github.cbarlin.aru.impl.Constants.Names.MATH;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS_MAP_ITERABLE;
+import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MAP_ITERABLE;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__IMMUTABLE_LIST;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__LISTS_FACTORY;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_LIST;
@@ -32,7 +32,7 @@ public abstract sealed class EclipseListCollectionHandler extends EclipseCollect
 
     @Override
     public final void writeDifferMethod(final TypeName innerType, final MethodSpec.Builder methodBuilder, final ClassName collectionResultRecord) {
-        final ParameterizedTypeName mapPtn = ParameterizedTypeName.get(ECLIPSE_COLLECTIONS_MAP_ITERABLE, innerType, LONG);
+        final ParameterizedTypeName mapPtn = ParameterizedTypeName.get(ECLIPSE_COLLECTIONS__MAP_ITERABLE, innerType, LONG);
         final ParameterizedTypeName listPtn = ParameterizedTypeName.get(ECLIPSE_COLLECTIONS__MUTABLE_LIST, innerType);
         final ParameterizedTypeName setPtn = ParameterizedTypeName.get(ECLIPSE_COLLECTIONS__MUTABLE_SET, innerType);
         final ParameterizedTypeName componentPtn = ParameterizedTypeName.get(classNameOnComponent, innerType);

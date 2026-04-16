@@ -139,8 +139,6 @@ public enum DependencyClassNames {
     public static final ClassName ECLIPSE_COLLECTIONS__SETS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Sets");
     public static final ClassName ECLIPSE_COLLECTIONS__LISTS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Lists");
     public static final ClassName ECLIPSE_COLLECTIONS__MAPS_FACTORY = ClassName.get("org.eclipse.collections.api.factory", "Maps");
-
-    public static final ClassName ECLIPSE_COLLECTIONS_MAP_ITERABLE = ClassName.get("org.eclipse.collections.api.map", "MapIterable");
     // endregion
 
     private static String capitalise(final String variableName) {

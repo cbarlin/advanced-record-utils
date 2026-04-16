@@ -33,11 +33,12 @@ import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames
 @RequiresProperty(value = ECLIPSE_COLLECTIONS__PROPERTY, equalTo = "true")
 public final class EclipseCollectionHandlerFactory {
 
+    // Boolean is not a valid key type in Eclipse primitive collections
     private static final TypeName[] MAP_PRIMITIVE_KEY_TYPES = {
-        TypeName.BYTE, TypeName.CHAR, TypeName.SHORT, TypeName.INT, TypeName.LONG, TypeName.CHAR, TypeName.FLOAT, TypeName.DOUBLE
+        TypeName.BYTE, TypeName.CHAR, TypeName.SHORT, TypeName.INT, TypeName.LONG, TypeName.FLOAT, TypeName.DOUBLE
     };
     private static final TypeName[] MAP_PRIMITIVE_VALUE_TYPES = {
-        TypeName.BOOLEAN, TypeName.BYTE, TypeName.CHAR, TypeName.SHORT, TypeName.INT, TypeName.LONG, TypeName.CHAR, TypeName.FLOAT, TypeName.DOUBLE
+        TypeName.BOOLEAN, TypeName.BYTE, TypeName.CHAR, TypeName.SHORT, TypeName.INT, TypeName.LONG, TypeName.FLOAT, TypeName.DOUBLE
     };
 
     @Bean

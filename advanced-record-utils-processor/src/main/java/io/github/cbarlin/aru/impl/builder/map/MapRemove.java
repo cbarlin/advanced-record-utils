@@ -44,12 +44,7 @@ public final class MapRemove extends RecordVisitor {
     protected boolean visitComponentImpl(
         final AnalysedComponent ignored
     ) {
-        addTwoArgs();
-        return true;
-    }
-
-    private void addTwoArgs() {
-        final String methodName = addNameMethodName();
+        final String methodName = removeMethodName();
         final MethodSpec.Builder method = builderClass.createMethod(methodName, claimableOperation, mapHandlerHelper.component().element());
         AnnotationSupplier.addGeneratedAnnotation(method, this);
         mapHandlerHelper.writeRemoveSingle(method);
@@ -57,9 +52,10 @@ public final class MapRemove extends RecordVisitor {
             .returns(builderClass.className())
             .addModifiers(Modifier.PUBLIC);
         method.addStatement("return this");
+        return true;
     }
 
-    private String addNameMethodName() {
+    private String removeMethodName() {
         return analysedRecord.settings().prism().builderOptions().removeMethodPrefix() +
                 capitalise(mapHandlerHelper.component().name()) +
                 analysedRecord.settings().prism().builderOptions().removeMethodSuffix();

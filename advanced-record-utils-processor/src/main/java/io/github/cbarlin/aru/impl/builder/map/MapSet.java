@@ -47,6 +47,13 @@ public final class MapSet extends RecordVisitor {
                 .returns(builderClass.className())
                 .addAnnotation(CommonsConstants.Names.NON_NULL)
                 .addModifiers(Modifier.PUBLIC);
+        if (mapHandlerHelper.nullReplacesNotNull()) {
+            method.addJavadoc("\n<p>\n")
+                            .addJavadoc("Supplying a null value will clear the current map");
+        } else {
+            method.addJavadoc("\n<p>\n")
+                            .addJavadoc("Supplying a null value won't replace a set value");
+        }
         mapHandlerHelper.writeSetter(method);
         AnnotationSupplier.addGeneratedAnnotation(method, this);
         method.addStatement("return this");

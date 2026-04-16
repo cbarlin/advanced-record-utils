@@ -1,11 +1,9 @@
 package io.github.cbarlin.aru.impl.types.maps.eclipse;
 
-import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.visitors.AruVisitor;
 import io.github.cbarlin.aru.impl.Constants;
 import io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames;
 import io.micronaut.sourcegen.javapoet.ClassName;
@@ -17,6 +15,11 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
 public final class MutableNonPrimitiveMapHandler implements EclipseMapHandler {
+    /*
+    A reminder that the explicit type the user has entered is "MutableMap" - so we *must* return mutable variants
+        in our "immutable" methods
+     */
+
     private static final ClassName iterable = DependencyClassNames.ECLIPSE_COLLECTIONS__MAP_ITERABLE;
     private static final ClassName mutable = DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_MAP;
     private static final ClassName factory = DependencyClassNames.ECLIPSE_COLLECTIONS__MAPS_FACTORY;
@@ -163,23 +166,30 @@ public final class MutableNonPrimitiveMapHandler implements EclipseMapHandler {
 
     @Override
     public void writeNonNullAutoGetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName keyType, final TypeName valueType) {
-        methodBuilder.returns(ParameterizedTypeName.get(mutable, keyType, valueType).annotated(CommonsConstants.NULLABLE_ANNOTATION))
+        methodBuilder.returns(ParameterizedTypeName.get(mutable, keyType, valueType).annotated(CommonsConstants.NON_NULL_ANNOTATION))
                 .addStatement("return this.$L", component.name());
     }
 
     @Override
     public void writeNonNullAutoSetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
         final String name = component.name();
-        final TypeName param = ParameterizedTypeName.get(Constants.Names.MAP, keyType, valueType).annotated(CommonsConstants.NON_NULL_ANNOTATION);
+        final TypeName param = ParameterizedTypeName.get(Constants.Names.MAP, keyType, valueType).annotated(CommonsConstants.NULLABLE_ANNOTATION);
         methodBuilder.addParameter(
                 ParameterSpec.builder(param, name)
                         .addJavadoc("Replacement value")
                         .build()
         );
-        methodBuilder.beginControlFlow("if ($L != null)", name)
-                .addStatement("this.$L.clear()", name)
-                .addStatement("this.$L.putAll($L)", name, name)
-                .endControlFlow();
+        if (nullReplacesNotNull) {
+            methodBuilder.addStatement("this.$L.clear()", name)
+                    .beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L.putAll($L)", name, name)
+                    .endControlFlow();
+        } else {
+            methodBuilder.beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L.clear()", name)
+                    .addStatement("this.$L.putAll($L)", name, name)
+                    .endControlFlow();
+        }
     }
 
     @Override
@@ -291,8 +301,8 @@ public final class MutableNonPrimitiveMapHandler implements EclipseMapHandler {
                         setKey
                 )
                 .addStatement(
-                        "final $T keysWithDifferentValues = commonKeys.reject(k -> Objects.equals(nOriginal.get(k), nUpdated.get(k)))",
-                        setKey
+                        "final $T keysWithDifferentValues = commonKeys.reject(k -> $T.equals(nOriginal.get(k), nUpdated.get(k)))",
+                        setKey, CommonsConstants.Names.OBJECTS
                 )
                 .addStatement(
                         "final $T keysWithSameValues = commonKeys.newWithoutAll(keysWithDifferentValues)",

@@ -15,6 +15,10 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
 public final class MutablePrimitiveMapHandler implements EclipseMapHandler {
+    /*
+    A reminder that the explicit type the user has entered is "MutableMap" - so we *must* return mutable variants
+        in our "immutable" methods
+     */
     private static final String factoryPackage = "org.eclipse.collections.api.factory.primitive";
     private static final String containerPackage = "org.eclipse.collections.api.map.primitive";
     private static final String setPackage = "org.eclipse.collections.api.set.primitive";
@@ -170,23 +174,30 @@ public final class MutablePrimitiveMapHandler implements EclipseMapHandler {
 
     @Override
     public void writeNonNullAutoGetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName keyType, final TypeName valueType) {
-        methodBuilder.returns(mutable.annotated(CommonsConstants.NULLABLE_ANNOTATION))
+        methodBuilder.returns(mutable.annotated(CommonsConstants.NON_NULL_ANNOTATION))
                 .addStatement("return this.$L", component.name());
     }
 
     @Override
     public void writeNonNullAutoSetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName keyType, final TypeName valueType, final boolean nullReplacesNotNull) {
         final String name = component.name();
-        final TypeName param = mapParent.annotated(CommonsConstants.NON_NULL_ANNOTATION);
+        final TypeName param = mapParent.annotated(CommonsConstants.NULLABLE_ANNOTATION);
         methodBuilder.addParameter(
                 ParameterSpec.builder(param, name)
                         .addJavadoc("Replacement value")
                         .build()
         );
-        methodBuilder.beginControlFlow("if ($L != null)", name)
-                .addStatement("this.$L.clear()", name)
-                .addStatement("this.$L.putAll($L)", name, name)
-                .endControlFlow();
+        if (nullReplacesNotNull) {
+            methodBuilder.addStatement("this.$L.clear()", name)
+                    .beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L.putAll($L)", name, name)
+                    .endControlFlow();
+        } else {
+            methodBuilder.beginControlFlow("if ($L != null)", name)
+                    .addStatement("this.$L.clear()", name)
+                    .addStatement("this.$L.putAll($L)", name, name)
+                    .endControlFlow();
+        }
     }
 
     @Override
@@ -295,8 +306,8 @@ public final class MutablePrimitiveMapHandler implements EclipseMapHandler {
                         setKey, immutableKeySetFactory
                 )
                 .addStatement(
-                        "final $T keysWithDifferentValues = commonKeys.reject(k -> Objects.equals(nOriginal.get(k), nUpdated.get(k)))",
-                        setKey
+                        "final $T keysWithDifferentValues = commonKeys.reject(k -> $T.equals(nOriginal.get(k), nUpdated.get(k)))",
+                        setKey, CommonsConstants.Names.OBJECTS
                 )
                 .addStatement(
                         "final $T keysWithSameValues = commonKeys.newWithoutAll(keysWithDifferentValues)",
