@@ -26,7 +26,7 @@ For more details, see the [documentation](https://cbarlin.github.io/advanced-rec
 Goals include:
  * Making working with deeply nested data structures easy
  * Moving work to compile-time where possible
- * Wrap serialisation/de-serialisation into XML and (eventually) JSON
+ * Wrap serialisation into XML (and, eventually potentially other formats)
  * JPMS support
  * Opt-in dependencies based on the settings chosen
  * Readable generated source code
@@ -130,12 +130,9 @@ With the same settings, changing the minor or patch version of the processor sho
 ## Desired features:
 
 Some of these may be quite large:
- * Avaje JSONB support (as in, generate their handlers by using Jakarta XML annotations)
-    * This includes hooking into e.g. Eclipse Collection support
  * Jackson POJO builder support
- * Memoized operations (using `vavr` maybe?)
+ * Memoized operations for diffs (using `vavr` maybe?)
  * XML Deserialisation
- * `Map` support - the plumbing is there, just need it to be done!
 
 # Contributing
 
