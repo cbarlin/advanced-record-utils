@@ -251,11 +251,11 @@ public @interface AdvancedRecordUtilsGenerated {
         /**
          * The minor version of the library
          */
-        public static final int MINOR_VERSION = 8;
+        public static final int MINOR_VERSION = 9;
         /**
          * The patch version of the library
          */
-        public static final int PATCH_VERSION = 3;
+        public static final int PATCH_VERSION = 0;
 
         /**
          * The major version of the generator used
