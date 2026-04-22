@@ -76,7 +76,7 @@ public final class WriteCharSequence extends XmlVisitor {
 
         component.withinUnwrapped(
             variableName -> {
-                methodBuilder.beginControlFlow("if($L == null)", variableName)
+                methodBuilder.beginControlFlow("if ($L == null)", variableName)
                     .addStatement("continue")
                     .endControlFlow();
                 namespaceName.ifPresentOrElse(
