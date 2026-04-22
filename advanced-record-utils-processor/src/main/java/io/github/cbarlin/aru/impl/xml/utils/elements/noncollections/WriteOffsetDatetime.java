@@ -23,7 +23,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.ZONE_OFFSET;
 @RequiresBean({XmlElementPrism.class})
 public final class WriteOffsetDatetime extends NonCollectionXmlVisitor {
 
-    private static final String CHK_NON_NULL = "if ($T.nonNull(val))";
+    private static final String CHK_NON_NULL = "if (val != null)";
 
     private final XmlElementPrism prism;
 
@@ -73,7 +73,7 @@ public final class WriteOffsetDatetime extends NonCollectionXmlVisitor {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NON_NULL, OBJECTS);
+            methodBuilder.beginControlFlow(CHK_NON_NULL);
         }
       
         namespaceName.ifPresentOrElse(
@@ -99,7 +99,7 @@ public final class WriteOffsetDatetime extends NonCollectionXmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> writeStandardStartElement(methodBuilder, elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NON_NULL, OBJECTS)
+        methodBuilder.beginControlFlow(CHK_NON_NULL)
             .addStatement("output.writeCharacters(val.atZoneSameInstant($T.UTC).format($T.ISO_OFFSET_DATE_TIME))", ZONE_OFFSET, DATE_TIME_FORMATTER)
             .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));

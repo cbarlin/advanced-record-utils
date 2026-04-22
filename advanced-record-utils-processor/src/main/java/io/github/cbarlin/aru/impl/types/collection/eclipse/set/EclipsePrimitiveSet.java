@@ -17,7 +17,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
 
@@ -159,7 +158,7 @@ public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
             )
             .returns(collectionResultRecord)
             .addComment("Filter elements by comparing against the other set")
-            .beginControlFlow("if ($T.nonNull(original) && $T.nonNull(updated))", OBJECTS, OBJECTS)
+            .beginControlFlow("if (original != null && updated != null)")
             .addStatement(
                 "final $T og = original.toImmutable()",
                 immutableClassName
@@ -172,13 +171,13 @@ public final class EclipsePrimitiveSet extends EclipseCollectionHandler {
                 "return new $T(upd.difference(og), og.intersect(upd), og.difference(upd))",
                 collectionResultRecord
             )
-            .nextControlFlow("else if ($T.nonNull(original))", OBJECTS)
+            .nextControlFlow("else if (original != null)")
             .addStatement(
                 "return new $T($T.immutable.of(), $T.immutable.of(), original.toImmutable())",
                 collectionResultRecord,
                 factoryClassName, factoryClassName
             )
-            .nextControlFlow("else if ($T.nonNull(updated))", OBJECTS)
+            .nextControlFlow("else if (updated != null)")
             .addStatement(
                 "return new $T(updated.toImmutable(), $T.immutable.of(), $T.immutable.of())",
                 collectionResultRecord,

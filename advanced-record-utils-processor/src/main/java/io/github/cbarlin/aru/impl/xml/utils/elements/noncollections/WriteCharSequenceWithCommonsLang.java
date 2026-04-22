@@ -24,7 +24,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.VALIDATE;
 @RequiresBean({XmlElementPrism.class})
 public final class WriteCharSequenceWithCommonsLang extends NonCollectionXmlVisitor {
 
-    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.isNotBlank(val.toString()))";
+    private static final String CHK_NOT_NULL_OR_BLANK = "if (val != null && $T.isNotBlank(val.toString()))";
 
     private final XmlElementPrism prism;
 
@@ -78,7 +78,7 @@ public final class WriteCharSequenceWithCommonsLang extends NonCollectionXmlVisi
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             methodBuilder.addStatement("$T.notBlank(val.toString(), $S)", VALIDATE, errMsg);
         } else {
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, STRINGUTILS);
         }
 
         namespaceName.ifPresentOrElse(
@@ -104,7 +104,7 @@ public final class WriteCharSequenceWithCommonsLang extends NonCollectionXmlVisi
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> writeStandardStartElement(methodBuilder, elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, STRINGUTILS)
+        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, STRINGUTILS)
             .addStatement("output.writeCharacters(val.toString())")
             .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));

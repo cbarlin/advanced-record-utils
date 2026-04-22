@@ -51,7 +51,7 @@ public final class AddSetter extends RecordVisitor {
                     .addJavadoc("\n<p>\n")
                     .addJavadoc("Supplying a null value will set the current value to null");
             } else {
-                method.addStatement("this.$L = $T.nonNull($L) ? $L : this.$L", name, CommonsConstants.Names.OBJECTS, name, name, name)
+                method.addStatement("this.$L = ($L != null) ? $L : this.$L", name, name, name, name)
                     .addJavadoc("\n<p>\n")
                     .addJavadoc("Supplying a null value won't replace a set value");
             }

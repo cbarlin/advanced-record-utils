@@ -22,7 +22,6 @@ import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 
 public sealed abstract class EclipseCollectionHandler
@@ -62,7 +61,7 @@ public sealed abstract class EclipseCollectionHandler
     @Override
     public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         final String componentName = component.name();
-        methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, componentName)
+        methodBuilder.beginControlFlow("if (this.$L != null)", componentName)
                 .addStatement("this.$L = this.$L.select(__v -> $L.contains(__v))", componentName, componentName, componentName)
                 .endControlFlow();
     }
@@ -71,19 +70,19 @@ public sealed abstract class EclipseCollectionHandler
     public void writeNullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         final String componentName = component.name();
         if (mutableClassName.equals(classNameOnBuilder)) {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L == null)", componentName)
                     .addStatement("this.$L = $T.mutable.of($L)", componentName, factoryClassName, componentName)
                     .nextControlFlow("else")
                     .addStatement("this.$L.add($L)", componentName, componentName)
                     .endControlFlow();
         } else if (immutableClassName.equals(classNameOnBuilder)) {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L == null)", componentName)
                     .addStatement("this.$L = $T.immutable.of($L)", componentName, factoryClassName, componentName)
                     .nextControlFlow("else")
                     .addStatement("this.$L = this.$L.newWith($L)", componentName, componentName, componentName)
                     .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L == null)", componentName)
                     .addStatement("this.$L = $T.mutable.of($L)", componentName, factoryClassName, componentName)
                     .nextControlFlow("else if (this.$L instanceof $T)", componentName, immutableClassName)
                     .addStatement("this.$L = this.$L.newWith($L)", componentName, componentName, componentName)
@@ -97,15 +96,15 @@ public sealed abstract class EclipseCollectionHandler
     public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         final String componentName = component.name();
         if (mutableClassName.equals(classNameOnBuilder)) {
-            methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L != null)", componentName)
                     .addStatement("this.$L.removeIf($L)", componentName, componentName)
                     .endControlFlow();
         } else if (immutableClassName.equals(classNameOnBuilder)) {
-            methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L != null)", componentName)
                     .addStatement("this.$L = this.$L.select(__v -> !$L.test(__v))", componentName, componentName, componentName)
                     .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L != null)", componentName)
                     .beginControlFlow("if (this.$L instanceof $T)", componentName, immutableClassName)
                     .addStatement("this.$L = this.$L.select(__v -> !$L.test(__v))", componentName, componentName, componentName)
                     .nextControlFlow("else")
@@ -119,15 +118,15 @@ public sealed abstract class EclipseCollectionHandler
     public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         final String componentName = component.name();
         if (mutableClassName.equals(classNameOnBuilder)) {
-            methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L != null)", componentName)
                     .addStatement("this.$L.remove($L)", componentName, componentName)
                     .endControlFlow();
         } else if (immutableClassName.equals(classNameOnBuilder)) {
-            methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L != null)", componentName)
                     .addStatement("this.$L = this.$L.newWithout($L)", componentName, componentName, componentName)
                     .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, componentName)
+            methodBuilder.beginControlFlow("if (this.$L != null)", componentName)
                     .beginControlFlow("if (this.$L instanceof $T)", componentName, immutableClassName)
                     .addStatement("this.$L = this.$L.newWithout($L)", componentName, componentName, componentName)
                     .nextControlFlow("else")
@@ -150,9 +149,9 @@ public sealed abstract class EclipseCollectionHandler
                      .addParameter(paramB)
                      .returns(tn)
                      .addJavadoc("Merger for fields of class {@link $T}", typeName)
-                     .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+                     .beginControlFlow("if (elA == null || elA.isEmpty())")
                      .addStatement("return elB")
-                     .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+                     .nextControlFlow("else if (elB == null || elB.isEmpty())")
                      .addStatement("return elA")
                      .endControlFlow()
                      .addStatement("return elA.newWithAll(elB)");
@@ -164,8 +163,8 @@ public sealed abstract class EclipseCollectionHandler
             super.writeNullableAutoSetter(component, methodBuilder, innerType, nullReplacesNotNull);
         } else {
             final String name = component.name();
-            methodBuilder.beginControlFlow("if (!($T.isNull(this.$L) && $T.isNull($L)))", OBJECTS, name, OBJECTS, name);
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, name);
+            methodBuilder.beginControlFlow("if (!(this.$L == null && $L == null))", name, name);
+            methodBuilder.beginControlFlow("if (this.$L == null)", name);
             if (classNameOnBuilder.equals(immutableClassName)) {
                 methodBuilder.addStatement("this.$L = $T.immutable.empty()", name, factoryClassName);
             } else {
@@ -181,11 +180,11 @@ public sealed abstract class EclipseCollectionHandler
     public void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull) {
         if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L.clear()", component.name())
-                    .beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+                    .beginControlFlow("if ($L != null)", component.name())
                     .addStatement("this.$L.addAllIterable($L)", component.name(), component.name())
                     .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if ($L != null)", component.name())
                     .addStatement("this.$L.clear()", component.name())
                     .addStatement("this.$L.addAllIterable($L)", component.name(), component.name())
                     .endControlFlow();
@@ -275,7 +274,7 @@ public sealed abstract class EclipseCollectionHandler
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
-                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+                .beginControlFlow("if ($L != null)", fieldName)
                 .addStatement("this.$L.addAllIterable($L)", fieldName, fieldName)
                 .endControlFlow()
                 .addStatement("return this");
@@ -299,9 +298,9 @@ public sealed abstract class EclipseCollectionHandler
             .addParameter(paramB)
             .returns(paramTypeName)
             .addJavadoc("Merger for fields of class {@link $T}", paramTypeName)
-            .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+            .beginControlFlow("if (elA == null || elA.isEmpty())")
             .addStatement("return elB")
-            .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+            .nextControlFlow("else if (elB == null || elB.isEmpty())")
             .addStatement("return elA")
             .endControlFlow()
             .addStatement("final $T<$T> combined = $T.mutable.empty()", mutableClassName, innerType, factoryClassName)

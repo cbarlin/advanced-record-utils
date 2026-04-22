@@ -16,8 +16,6 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
 @Component
 @BuilderPerComponentScope
 @RequiresBean({ConstructorComponent.class, TypeAliasComponent.class})
@@ -55,12 +53,12 @@ public final class AddAliasSetter extends RecordVisitor {
                     .build()
             );
         if (nullReplacingNonNull) {
-            methodBuilder.beginControlFlow("if ($T.isNull($L))", OBJECTS, name)
+            methodBuilder.beginControlFlow("if ($L == null)", name)
                 .addStatement("this.$L = null", name)
                 .addStatement("return this")
                 .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.isNull($L))", OBJECTS, name)
+            methodBuilder.beginControlFlow("if ($L == null)", name)
                 .addStatement("return this")
                 .endControlFlow();
         }

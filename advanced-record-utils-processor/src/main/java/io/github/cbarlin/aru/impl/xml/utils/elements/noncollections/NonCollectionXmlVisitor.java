@@ -10,8 +10,6 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 import java.util.Optional;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-
 public abstract class NonCollectionXmlVisitor extends XmlVisitor {
 
     private final Optional<AnalysedComponent> analysedOptionalComponent;
@@ -36,7 +34,7 @@ public abstract class NonCollectionXmlVisitor extends XmlVisitor {
     }
 
     public static void writeStandardStartElement(final MethodSpec.Builder methodBuilder, final String elementName) {
-        methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", OBJECTS)
+        methodBuilder.beginControlFlow("if (currentDefaultNamespace != null)")
                 .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
                 .nextControlFlow("else")
                 .addStatement("output.writeStartElement($S)", elementName)

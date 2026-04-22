@@ -15,7 +15,6 @@ import jakarta.inject.Singleton;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
@@ -60,7 +59,7 @@ public final class UnwrapOptional extends XmlVisitor {
             .addException(XML_STREAM_EXCEPTION)
             .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
             .addJavadoc("Add the {@code $L} field to the XML output", component.name())
-            .addStatement("$T.$L(output, $T.nonNull(val) ? val.orElse(null) : null, currentDefaultNamespace)", xmlStaticClass.className(), component.name(), OBJECTS);
+            .addStatement("$T.$L(output, (val != null) ? val.orElse(null) : null, currentDefaultNamespace)", xmlStaticClass.className(), component.name());
         
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
         return true;

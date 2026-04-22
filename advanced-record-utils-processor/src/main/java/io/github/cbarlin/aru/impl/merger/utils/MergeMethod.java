@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @Singleton
 @MergerPerRecordScope
@@ -78,11 +77,11 @@ public final class MergeMethod extends MergerVisitor {
             .addParameter(paramB)
             .addJavadoc("Merge two instances of {@link $T} together", analysedRecord.intendedType())
             .returns(analysedRecord.intendedType())
-            .beginControlFlow("if ($T.isNull(other)) ", OBJECTS);
+            .beginControlFlow("if (other == null) ");
         
         logTrace(method, "Short-circuit of merge - other is null");
         method.addStatement("return preferred")
-            .nextControlFlow("else if ($T.isNull(preferred))", OBJECTS);
+            .nextControlFlow("else if (preferred == null)");
         logTrace(method, "Short-circuit of merge - preferred is null");
         method.addStatement("return other")
             .endControlFlow();

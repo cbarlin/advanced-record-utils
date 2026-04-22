@@ -63,7 +63,7 @@ public final class AddFluentSetterFromLibrary extends RecordVisitor {
             .addParameter(paramSpec)
             .addJavadoc("Uses a supplied builder to replace the value at {@code $L}", name)
             .addStatement("$T.requireNonNull(subBuilder, $S)", OBJECTS, "Cannot supply a null function argument")
-            .addStatement("final $T builder = ($T.isNull(this.$L())) ? $T.$L() : $T.$L(this.$L())", otherBuilderClassName, OBJECTS, name, otherBuilderClassName, emptyMethodName, otherBuilderClassName, copyMethodName, name);
+            .addStatement("final $T builder = (this.$L() == null) ? $T.$L() : $T.$L(this.$L())", otherBuilderClassName, name, otherBuilderClassName, emptyMethodName, otherBuilderClassName, copyMethodName, name);
         
         logTrace(methodBuilder, "Passing over to provided consumer");
         

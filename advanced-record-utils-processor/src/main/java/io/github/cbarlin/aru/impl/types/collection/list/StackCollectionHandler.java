@@ -1,6 +1,5 @@
 package io.github.cbarlin.aru.impl.types.collection.list;
 
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STACK;
 
 import io.avaje.inject.Component;
@@ -18,7 +17,7 @@ public final class StackCollectionHandler extends ListCollectionHandler {
 
     @Override
     public void writeNullableAutoAddSingle(AnalysedComponent component, Builder methodBuilder, TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
             .endControlFlow()
             .addStatement("this.$L.add($L)", component.name(), component.name());
@@ -26,7 +25,7 @@ public final class StackCollectionHandler extends ListCollectionHandler {
 
     @Override
     public void writeNullableAutoRemoveSingle(AnalysedComponent component, Builder methodBuilder, TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
             .endControlFlow()
             .addStatement("this.$L.remove($L)", component.name(), component.name());
@@ -34,7 +33,7 @@ public final class StackCollectionHandler extends ListCollectionHandler {
 
     @Override
     public void writeNullableAutoRemovePredicate(AnalysedComponent component, Builder methodBuilder, TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
             .endControlFlow()
             .addStatement("this.$L.removeIf($L)", component.name(), component.name());
@@ -42,7 +41,7 @@ public final class StackCollectionHandler extends ListCollectionHandler {
 
     @Override
     public void writeNullableAutoRetainAll(AnalysedComponent component, Builder methodBuilder, TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
             .endControlFlow()
             .addStatement("this.$L.retainAll($L)", component.name(), component.name());

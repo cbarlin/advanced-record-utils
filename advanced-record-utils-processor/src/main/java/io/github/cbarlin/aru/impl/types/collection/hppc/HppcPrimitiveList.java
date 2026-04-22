@@ -3,21 +3,14 @@ package io.github.cbarlin.aru.impl.types.collection.hppc;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
-import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.LIST;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.FUNCTION;
-import static io.github.cbarlin.aru.impl.Constants.Names.LONG;
-import static io.github.cbarlin.aru.impl.Constants.Names.MAP;
 import static io.github.cbarlin.aru.impl.Constants.Names.MATH;
-import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.HPPC__PACKAGE;
 
 public final class HppcPrimitiveList extends AbstractHppcPrimitiveHandler {
 

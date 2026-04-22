@@ -45,7 +45,7 @@ public final class WriteLocalDateTime extends WriteXmlAttribute {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ATTRIBUTE.formatted(analysedComponent.name(), attributeName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
         } else {
-            methodBuilder.beginControlFlow("if ($T.nonNull(val))", OBJECTS);
+            methodBuilder.beginControlFlow("if (val != null)");
         }
         logTrace(methodBuilder, "Converting value to UTC - assuming that LocalDateTime has the System Default time zone");
         namespaceName.ifPresentOrElse(

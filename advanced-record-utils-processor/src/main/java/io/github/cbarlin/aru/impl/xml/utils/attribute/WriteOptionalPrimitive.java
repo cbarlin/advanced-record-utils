@@ -13,7 +13,6 @@ import jakarta.inject.Singleton;
 
 import java.util.Optional;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 
@@ -43,7 +42,7 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
         final Optional<String> namespaceName = namespaceName(prism);
 
         final boolean required = Boolean.TRUE.equals(prism.required());
-        methodBuilder.beginControlFlow("if ($T.nonNull(val) && val.isPresent())", OBJECTS);
+        methodBuilder.beginControlFlow("if (val != null && val.isPresent())");
         
 
         component.withinUnwrapped(

@@ -62,7 +62,7 @@ public final class WritePrimitiveSequence extends XmlVisitor {
             APContext.messager().printWarning("Cannot process default value on an XmlElement that's pointing at a collection", analysedComponent.element());
         }
 
-        methodBuilder.beginControlFlow("if ($T.isNull(val))", OBJECTS)
+        methodBuilder.beginControlFlow("if (val == null)")
                 .addStatement("return")
                 .endControlFlow();
 
@@ -72,7 +72,7 @@ public final class WritePrimitiveSequence extends XmlVisitor {
             variableName -> {
                 namespaceName.ifPresentOrElse(
                     namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                    () -> methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", OBJECTS)
+                    () -> methodBuilder.beginControlFlow("if (currentDefaultNamespace != null)")
                             .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
                             .nextControlFlow("else")
                             .addStatement("output.writeStartElement($S)", elementName)
@@ -108,7 +108,7 @@ public final class WritePrimitiveSequence extends XmlVisitor {
                 final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
                 methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             } else {
-                methodBuilder.beginControlFlow("if ($T.nonNull(val))", OBJECTS);
+                methodBuilder.beginControlFlow("if (val != null)");
             }
             methodBuilder.beginControlFlow("if (!val.isEmpty())");
         }

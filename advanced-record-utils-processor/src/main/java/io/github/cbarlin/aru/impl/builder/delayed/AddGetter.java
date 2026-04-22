@@ -15,8 +15,6 @@ import io.micronaut.sourcegen.javapoet.MethodSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
 @Component
 @BuilderPerComponentScope
 @RequiresProperty(value = "fluent", equalTo = "true")
@@ -44,8 +42,7 @@ public final class AddGetter extends RecordVisitor {
             .addModifiers(Modifier.PUBLIC)
             .addJavadoc("Returns the current value of {@code $L}\n", name)
             .addStatement(
-                "return $T.nonNull(this.$L) ? this.$L.$L() : null",
-                OBJECTS,
+                "return (this.$L != null) ? this.$L.$L() : null",
                 name,
                 name,
                 componentTargetingRecord.target().prism().builderOptions().buildMethodName()

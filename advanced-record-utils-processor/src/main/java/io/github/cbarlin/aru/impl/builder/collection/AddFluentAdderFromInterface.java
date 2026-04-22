@@ -16,7 +16,6 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.ComponentTargetingInterface;
 import io.github.cbarlin.aru.impl.types.collection.CollectionHandlerHelper;
 import io.github.cbarlin.aru.impl.wiring.BuilderPerComponentScope;
-import io.github.cbarlin.aru.prism.prison.BuilderOptionsPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
@@ -36,19 +35,16 @@ public final class AddFluentAdderFromInterface extends CollectionRecordVisitor {
 
     private final AnalysedInterface target;
     private final BuilderClass builder;
-    private final BuilderOptionsPrism myPrism;
 
     public AddFluentAdderFromInterface(
         final AnalysedCollectionComponent acc,
         final BuilderClass builderClass,
         final CollectionHandlerHelper minimalCollectionHandler,
-        final ComponentTargetingInterface targetingInterface,
-        final BuilderOptionsPrism myPrism
+        final ComponentTargetingInterface targetingInterface
     ) {
         super(Claims.BUILDER_FLUENT_SETTER, acc.parentRecord(), acc);
         target = targetingInterface.target();
         this.builder = builderClass;
-        this.myPrism = myPrism;
     }
 
     @Override

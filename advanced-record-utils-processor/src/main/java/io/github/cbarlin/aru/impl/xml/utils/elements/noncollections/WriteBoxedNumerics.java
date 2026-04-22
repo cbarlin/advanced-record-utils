@@ -83,7 +83,7 @@ public final class WriteBoxedNumerics extends NonCollectionXmlVisitor {
             final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
             methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
         } else {
-            methodBuilder.beginControlFlow("if($T.nonNull(val))", OBJECTS);
+            methodBuilder.beginControlFlow("if (val != null)");
         }
 
         namespaceName.ifPresentOrElse(
@@ -109,7 +109,7 @@ public final class WriteBoxedNumerics extends NonCollectionXmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> writeStandardStartElement(methodBuilder, elementName)
         );
-        methodBuilder.beginControlFlow("if($T.nonNull(val))", OBJECTS)
+        methodBuilder.beginControlFlow("if (val != null)")
             .addStatement("output.writeCharacters(val.toString())")
             .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));

@@ -253,9 +253,9 @@ public class JustMapNonEnumHandler implements MapHandler {
                 .addParameter(paramB)
                 .returns(paramTypeName)
                 .addJavadoc("Merger for fields of class {@link $T}", paramTypeName)
-                .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", Constants.Names.OBJECTS)
+                .beginControlFlow("if (elA == null || elA.isEmpty())")
                 .addStatement("return elB")
-                .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", Constants.Names.OBJECTS)
+                .nextControlFlow("else if (elB == null || elB.isEmpty())")
                 .addStatement("return elA")
                 .endControlFlow()
                 .addStatement(

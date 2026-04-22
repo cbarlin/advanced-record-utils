@@ -9,7 +9,6 @@ import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.LibraryLoadedTarget;
 import io.github.cbarlin.aru.core.types.ProcessingTarget;
 import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
-import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.ComponentTargetingInterface;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
@@ -34,7 +33,6 @@ import java.util.function.Predicate;
 
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT_DEFAULT;
 import static io.github.cbarlin.aru.impl.xml.utils.elements.noncollections.NonCollectionXmlVisitor.writeStandardStartElement;
 
@@ -47,22 +45,19 @@ public final class Branching extends XmlVisitor {
     private final Optional<XmlElementWrapperPrism> wrapper;
     private final AnalysedCollectionComponent component;
     private final AnalysedInterface other;
-    private final Optional<AnalysedOptionalComponent> optComponent;
 
     public Branching (
         final XmlRecordHolder xmlRecordHolder,
         final XmlElementsPrism prism,
         final Optional<XmlElementWrapperPrism> wrapper,
         final AnalysedCollectionComponent component,
-        final ComponentTargetingInterface targetingRecord,
-        final Optional<AnalysedOptionalComponent> optComponent
+        final ComponentTargetingInterface targetingRecord
     ) {
         super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
         this.outerPrism = prism;
         this.wrapper = wrapper;
         this.component = component;
         this.other = targetingRecord.target();
-        this.optComponent = optComponent;
     }
 
     @Override
@@ -79,7 +74,7 @@ public final class Branching extends XmlVisitor {
             .toList();
         final Map<ClassName, NameAndNamespace> extractedName = extractNamedVersions(component, other);
 
-        methodBuilder.beginControlFlow("if ($T.isNull(val))", OBJECTS)
+        methodBuilder.beginControlFlow("if (val == null)")
             .addStatement("return")
             .endControlFlow();
 
@@ -87,7 +82,7 @@ public final class Branching extends XmlVisitor {
 
         component.withinUnwrapped(
             variableName -> {
-                methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                methodBuilder.beginControlFlow("if($L == null)", variableName)
                     .addStatement("continue");
                 for (final ProcessingTarget target : targets) {
                     writeTargetIfStatement(methodBuilder, extractedName, target, variableName);

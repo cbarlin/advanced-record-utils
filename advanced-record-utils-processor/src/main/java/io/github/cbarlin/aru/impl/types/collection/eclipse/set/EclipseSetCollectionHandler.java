@@ -10,7 +10,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__IMMUTABLE_SET;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__MUTABLE_SET;
 import static io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames.ECLIPSE_COLLECTIONS__SETS_FACTORY;
@@ -37,7 +36,7 @@ public abstract sealed class EclipseSetCollectionHandler extends EclipseCollecti
                 )
                 .returns(collectionResultRecord)
                 .addComment("Filter elements by comparing against the other set")
-                .beginControlFlow("if ($T.nonNull(original) && $T.nonNull(updated))", OBJECTS, OBJECTS)
+                .beginControlFlow("if (original != null && updated != null)")
                 .addStatement(
                         "final $T<$T> og = original.toImmutableSet()",
                         immutableClassName, innerType
@@ -50,13 +49,13 @@ public abstract sealed class EclipseSetCollectionHandler extends EclipseCollecti
                         "return new $T(upd.difference(og), og.intersect(upd), og.difference(upd))",
                         collectionResultRecord
                 )
-                .nextControlFlow("else if ($T.nonNull(original))", OBJECTS)
+                .nextControlFlow("else if (original != null)")
                 .addStatement(
                         "return new $T(original.toImmutableSet(), $T.immutable.of(), $T.immutable.of())",
                         collectionResultRecord,
                         factoryClassName, factoryClassName
                 )
-                .nextControlFlow("else if ($T.nonNull(updated))", OBJECTS)
+                .nextControlFlow("else if (updated != null)")
                 .addStatement(
                         "return new $T(updated.toImmutableSet(), $T.immutable.of(), $T.immutable.of())",
                         collectionResultRecord,

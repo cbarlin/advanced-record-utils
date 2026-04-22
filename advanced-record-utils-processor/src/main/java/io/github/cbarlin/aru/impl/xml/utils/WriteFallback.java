@@ -31,7 +31,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
 @XmlPerComponentScope
 public final class WriteFallback extends XmlVisitor {
 
-    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
+    private static final String CHK_NOT_NULL_OR_BLANK = "if (val != null && val.toString() != null && (!val.toString().isBlank()) )";
 
     private final Optional<XmlAttributePrism> xmlAttributePrism;
     private final Optional<XmlElementPrism> xmlElementPrism;
@@ -110,7 +110,7 @@ public final class WriteFallback extends XmlVisitor {
         if (defaultValue.isPresent()) {
             final String writeAsDefaultValue = defaultValue.get();
             writeStartElement(methodBuilder, elementName, namespaceName);
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS)
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK)
                 .addStatement("output.writeCharacters(val.toString())")
                 .nextControlFlow("else");
             logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));
@@ -128,7 +128,7 @@ public final class WriteFallback extends XmlVisitor {
                 .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
                 .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK);
         }
 
         writeStartElement(methodBuilder, elementName, namespaceName);
@@ -164,7 +164,7 @@ public final class WriteFallback extends XmlVisitor {
                 .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
                 .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK);
         }
 
         namespaceName.ifPresentOrElse(
