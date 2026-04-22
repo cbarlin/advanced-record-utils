@@ -1,6 +1,5 @@
 package io.github.cbarlin.aru.impl.types.collection.set;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.COLLECTIONS;
 import static io.github.cbarlin.aru.impl.Constants.Names.SORTED_SET;
 import static io.github.cbarlin.aru.impl.Constants.Names.TREE_SET;
@@ -21,7 +20,7 @@ public final class SortedSetCollectionHandler extends SetCollectionHandler {
 
     @Override
     public void writeNonNullAutoGetter(final AnalysedComponent component, final Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("return new $T<>()", TREE_SET)
             .endControlFlow()
             .addStatement("return this.$L", component.name())
@@ -37,7 +36,7 @@ public final class SortedSetCollectionHandler extends SetCollectionHandler {
 
     @Override
     public void writeNonNullImmutableGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("return $T.emptySortedSet()", COLLECTIONS)
             .endControlFlow()
             .addStatement("return this.$L", component.name())

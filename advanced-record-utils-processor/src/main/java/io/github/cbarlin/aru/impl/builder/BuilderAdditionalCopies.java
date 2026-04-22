@@ -44,7 +44,7 @@ public class BuilderAdditionalCopies extends RecordVisitor {
         final var builder = analysedRecord.builderArtifact().createMethod(methodName, claimableOperation);
         builder.addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .addJavadoc("Either copy an existing {@link $T} into a builder, or create a blank builder for it", analysedRecord.intendedType())
-                .beginControlFlow("if ($T.nonNull(original) && original.isPresent()) ", CommonsConstants.Names.OBJECTS)
+                .beginControlFlow("if (original != null && original.isPresent()) ")
                 .addStatement("return $T.$L(original.get())", builderClassName, methodName)
                 .nextControlFlow("else")
                 .addStatement("return $T.$L()", builderClassName, analysedRecord.settings().prism().builderOptions().emptyCreationName())

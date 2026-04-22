@@ -13,7 +13,6 @@ import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
 import static io.github.cbarlin.aru.impl.Constants.Names.BI_CONSUMER;
 import static io.github.cbarlin.aru.impl.Constants.Names.CONSTRAINT_VIOLATION;
@@ -58,7 +57,7 @@ public final class JakartaValidatedBuild extends RecordVisitor {
             )
             .addStatement("final $T built = this.$L()", analysedRecord.intendedType(), methodName)
             .addStatement("final $T validationResults = validator.validate(built)", setOfViolations)
-            .beginControlFlow("if ($T.nonNull(validationResults) && (!validationResults.isEmpty()))", OBJECTS)
+            .beginControlFlow("if ((validationResults != null) && (!validationResults.isEmpty()))")
             .addStatement("resultConsumer.accept(validationResults)")
             .endControlFlow()
             .addStatement("return built");

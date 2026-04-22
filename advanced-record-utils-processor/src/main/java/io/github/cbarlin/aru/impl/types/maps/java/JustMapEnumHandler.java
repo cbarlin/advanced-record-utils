@@ -16,8 +16,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
 @Component
 @GlobalScope
 public final class JustMapEnumHandler extends JustMapNonEnumHandler {
@@ -135,9 +133,9 @@ public final class JustMapEnumHandler extends JustMapNonEnumHandler {
                 .addParameter(paramB)
                 .returns(paramTypeName)
                 .addJavadoc("Merger for fields of class {@link $T}", paramTypeName)
-                .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+                .beginControlFlow("if (elA == null || elA.isEmpty())")
                 .addStatement("return elB")
-                .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+                .nextControlFlow("else if (elB == null || elB.isEmpty())")
                 .addStatement("return elA")
                 .endControlFlow()
                 .addStatement(

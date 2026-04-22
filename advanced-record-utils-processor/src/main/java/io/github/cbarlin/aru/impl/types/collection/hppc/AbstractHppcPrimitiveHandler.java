@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 /**
  * An abstract parent ancestor for HPPC unitype (e.g. `CharArrayList`) handlers
@@ -65,7 +64,7 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
         if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L = $L", component.name(), component.name());
         } else {
-            methodBuilder.addStatement("this.$L = $T.nonNull($L) ? $L : this.$L", component.name(), OBJECTS, component.name(), component.name(), component.name());
+            methodBuilder.addStatement("this.$L = ($L != null) ? $L : this.$L", component.name(), component.name(), component.name(), component.name());
         }
     }
 
@@ -109,7 +108,7 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
      */
     @Override
     public void writeNullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                 .addStatement("this.$L = new $T()", component.name(), concreteClassName)
                 .endControlFlow()
                 .addStatement("this.$L.add($L)", component.name(), component.name());
@@ -120,7 +119,7 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
      */
     @Override
     public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = new $T()", component.name(), concreteClassName)
             .endControlFlow()
             .addStatement("this.$L.removeElement($L)", component.name(), component.name());
@@ -131,7 +130,7 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
      */
     @Override
     public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L != null)", component.name())
                 .addStatement("this.$L.removeAll($L)", component.name(), component.name())
                 .endControlFlow();
     }
@@ -141,7 +140,7 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
      */
     @Override
     public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L != null)", component.name())
                 .addStatement("this.$L.retainAll(__e -> $L.contains(__e))", component.name(), component.name())
                 .endControlFlow();
     }
@@ -151,7 +150,7 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
      */
     @Override
     public void writeNullableAutoGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L != null)", component.name())
                 .addStatement("return new $T(this.$L)", concreteClassName, component.name())
                 .nextControlFlow("else")
                 .addStatement("return null")
@@ -217,11 +216,11 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
     public void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull) {
         if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L.clear()", component.name())
-                    .beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+                    .beginControlFlow("if ($L != null)", component.name())
                     .addStatement("this.$L.addAll($L)", component.name(), component.name())
                     .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if ($L != null)", component.name())
                     .addStatement("this.$L.clear()", component.name())
                     .addStatement("this.$L.addAll($L)", component.name(), component.name())
                     .endControlFlow();
@@ -333,9 +332,9 @@ public abstract class AbstractHppcPrimitiveHandler extends CollectionHandler {
                 .addParameter(paramB)
                 .returns(concreteClassName)
                 .addJavadoc("Merger for fields of class {@link $T}", concreteClassName)
-                .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+                .beginControlFlow("if (elA == null || elA.isEmpty())")
                 .addStatement("return elB")
-                .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+                .nextControlFlow("else if (elB == null || elB.isEmpty())")
                 .addStatement("return elA")
                 .endControlFlow()
                 .addStatement("final $T combined = new $T()", concreteClassName, concreteClassName)

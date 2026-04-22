@@ -1,7 +1,5 @@
 package io.github.cbarlin.aru.impl.types.collection.hppc;
 
-import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
-import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
@@ -11,11 +9,8 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 import java.util.List;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTORS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.SET;
-import static io.github.cbarlin.aru.impl.Constants.Names.PREDICATE;
 
 public final class HppcPrimitiveSet extends AbstractHppcPrimitiveHandler {
 
@@ -34,7 +29,7 @@ public final class HppcPrimitiveSet extends AbstractHppcPrimitiveHandler {
 
     @Override
     public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                 .addStatement("this.$L = new $T()", component.name(), concreteClassName)
                 .endControlFlow()
                 .addStatement("this.$L.remove($L)", component.name(), component.name());

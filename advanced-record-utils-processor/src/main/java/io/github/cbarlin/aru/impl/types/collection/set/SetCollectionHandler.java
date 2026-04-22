@@ -25,7 +25,7 @@ public abstract class SetCollectionHandler extends StandardCollectionHandler {
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String assignmentName, final TypeName innerTypeName) {
         methodBuilder
             .addComment("Created in $L", this.getClass().getCanonicalName())
-            .beginControlFlow("if ($T.isNull($L))", OBJECTS, fieldName)
+            .beginControlFlow("if ($L == null)", fieldName)
             .addStatement("return $T.of()", SET)
             .endControlFlow()
             .addStatement(

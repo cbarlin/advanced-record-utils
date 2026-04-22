@@ -13,8 +13,6 @@ import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import java.util.Set;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
 @Singleton
 @MergerPerRecordScope
 public final class Fallback extends MergerVisitor {
@@ -50,10 +48,7 @@ public final class Fallback extends MergerVisitor {
                 .addParameter(paramB)
                 .returns(targetTn)
                 .addJavadoc("Merger for fields of class {@link $T}", targetTn)
-                .beginControlFlow("if ($T.isNull(elA))", OBJECTS)
-                .addStatement("return elB")
-                .endControlFlow()
-                .addStatement("return elA");
+                .addStatement("return (elA != null) ? elA : elB");
 
             AnnotationSupplier.addGeneratedAnnotation(method, this);
         }

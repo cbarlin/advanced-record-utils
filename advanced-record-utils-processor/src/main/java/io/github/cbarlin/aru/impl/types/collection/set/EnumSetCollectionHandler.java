@@ -34,7 +34,7 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
 
     public static void nullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         methodBuilder.addStatement("$T.requireNonNull($L, $S)", OBJECTS, component.name(), "Cannot add a null item to a set of enums")
-            .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = $T.noneOf($T.class)", component.name(), ENUM_SET, innerType)
             .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), ENUM_SET)
             .addStatement("this.$L = $T.copyOf(this.$L)", component.name(), ENUM_SET, component.name())
@@ -44,7 +44,7 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
 
     public static void nullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         methodBuilder.addStatement("$T.requireNonNull($L, $S)", OBJECTS, component.name(), "Cannot add a null item to a set of enums")
-            .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = $T.noneOf($T.class)", component.name(), ENUM_SET, innerType)
             .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), ENUM_SET)
             .addStatement("this.$L = $T.copyOf(this.$L)", component.name(), ENUM_SET, component.name())
@@ -54,7 +54,7 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
 
     public static void nullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         methodBuilder.addStatement("$T.requireNonNull($L, $S)", OBJECTS, component.name(), "Cannot add a null item to a set of enums")
-            .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = $T.noneOf($T.class)", component.name(), ENUM_SET, innerType)
             .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), ENUM_SET)
             .addStatement("this.$L = $T.copyOf(this.$L)", component.name(), ENUM_SET, component.name())
@@ -64,7 +64,7 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
 
     public static void nullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         methodBuilder.addStatement("$T.requireNonNull($L, $S)", OBJECTS, component.name(), "Cannot add a null item to a set of enums")
-            .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            .beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("this.$L = $T.noneOf($T.class)", component.name(), ENUM_SET, innerType)
             .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), ENUM_SET)
             .addStatement("this.$L = $T.copyOf(this.$L)", component.name(), ENUM_SET, component.name())
@@ -88,9 +88,9 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
             .addParameter(paramB)
             .returns(paramTypeName)
             .addJavadoc("Merger for fields of class {@link $T}", paramTypeName)
-            .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+            .beginControlFlow("if (elA == null || elA.isEmpty())")
             .addStatement("return elB")
-            .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+            .nextControlFlow("else if (elB == null || elB.isEmpty())")
             .addStatement("return elA")
             .endControlFlow()
             .addStatement("final $T<$T> combined = $T.noneOf($T.class)", ENUM_SET, innerType, ENUM_SET, innerType)
@@ -109,7 +109,7 @@ public final class EnumSetCollectionHandler extends SetCollectionHandler {
     }
 
     public static void nonNullAutoGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
-        methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+        methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
             .addStatement("return $T.noneOf($T.class)", ENUM_SET, innerType)
             .endControlFlow()
             .addStatement("return this.$L", component.name())

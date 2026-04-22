@@ -13,7 +13,6 @@ import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @SuppressWarnings({"java:S1192"}) // Adding a constant will not make the code clearer
 public abstract class StandardCollectionHandler extends CollectionHandler {
@@ -50,7 +49,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
         if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L = $L", component.name(), component.name());
         } else {
-            methodBuilder.addStatement("this.$L = $T.nonNull($L) ? $L : this.$L", component.name(), OBJECTS, component.name(), component.name(), component.name());
+            methodBuilder.addStatement("this.$L = ($L != null) ? $L : this.$L", component.name(), component.name(), component.name(), component.name());
         }
     }
 
@@ -81,14 +80,14 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNullableAutoAddSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         if (!mutableClassName.equals(classNameOnComponent)) {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                  .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                  .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
                  .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
                  .endControlFlow()
                  .addStatement("this.$L.add($L)", component.name(), component.name());
         } else {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                  .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                  .endControlFlow()
                  .addStatement("this.$L.add($L)", component.name(), component.name());
@@ -98,14 +97,14 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNullableAutoRemoveSingle(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         if (!mutableClassName.equals(classNameOnComponent)) {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                          .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                          .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
                          .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
                          .endControlFlow()
                          .addStatement("this.$L.remove($L)", component.name(), component.name());
         } else {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                          .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                          .endControlFlow()
                          .addStatement("this.$L.remove($L)", component.name(), component.name());
@@ -115,14 +114,14 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNullableAutoRemovePredicate(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         if (!mutableClassName.equals(classNameOnComponent)) {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                          .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                          .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
                          .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
                          .endControlFlow()
                          .addStatement("this.$L.removeIf($L)", component.name(), component.name());
         } else {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                          .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                          .endControlFlow()
                          .addStatement("this.$L.removeIf($L)", component.name(), component.name());
@@ -132,14 +131,14 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNullableAutoRetainAll(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         if (!mutableClassName.equals(classNameOnComponent)) {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                  .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                  .nextControlFlow("else if (!(this.$L instanceof $T))", component.name(), mutableClassName)
                  .addStatement("this.$L = new $T<$T>(this.$L)", component.name(), mutableClassName, innerType, component.name())
                  .endControlFlow()
                  .addStatement("this.$L.retainAll($L)", component.name(), component.name());
         } else {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                  .addStatement("this.$L = new $T<$T>()", component.name(), mutableClassName, innerType)
                  .endControlFlow()
                  .addStatement("this.$L.retainAll($L)", component.name(), component.name());
@@ -149,7 +148,7 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     @Override
     public void writeNullableImmutableGetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType) {
         if (classNameOnComponent.equals(immutableClassName)) {
-            methodBuilder.beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if (this.$L == null)", component.name())
                 .addStatement("return null")
                 .endControlFlow();
             convertToImmutable(methodBuilder, "this." + component.name(), "___immutable", innerType);
@@ -192,11 +191,11 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
     public void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final TypeName innerType, final boolean nullReplacesNotNull) {
         if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L.clear()", component.name())
-                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+                .beginControlFlow("if ($L != null)", component.name())
                 .addStatement("this.$L.addAll($L)", component.name(), component.name())
                 .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if ($L != null)", component.name())
                 .addStatement("this.$L.clear()", component.name())
                 .addStatement("this.$L.addAll($L)", component.name(), component.name())
                 .endControlFlow();
@@ -278,9 +277,9 @@ public abstract class StandardCollectionHandler extends CollectionHandler {
             .addParameter(paramB)
             .returns(paramTypeName)
             .addJavadoc("Merger for fields of class {@link $T}", paramTypeName)
-            .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+            .beginControlFlow("if (elA == null || elA.isEmpty())")
             .addStatement("return elB")
-            .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+            .nextControlFlow("else if (elB == null || elB.isEmpty())")
             .addStatement("return elA")
             .endControlFlow()
             .addStatement("final $T<$T> combined = new $T()", mutableClassName, innerType, mutableClassName)

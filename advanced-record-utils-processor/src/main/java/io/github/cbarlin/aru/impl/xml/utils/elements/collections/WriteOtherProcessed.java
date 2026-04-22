@@ -5,7 +5,6 @@ import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
-import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.ComponentTargetingRecord;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
@@ -35,22 +34,19 @@ public final class WriteOtherProcessed extends XmlVisitor {
     private final Optional<XmlElementWrapperPrism> wrapper;
     private final AnalysedCollectionComponent component;
     private final AnalysedRecord other;
-    private final Optional<AnalysedOptionalComponent> optComponent;
 
     public WriteOtherProcessed (
         final XmlRecordHolder xmlRecordHolder,
         final XmlElementPrism prism,
         final Optional<XmlElementWrapperPrism> wrapper,
         final AnalysedCollectionComponent component,
-        final ComponentTargetingRecord targetingRecord,
-        final Optional<AnalysedOptionalComponent> optComponent
+        final ComponentTargetingRecord targetingRecord
     ) {
         super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
         this.prism = prism;
         this.wrapper = wrapper;
         this.component = component;
         this.other = targetingRecord.target();
-        this.optComponent = optComponent;
     }
 
     @Override
@@ -76,7 +72,7 @@ public final class WriteOtherProcessed extends XmlVisitor {
 
         component.withinUnwrapped(
             variableName -> {
-                methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                methodBuilder.beginControlFlow("if($L == null)", variableName)
                     .addStatement("continue")
                     .endControlFlow();
                 namespaceName.ifPresentOrElse(
@@ -111,7 +107,7 @@ public final class WriteOtherProcessed extends XmlVisitor {
                 final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
                 methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             } else {
-                methodBuilder.beginControlFlow("if ($T.nonNull(val))", OBJECTS);
+                methodBuilder.beginControlFlow("if (val != null)");
             }
             methodBuilder.beginControlFlow("if (!val.isEmpty())");
         }

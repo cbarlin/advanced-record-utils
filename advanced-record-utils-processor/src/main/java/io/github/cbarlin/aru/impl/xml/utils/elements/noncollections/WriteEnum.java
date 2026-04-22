@@ -22,7 +22,7 @@ import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPT
 @RequiresBean({XmlElementPrism.class})
 public final class WriteEnum extends NonCollectionXmlVisitor {
 
-    private static final String CHK_NOT_NULL_OR_BLANK = "if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()) )";
+    private static final String CHK_NOT_NULL_OR_BLANK = "if (val != null && val.toString() != null && (!val.toString().isBlank()) )";
     private final XmlElementPrism prism;
 
     public WriteEnum(
@@ -74,7 +74,7 @@ public final class WriteEnum extends NonCollectionXmlVisitor {
                 .addStatement("throw new $T($S)", ILLEGAL_ARGUMENT_EXCEPTION, errMsg)
                 .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS);
+            methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK);
         }
 
         namespaceName.ifPresentOrElse(
@@ -100,7 +100,7 @@ public final class WriteEnum extends NonCollectionXmlVisitor {
             namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
             () -> writeStandardStartElement(methodBuilder, elementName)
         );
-        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK, OBJECTS, OBJECTS)
+        methodBuilder.beginControlFlow(CHK_NOT_NULL_OR_BLANK)
             .addStatement("output.writeCharacters(val.toString())")
             .nextControlFlow("else");
         logTrace(methodBuilder, "Supplied value for %s (element name %s) was null/blank, writing default of %s".formatted(analysedComponent.name(), elementName, writeAsDefaultValue));

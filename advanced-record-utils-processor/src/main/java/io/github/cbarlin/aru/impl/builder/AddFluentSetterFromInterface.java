@@ -76,7 +76,8 @@ public final class AddFluentSetterFromInterface extends RecordVisitor {
                 .addJavadoc("Uses a supplied builder to build an instance of {@link $T} and replace the value of {@link $L}", targetCN, name)
                 .addStatement("$T.requireNonNull(subBuilder, $S)", OBJECTS, "Cannot supply a null function argument")
                 .addStatement("final $T builder", otherBuilderClassName)
-                .beginControlFlow("if ($T.nonNull(this.$L()) && this.$L() instanceof $T oth)", OBJECTS, name, name, targetCN)
+                // `instanceof` acts as a null check as well
+                .beginControlFlow("if (this.$L() instanceof final $T oth)", name, targetCN)
                 .addStatement("builder = $T.$L(oth)", otherBuilderClassName, copyMethodName)
                 .nextControlFlow("else")
                 .addStatement("builder = $T.$L()", otherBuilderClassName, emptyMethodName)

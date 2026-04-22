@@ -17,7 +17,6 @@ import javax.lang.model.element.Modifier;
 import java.util.Set;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 
 @Singleton
 @MergerPerComponentScope
@@ -59,9 +58,9 @@ public final class MergeOptionalPrimitives extends MergerVisitor {
                 .addParameter(paramB)
                 .returns(targetTn)
                 .addJavadoc("Merger for fields of class {@link $T}", targetTn)
-                .beginControlFlow("if ($T.nonNull(elA) && elA.isPresent())", OBJECTS)
+                .beginControlFlow("if (elA != null && elA.isPresent())")
                 .addStatement("return elA")
-                .nextControlFlow("else if($T.nonNull(elB) && elB.isPresent())", OBJECTS)
+                .nextControlFlow("else if(elB != null && elB.isPresent())")
                 .addStatement("return elB")
                 .endControlFlow()
                 .addStatement("return $T.empty()", targetTn.withoutAnnotations());

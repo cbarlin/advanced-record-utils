@@ -15,7 +15,6 @@ import jakarta.inject.Singleton;
 import javax.lang.model.element.Modifier;
 import java.util.Set;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRINGUTILS;
 
 @Singleton
@@ -57,7 +56,7 @@ public final class CharSequenceField extends MergerVisitor {
                 if (OptionalClassDetector.doesDependencyExist(STRINGUTILS)) {
                     method.addStatement("return $T.firstNonBlank(elA, elB)", STRINGUTILS);
                 } else {
-                    method.addStatement("return ($T.nonNull(elA) && $T.nonNull(elA.toString()) && (!elA.toString().isBlank())) ? elA : elB", OBJECTS, OBJECTS);
+                    method.addStatement("return ((elA != null) && (elA.toString() != null) && (!elA.toString().isBlank())) ? elA : elB");
                 }
                 AnnotationSupplier.addGeneratedAnnotation(method, this);
             }

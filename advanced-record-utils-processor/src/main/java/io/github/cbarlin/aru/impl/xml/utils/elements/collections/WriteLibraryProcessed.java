@@ -4,7 +4,6 @@ import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
-import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
 import io.github.cbarlin.aru.impl.xml.LibraryLoadedXmlStaticHelper;
@@ -33,22 +32,19 @@ public final class WriteLibraryProcessed extends XmlVisitor {
     private final Optional<XmlElementWrapperPrism> wrapper;
     private final AnalysedCollectionComponent component;
     private final LibraryLoadedXmlStaticHelper other;
-    private final Optional<AnalysedOptionalComponent> optComponent;
 
     public WriteLibraryProcessed(
         final XmlRecordHolder xmlRecordHolder,
         final XmlElementPrism prism,
         final Optional<XmlElementWrapperPrism> wrapper,
         final AnalysedCollectionComponent component,
-        final LibraryLoadedXmlStaticHelper targetingRecord,
-        final Optional<AnalysedOptionalComponent> optComponent
+        final LibraryLoadedXmlStaticHelper targetingRecord
     ) {
         super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
         this.prism = prism;
         this.wrapper = wrapper;
         this.component = component;
         this.other = targetingRecord;
-        this.optComponent = optComponent;
     }
 
     @Override
@@ -74,7 +70,7 @@ public final class WriteLibraryProcessed extends XmlVisitor {
 
         component.withinUnwrapped(
             variableName -> {
-                methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                methodBuilder.beginControlFlow("if($L == null)", variableName)
                     .addStatement("continue")
                     .endControlFlow();
                 namespaceName.ifPresentOrElse(
@@ -109,7 +105,7 @@ public final class WriteLibraryProcessed extends XmlVisitor {
                 final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
                 methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             } else {
-                methodBuilder.beginControlFlow("if ($T.nonNull(val))", OBJECTS);
+                methodBuilder.beginControlFlow("if (val != null)");
             }
             methodBuilder.beginControlFlow("if (!val.isEmpty())");
         }

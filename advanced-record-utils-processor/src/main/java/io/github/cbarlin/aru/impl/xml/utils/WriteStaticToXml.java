@@ -256,7 +256,7 @@ public final class WriteStaticToXml extends ToXmlMethod {
             
         } else {
             methodBuilder.addStatement(
-                "final $T defNs = $T.$L.filter(ignored -> $T.nonNull(requestedNamespace) && (!requestedNamespace.isBlank()))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, OBJECTS
+                "final $T defNs = $T.$L.filter(ignored -> (requestedNamespace != null) && (!requestedNamespace.isBlank()))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
             )
             .beginControlFlow("if (defNs.isPresent())")
             .addStatement(

@@ -76,12 +76,12 @@ public final class WriteEnum extends XmlVisitor {
 
         component.withinUnwrapped(
             variableName -> {
-                methodBuilder.beginControlFlow("if($T.isNull($L))", OBJECTS, variableName)
+                methodBuilder.beginControlFlow("if($L == null)", variableName)
                     .addStatement("continue")
                     .endControlFlow();
                 namespaceName.ifPresentOrElse(
                     namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                    () -> methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", OBJECTS)
+                    () -> methodBuilder.beginControlFlow("if (currentDefaultNamespace != null)")
                             .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
                             .nextControlFlow("else")
                             .addStatement("output.writeStartElement($S)", elementName)
@@ -118,7 +118,7 @@ public final class WriteEnum extends XmlVisitor {
                 final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
                 methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             } else {
-                methodBuilder.beginControlFlow("if ($T.nonNull(val))", OBJECTS);
+                methodBuilder.beginControlFlow("if (val != null)");
             }
             methodBuilder.beginControlFlow("if (!val.isEmpty())");
         }

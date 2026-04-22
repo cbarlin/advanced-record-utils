@@ -1,18 +1,14 @@
 package io.github.cbarlin.aru.impl.types.maps.eclipse;
 
-import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuiltRecord;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
-import io.github.cbarlin.aru.core.visitors.AruVisitor;
 import io.github.cbarlin.aru.impl.Constants;
-import io.github.cbarlin.aru.impl.types.dependencies.DependencyClassNames;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec.Builder;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
-import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import io.micronaut.sourcegen.javapoet.TypeName;
 import javax.lang.model.element.Modifier;
 
@@ -259,9 +255,9 @@ public final class ImmutablePrimitiveMapHandler implements EclipseMapHandler {
                 .addParameter(paramB)
                 .returns(paramTypeName)
                 .addJavadoc("Merger for fields of class {@link $T}", paramTypeName)
-                .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", Constants.Names.OBJECTS)
+                .beginControlFlow("if (elA == null || elA.isEmpty())")
                 .addStatement("return elB")
-                .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", Constants.Names.OBJECTS)
+                .nextControlFlow("else if (elB == null || elB.isEmpty())")
                 .addStatement("return elA")
                 .endControlFlow()
                 .addComment("It isn't documented, but the implementation here will create a new map preferring the arguments keys over the callers")

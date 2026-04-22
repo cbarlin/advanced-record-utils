@@ -42,8 +42,8 @@ public final class PrimitiveHelper {
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
-                .beginControlFlow("if ($T.nonNull(this.$L))", OBJECTS, fieldName)
-                    .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+                .beginControlFlow("if (this.$L != null)", fieldName)
+                    .beginControlFlow("if ($L != null)", fieldName)
                         .addStatement("this.$L.removeAll($L)", fieldName, fieldName)
                     .endControlFlow()
                 .endControlFlow()
@@ -70,7 +70,7 @@ public final class PrimitiveHelper {
             .addParameter(param)
             .returns(builder.className())
             .addAnnotation(NOT_NULL)
-            .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+            .beginControlFlow("if ($L != null)", fieldName)
             .addStatement("this.$L.removeAll($L)", fieldName, fieldName)
             .endControlFlow()
             .addStatement("return this");
@@ -80,11 +80,11 @@ public final class PrimitiveHelper {
     public static void writeNonNullAutoSetter(final AnalysedComponent component, final MethodSpec.Builder methodBuilder, final boolean nullReplacesNotNull) {
         if (nullReplacesNotNull) {
             methodBuilder.addStatement("this.$L.clear()", component.name())
-                         .beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+                         .beginControlFlow("if ($L != null)", component.name())
                          .addStatement("this.$L.addAll($L)", component.name(), component.name())
                          .endControlFlow();
         } else {
-            methodBuilder.beginControlFlow("if ($T.nonNull($L))", OBJECTS, component.name())
+            methodBuilder.beginControlFlow("if ($L != null)", component.name())
                          .addStatement("this.$L.clear()", component.name())
                          .addStatement("this.$L.addAll($L)", component.name(), component.name())
                          .endControlFlow();
@@ -115,8 +115,8 @@ public final class PrimitiveHelper {
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
-                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
-                    .beginControlFlow("if ($T.isNull(this.$L))", OBJECTS, fieldName)
+                .beginControlFlow("if ($L != null)", fieldName)
+                    .beginControlFlow("if (this.$L == null)", fieldName)
                         .addStatement("this.$L = $T.mutable.ofAll($L)", fieldName, factoryClassName, fieldName)
                     .nextControlFlow("else")
                         .addStatement("this.$L.addAll($L)", fieldName, fieldName)
@@ -146,7 +146,7 @@ public final class PrimitiveHelper {
             .addParameter(param)
             .returns(builder.className())
             .addAnnotation(NOT_NULL)
-            .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+            .beginControlFlow("if ($L != null)", fieldName)
             .addStatement("this.$L.addAll($L)", fieldName, fieldName)
             .endControlFlow()
             .addStatement("return this");
@@ -168,9 +168,9 @@ public final class PrimitiveHelper {
                      .addParameter(paramB)
                      .returns(classNameOnComponent)
                      .addJavadoc("Merger for fields of class {@link $T}", classNameOnComponent)
-                     .beginControlFlow("if ($T.isNull(elA) || elA.isEmpty())", OBJECTS)
+                     .beginControlFlow("if (elA == null || elA.isEmpty())")
                      .addStatement("return elB")
-                     .nextControlFlow("else if ($T.isNull(elB) || elB.isEmpty())", OBJECTS)
+                     .nextControlFlow("else if (elB == null || elB.isEmpty())")
                      .addStatement("return elA")
                      .endControlFlow()
                      .addStatement("final $T combined = $T.mutable.empty()", mutableClassName, factoryClassName)

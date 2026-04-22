@@ -13,7 +13,6 @@ import jakarta.inject.Singleton;
 
 import java.util.Optional;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.CHAR_SEQUENCE;
 import static io.github.cbarlin.aru.impl.Constants.Names.ILLEGAL_ARGUMENT_EXCEPTION;
 
@@ -50,7 +49,7 @@ public final class WriteCharSequence extends XmlVisitor {
         final String attributeName = attributeName(analysedComponent, prism);
         final Optional<String> namespaceName = namespaceName(prism);
 
-        methodBuilder.beginControlFlow("if ($T.nonNull(val) && $T.nonNull(val.toString()) && (!val.toString().isBlank()))", OBJECTS, OBJECTS);
+        methodBuilder.beginControlFlow("if (val != null && val.toString() != null && (!val.toString().isBlank()))");
         namespaceName.ifPresentOrElse(
             namespace -> methodBuilder.addStatement("output.writeAttribute($S, $S, val.toString())", namespace, attributeName),
             () -> methodBuilder.addStatement("output.writeAttribute($S, val.toString())", attributeName)

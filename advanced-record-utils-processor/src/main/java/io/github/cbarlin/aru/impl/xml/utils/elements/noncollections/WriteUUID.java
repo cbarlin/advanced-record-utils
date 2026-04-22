@@ -56,7 +56,7 @@ public final class WriteUUID extends NonCollectionXmlVisitor {
                 final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
                 methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             } else {
-                methodBuilder.beginControlFlow("if ($T.nonNull(val))", OBJECTS);
+                methodBuilder.beginControlFlow("if (val != null)");
             }
           
             namespaceName.ifPresentOrElse(

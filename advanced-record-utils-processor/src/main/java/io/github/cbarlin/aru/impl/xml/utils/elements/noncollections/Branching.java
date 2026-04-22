@@ -31,7 +31,6 @@ import java.util.function.Predicate;
 
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_UTILS_CLASS;
-import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_ELEMENT_DEFAULT;
 
 @Singleton
@@ -69,7 +68,7 @@ public final class Branching extends NonCollectionXmlVisitor {
             .toList();
         final Map<ClassName, NameAndNamespace> extractedName = extractNamedVersions(analysedComponent, other);
         
-        methodBuilder.beginControlFlow("if ($T.isNull(val))", OBJECTS)
+        methodBuilder.beginControlFlow("if (val == null)")
             .addStatement("return");
 
         for (final ProcessingTarget target : targets) {

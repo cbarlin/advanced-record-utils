@@ -17,8 +17,6 @@ import io.micronaut.sourcegen.javapoet.ParameterSpec;
 
 import javax.lang.model.element.Modifier;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
-
 @Component
 @BuilderPerComponentScope
 @RequiresProperty(value = "fluent", equalTo = "true")
@@ -56,9 +54,8 @@ public final class AddSetter extends RecordVisitor {
 
         if (!Boolean.FALSE.equals(settings.prism().builderOptions().nullReplacesNotNull())) {
             method.addStatement(
-                    "this.$L = $T.nonNull($L) ? $T.$L($L) : null",
+                    "this.$L = ($L != null) ? $T.$L($L) : null",
                       name,
-                      OBJECTS,
                       name,
                       componentTargetingRecord.target().utilsClassName(),
                       componentTargetingRecord.target().settings().prism().builderOptions().copyCreationName(),
@@ -68,9 +65,8 @@ public final class AddSetter extends RecordVisitor {
                   .addJavadoc("Supplying a null value will set the current value to null");
         } else {
             method.addStatement(
-                      "this.$L = $T.nonNull($L) ? $T.$L($L) : this.$L",
+                      "this.$L = ($L != null) ? $T.$L($L) : this.$L",
                       name,
-                      OBJECTS,
                       name,
                       componentTargetingRecord.target().utilsClassName(),
                       componentTargetingRecord.target().settings().prism().builderOptions().copyCreationName(),

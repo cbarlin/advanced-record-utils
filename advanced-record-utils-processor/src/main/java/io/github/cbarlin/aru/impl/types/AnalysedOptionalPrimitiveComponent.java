@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_DOUBLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_INT;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL_LONG;
@@ -63,7 +62,7 @@ public record AnalysedOptionalPrimitiveComponent(
     @Override
     public void withinUnwrapped(final Consumer<String> withUnwrappedName, final MethodSpec.Builder methodBuilder, final String incomingName, final TypeName unwrappedTn) {
         final String methodName = getterMethod();
-        methodBuilder.beginControlFlow("if ($T.nonNull($L) && $L.isPresent())", OBJECTS, incomingName, incomingName)
+        methodBuilder.beginControlFlow("if ($L != null && $L.isPresent())", incomingName, incomingName)
             .addStatement("final $T $L = $L.$L()", unwrappedTn, "__innerPrimitive", incomingName, methodName);
         withUnwrappedName.accept("__innerPrimitive");
         methodBuilder.endControlFlow();

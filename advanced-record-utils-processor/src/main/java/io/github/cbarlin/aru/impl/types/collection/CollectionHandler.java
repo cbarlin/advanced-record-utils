@@ -16,7 +16,6 @@ import javax.lang.model.element.Modifier;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.COLLECTION;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NOT_NULL;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.ITERABLE;
 import static io.github.cbarlin.aru.impl.Constants.Names.ITERATOR;
 import static io.github.cbarlin.aru.impl.Constants.Names.SPLITERATOR;
@@ -400,7 +399,7 @@ public abstract class CollectionHandler {
             .addParameter(param)
             .returns(builder.className())
             .addAnnotation(NOT_NULL)
-            .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+            .beginControlFlow("if ($L != null)", fieldName)
             .addStatement("this.$L.addAll($L)", fieldName, fieldName)
             .endControlFlow()
             .addStatement("return this");
@@ -426,7 +425,7 @@ public abstract class CollectionHandler {
             .addParameter(param)
             .returns(builder.className())
             .addAnnotation(NOT_NULL)
-            .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+            .beginControlFlow("if ($L != null)", fieldName)
             .addStatement("this.$L.removeAll($L)", fieldName, fieldName)
             .endControlFlow()
             .addStatement("return this");
@@ -466,7 +465,7 @@ public abstract class CollectionHandler {
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
-                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+                .beginControlFlow("if ($L != null)", fieldName)
                 .beginControlFlow("for (final $T __single : $L)", innerType, fieldName)
                 .addStatement("this.$L(__single)", singleOperatorMethodName)
                 .endControlFlow()
@@ -495,7 +494,7 @@ public abstract class CollectionHandler {
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
-                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+                .beginControlFlow("if ($L != null)", fieldName)
                 .beginControlFlow("while($L.hasNext())", fieldName)
                 .addStatement("this.$L($L.next())", singleOperatorMethodName, fieldName)
                 .endControlFlow()
@@ -524,7 +523,7 @@ public abstract class CollectionHandler {
                 .addParameter(param)
                 .returns(builder.className())
                 .addAnnotation(NOT_NULL)
-                .beginControlFlow("if ($T.nonNull($L))", OBJECTS, fieldName)
+                .beginControlFlow("if ($L != null)", fieldName)
                 .addStatement("$L.forEachRemaining(this::$L)", fieldName, singleOperatorMethodName)
                 .endControlFlow()
                 .addStatement("return this");

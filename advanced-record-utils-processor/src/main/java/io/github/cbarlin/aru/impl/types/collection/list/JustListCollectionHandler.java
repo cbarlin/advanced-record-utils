@@ -20,7 +20,7 @@ public final class JustListCollectionHandler extends ListCollectionHandler {
     @Override
     protected void convertToImmutable(final MethodSpec.Builder methodBuilder, final String fieldName, final String targetVariableName, final TypeName innerTypeName) {
         methodBuilder
-            .beginControlFlow("if ($T.isNull($L))", OBJECTS, fieldName)
+            .beginControlFlow("if ($L == null)", fieldName)
             .addStatement("return $T.of()", LIST)
             .endControlFlow()
             .addStatement(

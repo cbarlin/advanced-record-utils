@@ -4,8 +4,6 @@ import io.avaje.inject.RequiresBean;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.components.AnalysedCollectionComponent;
-import io.github.cbarlin.aru.core.types.components.AnalysedOptionalComponent;
-import io.github.cbarlin.aru.impl.Constants;
 import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.types.AnalysedOptionalPrimitiveComponent;
 import io.github.cbarlin.aru.impl.wiring.XmlPerComponentScope;
@@ -33,20 +31,17 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
     private final XmlElementPrism prism;
     private final Optional<XmlElementWrapperPrism> wrapper;
     private final AnalysedCollectionComponent component;
-    private final Optional<AnalysedOptionalComponent> optComponent;
 
     public WriteOptionalPrimitive (
         final XmlRecordHolder xmlRecordHolder,
         final XmlElementPrism prism,
         final Optional<XmlElementWrapperPrism> wrapper,
-        final AnalysedCollectionComponent component,
-        final Optional<AnalysedOptionalComponent> optComponent
+        final AnalysedCollectionComponent component
     ) {
         super(Claims.XML_WRITE_FIELD, xmlRecordHolder);
         this.prism = prism;
         this.wrapper = wrapper;
         this.component = component;
-        this.optComponent = optComponent;
     }
 
     @Override
@@ -77,12 +72,12 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
 
         component.withinUnwrapped(
             variableName -> {
-                methodBuilder.beginControlFlow("if($T.isNull($L) || $L.isEmpty())", OBJECTS, variableName, variableName)
+                methodBuilder.beginControlFlow("if($L == null || $L.isEmpty())", variableName, variableName)
                     .addStatement("continue")
                     .endControlFlow();
                 namespaceName.ifPresentOrElse(
                     namespace -> methodBuilder.addStatement("output.writeStartElement($S, $S)", namespace, elementName),
-                    () -> methodBuilder.beginControlFlow("if ($T.nonNull(currentDefaultNamespace))", Constants.Names.OBJECTS)
+                    () -> methodBuilder.beginControlFlow("if (currentDefaultNamespace != null)")
                             .addStatement("output.writeStartElement(currentDefaultNamespace, $S)", elementName)
                             .nextControlFlow("else")
                             .addStatement("output.writeStartElement($S)", elementName)
@@ -117,7 +112,7 @@ public final class WriteOptionalPrimitive extends XmlVisitor {
                 final String errMsg = XML_CANNOT_NULL_REQUIRED_ELEMENT.formatted(analysedComponent.name(), elementName);
                 methodBuilder.addStatement("$T.requireNonNull(val, $S)", OBJECTS, errMsg);
             } else {
-                methodBuilder.beginControlFlow("if ($T.nonNull(val))", OBJECTS);
+                methodBuilder.beginControlFlow("if (val != null)");
             }
             methodBuilder.beginControlFlow("if (!val.isEmpty())");
         }
