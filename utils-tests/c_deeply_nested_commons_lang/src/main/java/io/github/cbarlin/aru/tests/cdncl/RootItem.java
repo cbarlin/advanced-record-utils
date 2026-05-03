@@ -21,7 +21,9 @@ import jakarta.xml.bind.annotation.XmlType;
     merger = true,
     wither = true,
     witherOptions = @WitherOptions(convertToBuilder = "toBuilder"),
-    xmlable = true
+    xmlable = true,
+    // We aren't actually suppressing any warnings here, just checking it gets added correctly
+    addSuppressWarningsAnnotation = @SuppressWarnings({"exports"})
 )
 @XmlRootElement(name = "RootItem", namespace = "ns://nxA")
 @XmlType(name = "", propOrder = {"yetAnotherField"})

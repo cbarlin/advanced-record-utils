@@ -128,6 +128,15 @@ public @interface AdvancedRecordUtils {
      * @since 0.7.8
      */
     boolean addHigherKindedJImportAnnotation() default false;
+
+    /**
+     * Should we add an {@link SuppressWarnings} annotation?
+     * <p>
+     * Useful if you want to ignore warnings in generated code
+     *
+     * @since 0.9.1
+     */
+    SuppressWarnings addSuppressWarningsAnnotation() default @SuppressWarnings({});
     //#endregion
 
     //#region Generated target options

@@ -101,7 +101,7 @@ public record Person(String name, int age) {}
 ====
 Defines the type of logging performed by generated code, if any.
 
-*Type*:: https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/AdvancedRecordUtils.LoggingGeneration.html[`+LoggingGeneration+`]
+*Type*:: https://javadoc.io/doc/io.github.cbarlin/advanced-record-utils-annotations/latest/io.github.cbarlin.aru.annotations/io/github/cbarlin/aru/annotations/AdvancedRecordUtils.LoggingGeneration.html[`+LoggingGeneration+`^]
 *Default*:: `+LoggingGeneration.NONE+`
 
 .Usage: Choosing a setting
@@ -136,9 +136,9 @@ include::../generated-code/options/aru-top-logging.adoc[]
 .`+addJsonbImportAnnotation+`
 [%collapsible]
 ====
-Enables or disables the generation of an https://javadoc.io/doc/io.avaje/avaje-jsonb/latest/io.avaje.jsonb/io/avaje/jsonb/Json.Import.html[Avaje `+@Json.Import+`] annotation on the `+*Utils+` classes.
+Enables or disables the generation of an https://javadoc.io/doc/io.avaje/avaje-jsonb/latest/io.avaje.jsonb/io/avaje/jsonb/Json.Import.html[Avaje `+@Json.Import+`^] annotation on the `+*Utils+` classes.
 
-You can read more about Avaje jsonb on their https://avaje.io/jsonb/[documentation page].
+You can read more about Avaje jsonb on their https://avaje.io/jsonb/[documentation page^].
 
 *Type*:: `+boolean+`
 *Default*:: `+false+`
@@ -161,9 +161,9 @@ include::../generated-code/options/aru-top-general.adoc[]
 .`+addHigherKindedJImportAnnotation+`
 [%collapsible]
 ====
-Enables or disables the generation of an https://javadoc.io/doc/io.github.higher-kinded-j/hkj-annotations/latest/org.higherkindedj.annotations/org/higherkindedj/optics/annotations/ImportOptics.html[Higher-Kinded-J `+@ImportOptics+`] annotation on the `+*Utils+` classes.
+Enables or disables the generation of an https://javadoc.io/doc/io.github.higher-kinded-j/hkj-annotations/latest/org.higherkindedj.annotations/org/higherkindedj/optics/annotations/ImportOptics.html[Higher-Kinded-J `+@ImportOptics+`^] annotation on the `+*Utils+` classes.
 
-You can read more about Higher-Kinded-J on their https://higher-kinded-j.github.io/latest/[documentation page].
+You can read more about Higher-Kinded-J on their https://higher-kinded-j.github.io/latest/[documentation page^].
 
 *Type*:: `+boolean+`
 *Default*:: `+false+`
@@ -178,5 +178,30 @@ public record Person(String name, int age) {}
 Particularly useful on large trees of records, as the <<#use-cascading,cascading>> effect means you do not have to annotate each record. The processor also adds the import annotation on the `+*Utils+` classes for sealed interfaces.
 
 include::../generated-code/options/aru-top-hkj.adoc[]
+
+====
+
+.`+addSuppressWarningsAnnotation+`
+[%collapsible]
+====
+Enables or disables the generation of an https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/SuppressWarnings.html[`+@SuppressWarnings+`^] annotation on the `+*Utils+` classes.
+
+*Type*:: `+@SuppressWarnings+`
+*Default*:: `+@SuppressWarnings({})+` (as in, no warnings suppressed)
+
+.Usage: Add to any place you can add the annotation
+[source,java]
+----
+@AdvancedRecordUtils(addSuppressWarningsAnnotation = @SuppressWarnings({"exports"}))
+public record Person(String name, int age) {}
+----
+
+While generated code shouldn't have warnings by default (and if it does, we would consider it a bug), some settings you specify may cause warnings to be generated such as:
+
+* Having XML generation enabled, but the XML module not marked as `+requires transitive+` in your `+module-info.java+`
+* Requesting that an interface is returned from `+build+` instead of a concrete type, but that interface isn't in a package exported in your `+module-info.java+`
+* Certain concrete collection types may generate casts, which Java may consider to be "unchecked" due to type erasure.
+
+include::../generated-code/options/aru-top-suppress.adoc[]
 
 ====
