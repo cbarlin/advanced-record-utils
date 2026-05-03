@@ -38,7 +38,7 @@ public final class ToPrettierAnnotationSpec {
             final String valueName = entry.getKey().getSimpleName().toString();
             av.accept(nestedVisitor, valueName);
         }
-        if (name.simpleName().equals("SuppressWarnings") && (!builder.members.containsKey("value"))) {
+        if (name.canonicalName().equals("java.lang.SuppressWarnings") && (!builder.members.containsKey("value"))) {
             builder.addMember("value", "{}");
         }
         return builder.build();
