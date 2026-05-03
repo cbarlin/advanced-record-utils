@@ -180,3 +180,28 @@ Particularly useful on large trees of records, as the <<#use-cascading,cascading
 include::../generated-code/options/aru-top-hkj.adoc[]
 
 ====
+
+.`+addSuppressWarningsAnnotation+`
+[%collapsible]
+====
+Enables or disables the generation of an https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/SuppressWarnings.html[`+@SuppressWarnings+`] annotation on the `+*Utils+` classes.
+
+*Type*:: `+@SuppressWarnings+`
+*Default*:: `+@SuppressWarnings({})+` (as in, no warnings suppressed)
+
+.Usage: Add to any place you can add the annotation
+[source,java]
+----
+@AdvancedRecordUtils(addSuppressWarningsAnnotation = @SuppressWarnings({"exports"}))
+public record Person(String name, int age) {}
+----
+
+While generated code shouldn't have warnings by default (and if it does, we would consider it a bug), some settings you specify may cause warnings to be generated such as:
+
+* Having XML generation enabled, but the XML module not marked as `+requires transitive+` in your `+module-info.java+`
+* Requesting that an interface is returned from `+build+` instead of a concrete type, but that interface isn't in a package exported in your `+module-info.java+`
+* Certain concrete collection types may generate casts, which Java may consider to be "unchecked" due to type erasure.
+
+include::../generated-code/options/aru-top-suppress.adoc[]
+
+====

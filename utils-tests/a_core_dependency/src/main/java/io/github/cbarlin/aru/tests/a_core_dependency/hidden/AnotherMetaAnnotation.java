@@ -10,7 +10,12 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.TYPE;
 
-@AdvancedRecordUtils(logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE)
+@AdvancedRecordUtils(
+        logGeneration = LoggingGeneration.SLF4J_GENERATED_UTIL_INTERFACE,
+        // There are no actual warnings generated, we are just confirming it is actually added correctly
+        //   when requested
+        addSuppressWarningsAnnotation = @SuppressWarnings({"exports", "unchecked"})
+)
 @Target({TYPE})
 @Retention(RetentionPolicy.CLASS)
 @Inherited

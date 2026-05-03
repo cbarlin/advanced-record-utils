@@ -38,7 +38,8 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.MergerOptions;
     ),
     mergerOptions = @MergerOptions(
         staticMethodsAddedToUtils = true
-    )
+    ),
+    addSuppressWarningsAnnotation = @SuppressWarnings({"exports"})
 )
 public @interface AdvancedRecordUtilsFull {
 
