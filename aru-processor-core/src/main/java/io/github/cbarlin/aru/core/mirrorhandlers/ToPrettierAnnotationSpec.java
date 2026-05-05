@@ -14,6 +14,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor9;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,10 +35,13 @@ public final class ToPrettierAnnotationSpec {
         final ClassName name = ClassName.get(typeElement);
         final AnnotationSpec.Builder builder = AnnotationSpec.builder(name);
         final NestedVisitor nestedVisitor = new NestedVisitor(builder);
-        for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
-            final AnnotationValue av = entry.getValue();
+        // We want this to be sorted, if possible
+        final List<Map.Entry<? extends ExecutableElement, ? extends AnnotationValue>> entries =
+                new ArrayList<>(annotationMirror.getElementValues().entrySet());
+        entries.sort(Comparator.comparing(e -> e.getKey().getSimpleName().toString()));
+        for (final Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : entries) {
             final String valueName = entry.getKey().getSimpleName().toString();
-            av.accept(nestedVisitor, valueName);
+            entry.getValue().accept(nestedVisitor, valueName);
         }
         if (name.canonicalName().equals("java.lang.SuppressWarnings") && (!builder.members.containsKey("value"))) {
             builder.addMember("value", "{}");
