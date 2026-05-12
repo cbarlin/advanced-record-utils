@@ -64,7 +64,7 @@
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <guava.version>33.6.0-jre</guava.version>
-        <higher-kinded-j.version>0.4.2</higher-kinded-j.version>
+        <higher-kinded-j.version>0.4.3</higher-kinded-j.version>
         <hppc.version>0.10.0</hppc.version>
         <jackson-annotations.version>2.21.3</jackson-annotations.version>
         <jacoco.version>0.8.14</jacoco.version>
