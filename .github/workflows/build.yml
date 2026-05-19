@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        java_version: [21, 25]
+        java_version: [25]
     steps:
     - uses: actions/checkout@v6.0.2
     - name: Set up Java
