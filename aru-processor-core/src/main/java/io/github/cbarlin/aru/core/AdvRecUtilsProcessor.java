@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -13,6 +14,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
+import io.github.cbarlin.aru.core.artifacts.sorting.ElementComparator;
 import org.jspecify.annotations.Nullable;
 
 import io.avaje.inject.BeanScope;
@@ -92,14 +94,14 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
     private void findAndProcessTargets(final BeanScope scope, final RoundEnvironment roundEnv, final SupportedAnnotations supportedAnnotations) {
         final UtilsProcessingContext context = scope.get(UtilsProcessingContext.class);
         final List<TargetAnalyser> analysers = scope.list(TargetAnalyser.class);
-        final Set<TypeElement> firstLoop = Set.copyOf(supportedAnnotations.annotations());
+        final Set<TypeElement> firstLoop = new TreeSet<>(supportedAnnotations.annotations());
         for (final TypeElement typeElement : firstLoop) {
             for (final Element annotatedElement : roundEnv.getElementsAnnotatedWith(typeElement)) {
                 context.analyseRootElement(annotatedElement, analysers);
             }
         }
         // In case it got added to during the analysis
-        for (final TypeElement typeElement : Set.copyOf(supportedAnnotations.annotations())) {
+        for (final TypeElement typeElement : new TreeSet<>(supportedAnnotations.annotations())) {
             if (firstLoop.contains(typeElement)) {
                 continue;
             }
@@ -108,16 +110,18 @@ public final class AdvRecUtilsProcessor extends AbstractProcessor {
             }
         }
         context.matchInterfaces();
-        context.injectAllRootElements(Set.copyOf(supportedAnnotations.annotations()), getSupportedAnnotationTypes());
+        context.injectAllRootElements(new TreeSet<>(supportedAnnotations.annotations()), getSupportedAnnotationTypes());
         context.processElements(scope);
     }
 
-    private void findMetaAnnotations(final RoundEnvironment roundEnv, final Set<TypeElement> supportedAnnotations) {
-        for(final TypeElement annoType : Set.copyOf(supportedAnnotations)) {
-            for(final Element annotatedElement : roundEnv.getElementsAnnotatedWith(annoType)) {
-                if (annotatedElement instanceof final TypeElement typeAnnoElement && ElementKind.ANNOTATION_TYPE.equals(typeAnnoElement.getKind())) {
-                    supportedAnnotations.add(typeAnnoElement);
-                }
+    private void findMetaAnnotations(final RoundEnvironment roundEnv, final TreeSet<TypeElement> supportedAnnotations) {
+        final TreeSet<Element> annotatedElements = new TreeSet<>(ElementComparator.INSTANCE);
+        for(final TypeElement annoType : new TreeSet<>(supportedAnnotations)) {
+            annotatedElements.addAll(roundEnv.getElementsAnnotatedWith(annoType));
+        }
+        for(final Element annotatedElement : annotatedElements) {
+            if (annotatedElement instanceof final TypeElement typeAnnoElement && ElementKind.ANNOTATION_TYPE.equals(typeAnnoElement.getKind())) {
+                supportedAnnotations.add(typeAnnoElement);
             }
         }
     }

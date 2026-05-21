@@ -7,6 +7,7 @@ import io.github.cbarlin.aru.annotations.AdvancedRecordUtilsFull;
 import io.github.cbarlin.aru.annotations.TypeConverter;
 import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.OptionalClassDetector;
+import io.github.cbarlin.aru.core.artifacts.sorting.ElementComparator;
 import io.github.cbarlin.aru.core.wiring.CoreGlobalScope;
 import io.micronaut.sourcegen.javapoet.ClassName;
 
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.TreeSet;
 
 @Factory
 @CoreGlobalScope
@@ -33,15 +34,16 @@ public final class SupportedAnnotationsFactory {
         return new SupportedAnnotations(loadAnnotations(supportedAnnotations));
     }
 
-    private static HashSet<TypeElement> loadAnnotations(final Set<String> names) {
-        final var res = names.stream()
+    private static TreeSet<TypeElement> loadAnnotations(final Set<String> names) {
+        final TreeSet<TypeElement> elements = new TreeSet<>(ElementComparator.INSTANCE);
+        names.stream()
                 .map(APContext.elements()::getTypeElement)
                 .filter(Objects::nonNull)
                 .map(ClassName::get)
                 .map(OptionalClassDetector::loadAnnotation)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.toUnmodifiableSet());
-        return new HashSet<>(res);
+                .forEach(elements::add);
+        return elements;
     }
 }

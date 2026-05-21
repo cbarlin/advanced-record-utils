@@ -1,10 +1,10 @@
 package io.github.cbarlin.aru.core.factories;
 
 import javax.lang.model.element.TypeElement;
-import java.util.HashSet;
+import java.util.TreeSet;
 
 public record SupportedAnnotations (
-    HashSet<TypeElement> annotations
+    TreeSet<TypeElement> annotations
 ) {
 
 }
