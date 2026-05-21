@@ -4,6 +4,7 @@ import io.avaje.inject.BeanScope;
 import io.avaje.inject.Component;
 import io.github.cbarlin.aru.core.analysers.TargetAnalyser;
 import io.github.cbarlin.aru.core.analysers.TargetAnalysisResult;
+import io.github.cbarlin.aru.core.artifacts.sorting.ElementComparator;
 import io.github.cbarlin.aru.core.factories.BeanScopeFactory;
 import io.github.cbarlin.aru.core.impl.ScopeHolder;
 import io.github.cbarlin.aru.core.types.AnalysedInterface;
@@ -43,6 +44,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Predicate;
 
@@ -50,11 +53,11 @@ import java.util.function.Predicate;
 @CoreGlobalScope
 public final class UtilsProcessingContext {
 
-    private final Map<TypeElement, ProcessingTarget> analysedTypes = new HashMap<>();
+    private final Map<TypeElement, ProcessingTarget> analysedTypes = new TreeMap<>(ElementComparator.INSTANCE);
     private final Set<ExecutableElement> processedConverters = new HashSet<>();
     private final HashMap<TypeName, Queue<AnalysedTypeConverter>> analysedConverters = new HashMap<>();
     private final Set<TypeElement> processedElements = new HashSet<>();
-    private final Set<Element> rootElements = new HashSet<>();
+    private final Set<Element> rootElements = new TreeSet<>(ElementComparator.INSTANCE);
 
     public ProcessingEnvironment processingEnv() {
         return APContext.processingEnv();
@@ -232,8 +235,9 @@ public final class UtilsProcessingContext {
         ) {
             // Scope holder handles `close` on the BeanScope
             final BeanScope perTargetBeanScope = scopeHolder.scope();
-            perTargetBeanScope.list(InterfaceVisitor.class)
-                .forEach(InterfaceVisitor::visitInterface);
+            final List<InterfaceVisitor> perInterfaceVisitors = perTargetBeanScope.list(InterfaceVisitor.class);
+            Collections.sort(perInterfaceVisitors);
+            perInterfaceVisitors.forEach(InterfaceVisitor::visitInterface);
 
             writeFile(analysedInterface);
         }
