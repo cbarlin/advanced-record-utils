@@ -8,7 +8,7 @@ import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import java.util.Comparator;
 /**
- * Comparator for {`@link` Element} instances that provides deterministic ordering
+ * Comparator for {@link Element} instances that provides deterministic ordering
  * to ensure reproducible builds. Elements are ordered by type hierarchy (modules,
  * packages, executables, then types), with ties broken by qualified or simple name.
  */
