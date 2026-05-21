@@ -7,14 +7,34 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import java.util.Comparator;
-
+/**
+ * Comparator for {`@link` Element} instances that provides deterministic ordering
+ * to ensure reproducible builds. Elements are ordered by type hierarchy (modules,
+ * packages, executables, then types), with ties broken by qualified or simple name.
+ */
 public final class ElementComparator {
 
+    /**
+     * The element comparator. Orders elements by type hierarchy with ties broken by name.
+     *
+     * @see ElementComparator
+     */
     public static final Comparator<Element> INSTANCE = createComparator();
 
+    /**
+     * Creates the element comparator. First orders by element type rank,
+     * then by qualified name (when available) or simple name as a tiebreaker.
+     */
     private static Comparator<Element> createComparator() {
         return Comparator.comparingInt(ElementComparator::elementTypeToNumber)
-                .thenComparing(e -> (e instanceof final QualifiedNameable qualifiedNameable) ? qualifiedNameable.getQualifiedName().toString() : e.getSimpleName().toString());
+                .thenComparing(ElementComparator::elementName);
+    }
+
+    private static String elementName(final Element element) {
+        if (element instanceof final QualifiedNameable qualifiedNameable) {
+            return qualifiedNameable.getQualifiedName().toString();
+        }
+        return element.getSimpleName().toString();
     }
 
     private static int elementTypeToNumber(final Element el) {
