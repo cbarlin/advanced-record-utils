@@ -64,19 +64,19 @@
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <guava.version>33.6.0-jre</guava.version>
-        <higher-kinded-j.version>0.4.4</higher-kinded-j.version>
+        <higher-kinded-j.version>0.4.5</higher-kinded-j.version>
         <hppc.version>0.10.0</hppc.version>
         <jackson-annotations.version>2.21.3</jackson-annotations.version>
         <jacoco.version>0.8.14</jacoco.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.5</jakarta-xml-bind-api.version>
         <jspecify.version>1.0.0</jspecify.version>
-        <junit-bom.version>6.0.3</junit-bom.version>
+        <junit-bom.version>6.1.0</junit-bom.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <mockito.version>5.23.0</mockito.version>
         <stax2-api.version>4.3.0</stax2-api.version>
         <vavr.version>1.0.1</vavr.version>
-        <woodstox.version>7.1.1</woodstox.version>
+        <woodstox.version>7.2.0</woodstox.version>
         <xmlunit.version>2.11.0</xmlunit.version>
         <rainbowgum.version>0.8.2</rainbowgum.version>
         <valueclasses.version>2.0.2</valueclasses.version>
@@ -97,7 +97,7 @@
         <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
         <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
-        <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
+        <maven-site-plugin.version>3.22.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
         <versions-plugin.version>2.21.0</versions-plugin.version>
