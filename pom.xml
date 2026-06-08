@@ -57,17 +57,17 @@
         <avaje-prism.version>2.0</avaje-prism.version>
         <avaje-spi.version>2.17</avaje-spi.version>
         <avaje-validator.version>2.17</avaje-validator.version>
-        <avaje-inject.version>12.5</avaje-inject.version>
+        <avaje-inject.version>12.6</avaje-inject.version>
         <caffeine.version>3.2.4</caffeine.version>
         <commons-collections4.version>4.5.0</commons-collections4.version>
         <commons-io.version>2.22.0</commons-io.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <eclipse-collections.version>13.0.0</eclipse-collections.version>
         <guava.version>33.6.0-jre</guava.version>
-        <higher-kinded-j.version>0.4.5</higher-kinded-j.version>
+        <higher-kinded-j.version>0.4.6</higher-kinded-j.version>
         <hppc.version>0.10.0</hppc.version>
         <jackson-annotations.version>2.22.0</jackson-annotations.version>
-        <jacoco.version>0.8.14</jacoco.version>
+        <jacoco.version>0.8.15</jacoco.version>
         <jakarta-validation.version>3.1.1</jakarta-validation.version>
         <jakarta-xml-bind-api.version>4.0.5</jakarta-xml-bind-api.version>
         <jspecify.version>1.0.0</jspecify.version>
@@ -76,7 +76,7 @@
         <mockito.version>5.23.0</mockito.version>
         <stax2-api.version>4.3.0</stax2-api.version>
         <vavr.version>1.0.1</vavr.version>
-        <woodstox.version>7.2.0</woodstox.version>
+        <woodstox.version>7.2.1</woodstox.version>
         <xmlunit.version>2.12.0</xmlunit.version>
         <rainbowgum.version>0.8.2</rainbowgum.version>
         <valueclasses.version>2.0.2</valueclasses.version>
