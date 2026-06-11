@@ -95,14 +95,17 @@ public final class PersonUtils implements GeneratedUtil {
             Objects.requireNonNull(el, "Cannot supply null element to be written to XML");
             Objects.requireNonNull(output, "Cannot supply null output for XML content");
             final String tag = _XmlUtils.createTag(requestedTagName);
-            final Optional<String> namespace = _XmlUtils.createNamespace(requestedNamespace, currentDefaultNamespace);
-            final Optional<String> defNs = _XmlUtils.__DEFAULT_NAMESPACE_URI.filter(ignored -> Objects.nonNull(requestedNamespace) && (!requestedNamespace.isBlank()));
-            if (defNs.isPresent()) {
-                output.setDefaultNamespace(defNs.get());
+            final @Nullable String namespace = _XmlUtils.createNamespace(requestedNamespace, currentDefaultNamespace);
+            final @Nullable String defNs = (_XmlUtils.__DEFAULT_NAMESPACE_URI != null && (requestedNamespace != null) && (!requestedNamespace.isBlank())) ? _XmlUtils.__DEFAULT_NAMESPACE_URI : null;
+            if (defNs != null) {
+                output.setDefaultNamespace(defNs);
             }
-            final @Nullable String namespaceToPassDown = defNs.orElse(currentDefaultNamespace);
-            if (namespace.isPresent()) {
-                output.writeStartElement(namespace.get(), tag);
+            final @Nullable String namespaceToPassDown = defNs != null ? defNs : currentDefaultNamespace;
+            if (namespace != null) {
+                output.writeStartElement(namespace, tag);
+                if (!Objects.equals(namespace, currentDefaultNamespace)) {
+                    output.writeDefaultNamespace(namespace);
+                }
             } else {
                 output.writeStartElement(tag);
             }
@@ -144,17 +147,14 @@ public final class PersonUtils implements GeneratedUtil {
         )
         private static final Optional<String> createNamespace(@Nullable final String requestedNamespace,
                 @Nullable final String currentDefaultNamespace) {
-            return Optional.ofNullable(requestedNamespace)
-                        .filter(Objects::nonNull)
-                        .filter(Predicate.not(String::isBlank))
-                        .filter(x -> !AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(x))
-                        .or(() -> __DEFAULT_NAMESPACE_URI)
-                        .or(
-                            () -> Optional.ofNullable(currentDefaultNamespace)
-                                .filter(Objects::nonNull)
-                                .filter(Predicate.not(String::isBlank))
-                                .filter(x -> !AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(x))
-                        );
+            if (requestedNamespace != null && (!requestedNamespace.isBlank()) && (!AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(requestedNamespace))) {
+                return requestedNamespace;
+            } else if (__DEFAULT_NAMESPACE_URI != null) {
+                return __DEFAULT_NAMESPACE_URI;
+            } else if (currentDefaultNamespace != null && (!currentDefaultNamespace.isBlank()) && (!AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(currentDefaultNamespace))) {
+                return currentDefaultNamespace;
+            }
+            return null;
         }
 
         /**
@@ -167,11 +167,10 @@ public final class PersonUtils implements GeneratedUtil {
                 comments = "Related class claim: xmlStaticClassToXml"
         )
         private static final String createTag(final String incomingTag) {
-            return Optional.ofNullable(incomingTag)
-                            .filter(Objects::nonNull)
-                            .filter(Predicate.not(String::isBlank))
-                            .filter(x -> !AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(x))
-                            .orElse(__DEFAULT_TAG_NAME);
+            if (incomingTag != null && (!incomingTag.isBlank()) && (!AdvancedRecordUtilsGenerated.XML_DEFAULT_STRING.equals(incomingTag))) {
+                return incomingTag;
+            }
+            return __DEFAULT_TAG_NAME;
         }
 
         /**
@@ -270,14 +269,17 @@ public final class PersonUtils implements GeneratedUtil {
                 @Nullable final String requestedNamespace, final String currentDefaultNamespace) throws XMLStreamException {
             Objects.requireNonNull(output, "Cannot supply null output for XML content");
             final String tag = _XmlUtils.createTag(requestedTagName);
-            final Optional<String> namespace = _XmlUtils.createNamespace(requestedNamespace, currentDefaultNamespace);
-            final Optional<String> defNs = _XmlUtils.__DEFAULT_NAMESPACE_URI.filter(ignored -> Objects.isNull(requestedNamespace) || (requestedNamespace.isBlank()));
-            if (defNs.isPresent()) {
-                output.setDefaultNamespace(defNs.get());
+            final @Nullable String namespace = _XmlUtils.createNamespace(requestedNamespace, currentDefaultNamespace);
+            final @Nullable String defNs = (_XmlUtils.__DEFAULT_NAMESPACE_URI != null && (requestedNamespace != null) && (!requestedNamespace.isBlank())) ? _XmlUtils.__DEFAULT_NAMESPACE_URI : null;
+            if (defNs != null) {
+                output.setDefaultNamespace(defNs);
             }
-            final @Nullable String namespaceToPassDown = defNs.orElse(currentDefaultNamespace);
-            if (namespace.isPresent()) {
-                output.writeStartElement(namespace.get(), tag);
+            final @Nullable String namespaceToPassDown = defNs != null ? defNs : currentDefaultNamespace;
+            if (namespace != null) {
+                output.writeStartElement(namespace, tag);
+                if (!Objects.equals(namespace, currentDefaultNamespace)) {
+                    output.writeDefaultNamespace(namespace);
+                }
             } else {
                 output.writeStartElement(tag);
             }

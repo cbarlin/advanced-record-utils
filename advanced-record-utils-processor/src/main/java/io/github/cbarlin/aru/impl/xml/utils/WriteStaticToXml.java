@@ -12,30 +12,25 @@ import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
-import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
-import io.micronaut.sourcegen.javapoet.ParameterizedTypeName;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_GENERATED;
-import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULLABLE;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OPTIONAL;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_NAMESPACE_VAR_NAME;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_STRING;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_TAG_NAME_VAR_NAME;
 import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_PACKAGE_NAMESPACE_VAR_NAME;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
-import static io.github.cbarlin.aru.impl.Constants.Names.PREDICATE;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_WRITER;
@@ -50,7 +45,6 @@ public final class WriteStaticToXml extends ToXmlMethod {
     private static final ParameterSpec REQ_NS_PARAM = ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "requestedNamespace", Modifier.FINAL)
         .addJavadoc("The requested namespace when called")
         .build();
-    private static final ParameterizedTypeName OPTIONAL_STRING = ParameterizedTypeName.get(OPTIONAL, STRING);
 
     public WriteStaticToXml(final XmlRecordHolder xmlRecordHolder, final Optional<XmlTypePrism> xmlTypePrism, final Optional<XmlRootElementPrism> xmlRootElementPrism) {
         super(Claims.XML_STATIC_CLASS_TO_XML, xmlRecordHolder, xmlTypePrism, xmlRootElementPrism);
@@ -83,13 +77,13 @@ public final class WriteStaticToXml extends ToXmlMethod {
             )
             .ifPresentOrElse(
                 namespace -> xmlStaticClass.addField(
-                    FieldSpec.builder(OPTIONAL_STRING, XML_DEFAULT_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
-                        .initializer("$T.of($S)", OPTIONAL, namespace)
+                    FieldSpec.builder(NULLABLE_STRING, XML_DEFAULT_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
+                        .initializer("$S", namespace)
                         .build()
                 ),
                 () -> xmlStaticClass.addField(
-                    FieldSpec.builder(OPTIONAL_STRING, XML_DEFAULT_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
-                        .initializer("$T.empty()", OPTIONAL)
+                    FieldSpec.builder(NULLABLE_STRING, XML_DEFAULT_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
+                        .initializer("null")
                         .build()
                 )
             );
@@ -100,13 +94,13 @@ public final class WriteStaticToXml extends ToXmlMethod {
                 .filter(Predicate.not(XML_DEFAULT_STRING::equals))
                 .ifPresentOrElse(
                     namespace -> xmlStaticClass.addField(
-                        FieldSpec.builder(OPTIONAL_STRING, XML_PACKAGE_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
-                            .initializer("$T.of($S)", OPTIONAL, namespace)
+                        FieldSpec.builder(NULLABLE_STRING, XML_PACKAGE_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
+                            .initializer("$S", namespace)
                             .build()
                     ),
                     () -> xmlStaticClass.addField(
-                        FieldSpec.builder(OPTIONAL_STRING, XML_PACKAGE_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
-                            .initializer("$T.empty()", OPTIONAL)
+                        FieldSpec.builder(NULLABLE_STRING, XML_PACKAGE_NAMESPACE_VAR_NAME, Modifier.FINAL, Modifier.STATIC, Modifier.PRIVATE)
+                            .initializer("null")
                             .build()
                     )
                 );
@@ -132,21 +126,10 @@ public final class WriteStaticToXml extends ToXmlMethod {
                     .addJavadoc("The incoming tag that was requested")
                     .build()
             )
-            .addStatement(
-                """
-                    return $T.ofNullable(incomingTag)
-                        .filter($T::nonNull)
-                        .filter($T.not($T::isBlank))
-                        .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
-                        .orElse($L)
-                """.trim(),
-                OPTIONAL, 
-                OBJECTS, 
-                PREDICATE,
-                STRING,
-                ARU_GENERATED,
-                XML_DEFAULT_TAG_NAME_VAR_NAME
-            );
+            .beginControlFlow("if (incomingTag != null && (!incomingTag.isBlank()) && (!$T.XML_DEFAULT_STRING.equals(incomingTag)))", ARU_GENERATED)
+            .addStatement("return incomingTag")
+            .endControlFlow()
+            .addStatement("return $L", XML_DEFAULT_TAG_NAME_VAR_NAME);
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
     }
 
@@ -163,7 +146,7 @@ public final class WriteStaticToXml extends ToXmlMethod {
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
         methodBuilder.modifiers.clear();
         methodBuilder.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-            .returns(OPTIONAL_STRING)
+            .returns(NULLABLE_STRING)
             .addJavadoc("Determine the final namespace of the current XmlRootElement")
             .addParameter(
                 REQ_NS_PARAM
@@ -171,34 +154,14 @@ public final class WriteStaticToXml extends ToXmlMethod {
             .addParameter(
                 CURR_DEF_NS_PARAM
             )
-            .addStatement(
-                """
-                return $T.ofNullable(requestedNamespace)
-                    .filter($T::nonNull)
-                    .filter($T.not($T::isBlank))
-                    .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
-                    .or(() -> $L)
-                    .or(
-                        () -> $T.ofNullable(currentDefaultNamespace)
-                            .filter($T::nonNull)
-                            .filter($T.not($T::isBlank))
-                            .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
-                    )
-                    .or(() -> $L)
-                """.trim(),
-                OPTIONAL,
-                OBJECTS, 
-                PREDICATE,
-                STRING,
-                ARU_GENERATED,
-                XML_DEFAULT_NAMESPACE_VAR_NAME,
-                OPTIONAL,
-                OBJECTS, 
-                PREDICATE,
-                STRING,
-                ARU_GENERATED,
-                XML_PACKAGE_NAMESPACE_VAR_NAME
-            );
+            .beginControlFlow("if (requestedNamespace != null && (!requestedNamespace.isBlank()) && (!$T.XML_DEFAULT_STRING.equals(requestedNamespace)))", ARU_GENERATED)
+            .addStatement("return requestedNamespace")
+            .nextControlFlow("else if ($L != null)", XML_DEFAULT_NAMESPACE_VAR_NAME)
+            .addStatement("return $L", XML_DEFAULT_NAMESPACE_VAR_NAME)
+            .nextControlFlow("else if (currentDefaultNamespace != null && (!currentDefaultNamespace.isBlank()) && (!$T.XML_DEFAULT_STRING.equals(currentDefaultNamespace)))", ARU_GENERATED)
+            .addStatement("return currentDefaultNamespace")
+            .endControlFlow()
+            .addStatement("return $L", XML_PACKAGE_NAMESPACE_VAR_NAME);
     }
 
     private void writeCreateNamespaceNonRoot() {
@@ -206,7 +169,7 @@ public final class WriteStaticToXml extends ToXmlMethod {
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
         methodBuilder.modifiers.clear();
         methodBuilder.addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-            .returns(OPTIONAL_STRING)
+            .returns(NULLABLE_STRING)
             .addJavadoc("Determine the final namespace of the current XmlType")
             .addParameter(
                 REQ_NS_PARAM
@@ -214,80 +177,35 @@ public final class WriteStaticToXml extends ToXmlMethod {
             .addParameter(
                 CURR_DEF_NS_PARAM
             )
-            .addStatement(
-                """
-                return $T.ofNullable(requestedNamespace)
-                    .filter($T::nonNull)
-                    .filter($T.not($T::isBlank))
-                    .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
-                    .or(() -> $L)
-                    .or(
-                        () -> $T.ofNullable(currentDefaultNamespace)
-                            .filter($T::nonNull)
-                            .filter($T.not($T::isBlank))
-                            .filter(x -> !$T.XML_DEFAULT_STRING.equals(x))
-                    )
-                """.trim(),
-                OPTIONAL,
-                OBJECTS, 
-                PREDICATE,
-                STRING,
-                ARU_GENERATED,
-                XML_DEFAULT_NAMESPACE_VAR_NAME,
-                OPTIONAL,
-                OBJECTS, 
-                PREDICATE,
-                STRING,
-                ARU_GENERATED
-            );
-    }
-
-    private void writeChangeDefaultNamespace(final MethodSpec.Builder methodBuilder) {
-        final ClassName xmlUtilCn = xmlStaticClass.className();
-        if (xmlRootElementPrism.isPresent()) {
-            methodBuilder.beginControlFlow("if ($T.$L.isPresent()) ", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME)
-            .addStatement(
-                "output.setDefaultNamespace($T.$L.get())", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
-            )
+            .beginControlFlow("if (requestedNamespace != null && (!requestedNamespace.isBlank()) && (!$T.XML_DEFAULT_STRING.equals(requestedNamespace)))", ARU_GENERATED)
+            .addStatement("return requestedNamespace")
+            .nextControlFlow("else if ($L != null)", XML_DEFAULT_NAMESPACE_VAR_NAME)
+            .addStatement("return $L", XML_DEFAULT_NAMESPACE_VAR_NAME)
+            .nextControlFlow("else if (currentDefaultNamespace != null && (!currentDefaultNamespace.isBlank()) && (!$T.XML_DEFAULT_STRING.equals(currentDefaultNamespace)))", ARU_GENERATED)
+            .addStatement("return currentDefaultNamespace")
             .endControlFlow()
-            .addStatement(
-                "final @$T String namespaceToPassDown = $T.$L.orElse(currentDefaultNamespace)", NULLABLE, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
-            );
-            
-        } else {
-            methodBuilder.addStatement(
-                "final $T defNs = $T.$L.filter(ignored -> (requestedNamespace != null) && (!requestedNamespace.isBlank()))", OPTIONAL_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
-            )
-            .beginControlFlow("if (defNs.isPresent())")
-            .addStatement(
-                "output.setDefaultNamespace(defNs.get())"
-            )
-            .endControlFlow()
-            .addStatement(
-                "final @$T String namespaceToPassDown = defNs.orElse(currentDefaultNamespace)", NULLABLE
-            );
-        }
+            .addStatement("return null");
     }
 
     private void writeSelfToExistingWithTagAndNamespace(final AnalysedRecord analysedRecord) {
         final MethodSpec.Builder methodBuilder = createMethod(analysedRecord)
             .addStatement("final $T tag = $T.$L(requestedTagName)", STRING, xmlStaticClass.className(), "createTag")
-            .addStatement("final $T namespace = $T.createNamespace(requestedNamespace, currentDefaultNamespace)", OPTIONAL_STRING, xmlStaticClass.className());
+            .addStatement("final $T namespace = $T.createNamespace(requestedNamespace, currentDefaultNamespace)", NULLABLE_STRING, xmlStaticClass.className());
         configureNamespaceContext(analysedRecord, methodBuilder);
         writeChangeDefaultNamespace(methodBuilder);
-        methodBuilder.beginControlFlow("if (namespace.isPresent())")
-                .addStatement("final $T namespaceValue = namespace.get()", STRING)
-                .addStatement("output.writeStartElement(namespaceValue, tag)")
-                .beginControlFlow("if (!$T.equals(namespaceValue, currentDefaultNamespace))", OBJECTS)
-                .addStatement("output.writeDefaultNamespace(namespaceValue)")
+        methodBuilder.beginControlFlow("if (namespace != null)")
+                .addStatement("output.writeStartElement(namespace, tag)")
+                .beginControlFlow("if (!$T.equals(namespace, currentDefaultNamespace))", OBJECTS)
+                .addStatement("output.writeDefaultNamespace(namespace)")
                 .endControlFlow()
                 .nextControlFlow("else")
                 .addStatement("output.writeStartElement(tag)")
                 .endControlFlow();
+
+        addWriteOrderComment(methodBuilder);
         // OK, now to write out all the components... attributes first, then elements, then within those in order... booooooo
         final List<String> propOrder = XmlTypePrism.getOptionalOn(analysedRecord.typeElement())
             .map(XmlTypePrism::propOrder)
-            .filter(Objects::nonNull)
             .map(props -> props.stream().filter(StringUtils::isNotBlank).toList())
             .orElse(List.of());
     
@@ -328,17 +246,17 @@ public final class WriteStaticToXml extends ToXmlMethod {
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "requestedTagName", Modifier.FINAL)
+                ParameterSpec.builder(NULLABLE_STRING, "requestedTagName", Modifier.FINAL)
                     .addJavadoc("The tag name requested for this element. If null, will use the default tag name")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "requestedNamespace", Modifier.FINAL)
+                ParameterSpec.builder(NULLABLE_STRING, "requestedNamespace", Modifier.FINAL)
                     .addJavadoc("The namespace requested for this element. If null, will use the default namespace (NOT the one on the element)")
                     .build()
             )
             .addParameter(
-                ParameterSpec.builder(STRING.annotated(CommonsConstants.NULLABLE_ANNOTATION), "currentDefaultNamespace", Modifier.FINAL)
+                ParameterSpec.builder(NULLABLE_STRING, "currentDefaultNamespace", Modifier.FINAL)
                     .addJavadoc("The current default namespace")
                     .build()
             )

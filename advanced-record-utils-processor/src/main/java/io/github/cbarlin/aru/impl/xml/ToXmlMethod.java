@@ -1,6 +1,7 @@
 package io.github.cbarlin.aru.impl.xml;
 
 import io.github.cbarlin.aru.core.ClaimableOperation;
+import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.types.AnalysedComponent;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.impl.xml.iface.WriteIfaceToXml;
@@ -8,7 +9,9 @@ import io.github.cbarlin.aru.impl.xml.utils.WriteStaticToXml;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlSchemaPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
+import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
+import io.micronaut.sourcegen.javapoet.TypeName;
 
 import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
@@ -18,14 +21,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+
+import static io.github.cbarlin.aru.impl.Constants.InternalReferenceNames.XML_DEFAULT_NAMESPACE_VAR_NAME;
+
+import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
+
 public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceToXml, WriteStaticToXml {
+
+    protected static final TypeName NULLABLE_STRING = STRING.withoutAnnotations().annotated(CommonsConstants.NULLABLE_ANNOTATION);
 
     protected final Optional<XmlRootElementPrism> xmlRootElementPrism;
     protected final Optional<XmlTypePrism> xmlTypePrism;
     protected final MethodSpec.Builder interfaceMethod;
     protected final MethodSpec.Builder staticMethod;
     protected final List<AnalysedComponent> components = new ArrayList<>();
-    protected final Set<AnalysedComponent> elCompontents = new HashSet<>();
+    protected final Set<AnalysedComponent> elComponents = new HashSet<>();
     protected final Set<AnalysedComponent> attrComponents = new HashSet<>();
 
     protected ToXmlMethod(
@@ -52,9 +62,44 @@ public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceTo
         if (holder.xmlAttributeMapper().optionalInstanceOn(analysedComponent.element()).isPresent()) {
             attrComponents.add(analysedComponent);
         } else if (holder.xmlTransientMapper().optionalInstanceOn(analysedComponent.element()).isEmpty()) {
-            elCompontents.add(analysedComponent);
+            elComponents.add(analysedComponent);
         }
         return false;
+    }
+
+    /// Generates code to handle default namespace changes for XML output.
+    ///
+    /// This takes into account:
+    ///  - if the user has specified an {@code XmlRootElement} annotation
+    ///  - if there is a requested namespace (via the {@code namespaceToPassDown} param)
+    ///  - if there's a current default namespace assigned
+    ///
+    /// @param methodBuilder the method specification builder to add statements to
+    protected void writeChangeDefaultNamespace(final MethodSpec.Builder methodBuilder) {
+        final ClassName xmlUtilCn = xmlStaticClass.className();
+        if (xmlRootElementPrism.isPresent()) {
+            methodBuilder.beginControlFlow("if ($T.$L != null) ", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME)
+            .addStatement(
+                "output.setDefaultNamespace($T.$L)", xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
+            )
+            .endControlFlow()
+            .addStatement(
+                "final $T namespaceToPassDown = ($T.$L != null) ? $T.$L : currentDefaultNamespace", NULLABLE_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
+            );
+
+        } else {
+            methodBuilder.addStatement(
+                "final $T defNs = ($T.$L != null && (requestedNamespace != null) && (!requestedNamespace.isBlank())) ? $T.$L : null", NULLABLE_STRING, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME, xmlUtilCn, XML_DEFAULT_NAMESPACE_VAR_NAME
+            )
+            .beginControlFlow("if (defNs != null)")
+            .addStatement(
+                "output.setDefaultNamespace(defNs)"
+            )
+            .endControlFlow()
+            .addStatement(
+                "final $T namespaceToPassDown = defNs != null ? defNs : currentDefaultNamespace", NULLABLE_STRING
+            );
+        }
     }
 
     protected final void configureNamespaceContext(final AnalysedRecord analysedRecord, final MethodSpec.Builder methodBuilder) {
@@ -87,7 +132,7 @@ public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceTo
         if (isAlphabeticalAccessOrder) {
             final List<AnalysedComponent> toBeOrdered = new ArrayList<>();
             for(final AnalysedComponent component : components) {
-                if (elCompontents.contains(component) && (!(writeOrder.contains(component) || toBeOrdered.contains(component)))) {
+                if (elComponents.contains(component) && (!(writeOrder.contains(component) || toBeOrdered.contains(component)))) {
                     toBeOrdered.add(component);
                 }
             }
@@ -96,7 +141,7 @@ public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceTo
         } else {
             // This will be declaration order then
             for(final AnalysedComponent component : components) {
-                if (elCompontents.contains(component) && (!writeOrder.contains(component))) {
+                if (elComponents.contains(component) && (!writeOrder.contains(component))) {
                     writeOrder.add(component);
                 }
             }
@@ -110,7 +155,7 @@ public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceTo
     ) {
         for (final String prop : propOrder) {
             for(final AnalysedComponent component : components) {
-                if (prop.equals(component.name()) && (!writeOrder.contains(component)) && elCompontents.contains(component)) {
+                if (prop.equals(component.name()) && (!writeOrder.contains(component)) && elComponents.contains(component)) {
                     writeOrder.add(component);
                 }
             }
