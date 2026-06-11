@@ -67,6 +67,14 @@ public sealed abstract class ToXmlMethod extends XmlVisitor permits WriteIfaceTo
         return false;
     }
 
+    /// Generates code to handle default namespace changes for XML output.
+    ///
+    /// This takes into account:
+    ///  - if the user has specified an {@code XmlRootElement} annotation
+    ///  - if there is a requested namespace (via the {@code namespaceToPassDown} param)
+    ///  - if there's a current default namespace assigned
+    ///
+    /// @param methodBuilder the method specification builder to add statements to
     protected void writeChangeDefaultNamespace(final MethodSpec.Builder methodBuilder) {
         final ClassName xmlUtilCn = xmlStaticClass.className();
         if (xmlRootElementPrism.isPresent()) {

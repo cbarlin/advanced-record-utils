@@ -21,7 +21,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
