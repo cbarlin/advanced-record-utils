@@ -9,7 +9,7 @@ import jdk.jfr.Name;
 @Description("A diff was computed between two instances of a record")
 public final class RecordDiffCreation extends AruAbstractEvent {
 
-    public RecordDiffCreation(final String utilsClass, final String targetClass) {
+    public RecordDiffCreation(final Class<?> utilsClass, final Class<?> targetClass) {
         super(utilsClass, targetClass);
     }
 }

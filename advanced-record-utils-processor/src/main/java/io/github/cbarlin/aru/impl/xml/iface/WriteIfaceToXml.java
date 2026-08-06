@@ -47,11 +47,11 @@ public final class WriteIfaceToXml extends ToXmlMethod {
         final boolean doJfr = shouldCreateJfr();
         if (doJfr) {
             methodBuilder.addStatement(
-                    "final $T __aruJfrXml = new $T($S, $S)",
+                    "final $T __aruJfrXml = new $T($T.class, $T.class)",
                     ARU_JFR_XML_SERIALISE,
                     ARU_JFR_XML_SERIALISE,
-                    analysedRecord.utilsClassName().canonicalName(),
-                    analysedRecord.className().canonicalName()
+                    analysedRecord.utilsClassName(),
+                    analysedRecord.className()
             );
         }
         methodBuilder.addStatement("final $T tag = $T.$L(requestedTagName)", STRING, xmlStaticClass.className(), "createTag")

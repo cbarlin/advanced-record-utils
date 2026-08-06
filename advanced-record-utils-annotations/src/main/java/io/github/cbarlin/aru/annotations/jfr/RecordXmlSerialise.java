@@ -9,7 +9,7 @@ import jdk.jfr.Name;
 @Description("A record was serialised to XML")
 public final class RecordXmlSerialise extends AruAbstractEvent {
 
-    public RecordXmlSerialise(final String utilsClass, final String targetClass) {
+    public RecordXmlSerialise(final Class<?> utilsClass, final Class<?> targetClass) {
         super(utilsClass, targetClass);
     }
 }

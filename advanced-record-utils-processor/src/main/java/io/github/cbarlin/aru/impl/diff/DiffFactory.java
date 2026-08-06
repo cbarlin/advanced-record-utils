@@ -202,18 +202,18 @@ public final class DiffFactory {
                 APContext.logError(analysedRecord.typeElement(), "You cannot use the name '__aruJfrDiff' for the diff comparison element name when JFR is enabled");
             }
             differResultRecordConstructor.addStatement(
-                "final $T __aruJfrDiff = new $T($S, $S)",
+                "final $T __aruJfrDiff = new $T($T.class, $T.class)",
                 ARU_JFR_DIFF,
                 ARU_JFR_DIFF,
-                analysedRecord.utilsClassName().canonicalName(),
-                analysedRecord.className().canonicalName()
+                analysedRecord.utilsClassName(),
+                analysedRecord.className()
             );
             differResultInterfaceConstructor.addStatement(
-                "final $T __aruJfrDiff = new $T($S, $S)",
+                "final $T __aruJfrDiff = new $T($T.class, $T.class)",
                 ARU_JFR_DIFF,
                 ARU_JFR_DIFF,
-                analysedRecord.utilsClassName().canonicalName(),
-                analysedRecord.className().canonicalName()
+                analysedRecord.utilsClassName(),
+                analysedRecord.className()
             );
         }
 

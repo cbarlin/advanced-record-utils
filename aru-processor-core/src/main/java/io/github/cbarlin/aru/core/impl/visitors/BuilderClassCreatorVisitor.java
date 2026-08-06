@@ -47,7 +47,7 @@ public final class BuilderClassCreatorVisitor extends RecordVisitor {
         }
         if (shouldCreateJfr()) {
             final FieldSpec jfr = FieldSpec.builder(CommonsConstants.Names.ARU_JFR_BUILDER, "__aruJfrEvent", Modifier.PRIVATE, Modifier.FINAL)
-                    .initializer("new $T($S, $S)", CommonsConstants.Names.ARU_JFR_BUILDER, analysedRecord.utilsClassName().canonicalName(), analysedRecord.className().canonicalName())
+                    .initializer("new $T($T.class, $T.class)", CommonsConstants.Names.ARU_JFR_BUILDER, analysedRecord.utilsClassName(), analysedRecord.className())
                     .build();
             builder.builder().addField(jfr);
         }

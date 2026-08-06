@@ -10,12 +10,15 @@ import jdk.jfr.StackTrace;
 public sealed abstract class AruAbstractEvent extends Event
 permits RecordBuild, RecordDiffCreation, RecordXmlSerialise {
     @Label("Utils Class FQN")
-    public final String utilsClass;
+    public final Class<?> utilsClass;
 
     @Label("Target Record FQN")
-    public final String targetClass;
+    public final Class<?> targetClass;
 
-    protected AruAbstractEvent(final String utilsClass, final String targetClass) {
+    @Label("Current Thread")
+    public final Thread currentThread = Thread.currentThread();
+
+    protected AruAbstractEvent(final Class<?> utilsClass, final Class<?> targetClass) {
         super();
         this.utilsClass = utilsClass;
         this.targetClass = targetClass;

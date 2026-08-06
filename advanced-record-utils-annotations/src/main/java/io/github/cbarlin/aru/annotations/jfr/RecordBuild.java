@@ -9,7 +9,7 @@ import jdk.jfr.Name;
 @Description("A Builder was created, populated, and then the final object was constructed")
 public final class RecordBuild extends AruAbstractEvent {
 
-    public RecordBuild(final String utilsClass, final String targetClass) {
+    public RecordBuild(final Class<?> utilsClass, final Class<?> targetClass) {
         super(utilsClass, targetClass);
     }
 }

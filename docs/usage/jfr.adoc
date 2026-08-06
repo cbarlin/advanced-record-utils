@@ -16,7 +16,8 @@ These events all:
 
 * live in the category "Advanced Record Utils"
 * have the `+Name+` of the event with the package `+io.github.cbarlin.aru+`
-* contain the name of both the `+*Utils+` class and the target record
+* contain the class of both the `+*Utils+` class and the target record
+* contain the thread that initiated the event
 * time how long the event took
 * are enabled by default
 * have stack traces disabled by default.
