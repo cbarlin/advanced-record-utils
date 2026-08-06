@@ -11,6 +11,10 @@ import io.github.cbarlin.aru.core.artifacts.BuilderClass;
 import io.github.cbarlin.aru.core.types.AnalysedRecord;
 import io.github.cbarlin.aru.core.visitors.RecordVisitor;
 import io.github.cbarlin.aru.core.wiring.CorePerRecordScope;
+import io.github.cbarlin.aru.prism.prison.IncludeJFRPrism;
+import io.micronaut.sourcegen.javapoet.FieldSpec;
+
+import java.util.Objects;
 
 @Component
 @CorePerRecordScope
@@ -41,6 +45,20 @@ public final class BuilderClassCreatorVisitor extends RecordVisitor {
             builder.builder().addJavadoc(JDOC_PARA)
                 .addJavadoc("Generates {@link $T} objects using the {@link $T} implementation objects", analysedRecord.intendedType(), analysedRecord.className());
         }
+        if (shouldCreateJfr()) {
+            final FieldSpec jfr = FieldSpec.builder(CommonsConstants.Names.ARU_JFR_BUILDER, "__aruJfrEvent", Modifier.PRIVATE, Modifier.FINAL)
+                    .initializer("new $T($S, $S)", CommonsConstants.Names.ARU_JFR_BUILDER, analysedRecord.utilsClassName().canonicalName(), analysedRecord.className().canonicalName())
+                    .build();
+            builder.builder().addField(jfr);
+        }
         return true;
+    }
+
+    private boolean shouldCreateJfr() {
+        if (IncludeJFRPrism.isPresent(analysedRecord.typeElement())) {
+            final IncludeJFRPrism prism = Objects.requireNonNull(IncludeJFRPrism.getInstanceOn(analysedRecord.typeElement()));
+            return !Boolean.FALSE.equals(prism.builder());
+        }
+        return false;
     }
 }

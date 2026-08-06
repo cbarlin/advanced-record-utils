@@ -35,6 +35,7 @@ public enum CommonsConstants {
         // ClassNames load faster when using the string constructor vs the .class one
         private static final String ADVANCED_RECORD_UTILS_GENERATED = "AdvancedRecordUtilsGenerated";
         private static final String IO_GITHUB_CBARLIN_ARU_ANNOTATIONS = "io.github.cbarlin.aru.annotations";
+        private static final String ARU_JFR = "io.github.cbarlin.aru.annotations.jfr";
         private static final String JAKARTA_XML_BIND = "jakarta.xml.bind.annotation";
         private static final String JAVA_UTIL = "java.util";
         private static final String ORG_JSPECIFY_ANNOTATIONS = "org.jspecify.annotations";
@@ -44,6 +45,9 @@ public enum CommonsConstants {
         public static final ClassName ARU_INTERNAL_UTILS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "InternalUtil");
         public static final ClassName ARU_LOGGING_CONSTANTS = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "LoggingConstants");
         public static final ClassName ARU_MAIN_ANNOTATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, "AdvancedRecordUtils");
+        public static final ClassName ARU_JFR_BUILDER = ClassName.get(ARU_JFR, "RecordBuild");
+        public static final ClassName ARU_JFR_DIFF = ClassName.get(ARU_JFR, "RecordDiffCreation");
+        public static final ClassName ARU_JFR_XML_SERIALISE = ClassName.get(ARU_JFR, "RecordXmlSerialise");
         public static final ClassName ARU_DEFAULT = ARU_MAIN_ANNOTATION.nestedClass("DEFAULT");
         public static final ClassName ARU_IMPORT_LIBRARY = ARU_MAIN_ANNOTATION.nestedClass("ImportLibraryUtils");
         public static final ClassName ARU_ROOT_ELEMENT_INFORMATION = ClassName.get(IO_GITHUB_CBARLIN_ARU_ANNOTATIONS, ADVANCED_RECORD_UTILS_GENERATED, "RootElementInformation");

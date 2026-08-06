@@ -27,6 +27,7 @@ import jakarta.xml.bind.annotation.XmlType;
 )
 @XmlRootElement(name = "RootItem", namespace = "ns://nxA")
 @XmlType(name = "", propOrder = {"yetAnotherField"})
+@AdvancedRecordUtils.IncludeJFR(builder = false)
 public record RootItem(
     @XmlElement(name = "FirstLevels")
     List<FirstLevel> firstLevels,

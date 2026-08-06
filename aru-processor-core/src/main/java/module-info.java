@@ -17,6 +17,7 @@ module io.github.cbarlin.aru.core {
     exports io.github.cbarlin.aru.core.types.components;
     exports io.github.cbarlin.aru.core.visitors;
     exports io.github.cbarlin.aru.core.wiring;
+    exports io.github.cbarlin.aru.core.impl.visitors.builder to io.github.cbarlin.aru.worker;
 
     requires transitive io.avaje.inject;
     requires transitive io.github.cbarlin.aru.annotations;

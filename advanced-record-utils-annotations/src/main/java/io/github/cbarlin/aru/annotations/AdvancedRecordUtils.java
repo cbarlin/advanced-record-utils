@@ -780,4 +780,31 @@ public @interface AdvancedRecordUtils {
          */
         Class<?> fromInterface() default DEFAULT.class;
     }
+
+    /**
+     * Mark that a generated *Utils class should generate JFR events.
+     *
+     * @since 0.11.0
+     */
+    @Target({TYPE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface IncludeJFR {
+        /**
+         * Generate JFR events for the builder. Time measured is from when the object starts being
+         *   built until the end of the <code>build</code> method.
+         */
+        boolean builder() default true;
+
+        /**
+         * Generate JFR events for the XML writer. Time measured is from when the
+         *    <code>writeSelfTo</code> method begins until it ends.
+         */
+        boolean xml() default true;
+
+        /**
+         * Generate JFR events for the diff generator. Time measured is from when the
+         *    <code>diff</code> method begins until it ends.
+         */
+        boolean diff() default true;
+    }
 }

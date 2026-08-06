@@ -33,6 +33,7 @@ import java.util.UUID;
         validatedBuilder = AdvancedRecordUtils.ValidationApi.JAKARTA_PLAIN
     )
 )
+@AdvancedRecordUtils.IncludeJFR(xml = false)
 public record OddTypeBag(
     @XmlElementWrapper(name = "WrapperOfLSO")
     Optional<List<String>> listOfItems,

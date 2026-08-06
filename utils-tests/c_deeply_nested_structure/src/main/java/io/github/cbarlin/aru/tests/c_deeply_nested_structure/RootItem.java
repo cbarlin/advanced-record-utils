@@ -33,6 +33,7 @@ import java.util.List;
 )
 @XmlRootElement(name = "RootItem", namespace = "ns://nxA")
 @XmlType(name = "", propOrder = {"yetAnotherField"})
+@AdvancedRecordUtils.IncludeJFR()
 public record RootItem(
     @XmlElement(name = "FirstLevels")
     List<FirstLevel> firstLevels,

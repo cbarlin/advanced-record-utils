@@ -4,6 +4,7 @@ import io.avaje.inject.Bean;
 import io.avaje.inject.BeanTypes;
 import io.avaje.inject.Factory;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffEvaluationMode;
+import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
@@ -19,6 +20,7 @@ import io.github.cbarlin.aru.impl.wiring.DiffPerRecordScope;
 import io.github.cbarlin.aru.prism.prison.AdvancedRecordUtilsPrism;
 import io.github.cbarlin.aru.prism.prison.BuilderOptionsPrism;
 import io.github.cbarlin.aru.prism.prison.DiffOptionsPrism;
+import io.github.cbarlin.aru.prism.prison.IncludeJFRPrism;
 import io.micronaut.sourcegen.javapoet.ClassName;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.ParameterSpec;
@@ -26,7 +28,9 @@ import io.micronaut.sourcegen.javapoet.TypeSpec;
 
 import javax.lang.model.element.Modifier;
 import java.util.HashSet;
+import java.util.Objects;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_JFR_DIFF;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.NULL_MARKED;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.OBJECTS;
 import static io.github.cbarlin.aru.core.CommonsConstants.Names.UNSUPPORTED_OPERATION_EXCEPTION;
@@ -189,6 +193,30 @@ public final class DiffFactory {
                     .addJavadoc("The (potentially) changed element of the diff")
                     .build()
             );
+
+        if (shouldCreateJfr()) {
+            if ("__aruJfrDiff".equals(diffOptionsPrism.originatingElementName())) {
+                APContext.logError(analysedRecord.typeElement(), "You cannot use the name '__aruJfrDiff' for the diff originating element name when JFR is enabled");
+            }
+            if ("__aruJfrDiff".equals(diffOptionsPrism.comparedToElementName())) {
+                APContext.logError(analysedRecord.typeElement(), "You cannot use the name '__aruJfrDiff' for the diff comparison element name when JFR is enabled");
+            }
+            differResultRecordConstructor.addStatement(
+                "final $T __aruJfrDiff = new $T($S, $S)",
+                ARU_JFR_DIFF,
+                ARU_JFR_DIFF,
+                analysedRecord.utilsClassName().canonicalName(),
+                analysedRecord.className().canonicalName()
+            );
+            differResultInterfaceConstructor.addStatement(
+                "final $T __aruJfrDiff = new $T($S, $S)",
+                ARU_JFR_DIFF,
+                ARU_JFR_DIFF,
+                analysedRecord.utilsClassName().canonicalName(),
+                analysedRecord.className().canonicalName()
+            );
+        }
+
         return new DiffResultsClass(differResult, differResultRecordConstructor, differResultInterfaceConstructor);
     }
 
@@ -203,5 +231,13 @@ public final class DiffFactory {
             matchingInterface,
             analysedRecord
         );
+    }
+
+    private boolean shouldCreateJfr() {
+        if (IncludeJFRPrism.isPresent(analysedRecord.typeElement())) {
+            final IncludeJFRPrism prism = Objects.requireNonNull(IncludeJFRPrism.getInstanceOn(analysedRecord.typeElement()));
+            return !Boolean.FALSE.equals(prism.diff());
+        }
+        return false;
     }
 }
