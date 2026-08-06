@@ -7,7 +7,8 @@ import jdk.jfr.StackTrace;
 
 @Category({"Advanced Record Utils"})
 @StackTrace(false)
-public abstract class AruAbstractEvent extends Event {
+public sealed abstract class AruAbstractEvent extends Event
+permits RecordBuild, RecordDiffCreation, RecordXmlSerialise {
     @Label("Utils Class FQN")
     public final String utilsClass;
 

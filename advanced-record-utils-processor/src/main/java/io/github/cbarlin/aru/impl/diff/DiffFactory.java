@@ -4,6 +4,7 @@ import io.avaje.inject.Bean;
 import io.avaje.inject.BeanTypes;
 import io.avaje.inject.Factory;
 import io.github.cbarlin.aru.annotations.AdvancedRecordUtils.DiffEvaluationMode;
+import io.github.cbarlin.aru.core.APContext;
 import io.github.cbarlin.aru.core.AnnotationSupplier;
 import io.github.cbarlin.aru.core.CommonsConstants;
 import io.github.cbarlin.aru.core.artifacts.ToBeBuilt;
@@ -194,6 +195,12 @@ public final class DiffFactory {
             );
 
         if (shouldCreateJfr()) {
+            if ("__aruJfrDiff".equals(diffOptionsPrism.originatingElementName())) {
+                APContext.logError(analysedRecord.typeElement(), "You cannot use the name '__aruJfrDiff' for the diff originating element name when JFR is enabled");
+            }
+            if ("__aruJfrDiff".equals(diffOptionsPrism.comparedToElementName())) {
+                APContext.logError(analysedRecord.typeElement(), "You cannot use the name '__aruJfrDiff' for the diff comparison element name when JFR is enabled");
+            }
             differResultRecordConstructor.addStatement(
                 "final $T __aruJfrDiff = new $T($S, $S)",
                 ARU_JFR_DIFF,

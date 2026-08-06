@@ -7,7 +7,7 @@ import jdk.jfr.Name;
 @Name("io.github.cbarlin.aru.RecordDiffCreation")
 @Label("Record Diff Creation")
 @Description("A diff was computed between two instances of a record")
-public class RecordDiffCreation extends AruAbstractEvent {
+public final class RecordDiffCreation extends AruAbstractEvent {
 
     public RecordDiffCreation(final String utilsClass, final String targetClass) {
         super(utilsClass, targetClass);

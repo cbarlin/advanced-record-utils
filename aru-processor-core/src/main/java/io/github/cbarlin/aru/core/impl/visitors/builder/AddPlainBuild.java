@@ -59,7 +59,7 @@ public final class AddPlainBuild extends RecordVisitor {
             constructorArgs.add(CALL_GETTER);
             formatArgs.add(param.getSimpleName().toString());
         }
-        final String command = (addingJfr ? ASSIGN : CONSTRUCT).formatted(StringUtils.join(constructorArgs, ",\n\t"));
+        final String command = (addingJfr ? ASSIGN : CONSTRUCT).formatted(StringUtils.join(constructorArgs, ",\n    "));
         final Object[] args = formatArgs.toArray();
         methodBuilder.addStatement(command, args);
         if (addingJfr) {
