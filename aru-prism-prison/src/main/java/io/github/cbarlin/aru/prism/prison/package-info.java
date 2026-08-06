@@ -51,6 +51,7 @@
 @GeneratePrism(value = AdvancedRecordUtils.BuilderOptions.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtils.DiffOptions.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtils.ImportLibraryUtils.class, publicAccess = true)
+@GeneratePrism(value = AdvancedRecordUtils.IncludeJFR.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtils.MergerOptions.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtils.TargetConstructor.class, publicAccess = true)
 @GeneratePrism(value = AdvancedRecordUtils.WitherOptions.class, publicAccess = true)

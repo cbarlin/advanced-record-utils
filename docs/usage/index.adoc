@@ -49,3 +49,6 @@ TODO: Write this section
 
 [#use-imp]
 include::imp.adoc[leveloffset=+1]
+
+[#use-jfr]
+include::jfr.adoc[leveloffset=+1]

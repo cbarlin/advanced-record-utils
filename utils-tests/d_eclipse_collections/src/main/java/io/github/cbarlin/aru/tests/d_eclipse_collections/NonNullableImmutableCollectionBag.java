@@ -40,6 +40,7 @@ import org.eclipse.collections.api.set.primitive.*;
         InferMatchingNameUtils.class
     }
 )
+@AdvancedRecordUtils.IncludeJFR(diff = false)
 public record NonNullableImmutableCollectionBag(
     // We will do immutable and mutable of enum/string/record
     ImmutableSet<AnEnumInDep> immutableSetOfEnum,

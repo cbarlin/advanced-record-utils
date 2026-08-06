@@ -10,7 +10,9 @@ module io.github.cbarlin.aru.annotations {
 
     exports io.github.cbarlin.aru.annotations;
     exports io.github.cbarlin.aru.annotations.aliases;
+    exports io.github.cbarlin.aru.annotations.jfr;
 
     requires java.base;
     requires transitive org.jspecify;
+    requires static jdk.jfr;
 }

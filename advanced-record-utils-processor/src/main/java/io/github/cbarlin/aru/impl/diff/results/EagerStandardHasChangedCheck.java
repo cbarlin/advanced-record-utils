@@ -2,6 +2,7 @@ package io.github.cbarlin.aru.impl.diff.results;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.lang.model.element.Modifier;
 
@@ -11,6 +12,7 @@ import io.github.cbarlin.aru.impl.Constants.Claims;
 import io.github.cbarlin.aru.impl.diff.DifferVisitor;
 import io.github.cbarlin.aru.impl.diff.holders.DiffHolder;
 import io.github.cbarlin.aru.impl.wiring.DiffPerRecordScope;
+import io.github.cbarlin.aru.prism.prison.IncludeJFRPrism;
 import io.micronaut.sourcegen.javapoet.FieldSpec;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
 import io.micronaut.sourcegen.javapoet.TypeName;
@@ -73,5 +75,17 @@ public final class EagerStandardHasChangedCheck extends DifferVisitor {
         changedMethod.returns(TypeName.BOOLEAN)
             .addStatement("return this.__overallChanged")
             .addJavadoc("Has any field changed in this diff?");
+        if (shouldCreateJfr()) {
+            differResultRecordConstructor.addStatement("__aruJfrDiff.commit()");
+            differResultInterfaceConstructor.addStatement("__aruJfrDiff.commit()");
+        }
+    }
+
+    private boolean shouldCreateJfr() {
+        if (IncludeJFRPrism.isPresent(analysedRecord.typeElement())) {
+            final IncludeJFRPrism prism = Objects.requireNonNull(IncludeJFRPrism.getInstanceOn(analysedRecord.typeElement()));
+            return !Boolean.FALSE.equals(prism.diff());
+        }
+        return false;
     }
 }

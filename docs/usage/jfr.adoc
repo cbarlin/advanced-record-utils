@@ -1,0 +1,38 @@
+= JDK Flight Recorder (JFR)
+
+Advanced Record Utils (as of version 0.11.0) supports the creation of link:https://en.wikipedia.org/wiki/JDK_Flight_Recorder[JDK Flight Recorder^] events. This can be enabled by adding an `+@AdvancedRecordUtils.IncludeJfr+` annotation like so:
+
+.Person.java
+[source,java]
+----
+@AdvancedRecordUtils
+@AdvancedRecordUtils.IncludeJfr
+public record Person(String name, Integer age, List<String> favouriteColours) implements PersonUtils.All {}
+----
+
+NOTE: This annotation does _not_ cascade, and must be set on each record you wish to have JFR events generated for. This allows you to specifically target events to be generated at complex or large roots, and avoids flooding your JFR output.
+
+These events all:
+
+* live in the category "Advanced Record Utils"
+* have the `+Name+` of the event with the package `+io.github.cbarlin.aru+`
+* contain the name of both the `+*Utils+` class and the target record
+* time how long the event took
+* are enabled by default
+* have stack traces disabled by default.
+
+Each of these event types can be turned off in the `+IncludeJfr+` annotation options.
+
+== Record Build
+
+This event times how long a builder instance takes from when the "Builder" was created until the "build" method is called and the target record created. The full name is `+io.github.cbarlin.aru.RecordBuild+`
+
+CAUTION: The JFR event (naively) assumes that the builder is only constructing one result. Re-using the same builder multiple times may cause the captured timings to drift, or cause issues with the same JFR event instance being "committed" multiple times.
+
+== Record Diff Creation
+
+This event times how long it takes to compute the diff between two instances of a record. The full name is `+io.github.cbarlin.aru.RecordDiffCreation+`
+
+== Record XML Serialise
+
+This event times how long it takes to serialise an instance of a record to XML. The full name is `+io.github.cbarlin.aru.RecordXmlSerialise+`

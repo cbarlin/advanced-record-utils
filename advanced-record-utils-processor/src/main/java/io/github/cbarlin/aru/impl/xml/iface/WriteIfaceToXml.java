@@ -8,6 +8,7 @@ import io.github.cbarlin.aru.impl.types.TypeAliasComponent;
 import io.github.cbarlin.aru.impl.wiring.XmlPerRecordScope;
 import io.github.cbarlin.aru.impl.xml.ToXmlMethod;
 import io.github.cbarlin.aru.impl.xml.XmlRecordHolder;
+import io.github.cbarlin.aru.prism.prison.IncludeJFRPrism;
 import io.github.cbarlin.aru.prism.prison.XmlRootElementPrism;
 import io.github.cbarlin.aru.prism.prison.XmlTypePrism;
 import io.micronaut.sourcegen.javapoet.MethodSpec;
@@ -18,8 +19,10 @@ import org.apache.commons.lang3.StringUtils;
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import static io.github.cbarlin.aru.core.CommonsConstants.Names.ARU_JFR_XML_SERIALISE;
 import static io.github.cbarlin.aru.impl.Constants.Names.OBJECTS;
 import static io.github.cbarlin.aru.impl.Constants.Names.STRING;
 import static io.github.cbarlin.aru.impl.Constants.Names.XML_STREAM_EXCEPTION;
@@ -40,8 +43,18 @@ public final class WriteIfaceToXml extends ToXmlMethod {
 
     @Override
     protected void visitEndOfClassImpl() {
-        final MethodSpec.Builder methodBuilder = createMethod()
-            .addStatement("final $T tag = $T.$L(requestedTagName)", STRING, xmlStaticClass.className(), "createTag")
+        final MethodSpec.Builder methodBuilder = createMethod();
+        final boolean doJfr = shouldCreateJfr();
+        if (doJfr) {
+            methodBuilder.addStatement(
+                    "final $T __aruJfrXml = new $T($S, $S)",
+                    ARU_JFR_XML_SERIALISE,
+                    ARU_JFR_XML_SERIALISE,
+                    analysedRecord.utilsClassName().canonicalName(),
+                    analysedRecord.className().canonicalName()
+            );
+        }
+        methodBuilder.addStatement("final $T tag = $T.$L(requestedTagName)", STRING, xmlStaticClass.className(), "createTag")
             .addStatement("final $T namespace = $T.createNamespace(requestedNamespace, currentDefaultNamespace)", NULLABLE_STRING, xmlStaticClass.className());
 
         configureNamespaceContext(analysedRecord, methodBuilder);
@@ -76,6 +89,9 @@ public final class WriteIfaceToXml extends ToXmlMethod {
             }
         }
         methodBuilder.addStatement("output.writeEndElement()");
+        if (doJfr) {
+            methodBuilder.addStatement("__aruJfrXml.commit()");
+        }
         AnnotationSupplier.addGeneratedAnnotation(methodBuilder, this);
     }
 
@@ -108,5 +124,12 @@ public final class WriteIfaceToXml extends ToXmlMethod {
             )
             .addStatement("$T.requireNonNull(output, $S)", OBJECTS, "Cannot supply null output for XML content");
     }
-    
+
+    private boolean shouldCreateJfr() {
+        if (IncludeJFRPrism.isPresent(analysedRecord.typeElement())) {
+            final IncludeJFRPrism prism = Objects.requireNonNull(IncludeJFRPrism.getInstanceOn(analysedRecord.typeElement()));
+            return !Boolean.FALSE.equals(prism.xml());
+        }
+        return false;
+    }
 }
