@@ -27,6 +27,7 @@ public enum Constants {
         public static final ClaimableOperation BUILDER_CONCRETE_OPTIONAL = new ClaimableOperation("builderConcreteSetterForOptional", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_FLUENT_SETTER = new ClaimableOperation("builderFluentSetter", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_MAP_SPECIALISATION = new ClaimableOperation("builderMapSpecialisation", FIELD_AND_ACCESSORS);
+        public static final ClaimableOperation BUILDER_OTHER_BUILDER = new ClaimableOperation("builderOtherBuilder", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_REMOVE_ALL_ITERABLE = new ClaimableOperation("builderRemoveAllIterable", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_REMOVE_IF = new ClaimableOperation("builderRemoveIf", FIELD_AND_ACCESSORS);
         public static final ClaimableOperation BUILDER_REMOVE_SINGLE = new ClaimableOperation("builderRemoveSingle", FIELD_AND_ACCESSORS);
