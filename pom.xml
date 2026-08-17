@@ -78,7 +78,7 @@
         <vavr.version>1.0.1</vavr.version>
         <woodstox.version>7.2.2</woodstox.version>
         <xmlunit.version>2.13.0</xmlunit.version>
-        <rainbowgum.version>0.8.2</rainbowgum.version>
+        <rainbowgum.version>0.9.0</rainbowgum.version>
         <valueclasses.version>2.0.2</valueclasses.version>
 
         <!-- Maven versions -->
