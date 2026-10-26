@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - name: asciidoctor-ghpages
         # Pinned to tag v2.3.0
-        uses: manoelcampos/asciidoctor-ghpages-action@60643a4db90d0da4647f891dfd460e1d38a4c02b
+        uses: manoelcampos/asciidoctor-ghpages-action@b67feb434bb6455d316c4c26372e99b480a653fe
         with:
           asciidoctor_params: --attribute=nofooter
           source_dir: docs/
